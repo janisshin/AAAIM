@@ -1,0 +1,17 @@
+LICENSE
+README.md
+setup.py
+egg-info/PKG-INFO
+egg-info/SOURCES.txt
+egg-info/dependency_links.txt
+egg-info/requires.txt
+egg-info/top_level.txt
+core/__init__.py
+core/annotation_workflow.py
+core/curation_workflow.py
+core/database_search.py
+core/llm_interface.py
+core/model_info.py
+utils/__init__.py
+utils/constants.py
+utils/evaluation.py
