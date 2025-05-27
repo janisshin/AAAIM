@@ -5,6 +5,8 @@ AAAIM is a LLM-powered system for annotating biosimulation models with standardi
 ## Installation
 
 ```bash
+# python = 3.12
+
 # Install dependencies
 pip install -r requirements.txt
 ```
