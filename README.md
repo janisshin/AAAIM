@@ -97,6 +97,13 @@ After LLM performs synonym normalization, use direct dictionary matching to find
 
 After LLM performs synonym normalization, use direct dictionary matching to find ontology ID and report hit counting.
 
+To use RAG, create embeddings of the ontology first:
+
+```bash
+cd data
+python load_data.py --model default --collection chebi_default
+```
+
 ## Databases
 
 ### Currently Supported
