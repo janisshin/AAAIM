@@ -1,0 +1,12 @@
+Model: BIOMD0000000488
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:55:55
+
+Synonyms:
+ROS: ['reactive oxygen species', 'ROS', 'oxygen free radicals']
+damDNA: ['damaged DNA', 'DNA damage', 'damaged deoxyribonucleic acid']
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+AMP: ['adenosine monophosphate', 'AMP', 'adenosine monophosphate']
+
+Reason: All are well-known biochemical species with standard synonyms used in molecular biology and biochemistry.

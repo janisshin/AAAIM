@@ -1,0 +1,11 @@
+Model: BIOMD0000000481
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:59:32
+
+Synonyms:
+E2: ['estradiol', '17beta-estradiol', 'estra-1,3,5(10)-triene-3,17-diol']
+P4: ['progesterone', 'pregn-4-ene-3,20-dione', '4-pregnene-3,20-dione']
+OT: ['oxytocin', 'oxytocin (9-10)', 'cyclo(18-20)-[1-8]-oxytocin']
+PGF: ['prostaglandin F', 'dinoprost', 'prostaglandin F2alpha']
+
+Reason: The annotations are based on common biochemical names and synonyms, where E2 is likely estradiol, a major estrogen sex hormone, P4 is likely progesterone, a steroid hormone, OT is likely oxytocin, a peptide hormone, and PGF is likely prostaglandin F, specifically prostaglandin F2alpha, due to the display names and reaction contexts suggesting a biological or physiological model.

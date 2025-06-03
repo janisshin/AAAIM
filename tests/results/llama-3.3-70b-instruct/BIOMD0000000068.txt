@@ -1,0 +1,14 @@
+Model: BIOMD0000000068
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:47:54
+
+Synonyms:
+Phser: ['phosphohomoserine', 'O-phosphohomoserine', 'L-phosphohomoserine']
+Thr: ['threonine', 'L-threonine', '2-amino-3-hydroxypropanoic acid']
+Cystathionine: ['cystathionine', 'L-cystathionine', '3-(2-amino-2-carboxyethylthio)propanoic acid']
+Hser: ['homoserine', 'L-homoserine', '2-amino-4-hydroxybutanoic acid']
+Phi: ['phosphate', 'inorganic phosphate', 'orthophosphate']
+Cys: ['cysteine', 'L-cysteine', '2-amino-3-mercaptopropanoic acid']
+AdoMet: ['S-adenosylmethionine', 'adenosylmethionine', 'S-adenosyl-L-methionine']
+
+Reason: The display names provided in the model directly map to standardized chemical names, allowing for straightforward annotation of Phser, Thr, Cystathionine, Hser, Phi, Cys, and AdoMet with their respective common synonyms, based on their known biochemical roles and structures.

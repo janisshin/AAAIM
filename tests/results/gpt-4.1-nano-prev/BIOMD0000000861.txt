@@ -1,0 +1,19 @@
+Model: BIOMD0000000861
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:08:43
+
+Synonyms:
+CISnRNA1: ['CIS RNA', 'CIS non-coding RNA', 'CIS ncRNA']
+CISnRNA2: ['CIS RNA', 'CIS non-coding RNA', 'CIS ncRNA']
+CISnRNA3: ['CIS RNA', 'CIS non-coding RNA', 'CIS ncRNA']
+CISnRNA4: ['CIS RNA', 'CIS non-coding RNA', 'CIS ncRNA']
+CISnRNA5: ['CIS RNA', 'CIS non-coding RNA', 'CIS ncRNA']
+CISRNA: ['CIS RNA', 'CIS non-coding RNA', 'CIS ncRNA']
+SOCS3nRNA1: ['SOCS3 RNA', 'SOCS3 non-coding RNA', 'SOCS3 ncRNA']
+SOCS3nRNA2: ['SOCS3 RNA', 'SOCS3 non-coding RNA', 'SOCS3 ncRNA']
+SOCS3nRNA3: ['SOCS3 RNA', 'SOCS3 non-coding RNA', 'SOCS3 ncRNA']
+SOCS3nRNA4: ['SOCS3 RNA', 'SOCS3 non-coding RNA', 'SOCS3 ncRNA']
+SOCS3nRNA5: ['SOCS3 RNA', 'SOCS3 non-coding RNA', 'SOCS3 ncRNA']
+SOCS3RNA: ['SOCS3 RNA', 'SOCS3 non-coding RNA', 'SOCS3 ncRNA']
+
+Reason: All species are labeled as non-coding RNAs associated with SOCS3 or CIS genes; they are likely non-coding RNA molecules, not small molecules or proteins.

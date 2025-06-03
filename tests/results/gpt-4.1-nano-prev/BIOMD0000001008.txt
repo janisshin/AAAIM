@@ -1,0 +1,9 @@
+Model: BIOMD0000001008
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:09:50
+
+Synonyms:
+Agonist_1: ['UNK']
+Agonist_2: ['UNK']
+
+Reason: No reaction data or chemical identifiers provided; species appear to be generic agonist labels without chemical context.

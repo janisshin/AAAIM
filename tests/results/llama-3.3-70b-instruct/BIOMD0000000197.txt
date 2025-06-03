@@ -1,0 +1,14 @@
+Model: BIOMD0000000197
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:00:07
+
+Synonyms:
+x1: ['bromosulfophthalein', 'sulfobromophthalein', 'BSP']
+x2: ['bromosulfophthalein', 'sulfobromophthalein', 'BSP']
+x3: ['bromosulfophthalein', 'sulfobromophthalein', 'BSP']
+x4: ['bromosulfophthalein', 'sulfobromophthalein', 'BSP']
+x5: ['bromosulfophthalein', 'sulfobromophthalein', 'BSP']
+BSP_tot: ['bromosulfophthalein', 'sulfobromophthalein', 'BSP']
+BSP_cell: ['bromosulfophthalein', 'sulfobromophthalein', 'BSP']
+
+Reason: All species are related to BSP (bromosulfophthalein) based on the display names and the model context, which suggests a transport model for BSP in MDCKII cells. The different species (x1, x2, x3, x4, x5) likely represent different states or locations of BSP (e.g., free, bound, intracellular, apical, basolateral), but the underlying chemical entity is the same, hence the same set of standardized names.

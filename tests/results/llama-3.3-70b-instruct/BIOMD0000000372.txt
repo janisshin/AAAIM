@@ -1,0 +1,8 @@
+Model: BIOMD0000000372
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:14:23
+
+Synonyms:
+G: ['glucose', 'blood glucose', 'plasma glucose']
+
+Reason: The model is about the insulin-glucose feedback system, and 'G' is likely representing glucose, given the context of the model and the reaction equation involving 'Gin', which could imply glucose influx or input.

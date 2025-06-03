@@ -1,0 +1,22 @@
+Model: BIOMD0000000199
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:55:20
+
+Synonyms:
+FeIII: ['ferric ion', 'iron(III)', 'Fe(3+)']
+FeII: ['ferrous ion', 'iron(II)', 'Fe(2+)']
+FeII_O2: ['ferrous superoxide', 'Fe(2+)-O2 complex', 'iron(II) oxygen complex']
+FeIII_star: ['ferric* ion', 'oxidized ferric', 'Fe(3+)*']
+FeII_star: ['ferrous* ion', 'reduced ferrous', 'Fe(2+)*']
+FeII_star_O2: ['ferrous superoxide*', 'Fe(2+)-O2* complex', 'iron(II) oxygen complex*']
+FeIII_NO: ['ferric nitric oxide complex', 'Fe(3+)-NO', 'ferric-NO']
+FeII_NO: ['ferrous nitric oxide complex', 'Fe(2+)-NO', 'ferrous-NO']
+NADPH: ['nicotinamide adenine dinucleotide phosphate (reduced)', 'NADPH', 'reduced NADP']
+O2: ['oxygen', 'dioxygen', 'Oxygen molecule']
+citrulline: ['citrulline', 'L-citrulline', '2-amino-5-ureidopentanoic acid']
+NO3: ['nitrate', 'nitrogen pentoxide', 'nitrate ion']
+NO: ['nitric oxide', 'NO', 'nitrogen monoxide']
+NADPplus: ['nicotinamide adenine dinucleotide phosphate (oxidized)', 'NADP+', 'oxidized NADP']
+FeIII_t: ['ferric* (transient)', 'oxidized ferric', 'Fe(3+)']
+
+Reason: The species are mostly iron oxidation states and complexes, with common chemical names. "citrulline" is misspelled as "citruline" but clearly refers to citrulline. The species are involved in redox and nitric oxide related reactions, typical for iron and nitrogen species.

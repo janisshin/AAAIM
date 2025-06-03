@@ -1,0 +1,10 @@
+Model: BIOMD0000000137
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:53:52
+
+Synonyms:
+x13: ['phosphatidylinositol 3,4,5-trisphosphate', 'PI(3,4,5)P3', 'PtdIns(3,4,5)P3']
+x14: ['phosphatidylinositol 4,5-bisphosphate', 'PI(4,5)P2', 'PtdIns(4,5)P2']
+x15: ['phosphatidylinositol 3,4-bisphosphate', 'PI(3,4)P2', 'PtdIns(3,4)P2']
+
+Reason: The display names provided for each species match common abbreviations for specific phosphatidylinositol phosphates, which are well-known biochemical entities involved in cell signaling pathways, including insulin signaling.

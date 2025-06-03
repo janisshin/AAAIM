@@ -1,0 +1,12 @@
+Model: BIOMD0000000373
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:14:34
+
+Synonyms:
+c: ['calcium', 'calcium ion', 'Ca2+']
+cer: ['ceramide', 'sphingosine', 'ceramide molecule']
+g6p: ['glucose-6-phosphate', 'D-glucose-6-phosphate', 'G6P']
+fbp: ['fructose-1,6-bisphosphate', 'D-fructose-1,6-bisphosphate', 'FBP']
+adp: ['adenosine diphosphate', 'ADP molecule', "adenosine 5'-diphosphate"]
+
+Reason: The species names are annotated based on their display names and the context of the model, which is a pancreatic beta-cell model involving glycolysis and calcium dynamics. 'c' is likely calcium due to its involvement in the model's bursting behavior and the mention of "cytosolic Ca2+" in the article. 'cer' is less clear, but ceramide is a possible match given its biological relevance. 'g6p' and 'fbp' are likely glucose-6-phosphate and fructose-1,6-bisphosphate, respectively, due to their roles in glycolysis. 'adp' is likely adenosine diphosphate, a common energy transfer molecule in cellular biology.

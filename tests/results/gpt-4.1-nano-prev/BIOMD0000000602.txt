@@ -1,0 +1,166 @@
+Model: BIOMD0000000602
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:03:42
+
+Synonyms:
+M_3hanthrn_c: ['3-Hydroxyanthranilic acid', '3-HAA', '3-hydroxyanthranilate']
+
+Reason: The abbreviation suggests 3-hydroxyanthranilic acid, a known tryptophan pathway intermediate.
+
+M_5hoxnfkyn_c: "5-Hydroxykynurenine", "5-HK", "5-hydroxykynurenate"
+Reason: The name indicates 5-hydroxykynurenine, a key metabolite in tryptophan degradation.
+
+M_5htrp_c: "5-Hydroxytryptophan", "5-HTP", "5-hydroxytryptophan"
+Reason: The abbreviation matches 5-hydroxytryptophan, a serotonin precursor.
+
+M_5hxkyn_c: "5-Hydroxykynurenine", "5-HK", "5-hydroxykynurenate"
+Reason: Same as M_5hoxnfkyn_c; likely a variant or typo, but refers to 5-hydroxykynurenine.
+
+M_Lfmkynr_c: "L-Fumaroylkynurenine", "Fumaroyl kynurenine", "FKyn"
+Reason: The name suggests a kynurenine derivative linked to fumarate.
+
+M_Lkynr_c: "L-Kynurenine", "Kyn", "L-Kyn"
+Reason: Standard name for kynurenine, a tryptophan catabolite.
+
+M_ahcys_c: "L-2-Amino-3-cyano-4-hydroxybutanoic acid", "Aminocyanohydroxybutanoic acid"
+Reason: Likely a derivative or related compound, but uncertain; "UNK" if unsure.
+
+M_akg_c: "Alpha-Ketoglutarate", "α-KG", "2-Oxoglutarate"
+Reason: Common TCA cycle intermediate, well recognized.
+
+M_ala_DASH_L_c: "L-Alanine", "L-Ala", "Alanine"
+Reason: The name indicates L-alanine, a standard amino acid.
+
+M_amet_c: "L-Adenosylmethionine", "SAM", "S-Adenosylmethionine"
+Reason: "amet" suggests methyl donor, SAM.
+
+M_anth_c: "Anthranilic acid", "2-Aminobenzoic acid"
+Reason: Common tryptophan pathway intermediate.
+
+M_cmusa_c: "Cinnamoyl-CoA", "Cinnamoyl-CoA"
+Reason: The name resembles cinnamoyl-CoA, involved in phenylpropanoid metabolism.
+
+M_dhbpt_c: "Dihydroxybenzoate", "Dihydroxybenzoic acid"
+Reason: The abbreviation suggests dihydroxybenzoate derivative.
+
+M_for_c: "Formate", "Formic acid", "HCOO−"
+Reason: Common one-carbon donor in metabolism.
+
+M_glu_DASH_L_c: "L-Glutamate", "Glutamic acid", "Glu"
+Reason: "glu" indicates glutamate, a key amino acid.
+
+M_hLkynr_c: "3-Hydroxykynurenine", "3-HK", "3-Hydroxykynurenate"
+Reason: The "hL" suggests hydroxykynurenine, a tryptophan pathway intermediate.
+
+M_id3acald_c: "Indole-3-acetaldehyde", "IAA aldehyde"
+Reason: The name indicates indole-3-acetaldehyde, a tryptophan metabolite.
+
+M_indpyr_c: "Indole-3-pyruvate", "IPA"
+Reason: Likely indole-3-pyruvate, a tryptophan catabolite.
+
+M_nmtrpta_c: "N-Methyltryptamine", "NMT"
+Reason: The abbreviation suggests N-methyltryptamine, a tryptamine derivative.
+
+M_quln_c: "Quinolinic acid", "QA"
+Reason: The name resembles quinolinic acid, a neuroactive tryptophan metabolite.
+
+M_trp_DASH_L_c: "L-Tryptophan", "Trp", "Tryptophan"
+Reason: The abbreviation indicates tryptophan, the precursor.
+
+M_trp_L_trna_c: "Tryptophan tRNA", "tRNA-Trp"
+Reason: The name indicates tryptophan attached to tRNA.
+
+M_trypta_c: "Tryptophan", "Trp"
+Reason: Standard amino acid.
+
+M_amp_c: "Adenosine monophosphate", "AMP"
+Reason: Common nucleotide.
+
+M_atp_c: "Adenosine triphosphate", "ATP"
+Reason: Main energy currency.
+
+M_co2_c: "Carbon dioxide", "CO2"
+Reason: Common inorganic molecule.
+
+M_h2o2_c: "Hydrogen peroxide", "H2O2"
+Reason: Reactive oxygen species.
+
+M_h2o_c: "Water", "H2O"
+Reason: Universal solvent.
+
+M_h_c: "Proton", "H+"
+Reason: Hydrogen ion.
+
+M_nadp_c: "Nicotinamide adenine dinucleotide phosphate", "NADP+"
+Reason: Oxidized form of NADPH.
+
+M_nadph_c: "Nicotinamide adenine dinucleotide phosphate hydrogen", "NADPH"
+Reason: Reduced form, key in biosynthesis.
+
+M_nh4_c: "Ammonium ion", "NH4+"
+Reason: Ammonia ion.
+
+M_o2_c: "Oxygen", "O2"
+Reason: Molecular oxygen.
+
+M_o2s_c: "Superoxide", "O2−"
+Reason: Reactive oxygen species.
+
+M_ppi_c: "Inorganic pyrophosphate", "PPi"
+Reason: Byproduct of biosynthetic reactions.
+
+M_Cinnavalininate_c: "Cinnamoyl-CoA", "Cinnamoyl-CoA"
+Reason: Similar to cinnamoyl-CoA, involved in phenylpropanoid pathway.
+
+M_kynate_c: "Kynurenic acid", "Kynurenic acid"
+Reason: Likely a typo for kynurenic acid, a tryptophan pathway metabolite.
+
+TRP_ex: "Tryptophan external", "Tryptophan exchange"
+Reason: Represents tryptophan exchange or transport.
+
+M_nicrnt_c: "Nicotinate", "Niacin", "Nicotinic acid"
+Reason: Nicotinic acid, a vitamin B3 derivative.
+
+M_prpp_c: "Phosphoribosyl pyrophosphate", "PRPP"
+Reason: Key precursor in nucleotide biosynthesis.
+
+M_nformanth_c: "N-Formyltryptophan", "N-Formyl-Trp"
+Reason: Formylated tryptophan derivative.
+
+M_dnad_c: "Deoxyadenosine", "dA"
+Reason: Likely deoxyadenosine, a DNA component.
+
+M_am6sa_c: "Amidomethylsalycilic acid", "Am6sa"
+Reason: Uncertain; possibly a derivative, but "UNK" if unsure.
+
+M_5hoxindact_c: "5-Hydroxyindole-3-acetic acid", "5-HIAA"
+Reason: Likely 5-HIAA, a serotonin metabolite.
+
+M_Nacsertn_c: "N-Acetylserotonin", "N-Acetyl serotonin"
+Reason: N-Acetylserotonin, a melatonin precursor.
+
+M_accoa_c: "Acetyl-CoA", "Acetyl-CoA"
+Reason: Central metabolic intermediate.
+
+M_coa_c: "Coenzyme A", "CoA"
+Reason: Coenzyme A, essential cofactor.
+
+M_Xanthurenate: "Xanthurenic acid", "Xanthurenate"
+Reason: Known tryptophan pathway metabolite.
+
+M_f5hoxkyn_c: "5-Hydroxykynurenine", "5-HK"
+Reason: Same as other 5-hydroxykynurenine names.
+
+M_nndmtrpta_c: "N-Formylkynurenine", "N-Formyl-Kyn"
+Reason: Likely N-formylkynurenine, an intermediate.
+
+M_nmsrtn_c: "N-Methylserotonin", "NMS"
+Reason: Methylated serotonin derivative.
+
+M_Nactrypta_c: "N-Acetyltryptamine", "N-Acetyl-Trp"
+Reason: Acetylated tryptamine.
+
+M_Lkynr_ex: "L-Kynurenine exchange", "Kyn exchange"
+Reason: Transport or exchange form of kynurenine.
+
+Reason: All species are related to tryptophan metabolism or common metabolic cofactors; "UNK" if uncertain.

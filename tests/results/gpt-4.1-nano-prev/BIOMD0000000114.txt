@@ -1,0 +1,9 @@
+Model: BIOMD0000000114
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:22
+
+Synonyms:
+x: ['calcium ion', 'Ca2+', 'calcium']
+y: ['cytoplasmic calcium', 'cytosolic calcium', 'Ca2+ in cytosol']
+
+Reason: x appears to be calcium stored in the endoplasmic reticulum (ER), and y is calcium in the cytoplasm, based on the species names and context of calcium oscillations in liver cells.

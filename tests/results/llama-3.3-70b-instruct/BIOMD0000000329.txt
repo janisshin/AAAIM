@@ -1,0 +1,8 @@
+Model: BIOMD0000000329
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:12:30
+
+Synonyms:
+c: ['calcium', 'calcium ion', 'Ca2+']
+
+Reason: The display name for 'c' is 'Calcium', and the model description also mentions 'calcium signaling' and 'calcium oscillations', indicating that 'c' represents calcium, likely in its ionized form Ca2+.

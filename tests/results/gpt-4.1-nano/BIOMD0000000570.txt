@@ -1,0 +1,26 @@
+Model: BIOMD0000000570
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:18:53
+
+Synonyms:
+species_1: ['sodium ion', 'Na+', 'natrium']
+species_2: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+species_3: ['ADP', 'adenosine diphosphate', 'adenosine diphosphate']
+species_4: ['glucose', 'd-glucose', 'blood sugar']
+species_5: ['glyceraldehyde-3-phosphate', 'G3P', 'GAP']
+species_6: ['nicotinamide adenine dinucleotide', 'NAD+', 'nicotinamide adenine dinucleotide']
+species_7: ['reduced nicotinamide adenine dinucleotide', 'NADH', 'NADH']
+species_8: ['pyruvate', 'pyruvic acid', 'pyruvate ion']
+species_9: ['phosphoenolpyruvate', 'PEP', 'phosphoenolpyruvic acid']
+species_10: ['lactic acid', 'lactate', 'lactic acid']
+species_11: ['phosphocreatine', 'PCr', 'creatine phosphate']
+species_12: ['creatine', 'creatine', 'creatine']
+species_13: ['oxygen', 'O2', 'dioxygen']
+species_14: ['oxygen', 'O2', 'dioxygen']
+species_15: ['glucose', 'd-glucose', 'blood sugar']
+species_16: ['lactic acid', 'lactate', 'lactic acid']
+species_17: ['glucose', 'd-glucose', 'blood sugar']
+species_18: ['lactic acid', 'lactate', 'lactic acid']
+species_19: ['oxygen', 'O2', 'dioxygen']
+
+Reason: The species are mostly standard metabolic molecules and ions involved in cellular respiration and energy metabolism, with common synonyms. O2 appears multiple times, indicating oxygen molecules. Species_1 is Na+ (sodium ion), species_2 is ATP, species_3 is ADP, species_4, 15 are glucose, species_6 and 7 are NAD+/NADH, species_8 and 10 are pyruvate and lactate, species_11 is phosphocreatine, species_12 is creatine, species_13, 14, 19 are oxygen molecules, and species_5 and 16, 17 are G3P and glucose respectively. The reactions involve well-known metabolic pathways.

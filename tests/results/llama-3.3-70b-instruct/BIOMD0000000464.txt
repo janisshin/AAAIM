@@ -1,0 +1,12 @@
+Model: BIOMD0000000464
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:27:53
+
+Synonyms:
+s1: ['calcium ion', 'Ca2+', 'calcium']
+s2: ['calcium ion', 'Ca2+', 'calcium']
+s3: ['calcium ion', 'Ca2+', 'calcium']
+s4: ['calcium ion', 'Ca2+', 'calcium']
+s6: ['inositol 1,4,5-trisphosphate', 'IP3', 'D-myo-inositol 1,4,5-trisphosphate']
+
+Reason: s1, s2, s3, and s4 are likely calcium ions due to their display names containing "Ca", while s6 is identified as IP3 from its display name, a common synonym for inositol 1,4,5-trisphosphate.

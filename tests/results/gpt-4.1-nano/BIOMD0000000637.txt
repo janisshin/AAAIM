@@ -1,0 +1,13 @@
+Model: BIOMD0000000637
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:21:45
+
+Synonyms:
+Gt: ['GTP', 'guanosine triphosphate', 'guanosine triphosphate']
+Gd: ['GDP', 'guanosine diphosphate', 'guanosine diphosphate']
+LRGt: ['Labeled GTP', 'GTP analog', 'GTP']
+RGd: ['Regulator GTP', 'GTP-bound regulator', 'GTP']
+RGt: ['Regulator GTP', 'GTP-bound regulator', 'GTP']
+LRGd: ['Labeled GTP', 'GTP analog', 'GTP']
+
+Reason: These species are involved in G-protein signaling; Gt and Gd are likely GTP and GDP, respectively. The others are labeled or regulator forms, all related to GTP or its derivatives.

@@ -1,0 +1,16 @@
+Model: BIOMD0000000412
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:45:45
+
+Synonyms:
+cE3_m: ['Arabidopsis ELF3', 'EARLY FLOWERING 3', 'UNK']
+cE4_m: ['Arabidopsis ELF4', 'EARLY FLOWERING 4', 'UNK']
+cG_m: ['Arabidopsis GI', 'GIGANTEA', 'UNK']
+cLUX_m: ['Arabidopsis LUX', 'LUX ARRHYTHMO', 'UNK']
+cL_m: ['Arabidopsis LHY', 'LATE ELONGATED HYPOCOTYL', 'UNK']
+cNI_m: ['Arabidopsis TOC1', 'TIMING OF CAB EXPRESSION 1', 'UNK']
+cP7_m: ['Arabidopsis PRR7', 'PSEUDO-RESPONSE REGULATOR 7', 'UNK']
+cP9_m: ['Arabidopsis PRR9', 'PSEUDO-RESPONSE REGULATOR 9', 'UNK']
+cT_m: ['Arabidopsis CCA1', 'CIRCADIAN CLOCK ASSOCIATED 1', 'UNK']
+
+Reason: All species are gene products involved in the Arabidopsis circadian clock, which are well-characterized as specific clock genes. Since the species are labeled as gene products in the model, their standard names are the gene names or common synonyms. "UNK" is used if no common name is available.

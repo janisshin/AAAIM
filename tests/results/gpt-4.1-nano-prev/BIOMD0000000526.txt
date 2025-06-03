@@ -1,0 +1,11 @@
+Model: BIOMD0000000526
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:01:07
+
+Synonyms:
+PrNES_mCherry: ['PrNES', 'nuclear export signal', 'UNK']
+PrER_mGFP: ['PrER', 'endoplasmic reticulum', 'UNK']
+PrNES: ['PrNES', 'nuclear export signal', 'UNK']
+PrER: ['PrER', 'endoplasmic reticulum', 'UNK']
+
+Reason: These are fusion proteins with specific localization signals; "PrNES" likely refers to a nuclear export signal sequence, "PrER" to an ER localization signal. No direct chemical entities are involved, so "UNK" is used for the fusion tags.

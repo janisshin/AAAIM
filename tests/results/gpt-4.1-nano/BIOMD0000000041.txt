@@ -1,0 +1,17 @@
+Model: BIOMD0000000041
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:50:29
+
+Synonyms:
+ADPi: ['ADP', 'adenosine diphosphate', 'ADP']
+ATPi: ['ATP', 'adenosine triphosphate', 'ATP']
+Cri: ['creatine', 'creatine']
+PCri: ['phosphocreatine', 'creatine phosphate', 'PCr']
+PCr: ['phosphocreatine', 'creatine phosphate', 'PCr']
+ADP: ['ADP', 'adenosine diphosphate', 'ADP']
+ATP: ['ATP', 'adenosine triphosphate', 'ATP']
+Cr: ['creatine', 'creatine']
+Pi: ['inorganic phosphate', 'phosphate', 'Pi']
+P: ['phosphate', 'Pi', 'inorganic phosphate']
+
+Reason: The model involves energy transfer molecules and metabolites related to creatine kinase activity; ADPi and ATPi are likely phosphorylated forms of ADP and ATP, respectively; Cri and PCri are creatine and phosphocreatine; Pi and P are inorganic phosphate species. "UNK" is not appropriate as these are well-known energy metabolites.

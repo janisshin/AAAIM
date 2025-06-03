@@ -1,0 +1,9 @@
+Model: BIOMD0000000621
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:04:17
+
+Synonyms:
+Anakinra: ['anakinra', 'interleukin-1 receptor antagonist', 'IL-1Ra']
+Glucose: ['glucose', 'blood sugar', 'd-glucose']
+
+Reason: Anakinra is a pharmaceutical drug acting as an IL-1 receptor antagonist; glucose is a common monosaccharide involved in metabolism.

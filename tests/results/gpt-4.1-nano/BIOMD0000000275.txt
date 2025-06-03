@@ -1,0 +1,8 @@
+Model: BIOMD0000000275
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:57:52
+
+Synonyms:
+RA: ['retinoic acid', 'all-trans-retinoic acid', 'vitamin A acid']
+
+Reason: RA in developmental biology models typically refers to retinoic acid, a well-known morphogen involved in embryonic patterning.

@@ -1,0 +1,13 @@
+Model: BIOMD0000000624
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:23:35
+
+Synonyms:
+APAP: ['acetaminophen', 'paracetamol', 'acetylaminophen']
+NAPQI: ['N-acetyl-p-benzoquinone imine', 'N-acetylp-benzoquinoneimine', 'p-benzoquinone imine']
+GSH: ['glutathione', 'reduced glutathione', 'L-glutathione']
+NAPQIGSH: ['NAPQI-glutathione conjugate', 'acetaminophen glutathione conjugate', 'N-acetyl-p-benzoquinone imine glutathione']
+APAPconj_Glu: ['acetaminophen glucuronide', 'APAP-glucuronide', 'paracetamol glucuronide']
+APAPconj_Sul: ['acetaminophen sulfate', 'APAP-sulfate', 'paracetamol sulfate']
+
+Reason: The species names were matched to their corresponding chemical entities based on the display names and the context of the model, which describes acetaminophen metabolism. APAP is clearly acetaminophen, NAPQI is a known toxic metabolite of acetaminophen, and GSH is a common abbreviation for glutathione. The conjugates NAPQIGSH, APAPconj_Glu, and APAPconj_Sul were identified based on their reactions and the notes describing the model, which mentions the formation of these conjugates during acetaminophen metabolism.

@@ -1,0 +1,8 @@
+Model: BIOMD0000000077
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:49:40
+
+Synonyms:
+IP3: ['inositol trisphosphate', 'inositol 1,4,5-trisphosphate', 'D-myo-inositol 1,4,5-trisphosphate']
+
+Reason: IP3 is likely referring to inositol trisphosphate, a well-known second messenger molecule involved in cellular signaling, given its common abbreviation and the context of the model which involves cellular signaling pathways, such as GnRH-induced LH secretion.

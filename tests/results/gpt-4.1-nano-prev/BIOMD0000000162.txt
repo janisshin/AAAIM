@@ -1,0 +1,41 @@
+Model: BIOMD0000000162
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:38:10
+
+Synonyms:
+PABCa_D_Cytosol: ['phosphatidic acid', 'PA', 'diacylglycerol phosphate']
+
+Reason: PABCa likely refers to phosphatidic acid in cytosol, a common lipid signaling molecule.
+
+Ca_D_ER: "calcium", "Ca2+", "calcium ion"
+Reason: Ca_D_ER indicates calcium in the endoplasmic reticulum, a well-known calcium store.
+
+PABMg_D_Cytosol: "magnesium phosphate", "Mg2+", "magnesium ion"
+Reason: PABMg suggests magnesium-related species, possibly magnesium phosphate or free Mg2+.
+
+PABCa_Cytosol: "phosphatidic acid", "PA", "diacylglycerol phosphate"
+Reason: Similar to PABCa_D_Cytosol, indicates phosphatidic acid in cytosol.
+
+Mg_Cytosol: "magnesium", "Mg2+", "magnesium ion"
+Reason: Mg is a common abbreviation for magnesium, a vital ion.
+
+Ca_ER: "calcium", "Ca2+", "calcium ion"
+Reason: Calcium in ER, a key calcium reservoir.
+
+Ca_D_Cytosol: "calcium", "Ca2+", "calcium ion"
+Reason: Calcium in cytosol, essential for signaling.
+
+Ca_D_Extracellular: "calcium", "Ca2+", "extracellular calcium"
+Reason: Calcium outside the cell, involved in signaling and homeostasis.
+
+IP3_Cytosol: "inositol 1,4,5-trisphosphate", "IP3", "inositol triphosphate"
+Reason: IP3 is a signaling molecule that releases calcium from ER.
+
+IP3_D_Cytosol: "inositol 1,4,5-trisphosphate", "IP3", "inositol triphosphate"
+Reason: Same as above, indicating IP3 in cytosol.
+
+Mg_D_Cytosol: "magnesium", "Mg2+", "magnesium ion"
+Reason: Magnesium in cytosol, involved in enzyme activity.
+
+Ca_Cytosol: "calcium", "Ca2+", "cytosolic calcium"
+Reason: Calcium in cytosol, central to signaling pathways.

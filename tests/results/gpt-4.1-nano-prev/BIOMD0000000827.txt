@@ -1,0 +1,9 @@
+Model: BIOMD0000000827
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:08:17
+
+Synonyms:
+X_7_MET_MET: ['MET', 'hepatocyte growth factor receptor', 'c-MET receptor tyrosine kinase']
+X_10_p_MET_MET: ['phosphorylated MET', 'activated MET', 'p-MET']
+
+Reason: Both species are related to MET, with X_7 representing the dimeric form and X_10 representing the phosphorylated (activated) form, common in signaling pathways.

@@ -1,0 +1,8 @@
+Model: BIOMD0000000499
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:58:42
+
+Synonyms:
+species_22: ['sodium bicarbonate', 'NaHCO3', 'baking soda']
+
+Reason: The label "SBI" likely refers to sodium bicarbonate, a common biochemical species involved in pH buffering and CO2 transport.

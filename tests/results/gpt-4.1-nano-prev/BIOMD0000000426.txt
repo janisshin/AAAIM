@@ -1,0 +1,98 @@
+Model: BIOMD0000000426
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:46:16
+
+Synonyms:
+species_1: ['glucose', 'D-glucose', 'blood sugar']
+
+Reason: GLC is commonly used as abbreviation for glucose, a central metabolite.
+
+species_2: "glucose-6-phosphate", "G6P", "glucose-6-phosphate"
+Reason: G6P is a standard abbreviation for glucose-6-phosphate, a key glycolytic intermediate.
+
+species_3: "ADP", "adenosine diphosphate", "ADP"
+Reason: ADP is a common nucleotide involved in energy transfer.
+
+species_4: "ATP", "adenosine triphosphate", "ATP"
+Reason: ATP is the primary energy currency in cells.
+
+species_5: "fructose-6-phosphate", "F6P", "F6P"
+Reason: F6P is a standard abbreviation for fructose-6-phosphate, a glycolytic intermediate.
+
+species_6: "fructose-1,6-bisphosphate", "F16P", "F1,6BP"
+Reason: F16P is a common abbreviation for fructose-1,6-bisphosphate, a key glycolytic enzyme substrate.
+
+species_7: "erythrose-4-phosphate", "E4P", "E4P"
+Reason: E4P is a standard abbreviation for erythrose-4-phosphate, involved in the pentose phosphate pathway.
+
+species_8: "phosphoglucose isomerase", "PGI", "glucose-6-phosphate isomerase"
+Reason: PGN is likely phosphoglucose isomerase, an enzyme converting G6P to F6P.
+
+species_9: "glucose extracellular", "glucose outside cell", "glucose_e"
+Reason: GLC_e indicates extracellular glucose.
+
+species_10: "NADP+", "nicotinamide adenine dinucleotide phosphate", "NADP"
+Reason: NADP is a coenzyme involved in anabolic reactions and redox.
+
+species_11: "NADPH", "reduced nicotinamide adenine dinucleotide phosphate", "NADPH"
+Reason: NADPH is the reduced form of NADP+, involved in biosynthesis.
+
+species_13: "ribulose-5-phosphate", "Ru5P", "R5P"
+Reason: RU5P is a standard abbreviation for ribulose-5-phosphate, part of the pentose phosphate pathway.
+
+species_14: "xylulose-5-phosphate", "X5P", "X5P"
+Reason: X5P is a standard abbreviation for xylulose-5-phosphate, involved in pentose phosphate pathway.
+
+species_15: "ribose-5-phosphate", "R5P", "R5P"
+Reason: R5P is a common abbreviation for ribose-5-phosphate, a nucleotide precursor.
+
+species_16: "glyceraldehyde-3-phosphate", "GAP", "G3P"
+Reason: GAP is a key glycolytic intermediate.
+
+species_17: "sedoheptulose-7-phosphate", "S7P", "S7P"
+Reason: S7P is a standard abbreviation for sedoheptulose-7-phosphate, involved in the pentose phosphate pathway.
+
+species_18: "NADH", "reduced nicotinamide adenine dinucleotide", "NADH"
+Reason: NADH is the reduced form of NAD+ involved in energy production.
+
+species_19: "NAD", "nicotinamide adenine dinucleotide", "NAD"
+Reason: NAD is a coenzyme involved in redox reactions.
+
+species_20: "AMP", "adenosine monophosphate", "AMP"
+Reason: AMP is a nucleotide involved in energy transfer.
+
+species_22: "glucose-1-phosphate", "G1P", "G1P"
+Reason: G1P is a glycolytic intermediate and precursor for glycogen synthesis.
+
+species_23: "inorganic phosphate", "Pi", "phosphate"
+Reason: Pi is the standard abbreviation for inorganic phosphate.
+
+species_24: "glycerate", "glycerol-3-phosphate", "gly"
+Reason: GLY could refer to glycerate or glycerol derivatives; glycerate is a common metabolite.
+
+species_25: "citrate", "citric acid", "tricarboxylic acid"
+Reason: CIT is a standard abbreviation for citrate, a key TCA cycle intermediate.
+
+species_27: "dihydroxyacetone phosphate", "DHAP", "DHAP"
+Reason: DHAP is a glycolytic intermediate.
+
+species_28: "glycerol-3-phosphate", "G3P", "glycerol-3-phosphate"
+Reason: PG3 is likely glycerol-3-phosphate, involved in lipid metabolism.
+
+species_29: "phosphoglycerate 2", "PG2", "3-phosphoglycerate"
+Reason: PG2 is a common abbreviation for 3-phosphoglycerate, a glycolytic intermediate.
+
+species_30: "phosphoenolpyruvate", "PEP", "PEP"
+Reason: PEP is a key glycolytic metabolite.
+
+species_31: "pyruvate", "pyruvic acid", "PYR"
+Reason: PYR is a standard abbreviation for pyruvate, a central metabolic intermediate.
+
+species_32: "lactic acid", "lactate", "2-hydroxypropanoic acid"
+Reason: LAC is a common abbreviation for lactic acid.
+
+species_33: "carbon dioxide", "CO2", "dioxide"
+Reason: CO2 is a standard abbreviation for carbon dioxide, a metabolic waste.
+
+species_34: "oxygen", "O2", "dioxygen"
+Reason: O2 is the molecular oxygen involved in respiration.

@@ -1,0 +1,9 @@
+Model: BIOMD0000000378
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:59:20
+
+Synonyms:
+Ca_i_cytosolic_calcium: ['calcium ion', 'Ca2+', 'cytosolic calcium']
+Ca_lum: ['luminal calcium', 'calcium in ER', 'intracellular calcium store']
+
+Reason: Ca_i_cytosolic_calcium represents cytosolic calcium; Ca_lum refers to calcium within the intracellular store (likely ER lumen). Both are calcium ions involved in cellular calcium signaling.

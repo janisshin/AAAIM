@@ -1,0 +1,8 @@
+Model: BIOMD0000000507
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:09:30
+
+Synonyms:
+species_3: ['isopropyl beta-D-1-thiogalactopyranoside', 'isopropylthiogalactoside', 'IPTG']
+
+Reason: The display name 'IPTG' is a common abbreviation for isopropyl beta-D-1-thiogalactopyranoside, a molecule commonly used in molecular biology to induce gene expression. The model context and notes provide no contradictory information, making these names the most likely standardized names for species_3.

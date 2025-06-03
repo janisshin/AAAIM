@@ -1,0 +1,9 @@
+Model: BIOMD0000000115
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:23
+
+Synonyms:
+x: ['calcium ion', 'Ca2+', 'calcium']
+y: ['cytoplasmic calcium', 'cytosolic calcium', 'Ca2+ in cytosol']
+
+Reason: x appears to be an ER calcium store, and y is cytosolic calcium based on their labels, both are calcium ions involved in calcium signaling.

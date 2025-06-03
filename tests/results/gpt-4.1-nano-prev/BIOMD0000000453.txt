@@ -1,0 +1,18 @@
+Model: BIOMD0000000453
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:47:04
+
+Synonyms:
+mw8f5a7b5c_ca4c_4a4c_85b1_e5d640c426bf: ['Ras-GDP', 'Ras', 'Ras inactive']
+mwf40d6176_abfc_4a30_886f_83a19fcffc48: ['Ras-GTP', 'Ras active', 'GTP-bound Ras']
+mwa54a9c38_c98b_45e5_8432_4119fb777e44: ['Ras-GTP', 'Ras active', 'GTP-bound Ras']
+mw28464aad_8013_4a23_ae09_a406954859a6: ['Ras-GDP', 'Ras', 'Ras inactive']
+mwdf82303e_323f_4c51_a858_56a59233cd98: ['Ras-GTP', 'Ras active', 'GTP-bound Ras']
+mwd7bf31ba_b05c_4c45_bb2f_6a2468a2a507: ['Ras-GAP', 'RAS GTPase-activating protein', 'Ras regulator']
+mw83de7813_4941_45a6_a320_a551165bf22a: ['Ras-GTP', 'Ras active', 'GTP-bound Ras']
+mwb561d9f3_a9ed_4bdb_8d40_87be5cc3237a: ['PIP2', 'Phosphatidylinositol 4,5-bisphosphate', 'PIP2']
+mw014cc419_b720_4b90_9192_2ec6e706c87d: ['PIP3', 'Phosphatidylinositol 3,4,5-trisphosphate', 'PIP3']
+mwd7f41594_8377_4e2e_9528_45d5a82ffdb4: ['PIP3', 'Phosphatidylinositol 3,4,5-trisphosphate', 'PIP3']
+mw57a44eb0_ace7_4294_905a_219e87d3c281: ['pAkt', 'phosphorylated Akt', 'p-Akt']
+
+Reason: All species are key signaling molecules in the EGFR pathway, with Ras in active/inactive forms, PIP2/PIP3 as lipid second messengers, and phosphorylated Akt as a survival signal.

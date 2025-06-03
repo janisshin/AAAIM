@@ -1,0 +1,12 @@
+Model: BIOMD0000000052
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:35:10
+
+Synonyms:
+Glu: ['glucose', 'D-glucose', 'blood sugar']
+Fru: ['fructose', 'levulose', 'fruit sugar']
+Formic_acid: ['formic acid', 'methanoic acid', 'acid formic']
+Acetic_acid: ['acetic acid', 'vinegar acid', 'ethanoic acid']
+lys_R: ['lysine residue', 'lysine side chain', 'L-lysine']
+
+Reason: The reactions involve common monosaccharides and amino acid residues. Glu and Fru are standard abbreviations for glucose and fructose, respectively. Formic_acid and Acetic_acid are common acids involved in biochemical reactions. lys_R likely refers to a lysine residue, a common amino acid in proteins.

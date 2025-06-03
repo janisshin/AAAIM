@@ -1,0 +1,11 @@
+Model: BIOMD0000000948
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:35:06
+
+Synonyms:
+AR_A1: ['alkylresorcinol', 'resorcinol', '1,3-benzenediol']
+AR_A2: ['alkylresorcinol', 'resorcinol', '1,3-benzenediol']
+AR_Central: ['alkylresorcinol', 'resorcinol', '1,3-benzenediol']
+AR_Dose: ['UNK']
+
+Reason: All species except AR_Dose are annotated as "AR" which likely refers to alkylresorcinol, a compound that can be found in wheat bran and other foods. AR_Dose is unknown because it is an input dose and does not directly correspond to a chemical entity.

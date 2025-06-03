@@ -1,0 +1,13 @@
+Model: BIOMD0000000350
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:12
+
+Synonyms:
+toc1_mrna: ['TOC1 mRNA', 'timing of CAB1 1 mRNA', 'Arabidopsis TOC1 transcript']
+cca1_mrna: ['CCA1 mRNA', 'CIRCADIAN CLOCK ASSOCIATED 1 transcript', 'LHY mRNA']
+toc1luc_mrna: ['TOC1 luciferase mRNA', 'TOC1 reporter mRNA', 'luciferase transcript for TOC1']
+cca1luc_mrna: ['CCA1 luciferase mRNA', 'CCA1 reporter mRNA', 'luciferase transcript for CCA1']
+luc_mrna: ['luciferase mRNA', 'firefly luciferase transcript', 'reporter gene mRNA']
+luc: ['luciferase', 'firefly luciferase', 'reporter enzyme']
+
+Reason: All species are related to gene transcripts or reporter proteins involved in circadian clock gene expression in plants; "mRNA" indicates transcripts, "luc" indicates luciferase reporter proteins.

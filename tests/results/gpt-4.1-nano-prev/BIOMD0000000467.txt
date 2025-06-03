@@ -1,0 +1,40 @@
+Model: BIOMD0000000467
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:48:13
+
+Synonyms:
+s3: ['calcium ion', 'Ca2+', 'Ca']
+
+Reason: s3 is labeled as "Ca_c", indicating calcium ion, a common biochemical species.
+
+s45: "endothelial nitric oxide synthase cofactor", "eNOS cofactor", "eNOS-CaM-Ca4"
+Reason: s45 is involved in reactions with eNOS and calmodulin, likely representing a calcium-bound cofactor complex.
+
+s47: "calmodulin", "CaM", "calcium-binding messenger protein"
+Reason: s47 is named "CaM-Ca4" and "CaM-Ca2", indicating calmodulin in calcium-bound forms.
+
+s48: "calcium-calmodulin complex", "CaM-Ca2", "calcium-bound calmodulin"
+Reason: s48 is "CaM-Ca2", representing calmodulin bound to calcium.
+
+s50: "endothelial nitric oxide synthase", "eNOS", "NOS3"
+Reason: s50 is "eNOS-CaM-Ca2", indicating eNOS enzyme complexed with calmodulin and calcium.
+
+s58: "Hsp90-eNOS-calcium-calmodulin complex", "Hsp90-eNOS-CaM-Ca4", "Hsp90-eNOS-Ca2"
+Reason: s58 is "Hsp90-eNOS-CaM-Ca4", a complex involving Hsp90, eNOS, calmodulin, and calcium.
+
+s60: "Hsp90-eNOS-calcium-calmodulin complex", "Hsp90-eNOS-CaM-Ca4", "Hsp90-eNOS-Ca2"
+Reason: s60 is "Hsp90-p-eNOS-CaM-Ca4", similar to s58, indicating a phosphorylated eNOS complex with Hsp90 and calcium.
+
+s61: "Hsp90-eNOS-calcium-calmodulin complex", "Hsp90-eNOS-CaM-Ca2", "Hsp90-eNOS-Ca2"
+Reason: s61 is "Hsp90-eNOS-CaM-Ca2", similar complex with different calcium state.
+
+s62: "Hsp90-eNOS-calcium-calmodulin complex", "Hsp90-eNOS-CaM-Ca2", "Hsp90-eNOS-Ca2"
+Reason: s62 is "Hsp90-p-eNOS-CaM-Ca2", similar to s61, indicating phosphorylated form.
+
+s63: "L-arginine", "arginine", "L-Arg"
+Reason: s63 is "L-Arg", a standard amino acid substrate for eNOS.
+
+s64: "nitric oxide", "NO", "nitrogen monoxide"
+Reason: s64 is "NO", the product of eNOS activity.
+
+Reason: The species are involved in nitric oxide synthesis regulation, calcium signaling, and chaperone complexes, with standard biochemical names assigned accordingly.

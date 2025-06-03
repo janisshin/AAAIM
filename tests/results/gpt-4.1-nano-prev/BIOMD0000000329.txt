@@ -1,0 +1,8 @@
+Model: BIOMD0000000329
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:43:19
+
+Synonyms:
+c: ['calcium', 'Ca2+', 'calcium ion']
+
+Reason: The display name explicitly states 'Calcium', indicating the species is calcium ions, a common signaling ion.

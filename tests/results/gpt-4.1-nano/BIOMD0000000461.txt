@@ -1,0 +1,8 @@
+Model: BIOMD0000000461
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:02:19
+
+Synonyms:
+IPTG: ['isopropyl β-D-1-thiogalactopyranoside', 'IPTG', 'UNK']
+
+Reason: IPTG is a well-known synthetic inducer used in molecular biology to induce gene expression, commonly referenced by its abbreviation and chemical name.

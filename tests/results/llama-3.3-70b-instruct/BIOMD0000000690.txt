@@ -1,0 +1,18 @@
+Model: BIOMD0000000690
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:30:08
+
+Synonyms:
+ATP: ['adenosine triphosphate', "adenosine 5'-triphosphate", 'ATP']
+AMP: ['adenosine monophosphate', "adenosine 5'-monophosphate", 'AMP']
+p_ABA: ['4-amino-4-deoxypterin', 'p-aminobenzoic acid', 'p-ABA']
+H2_Pteroate: ['dihydropterotic acid', 'H2-pterotic acid', 'dihydropteroate']
+L_Glutamate: ['L-glutamic acid', 'glutamate', 'L-glutamate']
+ADP: ['adenosine diphosphate', "adenosine 5'-diphosphate", 'ADP']
+DHF: ['dihydrofolate', '7,8-dihydrofolate', 'DHF']
+L_serine: ['L-serine', 'serine', 'L-ser']
+Glycine: ['glycine', 'aminoacetic acid', 'gly']
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'NADPH', 'reduced nicotinamide adenine dinucleotide phosphate']
+CH2_THF: ['5,10-methylenetetrahydrofolate', '5,10-methylene-THF', '5,10-CH2-THF']
+
+Reason: The species are annotated based on their display names and the context of the folate pathway model. The standardized names are chosen based on common synonyms and chemical names. For example, ATP is a well-known energy currency in cells, and its standardized name is adenosine triphosphate. p_ABA is annotated as p-aminobenzoic acid, which is a common synonym. CH2_THF is annotated as 5,10-methylenetetrahydrofolate, which is a key intermediate in the folate pathway. The annotations are based on the display names and the reactions in the model, and the standardized names are chosen based on common usage in biochemistry.

@@ -1,0 +1,20 @@
+Model: BIOMD0000000502
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:15:33
+
+Synonyms:
+E4P: ['erythrose-4-phosphate', 'E4P', 'erythrose 4-phosphate']
+G6L: ['unknown', 'UNK', 'no standard name available']
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'NADPH', 'reduced NADP']
+P6G: ['6-phosphogluconolactone', '6-phosphoglucono-δ-lactone', 'P6G']
+R5P: ['ribose-5-phosphate', 'R5P', 'ribose-5-phosphate']
+Ru5P: ['ribulose-5-phosphate', 'Ru5P', 'ribulose 5-phosphate']
+S7P: ['sedoheptulose-7-phosphate', 'S7P', 'sedoheptulose 7-phosphate']
+X5P: ['xylulose-5-phosphate', 'X5P', 'xylulose 5-phosphate']
+NADP: ['nicotinamide adenine dinucleotide phosphate', 'NADP', 'oxidized NADP']
+G6P: ['glucose-6-phosphate', 'G6P', 'glucose 6-phosphate']
+F6P: ['fructose-6-phosphate', 'F6P', 'fructose 6-phosphate']
+GAP: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde 3-phosphate']
+
+Reason: 
+E4P, R5P, Ru5P, S7P, X5P, G6P, F6P, GAP are well-established metabolites in the pentose phosphate pathway and glycolysis. NADPH and NADP are common cofactors involved in redox reactions. G6L is not a recognized standard metabolite name; it likely refers to an unknown or misnamed compound.

@@ -1,0 +1,10 @@
+Model: BIOMD0000000325
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:11:12
+
+Synonyms:
+L: ['ligand', 'signaling molecule', 'signaling ligand']
+C: ['ligand-receptor complex', 'receptor-ligand complex', 'signal complex']
+X: ['inactive transcription factor complex', 'transcription factor-ligand-receptor complex', 'repressed transcription factor complex']
+
+Reason: The annotations are based on the provided model notes, which explicitly define the species: L as the Ligand, C as the Ligand-Receptor Complex, and X as C (Ligand-Receptor Complex) bound to an Inactive Transcription Factor. The standardized names and common synonyms are derived from these definitions and general knowledge of biochemical terminology.

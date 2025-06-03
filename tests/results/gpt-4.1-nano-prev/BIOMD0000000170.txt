@@ -1,0 +1,9 @@
+Model: BIOMD0000000170
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:38:19
+
+Synonyms:
+y1: ['PER2 mRNA', 'CRY2 mRNA', 'Per2 transcript']
+y4: ['BMAL1 mRNA', 'ARNTL mRNA', 'Bmal1 transcript']
+
+Reason: Both species are labeled as mRNA of specific circadian clock genes; "Per2" and "Cry" are associated with PER2 and CRY proteins, respectively, and "Bmal1" is a core clock gene. The synonyms reflect common naming conventions for these transcripts.

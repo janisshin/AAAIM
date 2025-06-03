@@ -1,0 +1,10 @@
+Model: BIOMD0000000275
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:03
+
+Synonyms:
+RA: ['retinoic acid', 'all-trans retinoic acid', 'vitamin A acid']
+M_C: ['cyp26 mRNA', 'cytochrome P450 26 mRNA', 'CYP26 mRNA']
+M_F: ['FGF mRNA', 'fibroblast growth factor mRNA', 'FGF transcript']
+
+Reason: RA is retinoic acid involved in developmental signaling; M_C and M_F are mRNA transcripts of enzymes and growth factors, respectively, which are standardly named as such.

@@ -1,0 +1,14 @@
+Model: BIOMD0000000946
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:09:05
+
+Synonyms:
+L_m: ['lactate', 'lactic acid', 'UNK']
+H_m: ['hydrogen ion', 'proton', 'UNK']
+L_e: ['lactate', 'lactic acid', 'UNK']
+H_e: ['hydrogen ion', 'proton', 'UNK']
+L_c: ['lactate', 'lactic acid', 'UNK']
+H_c: ['hydrogen ion', 'proton', 'UNK']
+L_n: ['lactate', 'lactic acid', 'UNK']
+
+Reason: All species are likely related to lactate or protons, common in cellular metabolism and pH regulation. No explicit identifiers are provided, so standard synonyms are used.

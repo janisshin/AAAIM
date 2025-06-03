@@ -1,0 +1,11 @@
+Model: BIOMD0000000305
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:10:59
+
+Synonyms:
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+S1: ['UNK']
+Pi_: ['phosphate', 'inorganic phosphate', 'orthophosphate']
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+
+Reason: ATP and ADP are identified as adenosine triphosphate and adenosine diphosphate respectively due to their common usage in biochemical contexts. Pi_ is likely referring to inorganic phosphate, a common byproduct of ATP hydrolysis. S1 is unknown as it appears to be a state of myosin, not a chemical entity.

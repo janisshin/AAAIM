@@ -1,0 +1,10 @@
+Model: BIOMD0000000037
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:43:34
+
+Synonyms:
+Pfr: ['phytochrome far-red light absorbing form', 'Pfr phytochrome', 'phytochrome Pfr']
+Pr: ['phytochrome red light absorbing form', 'Pr phytochrome', 'phytochrome Pr']
+Gluc: ['glucose', 'D-glucose', 'blood sugar']
+
+Reason: Pfr and Pr are likely related to phytochrome, a plant photoreceptor, given the reaction names and the model context. Gluc is likely glucose, a common biological molecule, given its involvement in a glucose sensor reaction.

@@ -1,0 +1,8 @@
+Model: BIOMD0000000290
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:18
+
+Synonyms:
+G: ['UNK']
+
+Reason: No display name or reaction context provided; species name is unspecified and cannot be inferred as a known chemical entity.

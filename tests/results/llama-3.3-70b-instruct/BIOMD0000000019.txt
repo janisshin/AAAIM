@@ -1,0 +1,9 @@
+Model: BIOMD0000000019
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:43:15
+
+Synonyms:
+x26: ['GDP-bound Ras protein', 'Ras-GDP', 'Ras guanosine diphosphate']
+x28: ['GTP-bound Ras protein', 'Ras-GTP', 'Ras guanosine triphosphate']
+
+Reason: The display names 'Ras-GTP' and 'Ras-GDP' are directly provided in the model, which are common synonyms for the GTP-bound and GDP-bound forms of the Ras protein, a well-known signaling molecule in cellular biology.

@@ -1,0 +1,14 @@
+Model: BIOMD0000000236
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:56:28
+
+Synonyms:
+GLC: ['glucose', 'd-glucose', 'blood sugar']
+G6P_F6P: ['glucose-6-phosphate/fructose-6-phosphate', 'G6P', 'F6P']
+F6P: ['fructose-6-phosphate', 'F6P', 'hexose phosphate']
+FBP: ['fructose-1,6-bisphosphate', 'FBP', 'F1,6BP']
+G3P: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde phosphate']
+DHAP: ['dihydroxyacetone phosphate', 'DHAP', 'dihydroxyacetone phosphate']
+DHAP_G3P: ['DHAP-G3P pool', 'glyceraldehyde-3-phosphate/dihydroxyacetone phosphate pool', 'glycolytic intermediates']
+
+Reason: All species are glycolytic intermediates or related molecules; GLC is glucose, the primary substrate; G6P and F6P are phosphorylated sugars; FBP is a key glycolytic intermediate; G3P and DHAP are triose phosphates; DHAP_G3P is a pool of these two.

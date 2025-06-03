@@ -1,0 +1,53 @@
+Model: BIOMD0000000161
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:38:06
+
+Synonyms:
+PIP_PM: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'PIP2 (phosphatidylinositol 4,5-bisphosphate)']
+
+Reason: PIP2 is a common phospholipid involved in signaling, especially at the plasma membrane.
+
+PI_PM: "phosphatidylinositol", "PI", "phosphatidylinositol (PI)"
+Reason: PI is a phospholipid precursor to PIP2, located at the plasma membrane.
+
+CaCAPRI_PM_PM: "calcium-dependent Ras GTPase-activating protein", "CAPRI", "RasGAP"
+Reason: CaCAPRI likely refers to a calcium-activated Ras GTPase-activating protein, involved in Ras regulation.
+
+PIP2_PM: "phosphatidylinositol 4,5-bisphosphate", "PIP2", "PIP2 (phosphatidylinositol 4,5-bisphosphate)"
+Reason: Same as PIP_PM, indicating PIP2 at the plasma membrane.
+
+Ca: "calcium ion", "Ca2+", "calcium"
+Reason: Ca is a common abbreviation for calcium ions.
+
+RinhCa: "calcium inhibitor", "Ca inhibitor", "Ca channel blocker"
+Reason: RinhCa likely refers to a calcium inhibitor or blocker affecting calcium signaling.
+
+IP3: "inositol 1,4,5-trisphosphate", "IP3", "InsP3"
+Reason: IP3 is a well-known second messenger released from PIP2 hydrolysis.
+
+Ca_RasGRP_GM_GM: "calcium-bound Ras guanine nucleotide releasing protein", "RasGRP", "RasGRP (Ras guanine nucleotide releasing protein)"
+Reason: RasGRP is a calcium-sensitive GEF involved in Ras activation.
+
+DAG_GM_GM: "diacylglycerol", "DAG", "diacylglycerol (DAG)"
+Reason: DAG is a lipid second messenger produced from PIP2 hydrolysis.
+
+CaCAPRI_cyt: "cytoplasmic calcium-dependent Ras GTPase-activating protein", "CAPRI", "RasGAP"
+Reason: Similar to CaCAPRI_PM_PM, but localized in cytoplasm.
+
+DAG_PM: "diacylglycerol", "DAG", "DAG (diacylglycerol)"
+Reason: Same as DAG_GM_GM, indicating DAG at plasma membrane.
+
+Ca_PLCe_cyt: "cytoplasmic calcium-activated phospholipase C epsilon", "PLCε", "phospholipase C epsilon"
+Reason: PLCe is a phospholipase activated by calcium, involved in PIP2 hydrolysis.
+
+Ras_CaPLCe_GM: "Ras activated by calcium-dependent PLC epsilon", "Ras", "Ras protein"
+Reason: Ras associated with PLCε activity at the membrane.
+
+PIP2_GM_GM: "phosphatidylinositol 4,5-bisphosphate", "PIP2", "PIP2 (phosphatidylinositol 4,5-bisphosphate)"
+Reason: Same as PIP2 at the Golgi membrane.
+
+Ca_ER: "endoplasmic reticulum calcium", "ER calcium", "Ca2+ in ER"
+Reason: Ca in ER stores calcium ions within the endoplasmic reticulum.
+
+CaRasGRP1_cyt: "cytoplasmic Ras guanine nucleotide releasing protein 1", "RasGRP1", "RasGRP1"
+Reason: RasGRP1 is a specific isoform of RasGRP involved in Ras activation.

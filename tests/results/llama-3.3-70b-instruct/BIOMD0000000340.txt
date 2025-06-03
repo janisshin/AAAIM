@@ -1,0 +1,11 @@
+Model: BIOMD0000000340
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:12:58
+
+Synonyms:
+ATIII_Heparin: ['antithrombin III-heparin complex', 'antithrombin-heparin complex', 'ATIII-heparin']
+Xa_ATIII_Heparin: ['factor Xa-antithrombin III-heparin complex', 'Xa-antithrombin-heparin complex', 'factor Xa-ATIII-heparin']
+IIa_ATIII_Heparin: ['factor IIa-antithrombin III-heparin complex', 'thrombin-antithrombin-heparin complex', 'factor IIa-ATIII-heparin']
+IXa_ATIII_Heparin: ['factor IXa-antithrombin III-heparin complex', 'factor IXa-antithrombin-heparin complex', 'factor IXa-ATIII-heparin']
+
+Reason: The model is a comprehensive model of the human coagulation network, and the species names suggest interactions between coagulation factors (IIa, IXa, Xa) and antithrombin III (ATIII) with heparin. The standardized names are based on the common names of these coagulation factors and their complexes with antithrombin III and heparin.

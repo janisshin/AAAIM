@@ -1,0 +1,115 @@
+Model: BIOMD0000000332
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:43:33
+
+Synonyms:
+II_l: ['Factor II', 'Prothrombin', 'Thrombin precursor']
+
+Reason: II typically refers to prothrombin, the inactive precursor of thrombin in coagulation.
+
+mIIa_l: "Active Factor II", "Thrombin", "Factor IIa"
+Reason: mIIa indicates activated thrombin (Factor IIa), the enzyme responsible for clot formation.
+
+V_l: "Factor V", "Labile factor", "Proaccelerin"
+Reason: V is a coagulation factor involved in clotting cascade, commonly called Factor V.
+
+Va_l: "Activated Factor V", "Factor Va", "Proaccelerin activated"
+Reason: Va is the activated form of Factor V, a cofactor in prothrombinase complex.
+
+VII_l: "Factor VII", "Stable factor", "Stable factor"
+Reason: VII is a coagulation factor, part of extrinsic pathway.
+
+VIIa_l: "Activated Factor VII", "Factor VIIa", "Serum prothrombin conversion accelerator"
+Reason: VIIa is the active enzyme form of Factor VII.
+
+VIII_l: "Factor VIII", "Anti-hemophilic factor A", "Anti-hemophilic factor A"
+Reason: VIII is a coagulation factor, deficiency causes hemophilia A.
+
+VIIIa_l: "Activated Factor VIII", "Factor VIIIa", "Anti-hemophilic factor A activated"
+Reason: VIIIa is the active form of Factor VIII.
+
+IX_l: "Factor IX", "Christmas factor", "Anti-hemophilic factor B"
+Reason: IX is a coagulation factor, deficiency causes hemophilia B.
+
+IXa_l: "Activated Factor IX", "Factor IXa", "Christmas factor activated"
+Reason: IXa is the active enzyme form of Factor IX.
+
+X_l: "Factor X", "Stuart-Prower factor", "Stuart-Prower"
+Reason: X is a key coagulation factor, activated to Xa.
+
+Xa_l: "Activated Factor X", "Factor Xa", "Stuart-Prower activated"
+Reason: Xa is the active enzyme form of Factor X.
+
+APC_l: "Activated Protein C", "Protein C", "C protein"
+Reason: APC is activated protein C, an anticoagulant.
+
+PS_l: "Protein S", "S protein", "Lipid-associated cofactor"
+Reason: PS is Protein S, a cofactor for activated Protein C.
+
+VIIIai_l: "Inactive Factor VIII", "Factor VIII inactive", "VIII precursor"
+Reason: VIIIai indicates inactive or precursor form of Factor VIII.
+
+Vai_l: "Inactive Factor V", "Factor V inactive", "V precursor"
+Reason: Vai indicates inactive or precursor form of Factor V.
+
+PC_l: "Protein C", "C protein", "Serine protease"
+Reason: PC is Protein C, an anticoagulant.
+
+TF_l: "Tissue Factor", "Factor III", "Thromboplastin"
+Reason: TF is tissue factor, initiates extrinsic pathway.
+
+TF_VIIa_l: "Tissue Factor-VIIa complex", "TF-VIIa", "Extrinsic tenase complex"
+Reason: Complex of tissue factor and activated VII.
+
+TF_VII_l: "Tissue Factor-VII complex", "TF-VII", inactive complex
+Reason: Complex of tissue factor and inactive VII.
+
+TF_VIIa_IX_l: "TF-VIIa-IX complex", "Tenase complex", "Extrinsic tenase"
+Reason: Complex involving tissue factor, VIIa, and IX.
+
+TF_VIIa_IXa_l: "TF-VIIa-IXa complex", "Active tenase", "Extrinsic tenase"
+Reason: Active complex of tissue factor, VIIa, and IXa.
+
+TF_VIIa_X_l: "TF-VIIa-X complex", "Prothrombinase precursor", "Extrinsic complex"
+Reason: Complex involving tissue factor, VIIa, and X.
+
+TF_VIIa_Xa_l: "TF-VIIa-Xa complex", "Prothrombinase", "Extrinsic prothrombinase"
+Reason: Active complex of tissue factor, VIIa, and Xa.
+
+IXa_VIIIa_l: "IXa-VIIIa complex", "Intrinsic tenase", "Tenase complex"
+Reason: Active complex of IXa and VIIIa, essential for Xa generation.
+
+Xa_Va_l: "Xa-Va complex", "Prothrombinase complex", "Active prothrombinase"
+Reason: Complex of Xa and Va, catalyzes prothrombin activation.
+
+IXa_VIIIa_X_l: "IXa-VIIIa-X complex", "Intrinsic tenase", "Tenase complex"
+Reason: Active complex of IXa, VIIIa, and X.
+
+XIa_IX_l: "XIa-IX complex", "XIa-IX activation complex", "XIa-IX"
+Reason: XIa activates IX, involved in intrinsic pathway.
+
+IIa_TM_l: "Thrombin-Thrombomodulin complex", "Thrombin bound to thrombomodulin", "Thrombin-thrombomodulin"
+Reason: Complex of thrombin with thrombomodulin, modulates activity.
+
+IIa_TM_PC_l: "Thrombin-Thrombomodulin-Protein C complex", "Thrombin-thrombomodulin-Protein C", "Activated Protein C complex"
+Reason: Complex involved in anticoagulant pathway.
+
+IXa_IXa_l: "IXa dimer", "IXa homodimer", "IXa-IXa"
+Reason: Likely a dimer or complex of IXa molecules.
+
+LIPID: "Lipid", "Fat", "Lipoprotein"
+Reason: Lipid is a general term for fats or lipoproteins.
+
+alpha2M_l: "Alpha-2-Macroglobulin", "α2-Macroglobulin", "Alpha-2-M"
+Reason: Alpha-2-Macroglobulin, a broad-spectrum protease inhibitor.
+
+alpha2M_IIa_l: "Alpha-2-Macroglobulin-Thrombin complex", "α2M-Thrombin", "Alpha-2-Macroglobulin bound to thrombin"
+Reason: Complex of alpha-2-macroglobulin with thrombin.
+
+alpha2M_Xa_l: "Alpha-2-Macroglobulin-Xa complex", "α2M-Xa", "Alpha-2-Macroglobulin bound to Xa"
+Reason: Complex of alpha-2-macroglobulin with Factor Xa.
+
+AT_XIa_l: "Antithrombin-XIa complex", "AT-XIa", "Antithrombin bound to XIa"
+Reason: Complex of antithrombin with XIa, inhibits XIa activity.
+
+Reason: All species are coagulation factors, inhibitors, or complexes involved in blood clotting pathways, with standard names or common synonyms.

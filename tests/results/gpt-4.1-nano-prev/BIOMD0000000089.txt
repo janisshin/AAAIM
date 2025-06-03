@@ -1,0 +1,12 @@
+Model: BIOMD0000000089
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:36:54
+
+Synonyms:
+cLm: ['LHY mRNA', 'LHY transcript', 'LHY RNA']
+cTm: ['TOC1 mRNA', 'TOC1 transcript', 'TIMING OF CAB EXPRESSION 1 mRNA']
+cYm: ['Y mRNA', 'Y transcript', 'Y RNA']
+cXm: ['X mRNA', 'X transcript', 'X RNA']
+cAm: ['PPR7/9 mRNA', 'PPR7/9 transcript', 'PPR7/9 RNA']
+
+Reason: All are labeled as mRNA in the model, representing specific gene transcripts involved in the plant circadian clock. They are best matched to their respective gene transcripts or mRNA synonyms.

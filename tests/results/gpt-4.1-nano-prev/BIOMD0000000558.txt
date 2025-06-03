@@ -1,0 +1,8 @@
+Model: BIOMD0000000558
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:01:42
+
+Synonyms:
+ROS: ['reactive oxygen species', 'ROS', 'reactive oxygen species (general)']
+
+Reason: The species is explicitly labeled as "ROS" in the model, which commonly refers to reactive oxygen species, a broad class of chemically reactive molecules containing oxygen.

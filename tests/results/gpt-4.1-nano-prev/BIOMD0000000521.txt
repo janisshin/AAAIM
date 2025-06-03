@@ -1,0 +1,8 @@
+Model: BIOMD0000000521
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:00:58
+
+Synonyms:
+C: ['plasma', 'blood plasma', 'serum']
+
+Reason: The species is labeled "PCV_plasma," indicating it is a plasma component, a common biological fluid rich in ions and proteins.

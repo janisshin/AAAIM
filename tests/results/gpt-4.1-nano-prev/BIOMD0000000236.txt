@@ -1,0 +1,14 @@
+Model: BIOMD0000000236
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:40:29
+
+Synonyms:
+GLC: ['glucose', 'D-glucose', 'blood sugar']
+G6P_F6P: ['glucose-6-phosphate/fructose-6-phosphate', 'G6P', 'F6P']
+F6P: ['fructose-6-phosphate', 'F6P', 'hexose phosphate']
+FBP: ['fructose-1,6-bisphosphate', 'F1,6BP', 'FBP']
+G3P: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde phosphate']
+DHAP: ['dihydroxyacetone phosphate', 'DHAP', 'dihydroxyacetone phosphate']
+DHAP_G3P: ['DHAP-G3P pool', 'glyceraldehyde-3-phosphate/dihydroxyacetone phosphate pool', 'glycolytic triose phosphate pool']
+
+Reason: all are key glycolytic intermediates; "G6P" and "F6P" are well-known phosphorylated sugars; "G3P" and "DHAP" are common glycolytic triose phosphates; "FBP" is a central glycolytic metabolite; "DHAP_G3P" refers to the combined pool of the two triose phosphates. "GLC" is a standard abbreviation for glucose.

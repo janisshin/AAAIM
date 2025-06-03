@@ -1,0 +1,17 @@
+Model: BIOMD0000000437
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:46:34
+
+Synonyms:
+frq_mRNA: ['frq mRNA', 'frequency mRNA', 'frq transcript']
+
+Reason: The species is the messenger RNA transcribed from the frq gene in Neurospora crassa, commonly referred to as frq mRNA or its transcript.
+
+Species: degraded_frq_mRNA: "degraded frq mRNA", "frq mRNA degradation product", "frq transcript fragment"
+Reason: Represents the degraded form of frq mRNA, a common term for the breakdown product of the frq transcript.
+
+Species: frq_gene: "frq gene", "frequency gene", "frq locus"
+Reason: The gene encoding the frq protein, a key component of the circadian clock in Neurospora.
+
+Species: hypoFRQc: "hypoFRQ protein", "hypophosphorylated FRQ", "FRQ"
+Reason: The species likely refers to a form of the FRQ protein, possibly hypophosphorylated, involved in the circadian feedback loop.

@@ -1,0 +1,13 @@
+Model: BIOMD0000000539
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:01:15
+
+Synonyms:
+A: ['acetyl-CoA', 'coenzyme A', 'UNK']
+rB: ['messenger RNA', 'mRNA', 'RNA']
+B: ['protein', 'polypeptide', 'UNK']
+
+Reason: 
+A is involved in binding with gB and is produced in reactions typical of a coenzyme or substrate, likely acetyl-CoA or CoA.
+rB is produced via transcription, indicating it is mRNA or a similar transcript.
+B is produced via translation, suggesting it is a protein or polypeptide.

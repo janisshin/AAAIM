@@ -1,0 +1,31 @@
+Model: BIOMD0000000565
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:16:01
+
+Synonyms:
+cpep: ['phosphoenolpyruvate', 'PEP', '2-phosphoenolpyruvate']
+cglcex: ['glucose', 'D-glucose', 'α-D-glucose']
+cg6p: ['glucose-6-phosphate', 'D-glucose-6-phosphate', 'G6P']
+cpyr: ['pyruvate', 'pyruvic acid', '2-oxopropanoic acid']
+cg1p: ['glucose-1-phosphate', 'D-glucose-1-phosphate', 'G1P']
+cpg: ['6-phosphogluconate', '6-phosphogluconic acid', '6-PG']
+cfdp: ['fructose-1,6-bisphosphate', 'D-fructose-1,6-bisphosphate', 'FBP']
+csed7p: ['sedoheptulose-7-phosphate', 'D-sedoheptulose-7-phosphate', 'S7P']
+crib5p: ['ribose-5-phosphate', 'D-ribose-5-phosphate', 'R5P']
+cgap: ['glyceraldehyde-3-phosphate', 'D-glyceraldehyde-3-phosphate', 'G3P']
+ce4p: ['erythrose-4-phosphate', 'D-erythrose-4-phosphate', 'E4P']
+cxyl5p: ['xylulose-5-phosphate', 'D-xylulose-5-phosphate', 'X5P']
+cribu5p: ['ribulose-5-phosphate', 'D-ribulose-5-phosphate', 'Ru5P']
+cdhap: ['dihydroxyacetonephosphate', 'D-dihydroxyacetonephosphate', 'DHAP']
+cpg3: ['3-phosphoglycerate', '3-phosphoglyceric acid', '3-PG']
+cpg2: ['2-phosphoglycerate', '2-phosphoglyceric acid', '2-PG']
+accoa: ['acetyl-CoA', 'acetyl coenzyme A', 'AcCoA']
+malcoa: ['malonyl-CoA', 'malonyl coenzyme A', 'MalCoA']
+fer: ['ferulic acid', 'trans-ferulic acid', '4-hydroxy-3-methoxycinnamic acid']
+fer_ext: ['UNK']
+fercoa: ['feruloyl-CoA', 'feruloyl coenzyme A', 'FerCoA']
+ferdicoa: ['feruloyl-dihydroferuloyl-CoA', 'feruloyl-dihydroferuloyl coenzyme A', 'FerDiCoA']
+cur: ['curcumin', 'diferuloylmethane', '1,7-bis(4-hydroxy-3-methoxyphenyl)-1,6-heptadiene-3,5-dione']
+cur_ext: ['UNK']
+
+Reason: The species names were matched to their corresponding display names and then standardized to common chemical names or synonyms. For species without display names or unclear reactions, "UNK" was returned. The model's context, a curcumin production pathway in E. coli, helped disambiguate some species, such as ferulic acid and its derivatives.

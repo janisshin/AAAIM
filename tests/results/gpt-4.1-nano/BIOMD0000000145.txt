@@ -1,0 +1,12 @@
+Model: BIOMD0000000145
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:53:27
+
+Synonyms:
+Galpha_GTP: ['G alpha GTP', 'G protein alpha GTP', 'GTP-bound G alpha']
+IP3: ['Inositol 1,4,5-trisphosphate', 'IP3', 'Inositol triphosphate']
+Ca_ER: ['Calcium in endoplasmic reticulum', 'ER calcium', 'Calcium ER store']
+Ca_Cyt: ['Cytosolic calcium', 'cytoplasmic calcium', 'Ca2+ in cytoplasm']
+DG: ['Diacylglycerol', 'DAG', 'Diacylglycerol lipid']
+
+Reason: All are well-known signaling molecules or ions involved in cellular signaling pathways; the ER calcium is a key calcium store, and GTP-bound G alpha is a common active form of G protein.

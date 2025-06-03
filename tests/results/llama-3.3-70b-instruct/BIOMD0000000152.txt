@@ -1,0 +1,19 @@
+Model: BIOMD0000000152
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:54:55
+
+Synonyms:
+Ca: ['calcium', 'calcium ion', 'Ca2+']
+PP2BinactiveCa2: ['UNK']
+cAMP: ['cyclic AMP', "adenosine 3',5'-cyclic monophosphate", 'cAMP']
+cAMP_R2C2: ['UNK']
+cAMP2_R2C2: ['UNK']
+cAMP3_R2C2: ['UNK']
+cAMP4_R2C2: ['UNK']
+cAMP4_R2C: ['UNK']
+cAMP4_R2: ['UNK']
+cAMP_PDE: ['cAMP-PDE complex', "adenosine 3',5'-cyclic monophosphate-phosphodiesterase complex", 'cAMP-PDE']
+AMP: ['adenosine monophosphate', 'AMP', "adenosine 5'-monophosphate"]
+cAMP_PDEP: ['UNK']
+
+Reason: Ca is likely calcium due to its symbol and common usage in biochemical models. cAMP is a well-known molecule with a standardized name. AMP is a common abbreviation for adenosine monophosphate. PP2BinactiveCa2, cAMP_R2C2, cAMP2_R2C2, cAMP3_R2C2, cAMP4_R2C2, cAMP4_R2C, cAMP4_R2, and cAMP_PDEP are unknown or unsure due to lack of clear information or standardized names. cAMP_PDE is likely a complex of cAMP and phosphodiesterase, but its exact name may vary.

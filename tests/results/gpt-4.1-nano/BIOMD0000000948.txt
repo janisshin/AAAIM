@@ -1,0 +1,11 @@
+Model: BIOMD0000000948
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:23:59
+
+Synonyms:
+AR_A1: ['resorcinol', '1,3-dihydroxybenzene', 'resorcin']
+AR_A2: ['resorcinol', '1,3-dihydroxybenzene', 'resorcin']
+AR_Central: ['resorcinol', '1,3-dihydroxybenzene', 'resorcin']
+AR_Dose: ['dose', 'administration dose', 'treatment dose']
+
+Reason: All AR species are labeled as "AR" and involved in reactions suggesting they are the same compound, likely alkylresorcinol. AR_Dose is a dosing parameter, not a chemical entity.

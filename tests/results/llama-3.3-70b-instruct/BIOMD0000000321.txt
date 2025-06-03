@@ -1,0 +1,9 @@
+Model: BIOMD0000000321
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:11:08
+
+Synonyms:
+A_dopa: ['levodopa', 'L-dopa', '3,4-dihydroxyphenylalanine']
+C_dopa: ['3-OMD', '3-O-methyldopa', '3-methoxytyrosine']
+
+Reason: The model is described as a pharmacokinetic model of L-dopa, and the reactions and notes suggest that A_dopa is L-dopa and C_dopa is its metabolite 3-OMD. The names are inferred from the context and the chemical structure implied by the model.

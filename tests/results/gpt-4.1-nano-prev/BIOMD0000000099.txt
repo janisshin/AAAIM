@@ -1,0 +1,9 @@
+Model: BIOMD0000000099
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:08
+
+Synonyms:
+species_0: ['cyclic adenosine monophosphate', 'cAMP', "adenosine 3',5'-cyclic monophosphate"]
+species_1: ['cyclic adenosine monophosphate', 'cAMP', "adenosine 3',5'-cyclic monophosphate"]
+
+Reason: Both species are labeled as 'Ex_cAMP' and 'In_cAMP', indicating extracellular and intracellular cAMP, respectively. The common and most recognizable name for these is cyclic adenosine monophosphate (cAMP).

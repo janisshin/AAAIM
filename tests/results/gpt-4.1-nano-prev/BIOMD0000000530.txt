@@ -1,0 +1,13 @@
+Model: BIOMD0000000530
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:01:09
+
+Synonyms:
+species_1: ['messenger RNA', 'mRNA', 'transcribed RNA']
+species_2: ['microRNA', 'miRNA', 'microRNA-1']
+species_3: ['microRNA', 'miRNA', 'microRNA-2']
+species_4: ['duplex', 'RNA duplex', 'RNA duplex structure']
+species_5: ['triplex', 'RNA triplex', 'RNA triplex structure']
+species_6: ['triplex', 'RNA triplex', 'RNA triplex structure']
+
+Reason: species_1 is mRNA, a messenger RNA molecule; species_2 and species_3 are microRNAs involved in gene regulation; species_4, species_5, and species_6 are RNA structures (duplex or triplex) involved in RNA interactions.

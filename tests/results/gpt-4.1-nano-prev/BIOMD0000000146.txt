@@ -1,0 +1,38 @@
+Model: BIOMD0000000146
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:44
+
+Synonyms:
+AktPIP3: ['Akt phosphorylated at PIP3 site', 'Akt-PIP3', 'Akt-PIP3']
+
+Reason: The species name suggests phosphorylated Akt bound to PIP3, a common signaling molecule.
+
+AktPIP: "Akt phosphorylated at PIP", "Akt-PIP", "Akt-PIP"
+Reason: Indicates Akt phosphorylated at PIP site; PIP is a phosphoinositide.
+
+AktPIPP: "Akt phosphorylated at PIP and PIP", "Akt-PIP2", "Akt-PIP2"
+Reason: The name suggests dual phosphorylation involving PIP sites; PIP2 is a common phosphoinositide.
+
+ERKP: "ERK phosphorylated", "pERK", "phospho-ERK"
+Reason: ERK phosphorylated form, common in signaling pathways.
+
+ERKPP: "ERK doubly phosphorylated", "ppERK", "phospho-ERK double"
+Reason: Indicates doubly phosphorylated ERK, active form.
+
+MEKP: "MEK phosphorylated", "pMEK", "phospho-MEK"
+Reason: MEK phosphorylated, active kinase form.
+
+MEKPP: "MEK doubly phosphorylated", "ppMEK", "phospho-MEK double"
+Reason: Doubly phosphorylated MEK, active form.
+
+PIP3: "phosphatidylinositol (3,4,5)-trisphosphate", "PIP3", "phosphatidylinositol (3,4,5)-trisphosphate"
+Reason: A well-known phosphoinositide involved in signaling.
+
+RasGDP: "Ras in GDP-bound form", "Ras-GDP", "inactive Ras"
+Reason: Ras bound to GDP, inactive state.
+
+RasGTP: "Ras in GTP-bound form", "Ras-GTP", "active Ras"
+Reason: Ras bound to GTP, active signaling form.
+
+P_I: "Inorganic phosphate", "Pi", "phosphate"
+Reason: Common abbreviation for inorganic phosphate involved in phosphorylation reactions.

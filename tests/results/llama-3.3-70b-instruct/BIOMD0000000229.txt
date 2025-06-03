@@ -1,0 +1,9 @@
+Model: BIOMD0000000229
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:03:29
+
+Synonyms:
+incAMP: ['cyclic AMP', 'cAMP', "adenosine 3',5'-cyclic monophosphate"]
+excAMP: ['cAMP', 'cyclic AMP', "adenosine 3',5'-cyclic monophosphate"]
+
+Reason: incAMP and excAMP are likely referring to intracellular and extracellular cyclic adenosine monophosphate (cAMP), a common signaling molecule in biological systems, given the context of the model "Ma2002_cAMP_oscillations" and the mention of oscillations, which is consistent with the role of cAMP in cellular signaling.

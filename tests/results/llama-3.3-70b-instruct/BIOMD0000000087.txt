@@ -1,0 +1,13 @@
+Model: BIOMD0000000087
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:50:50
+
+Synonyms:
+RPAssDNA: ['RPA-ssDNA complex', 'Replication Protein A-single-stranded DNA complex', 'RPA-DNA complex']
+RPAssDNA1: ['RPA-ssDNA intermediate complex', 'Replication Protein A-single-stranded DNA binding intermediate', 'RPA-DNA binding intermediate']
+RPAssDNA2: ['RPA-ssDNA binding intermediate 2', 'Replication Protein A-single-stranded DNA complex intermediate 2', 'RPA-DNA intermediate 2']
+Mec1RPAssDNA: ['Mec1-RPA-ssDNA complex', 'Mec1-Replication Protein A-single-stranded DNA complex', 'Mec1-RPA-DNA complex']
+ATP: ['adenosine triphosphate', "adenosine 5'-triphosphate", 'ATP molecule']
+ADP: ['adenosine diphosphate', "adenosine 5'-diphosphate", 'ADP molecule']
+
+Reason: The species names are annotated based on the reaction equations and display names provided in the model. RPAssDNA and its variants are related to the RPA (Replication Protein A) binding to single-stranded DNA (ssDNA), while Mec1RPAssDNA involves the additional binding of Mec1 to the RPA-ssDNA complex. ATP and ADP are standard energy transfer molecules in biochemical reactions. The annotations are based on the context of the reactions and the involvement of RPA, ssDNA, and other molecules, with the provided display names offering some guidance on the components involved.

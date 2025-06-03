@@ -1,0 +1,21 @@
+Model: BIOMD0000000106
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:52:57
+
+Synonyms:
+x1: ['arachidonic acid', 'eicosatetraenoic acid', '5,8,11,14-eicosatetraenoic acid']
+x2: ['15-hydroperoxy-5,8,11,13-eicosatetraenoic acid', '15-HPETE', '15-hydroperoxyeicosatetraenoic acid']
+x3: ['15-hydroxy-5,8,11,13-eicosatetraenoic acid', '15-HETE', '15-hydroxyeicosatetraenoic acid']
+x4: ['12-hydroperoxy-5,8,10,14-eicosatetraenoic acid', '12-HPETE', '12-hydroperoxyeicosatetraenoic acid']
+x5: ['12-hydroxy-5,8,10,14-eicosatetraenoic acid', '12-HETE', '12-hydroxyeicosatetraenoic acid']
+x6: ['prostaglandin H2', 'PGH2', 'prost-5,8,12,14-tetraen-1-oic acid']
+x7: ['prostaglandin E2', 'PGE2', 'dinoprostone']
+x8: ['thromboxane A2', 'TXA2', '9,11-dideoxy-11α,9α-epoxy-methanoprostaglandin F2α']
+x9: ['thromboxane B2', 'TXB2', '9,11-dideoxy-11α,9α-epoxy-methanoprostaglandin F2α-9,10-dihydro-10-oxo-']
+x10: ['5-hydroperoxy-6,8,11,14-eicosatetraenoic acid', '5-HPETE', '5-hydroperoxyeicosatetraenoic acid']
+x11: ['5-hydroxy-6,8,11,14-eicosatetraenoic acid', '5-HETE', '5-hydroxyeicosatetraenoic acid']
+x12: ['leukotriene A4', 'LTA4', '4-[(2E,6E)-3-[(1R,4S)-4-[(1E,3E)-3-hydroxy-1-octenyl]-2,5-dihydro-1H-cyclopentyl]-3-oxo-1-octenyl]butanoic acid']
+x13: ['leukotriene B4', 'LTB4', '4-[(2E,6E)-3-[(1R,3E,5S)-5-[(1E,3E)-3-hydroxy-1-octenyl]-1,4-dihydro-1H-cyclopenten-1-yl]-3-oxo-1-octenyl]butanoic acid']
+x14: ['ω-leukotriene B4', 'ω-LTB4', '5S,12R-dihydroxy-6,8,10,14-eicosatetraenoic acid']
+
+Reason: The species names were matched to their corresponding display names in the model, and then standardized names or common synonyms were found based on the display names. The model is a representation of the arachidonic acid metabolic network, and the species names were matched to known biochemical compounds in this pathway. The standardized names or common synonyms were chosen based on their relevance to the display names and their likelihood of being correct.

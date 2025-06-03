@@ -1,0 +1,18 @@
+Model: BIOMD0000000624
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:04:20
+
+Synonyms:
+APAP: ['acetaminophen', 'paracetamol', 'para-hydroxyacetanilide']
+NAPQI: ['N-acetyl-p-quinoneimine', 'NAPQI', 'p-quinoneimine']
+GSH: ['glutathione', 'reduced glutathione', 'GSSG']
+NAPQIGSH: ['NAPQI-glutathione conjugate', 'NAPQIGSH', 'GSH conjugate of NAPQI']
+APAPconj_Glu: ['APAP-glucuronide', 'acetaminophen glucuronide', 'APAP conjugated with Glu']
+APAPconj_Sul: ['APAP-sulfate', 'acetaminophen sulfate', 'APAP conjugated with sulfate']
+
+Reason: 
+APAP is a common abbreviation for acetaminophen.
+NAPQI is a well-known toxic metabolite of APAP.
+GSH is glutathione, a key cellular nucleophile involved in detoxification.
+NAPQIGSH is a conjugate of NAPQI with GSH, a detoxification product.
+APAPconj_Glu and APAPconj_Sul are conjugates of APAP with glucuronide and sulfate, respectively, common Phase II metabolites.

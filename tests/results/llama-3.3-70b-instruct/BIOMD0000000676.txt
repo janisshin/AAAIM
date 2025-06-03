@@ -1,0 +1,21 @@
+Model: BIOMD0000000676
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:29:41
+
+Synonyms:
+Arg: ['arginine', 'L-arginine', 'arginine amino acid']
+Fe3__enos: ['ferric ion', 'iron(3+) ion', 'Fe3+']
+Fe3__Arg: ['iron(3+)-arginine complex', 'ferric arginine', 'Fe3+-arginine']
+Fe2: ['ferrous ion', 'iron(2+) ion', 'Fe2+']
+Fe2__Arg: ['iron(2+)-arginine complex', 'ferrous arginine', 'Fe2+-arginine']
+Fe3__NO: ['iron(3+)-nitric oxide complex', 'ferric nitric oxide', 'Fe3+-NO']
+NO: ['nitric oxide', 'nitrogen monoxide', 'NO']
+Fe2__NO: ['iron(2+)-nitric oxide complex', 'ferrous nitric oxide', 'Fe2+-NO']
+Fe3__NOHA: ['iron(3+)-N-hydroxyarginine complex', 'ferric N-hydroxyarginine', 'Fe3+-NHA']
+Fe2__NOHA: ['iron(2+)-N-hydroxyarginine complex', 'ferrous N-hydroxyarginine', 'Fe2+-NHA']
+O2: ['oxygen', 'dioxygen', 'molecular oxygen']
+Fe3__O2__Arg: ['iron(3+)-oxygen-arginine complex', 'ferric oxygen arginine', 'Fe3+-O2-arginine']
+Fe3__O2__NOHA: ['iron(3+)-oxygen-N-hydroxyarginine complex', 'ferric oxygen N-hydroxyarginine', 'Fe3+-O2-NHA']
+Citrulline: ['citrulline', 'L-citrulline', '2-amino-5-ureidopentanoic acid']
+
+Reason: The species names were annotated based on their display names and the context of the model, which is related to nitric oxide release from endothelial cells. The annotations were made by combining the display names with common biochemical knowledge, such as the fact that "Fe3__enos" likely refers to a ferric ion (Fe3+) associated with an enzyme (enos), and "Fe3__Arg" likely refers to an iron(3+)-arginine complex. Similarly, "NO" is a well-known abbreviation for nitric oxide, and "O2" is a common symbol for molecular oxygen. The annotations for the other species were made in a similar manner, taking into account the display names and the biochemical context of the model.

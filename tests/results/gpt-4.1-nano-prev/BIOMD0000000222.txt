@@ -1,0 +1,18 @@
+Model: BIOMD0000000222
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:40:16
+
+Synonyms:
+aca: ['acetyl-CoA', 'acetyl coenzyme A', 'acetyl-CoA']
+oaa: ['oxaloacetate', 'oxaloacetate (cyclic form)', 'OAA']
+coa: ['coenzyme A', 'CoA', 'coenzyme A']
+cit: ['citrate', 'citric acid', 'sodium citrate']
+icit: ['isocitrate', 'isocitric acid', 'cyclic isocitrate']
+akg: ['alpha-ketoglutarate', 'α-ketoglutarate', '2-oxoglutarate']
+sca: ['succinyl-CoA', 'succinyl coenzyme A', 'succinate-CoA']
+suc: ['succinate', 'butanedioate', 'succinate (ionic)']
+fa: ['fatty acid', 'fatty acid', 'long-chain fatty acid']
+mal: ['malate', 'malic acid', 'malate (ionic)']
+gly: ['glycine', 'gly', 'aminoacetic acid']
+
+Reason: All are common metabolites involved in the TCA cycle or related pathways; no specific reactions are provided, but these are standard biochemical names.

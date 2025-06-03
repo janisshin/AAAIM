@@ -1,0 +1,9 @@
+Model: BIOMD0000000113
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:21
+
+Synonyms:
+Z: ['calcium ion', 'Ca2+', 'calcium']
+Y: ['phosphorylated protein', 'protein phosphate', 'p-protein']
+
+Reason: The model references calcium-dependent protein phosphorylation, with Z likely representing calcium ions and Y representing the phosphorylated form of a protein.

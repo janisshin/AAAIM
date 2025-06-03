@@ -1,0 +1,9 @@
+Model: BIOMD0000000494
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:00:13
+
+Synonyms:
+E2: ['estradiol', 'oestradiol', '17β-estradiol']
+P4: ['progesterone', 'pregn-4-ene-3,20-dione', '4-pregnene-3,20-dione']
+
+Reason: E2 and P4 are identified as estradiol and progesterone, respectively, based on the model description and notes, which explicitly mention these hormones and their roles in the menstrual cycle.

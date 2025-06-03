@@ -1,0 +1,32 @@
+Model: BIOMD0000000176
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:38:35
+
+Synonyms:
+GLCi: ['glucose', 'd-glucose', 'blood glucose']
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+G6P: ['glucose-6-phosphate', 'G6P', 'glucose 6-phosphate']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+F6P: ['fructose-6-phosphate', 'F6P', 'fructose 6-phosphate']
+F16bP: ['fructose-1,6-bisphosphate', 'F1,6BP', 'fructose 1,6-bisphosphate']
+F26bP: ['fructose-2,6-bisphosphate', 'F2,6BP', 'fructose 2,6-bisphosphate']
+AMP: ['adenosine monophosphate', 'AMP', 'adenosine monophosphate']
+DHAP: ['dihydroxyacetone phosphate', 'DHAP', 'dihydroxyacetone phosphate']
+GAP: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde 3-phosphate']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+', 'nicotinamide adenine dinucleotide']
+BPG: ['1,3-bisphosphoglycerate', '1,3-BPG', '1,3-bisphosphoglycerate']
+NADH: ['reduced nicotinamide adenine dinucleotide', 'NADH', 'nicotinamide adenine dinucleotide (reduced)']
+P3G: ['3-phosphoglycerate', '3PG', '3-phosphoglycerate']
+P2G: ['2-phosphoglycerate', '2PG', '2-phosphoglycerate']
+PEP: ['phosphoenolpyruvate', 'PEP', 'phosphoenolpyruvate']
+PYR: ['pyruvate', 'pyruvic acid', 'pyruvate']
+AcAld: ['acetaldehyde', 'ethanal', 'acetaldehyde']
+GLCo: ['glucose', 'd-glucose', 'blood glucose']
+CO2: ['carbon dioxide', 'CO2', 'carbonic acid']
+EtOH: ['ethanol', 'ethyl alcohol', 'alcohol']
+Glycerol: ['glycerol', 'glycerin', 'propane-1,2,3-triol']
+Glycogen: ['glycogen', 'animal starch', 'glucose polymer']
+Trehalose: ['trehalose', 'mycose', "α,α'-trehalose"]
+Succinate: ['succinate', 'butanedioate', 'succinate ion']
+
+Reason: All listed species are common biochemical compounds, mostly well-known metabolites or cofactors, with standard synonyms matching their chemical identities. "GLCi" and "GLCo" are both glucose, but "GLCo" likely refers to extracellular glucose, so both are normalized to "glucose". "AcAld" is acetaldehyde, a common aldehyde in metabolism. "F16bP" and "F26bP" are specific phosphorylated sugars, well-characterized in glycolysis.

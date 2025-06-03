@@ -1,0 +1,28 @@
+Model: BIOMD0000000326
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:43:14
+
+Synonyms:
+Ca2_buff: ['calcium buffer', 'Ca2+ buffer', 'calcium chelator']
+Ca2_free: ['free calcium', 'Ca2+', 'calcium ion']
+G_GTP: ['GTP-bound G protein', 'GTP-G protein', 'activated G protein']
+Ga_GDP: ['GDP-bound G alpha', 'G alpha-GDP', 'inactive G alpha']
+Ga_GTP: ['GTP-bound G alpha', 'G alpha-GTP', 'activated G alpha']
+Ga_GTP_PDE_a_Ga_GTP: ['G alpha GTP-PDE complex', 'G alpha GTP with PDE', 'G alpha GTP-PDE']
+Ga_GTP_a_PDE_a_Ga_GTP: ['G alpha GTP-PDE-G alpha GTP complex', 'G alpha GTP with PDE and G alpha GTP', 'G alpha GTP-PDE-G alpha GTP']
+Ops_G_GTP: ['activated opsin-GTP', 'opsin GTP complex', 'opsin bound to GTP']
+PDE_Ga_GTP: ['PDE-G alpha GTP complex', 'PDE bound to G alpha GTP', 'phosphodiesterase-GTP complex']
+PDE_a_Ga_GTP: ['active PDE-G alpha GTP', 'activated PDE with G alpha GTP', 'PDE complex with G alpha GTP']
+R0_G_GTP: ['R0 GTP-bound receptor', 'R0 GTP', 'receptor R0 GTP']
+R1_G_GTP: ['R1 GTP-bound receptor', 'R1 GTP', 'receptor R1 GTP']
+R2_G_GTP: ['R2 GTP-bound receptor', 'R2 GTP', 'receptor R2 GTP']
+R3_G_GTP: ['R3 GTP-bound receptor', 'R3 GTP', 'receptor R3 GTP']
+R4_G_GTP: ['R4 GTP-bound receptor', 'R4 GTP', 'receptor R4 GTP']
+R5_G_GTP: ['R5 GTP-bound receptor', 'R5 GTP', 'receptor R5 GTP']
+R6_G_GTP: ['R6 GTP-bound receptor', 'R6 GTP', 'receptor R6 GTP']
+RGS_Ga_GTP_a_PDE_a_Ga_GTP: ['RGS-G alpha GTP-PDE complex', 'RGS with G alpha GTP and PDE', 'RGS-G alpha GTP-PDE']
+RGS_PDE_a_Ga_GTP: ['RGS-PDE-G alpha GTP complex', 'RGS with PDE and G alpha GTP', 'RGS-PDE-G alpha GTP']
+Rec_wCa2_RK: ['calcium-dependent receptor kinase', 'receptor kinase with Ca2+', 'Ca2+ regulated kinase']
+cGMP: ['cyclic GMP', 'cGMP', 'cyclic guanosine monophosphate']
+
+Reason: These are well-established biochemical entities involved in phototransduction and G-protein signaling pathways. The species names correspond to common molecular forms or complexes.

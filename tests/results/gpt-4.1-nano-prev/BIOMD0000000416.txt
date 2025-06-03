@@ -1,0 +1,14 @@
+Model: BIOMD0000000416
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:45:50
+
+Synonyms:
+IAAm: ['indole-3-acetamide', 'IAA amide', 'indole-3-acetamide']
+AuxTIR1: ['TIR1', 'Transport Inhibitor Response 1', 'auxin receptor TIR1']
+AuxTIAA: ['IAA', 'indole-3-acetic acid', 'auxin']
+Aux: ['auxin', 'indole-3-acetic acid', 'IAA']
+Ck: ['cytokinin', 'cytokinin hormone', 'plant hormone cytokinin']
+CkAHK: ['cytokinin receptor AHK', 'Arabidopsis Histidine Kinase', 'cytokinin histidine kinase']
+CkAHKph: ['phosphorylated cytokinin receptor AHK', 'phosphorylated cytokinin histidine kinase', 'active cytokinin receptor']
+
+Reason: All are plant hormones or hormone receptors involved in cytokinin and auxin signaling pathways, well-characterized in plant biology.

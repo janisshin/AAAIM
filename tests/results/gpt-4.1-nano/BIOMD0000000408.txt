@@ -1,0 +1,15 @@
+Model: BIOMD0000000408
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:00:24
+
+Synonyms:
+ADPi: ['ADP', 'adenosine diphosphate', 'ADP']
+ATPi: ['ATP', 'adenosine triphosphate', 'ATP']
+Cri: ['creatine', 'creatine']
+PCri: ['phosphocreatine', 'creatine phosphate', 'PCr']
+PCr: ['phosphocreatine', 'creatine phosphate', 'PCr']
+ADP: ['ADP', 'adenosine diphosphate', 'ADP']
+ATP: ['ATP', 'adenosine triphosphate', 'ATP']
+Cr: ['creatine', 'creatine']
+
+Reason: The species are related to creatine and high-energy phosphate compounds involved in energy transfer in muscle; "Cri" and "Cr" are creatine, "PCr" and "PCri" are phosphocreatine, and "ADPi" and "ATPi" are ADP and ATP, respectively.

@@ -1,0 +1,8 @@
+Model: BIOMD0000000714
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:07:08
+
+Synonyms:
+C_A: ['interleukin-10', 'IL-10', 'anti-inflammatory cytokine']
+
+Reason: C_A is labeled as anti-inflammatory mediators, which commonly include cytokines like IL-10, known for their anti-inflammatory roles in immune responses.

@@ -1,0 +1,9 @@
+Model: BIOMD0000000805
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:23:27
+
+Synonyms:
+Li: ['lithium', 'lithium ion', 'Li+']
+Le: ['lactate', 'lactic acid', '2-hydroxypropanoic acid']
+
+Reason: Li is a chemical element commonly represented as lithium ion in biological contexts; Le is used as an abbreviation for lactate in biochemical models.

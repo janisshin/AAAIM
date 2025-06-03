@@ -1,0 +1,11 @@
+Model: BIOMD0000000317
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:43:01
+
+Synonyms:
+X: ['UNK']
+Z1: ['UNK']
+Z2: ['UNK']
+Z3: ['UNK']
+
+Reason: The model and description provide no specific names, display names, or biochemical context for these species; they appear to be abstract or generic components of a transcriptional regulation network, not chemical entities.

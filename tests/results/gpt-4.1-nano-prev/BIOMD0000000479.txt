@@ -1,0 +1,19 @@
+Model: BIOMD0000000479
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:55:46
+
+Synonyms:
+GaGTP: ['GTP', 'guanosine triphosphate', 'GTP']
+Effector: ['effector', 'effector protein', 'regulatory protein']
+GaGTPEffector: ['GTP effector', 'GTP-binding effector', 'G-protein effector']
+RGSmGaGTP: ['GTP-bound RGS', 'RGS-GTP complex', 'Regulator of G protein signaling GTP-bound']
+GaGTPEffectorOFF: ['inactive GTP effector', 'GTP effector OFF', 'GTP-bound effector inactive']
+RGSmGaGTPEffectorOFF: ['RGS-GTP-effector OFF', 'inactive RGS-effector complex', 'GTP-bound RGS-effector']
+GaGDPP: ['GDP', 'guanosine diphosphate', 'GDP']
+LRRGSmGaGTP: ['GTP-bound RGS-LR complex', 'GTP RGS-LR', 'RGS-LR GTP complex']
+RRGSmGaGTP: ['GTP-bound RGS', 'RGS GTP', 'Regulator of G protein signaling GTP']
+LRRGSmGaGTPEffectorOFF: ['inactive RGS-LR GTP-effector', 'GTP RGS-LR-effector OFF', 'RGS-LR GTP-effector inactive']
+GaGDP: ['GDP', 'guanosine diphosphate', 'GDP']
+P: ['phosphate', 'Pi', 'inorganic phosphate']
+
+Reason: All are standard nucleotide or common biochemical terms; "Effector" is generic but used in signaling contexts; "P" is a common abbreviation for inorganic phosphate. "UNK" not used as all are recognizable chemical entities.

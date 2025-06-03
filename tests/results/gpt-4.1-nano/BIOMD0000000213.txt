@@ -1,0 +1,21 @@
+Model: BIOMD0000000213
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:55:54
+
+Synonyms:
+_5mTHF: ['5-methyltetrahydrofolate', '5-methyl-THF', 'methylated tetrahydrofolate']
+THF: ['tetrahydrofolate', 'THF', 'folate']
+DHF: ['dihydrofolate', 'DHF', 'dihydrofolic acid']
+_5_10_CH2THF: ['5,10-methylenetetrahydrofolate', '5,10-CH2-THF', 'methylene-THF']
+_5_10_CHTHF: ['5,10-methenyltetrahydrofolate', '5,10-CH=THF', 'methylidene-THF']
+_10fTHF: ['10-formyltetrahydrofolate', '10-formyl-THF', 'formyl-THF']
+Ser: ['serine', 'Ser', 'aminosäure serin']
+Gly: ['glycine', 'Gly', 'gly']
+dUMP: ['deoxyuridine monophosphate', 'dUMP', 'deoxyuridylate']
+GAR: ['glycinamide ribonucleotide', 'GAR', 'glycinamide ribonucleotide']
+AICAR: ['5-aminoimidazole-4-carboxamide ribonucleotide', 'AICAR', 'ZMP']
+HCOOH: ['formic acid', 'methanoic acid', 'HCOOH']
+NADPH: ['NADPH', 'nicotinamide adenine dinucleotide phosphate, reduced', 'reduced NADP']
+Hcy: ['homocysteine', 'Hcy', 'homocystein']
+
+Reason: All are standard biochemical names or common synonyms for these folate and amino acid species, suitable for ontology lookup.

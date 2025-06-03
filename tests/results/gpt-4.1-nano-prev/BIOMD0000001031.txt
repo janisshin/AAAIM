@@ -1,0 +1,9 @@
+Model: BIOMD0000001031
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:10:32
+
+Synonyms:
+uninfected_cancer_cells: ['cancer cell', 'tumor cell', 'malignant cell']
+infected_cancer_cells: ['infected tumor cell', 'virus-infected cancer cell', 'oncogenic cell']
+
+Reason: Both species refer to cell populations involved in cancer; the uninfected are normal cancer cells, while infected are those infected by the virus used in virotherapy. They are standard terms for tumor biology and virotherapy contexts.

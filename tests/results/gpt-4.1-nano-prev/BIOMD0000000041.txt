@@ -1,0 +1,17 @@
+Model: BIOMD0000000041
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:45
+
+Synonyms:
+ADPi: ['ADP', 'adenosine diphosphate', 'ADP (nucleotide)']
+ATPi: ['ATP', 'adenosine triphosphate', 'ATP (nucleotide)']
+Cri: ['creatine', 'creatine (compound)', 'UNK']
+PCri: ['phosphocreatine', 'creatine phosphate', 'PCr']
+PCr: ['phosphocreatine', 'creatine phosphate', 'PCr']
+ADP: ['ADP', 'adenosine diphosphate', 'ADP (nucleotide)']
+ATP: ['ATP', 'adenosine triphosphate', 'ATP (nucleotide)']
+Cr: ['creatine', 'creatine (compound)', 'UNK']
+Pi: ['inorganic phosphate', 'phosphate', 'Pi']
+P: ['phosphate', 'inorganic phosphate', 'Pi']
+
+Reason: The model involves energy transfer molecules and phosphate compounds. Creatine and phosphocreatine are key energy buffers, and ADP/ATP are central to energy metabolism. Pi and P are inorganic phosphates involved in phosphorylation reactions. "Cri" and "PCri" are likely creatine and phosphocreatine, respectively. "ADPi" and "ATPi" are phosphorylated forms of ADP and ATP, respectively.

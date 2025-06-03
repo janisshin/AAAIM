@@ -1,0 +1,21 @@
+Model: BIOMD0000000436
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:01:05
+
+Synonyms:
+FA: ['fatty acid', 'free fatty acid', 'lipid']
+PGH2: ['prostaglandin H2', 'PGH2', 'prostaglandin']
+PGF2a: ['prostaglandin F2 alpha', 'PGF2α', 'prostaglandin F2']
+PGD2: ['prostaglandin D2', 'PGD2', 'prostaglandin']
+PGJ2: ['prostaglandin J2', 'PGJ2', 'prostaglandin']
+dPGJ2: ['15-deoxy-Δ12,14-prostaglandin J2', 'dPGJ2', 'prostaglandin J2 derivative']
+AA: ['arachidonic acid', 'arachidonic acid', '20:4 fatty acid']
+DG: ['diglyceride', 'diacylglycerol', 'DAG']
+GPCho: ['glycerophosphocholine', 'lecithin metabolite', 'phosphatidylcholine derivative']
+
+Reason: 
+FA is a general fatty acid, likely free fatty acid.
+PGH2, PGF2a, PGD2, PGJ2, dPGJ2 are all prostaglandins or derivatives, common eicosanoids.
+AA is explicitly identified as arachidonic acid.
+DG is a diglyceride, a common lipid intermediate.
+GPCho is glycerophosphocholine, a phospholipid headgroup.

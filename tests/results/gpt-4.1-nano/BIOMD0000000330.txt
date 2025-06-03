@@ -1,0 +1,10 @@
+Model: BIOMD0000000330
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:58:47
+
+Synonyms:
+Ca_cyt: ['calcium ion', 'Ca2+', 'cytoplasmic calcium']
+Ca_ER: ['endoplasmic reticulum calcium', 'ER calcium', 'Ca2+ in ER']
+Ca_mit: ['mitochondrial calcium', 'mitochondria calcium', 'Ca2+ in mitochondria']
+
+Reason: These species represent calcium concentrations in different cellular compartments, which are well-known chemical entities. The names are standard synonyms for calcium ions in cytoplasm, ER, and mitochondria.

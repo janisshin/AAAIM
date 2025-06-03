@@ -1,0 +1,17 @@
+Model: BIOMD0000000389
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:59:42
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'RuBP', 'ribulose bisphosphate']
+PGA: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'PGA']
+Ru5P: ['ribulose-5-phosphate', 'ribulose 5-phosphate', 'Ru5P']
+UTP: ['uridine triphosphate', 'UTP', 'uridine triphosphate']
+UDP: ['uridine diphosphate', 'UDP', 'uridine diphosphate']
+Pi: ['inorganic phosphate', 'phosphate', 'Pi']
+CO2: ['carbon dioxide', 'CO2', 'carbonic acid']
+Suc: ['sucrose', 'sucrose', 'table sugar']
+Pic: ['picolinic acid', 'picolinate', 'picolinic acid', 'Pic', 'picolinic acid', '(Note: likely a typo for phenicol or similar;  is ambiguous', 'but  is a common chemical)']
+SucV: ['sucrose transporter', 'sucrose', 'sucrose-related compound']
+
+Reason: All species are common biochemical compounds or their standard abbreviations. "Pic" is ambiguous but likely refers to a chemical compound; "SucV" appears to be a transporter or derivative related to sucrose.

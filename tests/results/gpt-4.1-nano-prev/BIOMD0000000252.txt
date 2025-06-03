@@ -1,0 +1,19 @@
+Model: BIOMD0000000252
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:41:10
+
+Synonyms:
+mm: ['Mdm2', 'HDM2', 'Mouse double minute 2 homolog']
+
+Reason: The species "mm" in the context of p53-Mdm2 feedback loop models typically refers to Mdm2, a key regulator of p53.
+
+Species: p: "p53", "TP53", "tumor protein p53"
+Reason: "p" in the model is the p53 protein, a well-known tumor suppressor.
+
+Species: m: "p53 mRNA", "TP53 mRNA", "p53 transcript"
+Reason: "m" likely represents the mRNA transcript of p53, given the context of gene regulation.
+
+Species: pm: "p53-Mdm2 complex", "p53-Mdm2 binding", "p53-Mdm2 complex"
+Reason: "pm" probably denotes the complex formed between p53 and Mdm2, involved in feedback regulation.
+
+Reason: All species are proteins or complexes involved in the p53-Mdm2 regulatory loop; "mm" is most likely Mdm2, a key negative regulator of p53.

@@ -1,0 +1,15 @@
+Model: BIOMD0000000376
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:59:19
+
+Synonyms:
+G6P: ['glucose-6-phosphate', 'G6P', 'glucose 6-phosphate']
+FBP: ['fructose-1,6-bisphosphate', 'FBP', 'fructose 1,6-bisphosphate']
+NADHm: ['NADH', 'nicotinamide adenine dinucleotide (reduced)', 'NADH']
+Cam: ['calmodulin', 'CaM', 'calcium/calmodulin-dependent']
+ADPm: ['ADP', 'adenosine diphosphate', 'adenine nucleotide diphosphate']
+adp: ['ADP', 'adenosine diphosphate', 'adenine nucleotide diphosphate']
+c: ['cytosol', 'cytoplasm', 'cellular compartment']
+Caer: ['Ca2+', 'calcium ion', 'calcium (extracellular)']
+
+Reason: All species are known biochemical entities or ions involved in cellular metabolism or signaling; "c" is a generic cytosolic marker, and "Caer" likely refers to extracellular calcium.

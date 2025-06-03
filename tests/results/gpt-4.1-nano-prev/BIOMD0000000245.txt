@@ -1,0 +1,15 @@
+Model: BIOMD0000000245
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:40:52
+
+Synonyms:
+s_glu: ['glucose', 'd-glucose', 'blood sugar']
+s_pyr: ['pyruvate', 'pyruvic acid', 'pyruvate ion']
+s_acetate: ['acetate', 'acetic acid', 'acetate ion']
+s_acetald: ['acetaldehyde', 'ethanal', 'acetaldehyde']
+s_EtOH: ['ethanol', 'ethyl alcohol', 'alcohol']
+CO2: ['carbon dioxide', 'CO2', 'carbonic acid gas']
+Red: ['NADH', 'reduced nicotinamide adenine dinucleotide', 'NADH']
+S_f: ['glucose feed', 'glucose feed solution', 'glucose input']
+
+Reason: The species are metabolites involved in yeast fermentation pathways; their common names are well established in biochemistry.

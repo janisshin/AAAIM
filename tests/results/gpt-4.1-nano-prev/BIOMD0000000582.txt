@@ -1,0 +1,11 @@
+Model: BIOMD0000000582
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:03:02
+
+Synonyms:
+ROS: ['reactive oxygen species', 'superoxide', 'hydrogen peroxide']
+DNA_damage: ['DNA damage', 'DNA double-strand break', 'genomic damage']
+Insulin: ['insulin', 'insulin hormone']
+Amino_Acids: ['amino acids', 'proteinogenic amino acids', 'free amino acids']
+
+Reason: The model discusses oxidative stress, DNA damage, insulin signaling, and amino acids, which are well-known biochemical entities. ROS refers to reactive oxygen species, DNA_damage to genomic lesions, Insulin as a hormone, and Amino_Acids as building blocks of proteins.

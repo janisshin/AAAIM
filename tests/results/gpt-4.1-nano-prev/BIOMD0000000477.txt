@@ -1,0 +1,10 @@
+Model: BIOMD0000000477
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:55:38
+
+Synonyms:
+mwa5d6f7e4_dc4d_4931_91ce_1e78e7b2f195: ['LPG', 'lysophosphatidylglycerol', 'lysophosphatidylglyceride']
+mw05469f51_73f7_4ba1_9f1a_bce5fea143c2: ['PIP2', 'phosphatidylinositol 4,5-bisphosphate', 'phosphatidylinositol 4,5-P2']
+mwf20834c8_a115_460b_859c_4e3ca1ffd953: ['DAG', 'diacylglycerol', '1,2-diacyl-sn-glycerol']
+
+Reason: The species are lipids involved in signaling pathways; LPG is lysophosphatidylglycerol, PIP2 is phosphatidylinositol 4,5-bisphosphate, DAG is diacylglycerol.

@@ -21,7 +21,8 @@ from .evaluation import (
     evaluate_models_in_folder,
     print_evaluation_results,
     calculate_species_statistics,
-    compare_with_amas_results
+    compare_results,
+    process_saved_llm_responses
 )
 
 __all__ = [
@@ -41,5 +42,6 @@ __all__ = [
     'evaluate_models_in_folder',
     'print_evaluation_results',
     'calculate_species_statistics',
-    'compare_with_amas_results'
+    'compare_with_amas_results',
+    'process_saved_llm_responses'
 ] 

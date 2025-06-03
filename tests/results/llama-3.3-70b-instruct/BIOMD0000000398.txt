@@ -1,0 +1,9 @@
+Model: BIOMD0000000398
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:18:18
+
+Synonyms:
+s101: ['Erlotinib', 'erlotinib hydrochloride', 'OSI-774']
+s147: ["6-bromoindirubin-3'-oxime", '6-bromoindirubin 3 oxime', 'BIO']
+
+Reason: s101 is annotated with standardized names for Erlotinib, a known drug, whereas s147 is annotated with synonyms for 6-bromoindirubin-3'-oxime, a compound that acts as an inhibitor, based on the provided display names and the context of the model describing signaling pathways and drug-based regulations.

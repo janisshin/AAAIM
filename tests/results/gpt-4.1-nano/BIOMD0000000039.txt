@@ -1,0 +1,11 @@
+Model: BIOMD0000000039
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:50:24
+
+Synonyms:
+Ca_cyt: ['calcium ion', 'cytosolic calcium', 'Ca2+ (cytoplasmic)']
+CaER: ['endoplasmic reticulum calcium', 'ER calcium', 'Ca2+ (ER)']
+CaM: ['calmodulin', 'Ca2+ binding protein', 'calcium/calmodulin complex']
+CaPr: ['calcium-pr', 'calcium-protein complex', 'UNK']
+
+Reason: Ca_cyt and CaER are cytosolic and ER calcium ions, respectively, common in calcium signaling. CaM is calmodulin, a well-known calcium-binding protein. CaPr is less specific; likely a calcium-protein complex or a placeholder, hence "UNK".

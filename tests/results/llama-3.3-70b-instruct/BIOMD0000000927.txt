@@ -1,0 +1,8 @@
+Model: BIOMD0000000927
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:34:32
+
+Synonyms:
+IAA: ['indole-3-acetic acid', 'indoleacetic acid', 'auxin']
+
+Reason: IAA is a common abbreviation for indole-3-acetic acid, a plant hormone also known as auxin, which is consistent with the model name "Responses_to_auxin_signals" and the display name 'IAA'.

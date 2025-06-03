@@ -1,0 +1,8 @@
+Model: BIOMD0000000276
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:08:41
+
+Synonyms:
+Ca: ['calcium', 'ionized calcium', 'calcium ion']
+
+Reason: The model is related to calcium homeostasis and the species Ca is referred to as "Ca_in_Plasma" in the display names, indicating that it represents calcium in its ionized form in the blood plasma. The synonyms are chosen based on the common terminology used in biochemistry and physiology to refer to calcium in its various forms.

@@ -1,0 +1,8 @@
+Model: BIOMD0000000276
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:04
+
+Synonyms:
+Ca: ['calcium ion', 'calcium', 'Ca(2+)']
+
+Reason: The species Ca is annotated as "Ca_in_Plasma" in the model, indicating plasma ionized calcium, which is commonly represented as calcium ion or Ca(2+).

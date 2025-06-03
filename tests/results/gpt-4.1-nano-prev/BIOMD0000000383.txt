@@ -1,0 +1,13 @@
+Model: BIOMD0000000383
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:43
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'ribulose bisphosphate', 'RuBP']
+PGA: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'PGA']
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'NADPH', 'reduced NADP']
+CO2: ['carbon dioxide', 'CO2']
+O2: ['oxygen', 'O2']
+NADP: ['nicotinamide adenine dinucleotide phosphate', 'NADP+', 'oxidized NADP']
+
+Reason: These are well-established biochemical names for the respective species, commonly used in metabolic pathways.

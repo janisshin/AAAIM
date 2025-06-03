@@ -1,0 +1,12 @@
+Model: BIOMD0000001054
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:10:51
+
+Synonyms:
+FM: ['fumaric acid', 'fumarate', 'trans-butenedioic acid']
+Thb: ['thrombin', 'thrombin fragment', 'protein']
+C0: ['unknown compound', 'unknown', 'UNK']
+C1: ['unknown compound', 'unknown', 'UNK']
+C2: ['unknown compound', 'unknown', 'UNK']
+
+Reason: The model relates to fibrin polymerization, involving thrombin and fibrinogen derivatives. "FM" is likely fumaric acid or fumarate, common in biochemical contexts. "Thb" is thrombin, a key enzyme in clotting. C0, C1, C2 are unspecified intermediates or complexes, with no clear identities provided.

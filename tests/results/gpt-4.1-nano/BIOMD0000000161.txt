@@ -1,0 +1,23 @@
+Model: BIOMD0000000161
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:53:53
+
+Synonyms:
+PIP_PM: ['phosphatidylinositol 4-phosphate', 'PI4P', 'phosphatidylinositol phosphate']
+PI_PM: ['phosphatidylinositol', 'PI', 'phosphatidylinositol']
+CaCAPRI_PM_PM: ['calcium-dependent Ras GTPase-activating protein CAPRI', 'CAPRI', 'RasGAP']
+PIP2_PM: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'phosphatidylinositol 4,5-bisphosphate']
+Ca: ['calcium ion', 'Ca2+', 'calcium']
+RinhCa: ['calcium-inhibited Ras GTPase-activating protein', 'RasGAP', 'Ca2+-regulated RasGAP']
+IP3: ['inositol 1,4,5-trisphosphate', 'IP3', 'InsP3']
+Ca_RasGRP_GM_GM: ['calcium-activated Ras guanine nucleotide exchange factor', 'RasGRP', 'Ca2+-activated RasGEF']
+DAG_GM_GM: ['diacylglycerol', 'DAG', 'diacylglycerol']
+CaCAPRI_cyt: ['cytoplasmic calcium-dependent Ras GTPase-activating protein', 'CAPRI', 'RasGAP']
+DAG_PM: ['diacylglycerol', 'DAG', 'diacylglycerol']
+Ca_PLCe_cyt: ['cytoplasmic calcium-dependent phospholipase C epsilon', 'PLCε', 'phospholipase C epsilon']
+Ras_CaPLCe_GM: ['Ras and calcium-activated phospholipase C epsilon complex', 'Ras-PLCε', 'Ras and PLCε complex']
+PIP2_GM_GM: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'phosphatidylinositol 4,5-bisphosphate']
+Ca_ER: ['endoplasmic reticulum calcium', 'Ca2+ ER store', 'ER calcium']
+CaRasGRP1_cyt: ['cytoplasmic calcium-activated Ras guanine nucleotide exchange factor 1', 'RasGRP1', 'Ca2+-activated RasGEF']
+
+Reason: All species are related to phosphoinositide signaling, calcium signaling, or Ras pathway components, with standard names matching common biochemical terminology.

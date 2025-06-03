@@ -1,0 +1,30 @@
+Model: BIOMD0000000393
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:45:16
+
+Synonyms:
+HeP: ['phosphoethanolamine', 'ethanolamine phosphate', 'UNK']
+SBP: ['sedoheptulose-1,7-bisphosphate', 'sedoheptulose bisphosphate', 'UNK']
+S7P: ['sedoheptulose-7-phosphate', 'sedoheptulose phosphate', 'UNK']
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+NADPH: ['nicotinamide adenine dinucleotide phosphate (reduced)', 'NADPH', 'reduced NADP']
+Pi: ['inorganic phosphate', 'Pi', 'phosphate']
+CO2: ['carbon dioxide', 'CO2', 'carbon dioxide']
+O2: ['oxygen', 'O2', 'dioxygen']
+NADP: ['nicotinamide adenine dinucleotide phosphate', 'NADP', 'oxidized NADP']
+GLYc: ['glycolate (cytosolic)', 'glycolate', 'UNK']
+SERc: ['serine (cytosolic)', 'serine', 'UNK']
+HePc: ['hydroxyethylphosphonate', 'HePc', 'phosphonate compound']
+SucPc: ['sucrose (phosphorylated)', 'sucrose phosphate', 'UNK']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD', 'oxidized NAD']
+NADH: ['nicotinamide adenine dinucleotide (reduced)', 'NADH', 'reduced NAD']
+GLUc: ['glucose (cytosolic)', 'glucose', 'UNK']
+Pic: ['phosphocholine', 'phosphocholine', 'UNK']
+PiTc: ['inorganic phosphate (thylakoid)', 'Pi', 'phosphate']
+ATPc: ['adenosine triphosphate (cytosolic)', 'ATP', 'cytosolic ATP']
+ADPc: ['adenosine diphosphate (cytosolic)', 'ADP', 'cytosolic ADP']
+PiPic: ['phosphoinositide', 'PI', 'phosphatidylinositol phosphate']
+
+Reason: 
+HeP is likely a phosphorylated ethanolamine derivative; SBP and S7P are well-known intermediates in the Calvin cycle; ATP, ADP, NADPH, NAD, NADH, Pi, CO2, and O2 are standard metabolites involved in photosynthesis and related pathways; GLYc and SERc are cytosolic amino acids; HePc and SucPc are less common but plausible phosphorylated compounds; GLUc is a common sugar; Pic and PiPic are less clear but possibly related to phospholipids or signaling molecules.

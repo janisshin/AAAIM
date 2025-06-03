@@ -1,0 +1,11 @@
+Model: BIOMD0000000651
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:05:51
+
+Synonyms:
+AktI: ['AKT1', 'Protein kinase B', 'AKT']
+
+Reason: AktI likely refers to AKT1, a well-known serine/threonine kinase involved in cell signaling.
+
+MEKI: "MEK1", "MAP2K1", "Mitogen-activated protein kinase kinase 1"
+Reason: MEKI probably denotes MEK1, a kinase in the MAPK signaling pathway.

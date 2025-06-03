@@ -1,0 +1,34 @@
+Model: BIOMD0000000428
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:20:57
+
+Synonyms:
+ATP_g: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+ATP_c: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+Pyr_c: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+DHAP_c: ['dihydroxyacetone phosphate', 'DHAP', '3-hydroxy-2-oxopropyl phosphate']
+Pyr_e: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+Gly3P_c: ['3-phosphoglyceraldehyde', 'glyceraldehyde 3-phosphate', 'G3P']
+DHAP_g: ['dihydroxyacetone phosphate', 'DHAP', '3-hydroxy-2-oxopropyl phosphate']
+Glc6P_g: ['glucose 6-phosphate', 'D-glucose 6-phosphate', 'G6P']
+Fru16BP_g: ['fructose 1,6-bisphosphate', 'D-fructose 1,6-bisphosphate', 'FBP']
+ADP_c: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+_3PGA_c: ['3-phosphoglyceric acid', '3-phosphoglycerate', 'PGA']
+Gly_e: ['glycine', 'aminoacetic acid', '2-aminoethanoic acid']
+GA3P_g: ['glyceraldehyde 3-phosphate', '3-phosphoglyceraldehyde', 'G3P']
+Gly_c: ['glycine', 'aminoacetic acid', '2-aminoethanoic acid']
+O2_c: ['oxygen', 'dioxygen', 'molecular oxygen']
+AMP_g: ['adenosine monophosphate', 'AMP', "adenosine 5'-monophosphate"]
+Fru6P_g: ['fructose 6-phosphate', 'D-fructose 6-phosphate', 'F6P']
+Glc_g: ['glucose', 'D-glucose', 'blood sugar']
+Gly3P_g: ['3-phosphoglyceraldehyde', 'glyceraldehyde 3-phosphate', 'G3P']
+Gly_g: ['glycine', 'aminoacetic acid', '2-aminoethanoic acid']
+NADH_g: ['reduced nicotinamide adenine dinucleotide', 'NADH', 'nicotinamide adenine dinucleotide (reduced)']
+AMP_c: ['adenosine monophosphate', 'AMP', "adenosine 5'-monophosphate"]
+Glc_c: ['glucose', 'D-glucose', 'blood sugar']
+Pi_g: ['phosphate', 'inorganic phosphate', 'orthophosphate']
+ADP_g: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+_3PGA_g: ['3-phosphoglyceric acid', '3-phosphoglycerate', 'PGA']
+Glc_e: ['glucose', 'D-glucose', 'blood sugar']
+
+Reason: The model is a glycolysis model, and most of the species are intermediates or products of glycolysis, which can be identified by their display names or common knowledge of the glycolytic pathway. Some species, like ATP, ADP, AMP, NADH, and Pi, are common biochemical molecules with well-known names. Gly_e, Gly_c, and Gly_g are likely glycine, but since glycine is not typically a part of glycolysis, it's possible that they represent different things, but without more information, glycine is the most likely candidate. O2_c is likely oxygen, as it's a common reactant in many biochemical reactions.

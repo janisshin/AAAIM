@@ -1,0 +1,15 @@
+Model: BIOMD0000000050
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:35:04
+
+Synonyms:
+Cn: ['cyano group', 'cyano', 'nitrile group']
+Gly: ['glycine', 'gly', 'aminoacetic acid']
+FA: ['fatty acid', 'palmitic acid', 'stearic acid']
+AA: ['amino acid', 'generic amino acid', 'proteinogenic amino acid']
+Man: ['mannose', 'mannose sugar', 'aldohexose']
+Glu: ['glucose', 'dextrose', 'blood sugar']
+MG: ['methylglyoxal', 'pyruvaldehyde', '2-oxopropanal']
+Fru: ['fructose', 'levulose', 'fruit sugar']
+
+Reason: These are common chemical names or synonyms for the given abbreviations, all relevant to biochemical contexts.

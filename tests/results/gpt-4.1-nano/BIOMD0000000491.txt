@@ -1,0 +1,10 @@
+Model: BIOMD0000000491
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:12:32
+
+Synonyms:
+s2: ['salt', 'sodium chloride', 'NaCl']
+s4: ['hydrogen peroxide', 'H2O2', 'peroxide']
+s6: ['ethylene', 'ethene', 'ethene gas']
+
+Reason: s2 is labeled as "Salt," likely referring to common salt (NaCl). s4 is "H2O2," a well-known peroxide. s6 is "Ethylene," a common plant hormone (C2H4).

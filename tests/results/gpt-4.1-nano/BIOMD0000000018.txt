@@ -1,0 +1,25 @@
+Model: BIOMD0000000018
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:50:12
+
+Synonyms:
+FH2f: ['dihydrofolate', 'tetrahydrofolate', 'dihydrofolic acid']
+FH2b: ['dihydrofolate', 'dihydrofolic acid']
+FH4: ['tetrahydrofolate', 'THF']
+CH2FH4: ['5,10-methylene-tetrahydrofolate', 'methylene-THF']
+CH3FH4: ['5-methyl-tetrahydrofolate', 'methyl-THF']
+CHOFH4: ['10-formyl-tetrahydrofolate', 'formyl-THF']
+FFH2: ['10-formyl-tetrahydrofolate', 'formyl-THF']
+HCHO: ['formaldehyde']
+AICAR: ['5-aminoimidazole-4-carboxamide ribonucleotide']
+dUMP: ['deoxyuridine monophosphate']
+serine: ['serine']
+formate: ['formate']
+ATP: ['adenosine triphosphate']
+glutamine: ['glutamine']
+glycine: ['glycine']
+NADP: ['nicotinamide adenine dinucleotide phosphate']
+NADPH: ['reduced nicotinamide adenine dinucleotide phosphate']
+homocysteine: ['homocysteine']
+
+Reason: All are recognized biochemical compounds, mostly folate derivatives or common metabolites; "HCHO" is formaldehyde, a simple aldehyde.

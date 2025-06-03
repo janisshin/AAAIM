@@ -1,0 +1,10 @@
+Model: BIOMD0000000283
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:09:18
+
+Synonyms:
+X: ['UNK']
+P: ['hydrogen peroxide', 'peroxide']
+Q: ['peroxidase', 'enzyme-substrate compound']
+
+Reason: X has no display name or reaction information that can be linked to a specific chemical entity, so it is annotated as "UNK". P is likely "hydrogen peroxide" because the model is described in the context of peroxidase and hydrogen peroxide kinetics. Q is likely "peroxidase" or "enzyme-substrate compound" because it is involved in a reaction with P (hydrogen peroxide) and is mentioned in the context of enzyme-substrate kinetics.

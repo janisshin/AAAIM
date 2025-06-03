@@ -1,0 +1,14 @@
+Model: BIOMD0000000387
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:50
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'RuBP', 'ribulose bisphosphate']
+PGA: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'PGA']
+NADPH: ['NADPH', 'nicotinamide adenine dinucleotide phosphate (reduced)', 'NADP(H)']
+CO2: ['carbon dioxide', 'CO2', 'carbonic acid']
+O2: ['oxygen', 'O2', 'dioxygen']
+NADP: ['NADP+', 'nicotinamide adenine dinucleotide phosphate (oxidized)', 'NADP']
+starch: ['starch', 'amylose', 'amylopectin']
+
+Reason: All are well-known biochemical compounds involved in photosynthesis and metabolism; NADPH and NADP are related redox cofactors, and starch is a storage carbohydrate.

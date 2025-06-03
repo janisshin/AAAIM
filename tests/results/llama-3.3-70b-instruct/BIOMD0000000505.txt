@@ -1,0 +1,39 @@
+Model: BIOMD0000000505
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:08:17
+
+Synonyms:
+C16AcylCoAMAT: ['palmitoyl-CoA', 'hexadecanoyl-CoA', 'palmitoyl coenzyme A']
+C16EnoylCoAMAT: ['hexadecenoyl-CoA', 'palmitoleoyl-CoA', '16-enoyl-CoA']
+C16KetoacylCoAMAT: ['hexadecanoyl-CoA(4-)', 'palmitoyl-CoA(4-)', '16-ketoacyl-CoA']
+C14AcylCoAMAT: ['myristoyl-CoA', 'tetradecanoyl-CoA', 'myristoyl coenzyme A']
+C14EnoylCoAMAT: ['myristoleoyl-CoA', 'tetradecenoyl-CoA', '14-enoyl-CoA']
+C14KetoacylCoAMAT: ['tetradecanoyl-CoA(4-)', 'myristoyl-CoA(4-)', '14-ketoacyl-CoA']
+C12AcylCoAMAT: ['dodecanoyl-CoA', 'lauroyl-CoA', 'dodecanoyl coenzyme A']
+C12EnoylCoAMAT: ['dodecenoyl-CoA', 'lauroleoyl-CoA', '12-enoyl-CoA']
+C12KetoacylCoAMAT: ['dodecanoyl-CoA(4-)', 'lauroyl-CoA(4-)', '12-ketoacyl-CoA']
+C10AcylCoAMAT: ['decanoyl-CoA', 'caprinoyl-CoA', 'decanoyl coenzyme A']
+C10EnoylCoAMAT: ['decenoyl-CoA', 'caprinoleoyl-CoA', '10-enoyl-CoA']
+C10KetoacylCoAMAT: ['decanoyl-CoA(4-)', 'caprinoyl-CoA(4-)', '10-ketoacyl-CoA']
+C8AcylCoAMAT: ['octanoyl-CoA', 'capryloyl-CoA', 'octanoyl coenzyme A']
+C8EnoylCoAMAT: ['octenoyl-CoA', 'capryoleoyl-CoA', '8-enoyl-CoA']
+C8KetoacylCoAMAT: ['octanoyl-CoA(4-)', 'capryloyl-CoA(4-)', '8-ketoacyl-CoA']
+C6AcylCoAMAT: ['hexanoyl-CoA', 'caproyl-CoA', 'hexanoyl coenzyme A']
+C6EnoylCoAMAT: ['hexenoyl-CoA', 'caproleoyl-CoA', '6-enoyl-CoA']
+C6KetoacylCoAMAT: ['hexanoyl-CoA(4-)', 'caproyl-CoA(4-)', '6-ketoacyl-CoA']
+C4AcylCoAMAT: ['butanoyl-CoA', 'butyryl-CoA', 'butanoyl coenzyme A']
+C4EnoylCoAMAT: ['butenoyl-CoA', 'butyroleoyl-CoA', '4-enoyl-CoA']
+C4AcetoacylCoAMAT: ['acetoacetyl-CoA', 'acetoacetyl coenzyme A', '3-oxobutanoyl-CoA']
+AcetylCoAMAT: ['acetyl-CoA', 'acetyl coenzyme A', 'ethanoyl-CoA']
+FADHMAT: ['FADH', 'flavin adenine dinucleotide (reduced)', 'FADH2']
+NADHMAT: ['NADH', 'nicotinamide adenine dinucleotide (reduced)', 'NADH2']
+CoAMAT: ['CoA', 'coenzyme A', 'coenzyme A (unspecified)']
+C16AcylCoACYT: ['palmitoyl-carnitine', 'hexadecanoyl-carnitine', 'palmitoyl-L-carnitine']
+CarCYT: ['L-carnitine', 'carnitine', 'vitamin Bt']
+CoACYT: ['acetyl-carnitine', 'acetylcarnitine', 'O-acetylcarnitine']
+MalCoACYT: ['malonyl-carnitine', 'malonyl-L-carnitine', '3-carboxypropionylcarnitine']
+CarMAT: ['carnitine', 'L-carnitine', 'vitamin Bt']
+FADtMAT: ['FAD', 'flavin adenine dinucleotide', 'FAD (oxidized)']
+CoAMATt: ['CoA', 'coenzyme A', 'coenzyme A (unspecified)']
+
+Reason: The model is related to fatty acid β-oxidation, and the species names suggest involvement in this pathway. The standardized names are based on the common names of the fatty acyl-CoA and carnitine species, and the cofactors FAD and NADH. The lack of reaction information makes it difficult to determine the exact roles of some species, but the names can be inferred from the context of the model and the display names provided.

@@ -1,0 +1,13 @@
+Model: BIOMD0000000637
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:05:45
+
+Synonyms:
+Gt: ['GTP', 'guanosine triphosphate', 'guanosine triphosphate (GTP)']
+Gd: ['GDP', 'guanosine diphosphate', 'guanosine diphosphate (GDP)']
+LRGt: ['LGR-GTP', 'LGR bound GTP', 'LGR-GTP complex']
+RGt: ['RGS-GTP', 'RGS bound GTP', 'RGS-GTP complex']
+RGd: ['RGS-GDP', 'RGS bound GDP', 'RGS-GDP complex']
+LRGd: ['LGR-RGS-GDP', 'LGR-RGS complex with GDP', 'LGR-RGS-GDP complex']
+
+Reason: All species are related to GTP/GDP cycling and receptor-G protein interactions; Gt and Gd are standard nucleotide forms; the others are complexes involving receptor and RGS proteins.

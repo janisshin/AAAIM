@@ -1,0 +1,12 @@
+Model: BIOMD0000000165
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:38:17
+
+Synonyms:
+Gsa_gdp_cell: ['GDP', 'guanosine diphosphate', 'GDP (cytoplasmic)']
+Gsa_gtp_cell: ['GTP', 'guanosine triphosphate', 'GTP (cytoplasmic)']
+ATP_cell: ['ATP', 'adenosine triphosphate', 'adenosine triphosphate (cytoplasmic)']
+cAMP_cell: ['cAMP', 'cyclic AMP', 'cyclic adenosine monophosphate']
+DMNB_cAMP_cell: ['DMNB-cAMP', 'dinitromethylbenzamide cAMP', 'cyclic AMP analog']
+
+Reason: These species are standard signaling molecules and nucleotides involved in G-protein and cAMP signaling pathways; their names are well-established in biochemical ontologies.

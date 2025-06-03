@@ -1,0 +1,11 @@
+Model: BIOMD0000000524
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:01:03
+
+Synonyms:
+PrNES_mCherry: ['PrNES', 'nuclear export signal', 'UNK']
+PrER_mGFP: ['PrER', 'endoplasmic reticulum', 'UNK']
+PrNES: ['PrNES', 'nuclear export signal', 'UNK']
+PrER: ['PrER', 'endoplasmic reticulum', 'UNK']
+
+Reason: These are likely fusion proteins with PrNES and PrER targeting signals fused to fluorescent proteins (mCherry, mGFP). The core components are the PrNES and PrER sequences, which are not standard chemical entities but biological targeting motifs. Therefore, only the motifs are annotated; the fluorescent proteins are not chemical entities. "UNK" is used for the fusion constructs as they are not chemical molecules.

@@ -1,0 +1,34 @@
+Model: BIOMD0000000512
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:00:17
+
+Synonyms:
+A_b: ['arachidonic acid', 'arachidonate', 'arachidonic acid (free)']
+O_b: ['oleic acid', 'oleate', 'cis-9-octadecenoic acid']
+P_b: ['palmitic acid', 'hexadecanoic acid', 'palmitate']
+L_b: ['linoleic acid', 'linoleate', 'cis,cis-9,12-octadecadienoic acid']
+NAPE_b: ['N-acyl phosphatidylethanolamine', 'NAPE', 'N-acyl ethanolamine phospholipid']
+NOPE_b: ['N-oleoyl phosphatidylethanolamine', 'NOPE', 'oleoyl ethanolamide phospholipid']
+NPPE_b: ['N-palmitoyl phosphatidylethanolamine', 'NPPE', 'palmitoyl ethanolamide phospholipid']
+NLPE_b: ['N-linoleoyl phosphatidylethanolamine', 'NLPE', 'linoleoyl ethanolamide phospholipid']
+FAAHinh_b: ['FAAH inhibitor', 'fatty acid amide hydrolase inhibitor', 'FAAH blocker']
+A_r: ['arachidonic acid', 'arachidonate', 'arachidonic acid (free)']
+O_r: ['oleic acid', 'oleate', 'cis-9-octadecenoic acid']
+P_r: ['palmitic acid', 'hexadecanoic acid', 'palmitate']
+L_r: ['linoleic acid', 'linoleate', 'cis,cis-9,12-octadecadienoic acid']
+NAPE_r: ['N-acyl phosphatidylethanolamine', 'NAPE', 'N-acyl ethanolamine phospholipid']
+NOPE_r: ['N-oleoyl phosphatidylethanolamine', 'NOPE', 'oleoyl ethanolamide phospholipid']
+NPPE_r: ['N-palmitoyl phosphatidylethanolamine', 'NPPE', 'palmitoyl ethanolamide phospholipid']
+NLPE_r: ['N-linoleoyl phosphatidylethanolamine', 'NLPE', 'linoleoyl ethanolamide phospholipid']
+FAAHinh_r: ['FAAH inhibitor', 'fatty acid amide hydrolase inhibitor', 'FAAH blocker']
+A_m: ['arachidonic acid', 'arachidonate', 'arachidonic acid (free)']
+O_m: ['oleic acid', 'oleate', 'cis-9-octadecenoic acid']
+P_m: ['palmitic acid', 'hexadecanoic acid', 'palmitate']
+L_m: ['linoleic acid', 'linoleate', 'cis,cis-9,12-octadecadienoic acid']
+FAAHinh_m: ['FAAH inhibitor', 'fatty acid amide hydrolase inhibitor', 'FAAH blocker']
+A_p: ['arachidonic acid', 'arachidonate', 'arachidonic acid (free)']
+O_p: ['oleic acid', 'oleate', 'cis-9-octadecenoic acid']
+P_p: ['palmitic acid', 'hexadecanoic acid', 'palmitate']
+L_p: ['linoleic acid', 'linoleate', 'cis,cis-9,12-octadecadienoic acid']
+
+Reason: All species are likely related to fatty acids, phospholipids, or enzyme inhibitors involved in endocannabinoid metabolism.

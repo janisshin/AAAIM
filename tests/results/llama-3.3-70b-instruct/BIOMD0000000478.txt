@@ -1,0 +1,26 @@
+Model: BIOMD0000000478
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:59:12
+
+Synonyms:
+Ras2_GDP: ['Ras protein', 'GDP-bound Ras', 'Ras-GDP']
+Ras2_GDP_Cdc25: ['Ras-Cdc25 complex', 'GDP-bound Ras-Cdc25', 'UNK']
+GDP: ['guanosine diphosphate', 'GDP', "guanosine 5'-diphosphate"]
+GTP: ['guanosine triphosphate', 'GTP', "guanosine 5'-triphosphate"]
+Ras2_GTP_Cdc25: ['Ras-Cdc25 complex', 'GTP-bound Ras-Cdc25', 'UNK']
+Ras2_GTP: ['Ras protein', 'GTP-bound Ras', 'Ras-GTP']
+Ras2_GTP_Ira2: ['Ras-Ira2 complex', 'GTP-bound Ras-Ira2', 'UNK']
+Ras2_GTP_CYR1: ['Ras-CYR1 complex', 'GTP-bound Ras-CYR1', 'UNK']
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+cAMP: ['cyclic adenosine monophosphate', 'cAMP', 'cyclic AMP']
+cAMP_PKA: ['cAMP-protein kinase A complex', 'cAMP-PKA', 'UNK']
+IIcAMP_PKA: ['UNK', 'UNK', 'UNK']
+IIIcAMP_PKA: ['UNK', 'UNK', 'UNK']
+IVcAMP_PKA: ['UNK', 'UNK', 'UNK']
+R_2cAMP: ['UNK', 'UNK', 'UNK']
+cAMP_Pde1f: ['cAMP-phosphodiesterase 1f complex', 'cAMP-Pde1f', 'UNK']
+cAMP_Pde2: ['cAMP-phosphodiesterase 2 complex', 'cAMP-Pde2', 'UNK']
+AMP: ['adenosine monophosphate', 'AMP', "adenosine 5'-monophosphate"]
+Ras2_GTP_Ira2P: ['Ras-Ira2P complex', 'GTP-bound Ras-Ira2P', 'UNK']
+
+Reason: Most species are annotated based on their names and the context of the Ras/cAMP/PKA pathway. Ras2_GDP and Ras2_GTP are likely referring to the Ras protein bound to GDP or GTP, respectively. cAMP and its related species are annotated based on their roles in the pathway. Species with unclear or unknown functions, such as IIcAMP_PKA, IIIcAMP_PKA, and IVcAMP_PKA, are annotated as "UNK" due to lack of information. Similarly, species like R_2cAMP are annotated as "UNK" due to unclear meaning. Complexes, such as Ras2_GDP_Cdc25 and cAMP_PKA, are annotated based on their component parts.

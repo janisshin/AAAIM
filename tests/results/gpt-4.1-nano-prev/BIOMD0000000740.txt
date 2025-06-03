@@ -1,0 +1,12 @@
+Model: BIOMD0000000740
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:08:04
+
+Synonyms:
+IIa: ['thrombin', 'activated factor II', 'prothrombinase']
+II: ['factor II', 'prothrombin', 'thrombin precursor']
+IIa_F: ['activated factor II', 'thrombin', 'factor IIa']
+II_B: ['factor IIb', 'prothrombin fragment', 'inactive prothrombin']
+Phospholipid: ['phosphatidylserine', 'membrane phospholipid', 'cell membrane phospholipid']
+
+Reason: IIa and II are well-known coagulation factors, with IIa being thrombin and II as prothrombin. IIa_F likely refers to activated thrombin. II_B is a less common notation but probably a fragment or inactive form. Phospholipid is a generic membrane component involved in coagulation.

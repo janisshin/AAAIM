@@ -1,0 +1,26 @@
+Model: BIOMD0000000303
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:10:51
+
+Synonyms:
+PC: ['phosphocholine', 'choline phosphate', 'phosphorylcholine']
+PC_CRP: ['phosphocholine-CRP', 'CRP-phosphocholine', 'C-reactive protein-phosphocholine']
+PC_CRP_C1: ['phosphocholine-CRP-C1', 'CRP-phosphocholine-C1', 'C-reactive protein-phosphocholine-C1']
+GlcNac: ['N-acetylglucosamine', 'glucosamine N-acetyl', '2-acetamido-glucose']
+GlcNac_LF: ['N-acetylglucosamine-L-ficolin', 'L-ficolin-N-acetylglucosamine', 'glucosamine N-acetyl-L-ficolin']
+GlcNac_LF_MASP: ['N-acetylglucosamine-L-ficolin-MASP', 'L-ficolin-N-acetylglucosamine-MASP', 'glucosamine N-acetyl-L-ficolin-MASP']
+PC_CRP_LF: ['phosphocholine-CRP-L-ficolin', 'CRP-phosphocholine-L-ficolin', 'C-reactive protein-phosphocholine-L-ficolin']
+PC_CRP_LF_MASP: ['phosphocholine-CRP-L-ficolin-MASP', 'CRP-phosphocholine-L-ficolin-MASP', 'C-reactive protein-phosphocholine-L-ficolin-MASP']
+GlcNac_LF_CRP: ['N-acetylglucosamine-L-ficolin-CRP', 'L-ficolin-N-acetylglucosamine-CRP', 'glucosamine N-acetyl-L-ficolin-CRP']
+GlcNac_LF_CRP_C1: ['N-acetylglucosamine-L-ficolin-CRP-C1', 'L-ficolin-N-acetylglucosamine-CRP-C1', 'glucosamine N-acetyl-L-ficolin-CRP-C1']
+C4BP_PC_CRP: ['C4b-binding protein-phosphocholine-CRP', 'C4BP-phosphocholine-CRP', 'C4b-binding protein-phosphocholine-C-reactive protein']
+C4BP_GlcNac_LF_CRP: ['C4b-binding protein-N-acetylglucosamine-L-ficolin-CRP', 'C4BP-N-acetylglucosamine-L-ficolin-CRP', 'C4b-binding protein-glucosamine N-acetyl-L-ficolin-CRP']
+PC_CRP_LF_C1: ['phosphocholine-CRP-L-ficolin-C1', 'CRP-phosphocholine-L-ficolin-C1', 'C-reactive protein-phosphocholine-L-ficolin-C1']
+C4BP_PC_CRP_LF: ['C4b-binding protein-phosphocholine-CRP-L-ficolin', 'C4BP-phosphocholine-CRP-L-ficolin', 'C4b-binding protein-phosphocholine-C-reactive protein-L-ficolin']
+GlcNac_LF_CRP_MASP: ['N-acetylglucosamine-L-ficolin-CRP-MASP', 'L-ficolin-N-acetylglucosamine-CRP-MASP', 'glucosamine N-acetyl-L-ficolin-CRP-MASP']
+PC_CRP_LF_C1_MASP: ['phosphocholine-CRP-L-ficolin-C1-MASP', 'CRP-phosphocholine-L-ficolin-C1-MASP', 'C-reactive protein-phosphocholine-L-ficolin-C1-MASP']
+GlcNac_LF_C1_MASP: ['N-acetylglucosamine-L-ficolin-C1-MASP', 'L-ficolin-N-acetylglucosamine-C1-MASP', 'glucosamine N-acetyl-L-ficolin-C1-MASP']
+GlcNac_HF: ['N-acetylglucosamine-H-ficolin', 'H-ficolin-N-acetylglucosamine', 'glucosamine N-acetyl-H-ficolin']
+GlcNac_HF_MASP: ['N-acetylglucosamine-H-ficolin-MASP', 'H-ficolin-N-acetylglucosamine-MASP', 'glucosamine N-acetyl-H-ficolin-MASP']
+
+Reason: The species names are annotated based on the display names and the context of the Complement System model. The annotations are ranked by likelihood, with the most likely names first. The names are based on the components of the Complement System, such as phosphocholine, C-reactive protein, L-ficolin, and MASP. The annotations for GlcNac and its variants are based on the common name for N-acetylglucosamine. The annotations for C4BP and its variants are based on the common name for C4b-binding protein. The annotations for PC and its variants are based on the common name for phosphocholine. The annotations for the complexes, such as PC_CRP and GlcNac_LF_CRP, are based on the combination of the individual components.

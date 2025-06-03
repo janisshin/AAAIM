@@ -1,0 +1,8 @@
+Model: BIOMD0000000659
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:28:45
+
+Synonyms:
+Ca: ['calcium', 'calcium ion', 'Ca2+']
+
+Reason: The display name 'Ca' and the notes mentioning 'calcium signalling' suggest that Ca refers to calcium, a chemical element. The model discusses the role of calcium signaling in the ERK-MAPK signaling cascade, further supporting this annotation.

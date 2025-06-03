@@ -1,0 +1,10 @@
+Model: BIOMD0000000330
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:12:35
+
+Synonyms:
+Ca_cyt: ['calcium(2+)', 'Ca2+', 'calcium ion']
+Ca_ER: ['calcium(2+)', 'Ca2+', 'calcium ion']
+Ca_mit: ['calcium(2+)', 'Ca2+', 'calcium ion']
+
+Reason: All three species (Ca_cyt, Ca_ER, Ca_mit) are likely referring to calcium ions in different cellular compartments (cytosol, endoplasmic reticulum, and mitochondria, respectively), so they are all annotated with standardized names for calcium ion.

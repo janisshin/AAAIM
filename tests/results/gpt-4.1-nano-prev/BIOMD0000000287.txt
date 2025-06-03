@@ -1,0 +1,10 @@
+Model: BIOMD0000000287
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:17
+
+Synonyms:
+damDNA: ['damaged DNA', 'DNA damage', 'damaged deoxyribonucleic acid']
+ROS: ['reactive oxygen species', 'oxidative stress', 'free radicals']
+basalROS: ['basal reactive oxygen species', 'resting ROS', 'background ROS']
+
+Reason: damDNA is a marker of DNA damage; ROS and basalROS are reactive oxygen species involved in oxidative stress and signaling.

@@ -1,0 +1,25 @@
+Model: BIOMD0000000212
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:39:54
+
+Synonyms:
+Asp: ['aspartate', 'L-aspartic acid', 'aspartic acid']
+Lys: ['lysine', 'L-lysine', 'lysine']
+AdoMet: ['S-adenosylmethionine', 'SAM', 'S-adenosyl-L-methionine']
+AspP: ['L-aspartyl phosphate', 'Aspartyl phosphate', 'Aspartate phosphate']
+Thr: ['threonine', 'L-threonine', 'threonine']
+ASA: ['aspartate semialdehyde', 'ASP semialdehyde', 'aspartate-β-semialdehyde']
+Hser: ['homoserine', 'L-homoserine', 'homoserine']
+PHser: ['phosphohomoserine', 'O-phosphohomoserine', 'phospho-homoserine']
+Phosphate: ['phosphate', 'inorganic phosphate', 'PO4']
+Cys: ['cysteine', 'L-cysteine', 'cysteine']
+Cysta: ['cystathionine', 'cystathionine', 'L-cystathionine']
+Ile: ['isoleucine', 'L-isoleucine', 'isoleucine']
+Val: ['valine', 'L-valine', 'valine']
+LysTRNA: ['lysine-tRNA', 'Lys-tRNA', 'tRNA-Lys']
+ThrTRNA: ['threonine-tRNA', 'Thr-tRNA', 'tRNA-Thr']
+IleTRNA: ['isoleucine-tRNA', 'Ile-tRNA', 'tRNA-Ile']
+Sacc: ['saccharopine', 'saccharopine', 'N6-(L-lysinyl)-delta1-pyrroline-5-carboxylate']
+Gly: ['glycine', 'Gly', 'L-glycine']
+
+Reason: All are standard or common synonyms for these amino acids or related compounds, suitable for ontology lookup.

@@ -1,0 +1,12 @@
+Model: BIOMD0000000067
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:51:26
+
+Synonyms:
+AcCoA: ['acetyl-CoA', 'acetyl coenzyme A', 'acetyl-CoA']
+AcP: ['acetyl phosphate', 'acetyl phosphate', 'Acetyl phosphate']
+OAc: ['acetate', 'acetic acid', 'acetate ion']
+HOAc: ['acetic acid', 'vinegar', 'acetate']
+HOAc_E: ['acetate export', 'acetate efflux', 'acetate secretion']
+
+Reason: All species are known biochemical entities involved in metabolic pathways, with standard names matching their abbreviations. HOAc_E is a process/product, but commonly referred to as acetate export.

@@ -1,0 +1,11 @@
+Model: BIOMD0000000231
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:03:31
+
+Synonyms:
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+AMP: ['adenosine monophosphate', 'AMP', "adenosine 5'-monophosphate"]
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+NADH: ['nicotinamide adenine dinucleotide + hydrogen', 'NADH', 'reduced nicotinamide adenine dinucleotide']
+
+Reason: The model is about adenine nucleotides and the display names directly match common chemical names, making the annotations straightforward. NADH is also a well-known coenzyme and its annotation is based on common chemical names.

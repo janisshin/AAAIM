@@ -1,0 +1,15 @@
+Model: BIOMD0000000439
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:21:41
+
+Synonyms:
+GaGTP: ['GTP', 'guanosine triphosphate', "Guanosine 5'-triphosphate"]
+RGSGaGTP: ['UNK']
+GaGDPP: ['GDP', 'guanosine diphosphate', "Guanosine 5'-diphosphate"]
+GaGTPEffector: ['UNK']
+inertGaGTP: ['GTP', 'guanosine triphosphate', "Guanosine 5'-triphosphate"]
+RGSinertGaGTP: ['UNK']
+GaGDP: ['GDP', 'guanosine diphosphate', "Guanosine 5'-diphosphate"]
+P: ['phosphate', 'orthophosphate', 'phosphoric acid']
+
+Reason: GaGTP and inertGaGTP are likely GTP due to the display name and reaction involvement, GaGDPP and GaGDP are likely GDP due to the reaction sequence, P is likely phosphate due to the reaction producing GaGDP + P, RGSGaGTP, GaGTPEffector, and RGSinertGaGTP are unknown due to lack of clear chemical information in the display names and reactions.

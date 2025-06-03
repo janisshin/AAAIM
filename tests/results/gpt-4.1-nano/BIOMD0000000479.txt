@@ -1,0 +1,18 @@
+Model: BIOMD0000000479
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:12:18
+
+Synonyms:
+GaGTP: ['GTP', 'guanosine triphosphate', 'GTP']
+GaGTPEffector: ['GTP effector', 'GTP-binding effector', 'GTP effector protein']
+RGSmGaGTP: ['GTP-bound RGS', 'RGS GTP complex', 'RGS GTP']
+GaGTPEffectorOFF: ['inactive GTP effector', 'GTP effector OFF', 'GTP effector inactive']
+RGSmGaGTPEffectorOFF: ['inactive RGS GTP effector complex', 'RGS GTP effector OFF', 'RGS GTP inactive']
+GaGDPP: ['GDP', 'guanosine diphosphate', 'GDP']
+LRRGSmGaGTP: ['GTP-bound RGS complex', 'RGS GTP', 'GTP-RGS complex']
+RRGSmGaGTP: ['GTP-bound RGS', 'RGS GTP', 'GTP-RGS']
+LRRGSmGaGTPEffectorOFF: ['inactive RGS GTP-effector complex', 'RGS GTP effector OFF', 'inactive RGS GTP complex']
+GaGDP: ['GDP', 'guanosine diphosphate', 'GDP']
+P: ['phosphate', 'Pi', 'inorganic phosphate']
+
+Reason: All species are related to GTP/GDP cycling or RGS proteins involved in G-protein signaling, which are well-characterized nucleotide and effector molecules.

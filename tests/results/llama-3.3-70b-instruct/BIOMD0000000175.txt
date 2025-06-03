@@ -1,0 +1,10 @@
+Model: BIOMD0000000175
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:57:11
+
+Synonyms:
+P3: ['phosphatidylinositol 3,4,5-trisphosphate', 'phosphatidylinositol (3,4,5)-trisphosphate', 'PIP3']
+RsD: ["guanosine 5'-diphosphate Ras", 'Ras-GDP', 'Ras guanosine diphosphate']
+RsT: ["guanosine 5'-triphosphate Ras", 'Ras-GTP', 'Ras guanosine triphosphate']
+
+Reason: The display names provided directly map to standardized names, with P3 corresponding to phosphatidylinositol 3,4,5-trisphosphate (PIP3), RsD to RasGDP, and RsT to RasGTP, based on common biochemical nomenclature and the context of the ErbB model, which involves signaling pathways where these molecules play key roles.

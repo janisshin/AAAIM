@@ -1,0 +1,10 @@
+Model: BIOMD0000000932
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:08:59
+
+Synonyms:
+Gp: ['glutamate transporter', 'glutamate membrane transporter', 'Glt']
+Gi: ['glutamate dehydrogenase', 'glutamate oxidase', 'glutamate enzyme']
+A: ['ammonia', 'NH3', 'ammonia molecule']
+
+Reason: Gp and Gi are involved in glutamate uptake and metabolism, respectively, so their names relate to glutamate transport and enzymatic activity. A is ammonia, a common metabolic product.

@@ -1,0 +1,12 @@
+Model: BIOMD0000000373
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:59:13
+
+Synonyms:
+c: ['cytosolic calcium', 'Ca2+ (cytoplasmic)', 'free calcium']
+cer: ['ceramide', 'cer', 'sphingolipid']
+g6p: ['glucose-6-phosphate', 'G6P', 'glucose-6-phosphate']
+fbp: ['fructose-1,6-bisphosphate', 'FBP', 'fructose 1,6-bisphosphate']
+adp: ['adenosine diphosphate', 'ADP', 'adenine nucleotide']
+
+Reason: The species are common biochemical entities involved in cellular metabolism and signaling. "c" likely refers to cytosolic calcium, "cer" to ceramide, "g6p" to glucose-6-phosphate, "fbp" to fructose-1,6-bisphosphate, and "adp" to adenosine diphosphate.

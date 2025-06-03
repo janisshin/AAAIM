@@ -1,0 +1,9 @@
+Model: BIOMD0000000378
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:36
+
+Synonyms:
+Ca_i_cytosolic_calcium: ['calcium ion', 'Ca2+', 'cytosolic calcium']
+Ca_lum: ['luminal calcium', 'calcium in ER lumen', 'endoplasmic reticulum calcium']
+
+Reason: Ca_i_cytosolic_calcium represents free calcium in the cytosol, commonly called calcium ion or Ca2+. Ca_lum refers to calcium within the ER lumen, often called luminal calcium or ER calcium.

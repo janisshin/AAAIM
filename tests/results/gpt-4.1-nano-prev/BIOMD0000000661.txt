@@ -1,0 +1,9 @@
+Model: BIOMD0000000661
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:05:59
+
+Synonyms:
+LT: ['Fas ligand', 'FasL', 'CD95L']
+Lm: ['soluble Fas ligand', 'sFasL', 'soluble FasL']
+
+Reason: Both LT and Lm are described as FasL variants; LT is membrane-bound FasL, Lm is its soluble form. The model focuses on Fas/FasL interactions in tumor immunology.

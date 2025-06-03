@@ -1,0 +1,22 @@
+Model: BIOMD0000000199
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:39:26
+
+Synonyms:
+FeIII: ['ferric ion', 'iron(III)', 'Fe(3+)']
+FeII: ['ferrous ion', 'iron(II)', 'Fe(2+)']
+FeII_O2: ['ferrous superoxide', 'Fe(II) oxygen complex', 'iron(II) oxygen species']
+FeIII_star: ['ferric ion (excited)', 'oxidized iron (excited)', 'Fe(III)*']
+FeII_star: ['ferrous ion (excited)', 'reduced iron (excited)', 'Fe(II)*']
+FeII_star_O2: ['ferrous superoxide (excited)', 'Fe(II) oxygen complex (excited)', 'iron(II) oxygen species (excited)']
+FeIII_NO: ['ferric nitric oxide complex', 'iron(III)-NO', 'Fe(III)-NO']
+FeII_NO: ['ferrous nitric oxide complex', 'iron(II)-NO', 'Fe(II)-NO']
+NADPH: ['nicotinamide adenine dinucleotide phosphate (reduced)', 'NADPH', 'reduced NADP']
+O2: ['oxygen', 'dioxygen', 'molecular oxygen']
+citrulline: ['citrulline', 'L-citrulline', '2-amino-5-ureidovaleric acid']
+NO3: ['nitrate', 'nitrogen pentoxide', 'nitrate ion']
+NO: ['nitric oxide', 'NO', 'nitrogen monoxide']
+NADPplus: ['nicotinamide adenine dinucleotide phosphate (oxidized)', 'NADP+', 'oxidized NADP']
+FeIII_t: ['ferric ion (variant)', 'oxidized iron', 'Fe(III) form']
+
+Reason: The species are chemical entities involved in iron redox states, nitric oxide complexes, and common cofactors. "FeIII" and "FeII" are standard iron oxidation states. "O2" is molecular oxygen. "NADPH" and "NADPplus" are well-known cofactors. "citrulline" is a standard amino acid derivative. "NO" and "NO3" are common nitrogen oxides. "FeII_O2", "FeII_star_O2", etc., are complexes or excited states of iron species. "FeIII_star" and "FeII_star" are likely excited or modified forms. "FeIII_t" is a variant form of ferric iron. "UNK" is not appropriate here as all are recognized chemical entities.

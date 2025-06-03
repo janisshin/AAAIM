@@ -1,0 +1,9 @@
+Model: BIOMD0000000320
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:58:27
+
+Synonyms:
+A_dopa: ['L-dopa', 'levodopa', '3,4-dihydroxy-L-phenylalanine']
+C_dopa: ['dopamine', 'dopamine', '3,4-dihydroxyphenethylamine']
+
+Reason: A_dopa is L-dopa, a common abbreviation; C_dopa is dopamine, a primary metabolite of L-dopa.

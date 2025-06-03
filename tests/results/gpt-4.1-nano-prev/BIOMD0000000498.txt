@@ -1,0 +1,17 @@
+Model: BIOMD0000000498
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:58:42
+
+Synonyms:
+species_24: ['ferric transferrin', 'iron transferrin', 'Fe-Transferrin']
+species_26: ['ferric transferrin receptor 2', 'TfR2', 'transferrin receptor 2']
+species_5: ['heme', 'hemoglobin', 'porphyrin']
+species_2: ['labile iron pool', 'LIP', 'free iron']
+species_43: ['ferric transferrin complex', 'Fe-Transferrin complex', 'transferrin-iron complex']
+species_12: ['ferric transferrin receptor 1 complex', 'TfR1-Fe', 'transferrin receptor 1 with iron']
+species_15: ['Tf-Fe-TfR2 complex', 'transferrin-iron-receptor 2 complex', 'TfR2-Fe complex']
+species_16: ['Tf-Fe-TfR1 complex', 'transferrin receptor 1-iron complex', 'TfR1-Fe complex']
+species_19: ['Fe-Tf-TfR2 complex', 'transferrin-iron-receptor 2 complex', 'TfR2-Fe complex']
+species_11: ['heme intercellular', 'intracellular heme', 'heme in cell']
+
+Reason: 

@@ -1,0 +1,19 @@
+Model: BIOMD0000000219
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:40:11
+
+Synonyms:
+aca: ['acetyl-CoA', 'acetyl coenzyme A', 'acetyl-CoA']
+oaa: ['oxaloacetate', 'oxaloacetate']
+coa: ['coenzyme A', 'CoA', 'acetyl-CoA']
+cit: ['citrate', 'citric acid', 'sodium citrate']
+icit: ['isocitrate', 'isocitric acid']
+akg: ['alpha-ketoglutarate', 'alpha-ketoglutaric acid', '2-oxoglutarate']
+ssa: ['succinic semialdehyde', 'succinic semialdehyde', 'succinate', 'ssa', '(Note: in TCA context', 'likely  but display name is )']
+suc: ['succinate', 'butanedioate']
+sca: ['succinyl-CoA', 'succinyl coenzyme A']
+fa: ['fatty acids', 'fatty acid', '(unspecified', 'generic)']
+mal: ['malate', 'malic acid']
+gly: ['glycine', 'gly', '(common amino acid', 'not a TCA intermediate)']
+
+Reason: The model references TCA cycle components; "aca" (acetyl-CoA), "oaa" (oxaloacetate), "coa" (coenzyme A), "cit" (citrate), "icit" (isocitrate), "akg" (alpha-ketoglutarate), "mal" (malate), "gly" (glycine) are standard TCA or related metabolites. "ssa" and "suc" are intermediates; "sca" is succinyl-CoA. "fa" is ambiguous but likely fatty acids; "gly" as amino acid is uncertain but included as a common metabolite. "Reason" notes the context of TCA cycle components and common synonyms.

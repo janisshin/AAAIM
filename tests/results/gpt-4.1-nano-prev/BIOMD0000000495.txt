@@ -1,0 +1,18 @@
+Model: BIOMD0000000495
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:56:08
+
+Synonyms:
+mw08818dfe_fb12_45cc_8c1d_d965f142d0ce: ['EtnE', 'ethenolamine', 'ethanolamine']
+mw8796c919_9251_4970_8f87_0bca9ecfeb5c: ['Etn', 'ethanolamine', 'ethenolamine']
+mwee54b5b4_b8c0_41df_8dda_5b160c5e10a5: ['PC', 'phosphatidylcholine', 'lecithin']
+mw919f8a86_e702_4b24_9cd7_adad694fcf9b: ['ChoE', 'choline ethanolamine', 'choline']
+mw812f63db_4cb0_40ad_b92b_9874be969dfe: ['Cho', 'choline', 'phosphocholine']
+mw73259e20_240e_4f3a_b2e0_9ca248658898: ['SerE', 'serine ethanolamine', 'serine']
+mwfcfaf604_14d4_47a6_b021_226d1fb5497c: ['PS', 'phosphatidylserine', 'serine phospholipid']
+mw15abaa48_d7d0_4845_ae04_c573d289d495: ['Ser', 'serine', 'amino acid']
+mwcb834e43_dc57_45ae_9452_f4c10955caf1: ['PCho', 'phosphorylcholine', 'choline phosphate']
+mw849ed3fd_87d9_44d2_9f3e_4d631b900d41: ['PEtn', 'ethanolamine phosphate', 'phosphoethanolamine']
+mwf166ad55_4ff0_49fb_95d2_b657ad7653d5: ['PE', 'phosphatidylethanolamine', 'lecithin']
+
+Reason: The species are labeled with unique identifiers but their display names correspond to known phospholipid and amino alcohol compounds involved in phospholipid synthesis pathways, which are well-characterized chemical entities.

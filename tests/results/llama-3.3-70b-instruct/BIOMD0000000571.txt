@@ -1,0 +1,26 @@
+Model: BIOMD0000000571
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:16:31
+
+Synonyms:
+CRP_cAMP: ['cAMP-bound CRP', 'cAMP-CRP complex', 'CRP-cAMP']
+CRP_cAMP_CRPsiteI_crp: ['UNK']
+CRP_cAMP_CRPsiteII_crp: ['UNK']
+CRP_cAMP_CRPsite_cyaA: ['UNK']
+CRP_cAMP_CRPsite_genome: ['UNK']
+CRP_cAMP_CRPsite_ptsGp1: ['UNK']
+CRP_cAMP_CRPsite_ptsGp2: ['UNK']
+CRP_cAMP_CRPsite_ptsHp0: ['UNK']
+CRP_cAMP_CRPsite_ptsHp1: ['UNK']
+CRP_cAMP_CRPsite_ptsIp0: ['UNK']
+CRP_cAMP_CRPsite_ptsIp1: ['UNK']
+CRP_cAMP_CRPsite_mlcp1: ['UNK']
+CRP_cAMP_CRPsite_mlcp2: ['UNK']
+cAMP: ['cyclic AMP', 'cyclic adenosine monophosphate', "3',5'-cyclic AMP"]
+Pyr: ['pyruvate', 'pyruvic acid', '2-oxopropanoic acid']
+PEP: ['phosphoenolpyruvate', '2-phosphoenolpyruvate', 'PEP']
+Glc6P: ['glucose-6-phosphate', 'D-glucose-6-phosphate', 'G6P']
+Glucose: ['glucose', 'D-glucose', 'dextrose']
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+
+Reason: The species with "CRP_cAMP" and other related names are likely related to the cAMP-bound CRP complex, but without more information, they cannot be accurately identified. The species cAMP, Pyr, PEP, Glc6P, Glucose, and ATP are all common biochemical molecules with well-established names. The other species are unknown due to lack of information.

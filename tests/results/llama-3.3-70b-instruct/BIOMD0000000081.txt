@@ -1,0 +1,27 @@
+Model: BIOMD0000000081
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:50:09
+
+Synonyms:
+PIP2_M: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'phosphatidylinositol(4,5)-bisphosphate']
+GGDPbS_M: ['UNK']
+Mg2_C: ['magnesium ion', 'magnesium(2+)', 'Mg2+']
+ATP_C: ["adenosine 5'-triphosphate", 'ATP', 'adenosine triphosphate']
+oxoM_EX: ['UNK']
+GDPbS_C: ["guanosine 5'-diphosphate", 'GDP', 'guanosine diphosphate']
+GGTPMg_M: ['UNK']
+GDP_C: ["guanosine 5'-diphosphate", 'GDP', 'guanosine diphosphate']
+GTP_C: ["guanosine 5'-triphosphate", 'GTP', 'guanosine triphosphate']
+GGDPAlF4Mg_M: ['UNK']
+ip3_C: ['inositol 1,4,5-trisphosphate', 'IP3', 'inositol trisphosphate']
+AlF4_C: ['aluminum tetrafluoride', 'AlF4', 'aluminum(III) tetrafluoride']
+GGTP_M: ['UNK']
+GGDPAlF4_M: ['UNK']
+GGTPgS_M: ['UNK']
+PI_M: ['phosphatidylinositol', 'PI', 'phosphatidyl-inositol']
+PIP_M: ['phosphatidylinositol 4-phosphate', 'PIP', 'phosphatidylinositol(4)-phosphate']
+PIP2xKCNQ_M: ['UNK']
+GGTPgSMg_M: ['UNK']
+GGDP_M: ["guanosine 5'-diphosphate", 'GDP', 'guanosine diphosphate']
+
+Reason: Most species are annotated based on their display names, which are often standard chemical names or common synonyms. Species with "UNK" annotations lack clear display names or have names that do not correspond to known chemical entities. Some species, such as PIP2_M and ip3_C, have display names that match known chemical entities, allowing for confident annotation. Others, like GGDPbS_M and GGTPMg_M, have unclear or non-standard names, resulting in "UNK" annotations.

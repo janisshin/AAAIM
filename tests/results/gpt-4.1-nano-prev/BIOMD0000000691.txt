@@ -1,0 +1,19 @@
+Model: BIOMD0000000691
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:06:41
+
+Synonyms:
+S1__Cell_1_: ['glucose', 'd-glucose', 'blood sugar']
+S1__Cell_2_: ['glucose', 'd-glucose', 'blood sugar']
+S3__Cell_1_: ['pyruvate', 'pyruvic acid', 'pyruvate ion']
+S3__Cell_2_: ['pyruvate', 'pyruvic acid', 'pyruvate ion']
+N2__Cell_1_: ['acetaldehyde', 'ethanal', 'acetaldehyde (ethanal)']
+N2__Cell_2_: ['acetaldehyde', 'ethanal', 'acetaldehyde (ethanal)']
+A3__Cell_1_: ['ethanol', 'ethyl alcohol', 'alcohol']
+A3__Cell_2_: ['ethanol', 'ethyl alcohol', 'alcohol']
+N1__Cell_1_: ['glycerol', 'glycerine', 'glycerin']
+N1__Cell_2_: ['glycerol', 'glycerine', 'glycerin']
+A2__Cell_1_: ['ATP', 'adenosine triphosphate', 'energy currency']
+A2__Cell_2_: ['ATP', 'adenosine triphosphate', 'energy currency']
+
+Reason: The model discusses glycolytic interactions in yeast, involving common metabolites such as glucose, pyruvate, acetaldehyde, ethanol, glycerol, and ATP. These are standard biochemical compounds relevant to glycolysis and cellular metabolism.

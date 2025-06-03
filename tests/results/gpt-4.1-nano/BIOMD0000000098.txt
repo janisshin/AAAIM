@@ -1,0 +1,9 @@
+Model: BIOMD0000000098
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:52:49
+
+Synonyms:
+Z: ['calcium ion', 'Ca2+', 'calcium']
+Y: ['calcium store', 'intracellular calcium', 'cytosolic calcium']
+
+Reason: The model reproduces calcium dynamics; Z and Y are likely calcium-related species involved in calcium signaling and release.

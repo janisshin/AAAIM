@@ -1,0 +1,9 @@
+Model: BIOMD0000000117
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:53:09
+
+Synonyms:
+z: ['calcium ion', 'Ca2+', 'calcium']
+y: ['calcium ion', 'Ca2+', 'calcium']
+
+Reason: Both species represent calcium in different cellular pools; "Ca in the cytosol" and "Ca in the InsP3-insensitive pool" are both calcium ions, common in cellular signaling.

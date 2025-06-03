@@ -1,0 +1,29 @@
+Model: BIOMD0000000090
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:52:47
+
+Synonyms:
+sul_ex: ['sulfate', 'sulfate ion', 'sulfate (SO4)']
+eth_ex: ['ethanol', 'ethyl alcohol', 'EtOH']
+oxy_ex: ['oxygen', 'O2', 'dioxygen']
+oxy: ['oxygen', 'O2', 'dioxygen']
+H2O: ['water', 'dihydrogen monoxide', 'H2O']
+A3c: ['ATP', 'adenosine triphosphate', 'adenosine triphosphate (ATP)']
+aps: ['PAPS', "3'-phosphoadenosine-5'-phosphosulfate", "adenosine 3'-phosphoadenosine-5'-phosphate"]
+PPi: ['pyrophosphate', 'diphosphate', 'PPi']
+pap: ['PAPS', "3'-phosphoadenosine-5'-phosphosulfate", "adenosine 3'-phosphoadenosine-5'-phosphate", '(Note: in this model', "'pap' is a product of sulfotransferase", 'but the synonyms are the same as PAPS)']
+sul: ['sulfate', 'sulfate ion', 'sulfate (SO4)']
+eth: ['ethanol', 'ethyl alcohol', 'EtOH']
+A2c: ['ADP', 'adenosine diphosphate', 'adenosine diphosphate (ADP)']
+hyd: ['hydrogen sulfide', 'H2S', 'hydrosulfide']
+cys: ['cysteine', 'CYS', 'amino acid cysteine']
+N2: ['NADH', 'nicotinamide adenine dinucleotide (reduced)', 'NADH']
+N1: ['NAD', 'nicotinamide adenine dinucleotide', 'NAD']
+aco: ['acetyl-CoA', 'acetyl coenzyme A', 'Acetyl-CoA']
+oah: ['oxaloacetate', 'OAA', 'oxaloacetate']
+A2m: ['ADP', 'adenosine diphosphate', 'adenosine diphosphate (ADP)']
+A3m: ['ATP', 'adenosine triphosphate', 'adenosine triphosphate (ATP)']
+Ho: ['H+', 'proton', 'hydrogen ion']
+Hm: ['H+', 'proton', 'hydrogen ion']
+
+Reason: The species are mostly standard biochemical entities; some are abbreviations used in the model, but their synonyms are well-established. Species like sul_ex and eth_ex are transport/exchange species, so their main form is the relevant chemical. Species like A3c and A2c are nucleotides, with ATP and ADP as common names. H+ is represented as Hm and Ho, both indicating protons.

@@ -1,0 +1,8 @@
+Model: BIOMD0000000507
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:59:42
+
+Synonyms:
+species_3: ['Isopropyl β-D-1-thiogalactopyranoside', 'IPTG', 'isopropylthiogalactoside']
+
+Reason: IPTG is a well-known synthetic inducer used in molecular biology to induce gene expression in systems with lac operon-based regulation.

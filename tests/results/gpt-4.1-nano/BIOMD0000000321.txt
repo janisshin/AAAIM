@@ -1,0 +1,9 @@
+Model: BIOMD0000000321
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:58:28
+
+Synonyms:
+A_dopa: ['L-dopa', 'levodopa', 'dopamine precursor']
+C_dopa: ['3-O-methyldopa', '3-OMD', '3-O-methyl-L-dopa']
+
+Reason: A_dopa is the primary substrate for the enzyme AADC, indicating it is L-dopa; C_dopa is explicitly named as 3-OMD, a known metabolite of L-dopa.

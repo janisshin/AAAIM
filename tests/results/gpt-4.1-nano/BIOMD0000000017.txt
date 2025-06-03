@@ -1,0 +1,25 @@
+Model: BIOMD0000000017
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:50:08
+
+Synonyms:
+ADP: ['adenosine diphosphate', 'ADP', 'diphosphate adenosine']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD', 'nicotinamide adenine dinucleotide']
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+NADH: ['reduced nicotinamide adenine dinucleotide', 'NADH', 'nicotinamide adenine dinucleotide (reduced)']
+pyruvate: ['pyruvic acid', 'pyruvate', 'pyruvate']
+lactate: ['lactic acid', 'lactate', 'lactic acid']
+CoA: ['coenzyme A', 'CoA', 'coenzyme A']
+AcCoA: ['acetyl-CoA', 'acetyl coenzyme A', 'acetyl-CoA']
+AcP: ['acetyl phosphate', 'acetyl phosphate', 'acetyl phosphate']
+Ac: ['acetyl group', 'acetyl', 'acetyl']
+AcO: ['acetaldehyde', 'acetaldehyde', 'acetaldehyde', '(Note: AcO likely refers to acetaldehyde)']
+EtOH: ['ethanol', 'ethyl alcohol', 'ethanol']
+AcLac: ['acetolactate', 'acetolactate', 'alpha-acetolactate']
+AcetoinIn: ['acetoin', 'acetoin', '4-hydroxy-2-bentanone']
+AcetoinOut: ['acetoin', 'acetoin', '4-hydroxy-2-bentanone']
+Butanediol: ['butanediol', 'butane-2,3-diol', '1,4-butanediol']
+O2: ['oxygen', 'O2', 'dioxygen']
+PO4: ['phosphate', 'phosphate', 'inorganic phosphate']
+
+Reason: All species are recognized as common biochemical entities, mostly standard coenzymes, metabolites, or substrates involved in central metabolic pathways. AcO is interpreted as acetaldehyde based on context.

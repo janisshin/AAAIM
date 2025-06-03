@@ -1,0 +1,26 @@
+Model: BIOMD0000001046
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:10:48
+
+Synonyms:
+M_coenzyme_A: ['coenzyme A', 'CoA', 'Adenosyl-CoA']
+M_ADP: ['ADP', 'adenosine diphosphate', 'adenosine diphosphate']
+M_acyl_carrier_protein: ['[acyl-carrier-protein]', 'ACP', 'acyl carrier protein']
+M_biotin: ['biotin', 'vitamin B7', 'biotin']
+M_ATP: ['ATP', 'adenosine triphosphate', 'ATP']
+M_pyrophosphate: ['pyrophosphate', 'PPi', 'diphosphate']
+M_AMP: ['AMP', 'adenosine monophosphate', 'AMP']
+M_HCO3: ['HCO3-', 'bicarbonate', 'hydrogen carbonate']
+M_phosphate: ['phosphate', 'Pi', 'phosphoric acid']
+M_H: ['H+', 'proton', 'hydrogen ion']
+M_acetyl_coA: ['acetyl-CoA', 'acetyl coenzyme A', 'Acetyl-CoA']
+M_malonyl_coA: ['malonyl-CoA', 'malonyl coenzyme A', 'Malonyl-CoA']
+M_ACP_FAS: ['ACP-FAS', 'acyl carrier protein in fatty acid synthase', 'ACP']
+M_C2_acyl_ACP_FAS: ['C2-acyl-ACP', 'acetyl-ACP', 'acetyl carrier protein']
+M_malonyl_C2_acyl_ACP_FAS: ['malonyl-C2-ACP', 'malonyl-ACP', 'malonyl carrier protein']
+M_beta_keto_C4_acyl_ACP_FAS: ['beta-keto-C4-ACP', 'beta-keto-acyl-ACP', 'beta-keto acyl carrier protein']
+M_CO2: ['CO2', 'carbon dioxide', 'carbonic acid']
+M_NADPH: ['NADPH', 'nicotinamide adenine dinucleotide phosphate (reduced)', 'NADPH']
+M_NADP: ['NADP+', 'nicotinamide adenine dinucleotide phosphate', 'NADP']
+
+Reason: All are common chemical names or widely used synonyms for these cofactors and metabolites, facilitating ontology lookup.

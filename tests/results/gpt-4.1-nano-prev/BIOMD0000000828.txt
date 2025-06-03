@@ -1,0 +1,9 @@
+Model: BIOMD0000000828
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:08:18
+
+Synonyms:
+Glucose_G: ['glucose', 'd-glucose', 'blood sugar']
+Drug_D: ['drug D', 'unknown compound', 'experimental drug']
+
+Reason: Glucose_G is a glucose molecule, a common sugar; Drug_D is unspecified, so labeled as an experimental or unknown drug.

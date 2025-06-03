@@ -1,0 +1,21 @@
+Model: BIOMD0000000232
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:40:26
+
+Synonyms:
+ADP: ['adenosine diphosphate', 'ADP', 'diphosphate adenosine']
+ATP: ['adenosine triphosphate', 'ATP', 'triphosphate adenosine']
+H: ['proton', 'hydrogen ion', 'H+']
+He: ['helium', 'He']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+', 'NAD']
+NADH: ['nicotinamide adenine dinucleotide hydrogen', 'NADH', 'reduced NAD']
+AcCoA: ['acetyl-CoA', 'acetyl coenzyme A', 'acetyl-CoA']
+KG: ['alpha-ketoglutarate', 'α-ketoglutarate', '2-oxoglutarate']
+Cit: ['citrate', 'citric acid', 'sodium citrate']
+OAA: ['oxaloacetate', 'oxaloacetate', 'OAA']
+O2: ['oxygen', 'O2', 'dioxygen']
+iP: ['inorganic phosphate', 'phosphate', 'Pi']
+Pyr: ['pyruvate', 'pyruvic acid', 'pyruvate']
+H2O: ['water', 'H2O', 'dihydrogen monoxide']
+
+Reason: The species are common biochemical molecules or ions involved in mitochondrial metabolism. "He" is a noble gas, not a biochemical species, but included for completeness. "iP" is a common abbreviation for inorganic phosphate, relevant in energy transfer.

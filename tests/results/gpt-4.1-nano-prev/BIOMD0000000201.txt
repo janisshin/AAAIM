@@ -1,0 +1,11 @@
+Model: BIOMD0000000201
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:39:27
+
+Synonyms:
+MF: ['Lunatic fringe', 'LFNG', 'Lunatic fringe mRNA']
+Rasi: ['inactive Ras', 'Ras inactive form', 'Ras GDP-bound']
+MAx: ['Axin2', 'axin-2', 'AXIN2 mRNA']
+Rasa: ['active Ras', 'Ras GTP-bound', 'Ras active form']
+
+Reason: The species are directly named in the display names with clear biological roles; Ras species are distinguished by activity state, and MF and MAx are mRNA species.

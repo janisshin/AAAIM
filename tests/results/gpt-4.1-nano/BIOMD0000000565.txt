@@ -1,0 +1,30 @@
+Model: BIOMD0000000565
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:18:45
+
+Synonyms:
+cpep: ['phosphoenolpyruvate', 'PEP', 'phosphoenolpyruvic acid']
+cglcex: ['extracellular glucose', 'glucose outside cell', 'glucose (extracellular)']
+cg6p: ['glucose-6-phosphate', 'G6P', 'glucose 6-phosphate']
+cpyr: ['pyruvate', 'pyruvic acid', 'pyruvate']
+cg1p: ['glucose-1-phosphate', 'G1P', 'glucose 1-phosphate']
+cpg: ['6-phosphogluconate', '6PG', '6-phosphogluconic acid']
+cfdp: ['fructose-1,6-bisphosphate', 'FBP', 'fructose 1,6-bisphosphate']
+csed7p: ['sedoheptulose-7-phosphate', 'S7P', 'sedoheptulose 7-phosphate']
+cpg2: ['2-phosphoglycerate', '2PG', '2-phosphoglyceric acid']
+cribu5p: ['ribose-5-phosphate', 'R5P', 'ribose-5-phosphate']
+accoa: ['acetyl-CoA', 'acetyl coenzyme A', 'acetyl-CoA']
+malcoa: ['malonyl-CoA', 'malonyl coenzyme A', 'malonyl-CoA']
+fer: ['ferrous iron', 'Fe(2+)', 'iron (Fe2+)']
+fer_ext: ['extracellular ferrous iron', 'Fe outside cell', 'iron outside cell']
+fercoa: ['ferrous iron-coenzyme A complex', 'ferrous-CoA', 'iron-CoA complex']
+ferdicoa: ['ferric iron-coenzyme A complex', 'ferric-CoA', 'iron (Fe3+)-CoA complex']
+cur: ['curcumin', 'diferuloylmethane', 'turmeric compound']
+cur_ext: ['extracellular curcumin', 'curcumin outside cell', 'curcumin (extracellular)']
+
+Reason: 
+- Many species are standard metabolites like glucose phosphates, pyruvate, and common cofactors.
+- "cpep" and "cpyr" are well-known central metabolites.
+- "fer", "fer_ext", "fercoa", "ferdicoa" relate to iron complexes, common in biochemical contexts.
+- "cur" and "cur_ext" refer to curcumin, the product of the pathway, matching the article context.
+- Species with empty display names are annotated based on their reaction roles or are ambiguous, hence "UNK" not used here.

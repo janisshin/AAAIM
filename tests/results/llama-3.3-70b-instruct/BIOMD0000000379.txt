@@ -1,0 +1,12 @@
+Model: BIOMD0000000379
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:15:10
+
+Synonyms:
+G_p: ['glucose', 'blood glucose', 'plasma glucose']
+G_t: ['glucose', 'tissue glucose', 'interstitial glucose']
+Q_sto1: ['glucose', 'stomach glucose', 'ingested glucose']
+Q_gut: ['glucose', 'gut glucose', 'intestinal glucose']
+Q_sto2: ['glucose', 'stomach contents', 'ingested meal']
+
+Reason: The model is a simulation of the glucose-insulin system, and the reactions describe the dynamics of glucose in different compartments, so all species are likely related to glucose. G_p and G_t are likely plasma and tissue glucose, while Q_sto1, Q_gut, and Q_sto2 are related to glucose in the stomach and gut, based on the reaction equations and the model's context.

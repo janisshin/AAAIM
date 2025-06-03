@@ -1,0 +1,23 @@
+Model: BIOMD0000000701
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:31:02
+
+Synonyms:
+Tem1GTP: ['guanosine triphosphate', 'GTP', "guanosine 5'-triphosphate"]
+Tem1GDP: ['guanosine diphosphate', 'GDP', "guanosine 5'-diphosphate"]
+T_Tem1GTP: ['UNK']
+T_Tem1GDP: ['UNK']
+B_Bfa1_Tem1GTP: ['UNK']
+B_Bfa1P4_Tem1GTP: ['UNK']
+B_Bfa1P5_Tem1GTP: ['UNK']
+B_Bfa1_Tem1GDP: ['UNK']
+B_Bfa1P4_Tem1GDP: ['UNK']
+B_Bfa1P5_Tem1GDP: ['UNK']
+Bfa1_Tem1GTP: ['UNK']
+Bfa1P4_Tem1GTP: ['UNK']
+Bfa1P5_Tem1GTP: ['UNK']
+Bfa1_Tem1GDP: ['UNK']
+Bfa1P4_Tem1GDP: ['UNK']
+Bfa1P5_Tem1GDP: ['UNK']
+
+Reason: Tem1GTP and Tem1GDP can be identified as GTP and GDP respectively, which are common biochemical molecules. The other species contain protein names (Tem1, Bfa1) and post-translational modifications (GTP, GDP, P4, P5), but without more context or display names, they cannot be mapped to standardized chemical names.

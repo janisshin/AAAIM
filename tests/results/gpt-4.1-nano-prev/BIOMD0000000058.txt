@@ -1,0 +1,9 @@
+Model: BIOMD0000000058
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:35:16
+
+Synonyms:
+c1: ['calcium ion', 'Ca2+', 'calcium']
+c2: ['calcium ion', 'Ca2+', 'calcium']
+
+Reason: Both species are labeled as calcium ions in different cells, which are standardly represented as Ca2+ in biological contexts.

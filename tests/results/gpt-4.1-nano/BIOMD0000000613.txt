@@ -1,0 +1,13 @@
+Model: BIOMD0000000613
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:20:31
+
+Synonyms:
+B: ['calcium', 'Ca2+', 'calcium ion']
+P: ['plasma calcium', 'serum calcium', 'blood calcium']
+T: ['intestinal calcium', 'calcium absorption', 'dietary calcium']
+R: ['intestinal calcium', 'calcium intake', 'dietary calcium']
+Q: ['intracellular calcium', 'cellular calcium', 'Ca2+ (cell)']
+Qbone: ['bone calcium', 'bone mineral', 'hydroxyapatite']
+
+Reason: The model focuses on calcium homeostasis and bone remodeling; B and P are related to calcium levels, T and R to calcium absorption and intake, Q and Qbone to calcium transfer within cells and bone mineral content. "Q" and "Qbone" are likely calcium-related entities, while others are related to calcium in different compartments.

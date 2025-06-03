@@ -1,0 +1,19 @@
+Model: BIOMD0000000219
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:02:40
+
+Synonyms:
+aca: ['acetyl-CoA', 'acetyl coenzyme A', 'acetic acid']
+oaa: ['oxaloacetate', 'oxaloacetic acid', '2-oxosuccinate']
+coa: ['coenzyme A', 'CoA', 'coenzyme A(4-)']
+cit: ['citric acid', 'citrate', 'citrate(4-)']
+icit: ['isocitric acid', 'isocitrate', 'D-isocitrate']
+akg: ['alpha-ketoglutaric acid', 'alpha-ketoglutarate', '2-oxoglutarate']
+ssa: ['UNK']
+suc: ['succinic acid', 'succinate', 'butanedioic acid']
+sca: ['UNK']
+fa: ['fumaric acid', 'fumarate', 'trans-butenedioic acid']
+mal: ['malic acid', 'malate', 'hydroxybutanedioic acid']
+gly: ['glyoxylate', 'glyoxylic acid', 'hydroxyacetic acid']
+
+Reason: The model is a kinetic model of the tricarboxylic acid cycle (TCA cycle) and glyoxylate bypass in Mycobacterium tuberculosis. The species names are likely to be intermediates in these pathways. aca, oaa, coa, cit, icit, akg, suc, fa, and mal are all known intermediates in the TCA cycle. gly is an intermediate in the glyoxylate bypass. ssa and sca do not match any known intermediates in these pathways, so they are annotated as "UNK".

@@ -1,0 +1,15 @@
+Model: BIOMD0000000589
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:19:35
+
+Synonyms:
+NADPH: ['NADPH', 'Nicotinamide adenine dinucleotide phosphate (reduced)', 'reduced NADP']
+NADPplus: ['NADP+', 'Nicotinamide adenine dinucleotide phosphate', 'oxidized NADP']
+GSH: ['glutathione', 'reduced glutathione', 'GSH']
+GSSG: ['glutathione disulfide', 'oxidized glutathione', 'GSSG']
+DHA: ['dehydroascorbic acid', 'oxidized ascorbate', 'DHA']
+MDA: ['malondialdehyde', 'MDA', 'malondialdehyde']
+H2O2: ['hydrogen peroxide', 'H2O2', 'peroxide']
+O2neg: ['superoxide', 'O2−', 'superoxide anion']
+
+Reason: All are well-known biochemical species involved in redox reactions and oxidative stress pathways, with standard names and common synonyms available in chemical and biological ontologies.

@@ -1,0 +1,9 @@
+Model: BIOMD0000000114
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:53:23
+
+Synonyms:
+x: ['calcium ion', 'Ca2+', 'calcium(2+)']
+y: ['cytosolic calcium', 'calcium ion', 'Ca2+']
+
+Reason: The display names 'Ca_Cyt' and 'Ca_ER' suggest that 'y' represents calcium in the cytosol and 'x' represents calcium in the endoplasmic reticulum. The model context and the paper title also support that the species are related to calcium.

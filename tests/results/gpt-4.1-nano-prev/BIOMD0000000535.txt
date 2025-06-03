@@ -1,0 +1,13 @@
+Model: BIOMD0000000535
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:01:12
+
+Synonyms:
+Ab: ['anti-IL6 antibody', 'IL-6 antibody', 'tocilizumab']
+
+Reason: The species is labeled as "Ab" and described as an Anti-IL6 Antibody targeting IL-6 in Crohn's disease, which corresponds to therapeutic monoclonal antibodies like tocilizumab.
+
+Reason: No other species names or chemical entities are provided or implied in the data.
+
+UNK: "UNK"
+Reason: The species name appears to be an internal identifier with no chemical or biological entity associated; no standard name or synonym can be assigned.

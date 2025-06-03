@@ -1,0 +1,15 @@
+Model: BIOMD0000000434
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:01:02
+
+Synonyms:
+species_1: ['dihydroceramide', 'ceramide', 'sphingolipid']
+species_2: ['LDL cholesterol', 'low-density lipoprotein cholesterol', 'bad cholesterol']
+species_7: ['hydroxy fatty acid', 'hydroxy fatty acyl-CoA', 'HFC']
+species_8: ['extracellular cholesterol', 'cell membrane cholesterol', 'EC']
+species_11: ['plasma lipoprotein', 'lipoprotein particle', 'lipoprotein']
+species_13: ['hydroxycholesteryl ester', 'cholesteryl ester', 'HCE']
+species_14: ['acetyl-CoA', 'acetyl coenzyme A', 'acetyl-CoA']
+species_28: ['phosphatidylcholine ester', 'PCE', 'phosphatidylcholine ester']
+
+Reason: The model discusses cholesterol metabolism, lipoproteins, and related lipid species. "species_2" and "species_11" are clearly lipoproteins or cholesterol carriers. "species_13" and "species_14" are lipid derivatives involved in lipid metabolism. "species_8" and "species_28" are lipid molecules or derivatives. "species_7" is a fatty acid derivative, and "species_1" is a sphingolipid. "species_3", "species_21", "species_29", "species_17", "species_12", "species_10", "species_32", and "species_23" are not directly relevant to lipid or cholesterol entities based on their display names.

@@ -1,0 +1,11 @@
+Model: BIOMD0000000231
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:56:20
+
+Synonyms:
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+AMP: ['adenosine monophosphate', 'AMP', 'adenylic acid']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+NADH: ['nicotinamide adenine dinucleotide (reduced)', 'NADH', 'reduced nicotinamide adenine dinucleotide']
+
+Reason: These are standard biochemical names and common synonyms for these nucleotides; NADH is the reduced form of NAD+, which is well recognized.

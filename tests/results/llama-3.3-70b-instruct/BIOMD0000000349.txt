@@ -1,0 +1,13 @@
+Model: BIOMD0000000349
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:13:44
+
+Synonyms:
+G3P: ['glyceraldehyde 3-phosphate', 'glyceraldehyde-3-phosphate', '3-phosphoglyceraldehyde']
+PYR: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+ATP: ["adenosine 5'-triphosphate", 'ATP', 'adenosine triphosphate']
+NADHm: ['NADH', 'nicotinamide adenine dinucleotide + hydrogen ion', 'reduced nicotinamide adenine dinucleotide']
+NADHc: ['NADH', 'nicotinamide adenine dinucleotide + hydrogen ion', 'reduced nicotinamide adenine dinucleotide']
+Cam: ['UNK']
+
+Reason: G3P, PYR, ATP, NADHm, and NADHc can be identified based on their display names and the context of the model, which appears to be a metabolic model of glucose sensing in pancreatic beta cells. Cam cannot be identified due to lack of information in the display names and reactions.

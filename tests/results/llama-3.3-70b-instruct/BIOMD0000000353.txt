@@ -1,0 +1,22 @@
+Model: BIOMD0000000353
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:14:03
+
+Synonyms:
+cpd_C00080_CY: ['hydrogen ion', 'proton', 'H+']
+cpd_C00208_CY: ['maltose', 'malt sugar', 'α-D-glucopyranosyl-(1→4)-D-glucopyranose']
+cpd_C00208_CS: ['maltose', 'malt sugar', 'α-D-glucopyranosyl-(1→4)-D-glucopyranose']
+cpd_C01835_CS: ['maltotriose', 'maltotriose sugar', 'α-D-glucopyranosyl-(1→4)-α-D-glucopyranosyl-(1→4)-D-glucopyranose']
+cpd_G00343_CS: ['maltopentaose', 'maltopentaose sugar', 'α-D-glucopyranosyl-(1→4)-α-D-glucopyranosyl-(1→4)-α-D-glucopyranosyl-(1→4)-α-D-glucopyranosyl-(1→4)-D-glucopyranose']
+cpd_C00031_CS: ['glucose', 'D-glucose', 'α-D-glucopyranose']
+cpd_C00031_CY: ['glucose', 'D-glucose', 'α-D-glucopyranose']
+cpd_C00002tot_CY: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+cpd_C00008tot_CY: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+cpd_C00009tot_CY: ['orthophosphate', 'inorganic phosphate', 'phosphate ion']
+cpd_C00051_CY: ['glutathione', 'reduced glutathione', 'L-γ-glutamyl-L-cysteinylglycine']
+cpd_C00660tot_CY: ['D-glucose 1,6-bisphosphate', 'glucose-1,6-bisphosphate', 'D-glucose 1,6-diphosphate']
+cpd_C03339tot_CY: ['2,3-bisphosphoglycerate', '2,3-bisphosphoglyceric acid', '2,3-diphosphoglycerate']
+cpd_C00103tot_CY: ['glucose-1-phosphate', 'D-glucose 1-phosphate', 'α-D-glucopyranose 1-phosphate']
+cpd_C00092tot_CY: ['glucose-6-phosphate', 'D-glucose 6-phosphate', 'α-D-glucopyranose 6-phosphate']
+
+Reason: The standardized names are based on the display names provided in the model and the common synonyms used in biochemistry. The species without display names or reactions, such as cpd_C00369Glc_CS, are not included in the output. The ranking of the synonyms is based on their common usage in the field of biochemistry.

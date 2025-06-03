@@ -1,0 +1,20 @@
+Model: BIOMD0000000606
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:20:18
+
+Synonyms:
+glycerol_i: ['glycerol', 'glycerol-3-phosphate', 'glycerolipid']
+glucose_i: ['glucose', 'blood sugar', 'dextrose']
+G6P: ['glucose-6-phosphate', 'G6P', 'gluc-6-P']
+trehalose: ['trehalose', 'maltose', 'mycose']
+F16DP: ['fructose-1,6-bisphosphate', 'F16BP', 'FBP']
+pyruvate: ['pyruvate', 'pyruvic acid', 'pyruvate ion']
+acetate_i: ['acetate', 'acetic acid', 'acetate ion']
+ethanol_i: ['ethanol', 'ethyl alcohol', 'alcohol']
+glycerol_e: ['glycerol', 'glycerol-3-phosphate', 'glycerolipid']
+glucose_e: ['glucose', 'blood sugar', 'dextrose']
+acetate_e: ['acetate', 'acetic acid', 'acetate ion']
+ethanol_e: ['ethanol', 'ethyl alcohol', 'alcohol']
+trehalose_e: ['trehalose', 'maltose', 'disaccharide']
+
+Reason: The species are mostly common metabolites involved in central carbon metabolism and osmoadaptation. Glycerol, glucose, and pyruvate are well-known metabolites with standard names. G6P is glucose-6-phosphate, a key glycolytic intermediate. Trehalose is a disaccharide involved in stress response. F16DP is fructose-1,6-bisphosphate, a glycolytic intermediate. Acetate and ethanol are common fermentation products. The suffixes "_i" and "_e" indicate intracellular or extracellular compartments, respectively.

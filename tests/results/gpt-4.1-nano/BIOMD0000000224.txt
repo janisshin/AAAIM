@@ -1,0 +1,10 @@
+Model: BIOMD0000000224
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:56:15
+
+Synonyms:
+CaI: ['calcium ion', 'Ca2+', 'calcium']
+IP3: ['inositol 1,4,5-trisphosphate', 'IP3', 'InsP3']
+CaS: ['calcium sulfate', 'CaSO4', 'calcium salt']
+
+Reason: CaI is a calcium ion involved in cellular signaling; IP3 is a well-known second messenger molecule; CaS appears to be a calcium salt, likely calcium sulfate, based on typical chemical nomenclature.

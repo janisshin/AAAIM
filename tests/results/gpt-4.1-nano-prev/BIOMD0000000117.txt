@@ -1,0 +1,9 @@
+Model: BIOMD0000000117
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:24
+
+Synonyms:
+z: ['calcium ion', 'Ca2+', 'calcium']
+y: ['calcium ion', 'Ca2+', 'calcium']
+
+Reason: Both species are calcium ions in different cellular pools; z is cytosolic calcium, y is calcium in the InsP3-insensitive pool. The reactions involve calcium movement between these pools, indicating they are calcium ions.

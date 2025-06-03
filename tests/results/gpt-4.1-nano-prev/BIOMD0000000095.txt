@@ -1,0 +1,13 @@
+Model: BIOMD0000000095
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:03
+
+Synonyms:
+cLm: ['UNK']
+cP7m: ['UNK']
+cP9m: ['UNK']
+cTm: ['UNK']
+cXm: ['UNK']
+cYm: ['UNK']
+
+Reason: The species are labeled with abbreviations (cLm, cP7m, etc.) without clear chemical identities or common names; they appear to be model-specific or generic species, not standard biochemical compounds.

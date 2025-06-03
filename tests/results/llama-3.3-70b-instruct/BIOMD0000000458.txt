@@ -1,0 +1,11 @@
+Model: BIOMD0000000458
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:27:31
+
+Synonyms:
+p3g: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'glycerate 3-phosphate']
+php: ['phosphohydroxypyruvate', 'hydroxypyruvate phosphate', '2-hydroxy-3-oxopropanoic acid phosphate']
+pser: ['phosphoserine', 'O-phosphoserine', 'L-phosphoserine']
+ser: ['serine', 'L-serine', '2-amino-3-hydroxypropanoic acid']
+
+Reason: The display names provided in the model directly map to standardized names, and additional synonyms were found in ChEBI for each species, with p3g, php, pser, and ser having well-established chemical names in the context of serine biosynthesis.

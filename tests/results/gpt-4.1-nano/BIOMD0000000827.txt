@@ -1,0 +1,9 @@
+Model: BIOMD0000000827
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:23:32
+
+Synonyms:
+X_7_MET_MET: ['MET', 'hepatocyte growth factor receptor', 'MET proto-oncogene']
+X_10_p_MET_MET: ['phosphorylated MET', 'activated MET', 'p-MET']
+
+Reason: Both species are related to the MET receptor tyrosine kinase, with the second being its phosphorylated (activated) form.

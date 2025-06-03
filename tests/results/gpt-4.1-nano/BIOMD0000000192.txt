@@ -1,0 +1,11 @@
+Model: BIOMD0000000192
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:55:08
+
+Synonyms:
+RCC1_RanGDP: ['Ran GDP', 'Ran guanosine diphosphate', 'Ran-GDP']
+GDP: ['guanosine diphosphate', 'GDP', 'guanosine diphosphate']
+RCC1_RanGTP: ['Ran GTP', 'Ran guanosine triphosphate', 'Ran-GTP']
+GTP: ['guanosine triphosphate', 'GTP', 'guanosine triphosphate']
+
+Reason: These species are nucleotide forms of Ran protein involved in GTPase activity; the names reflect their nucleotide states.

@@ -1,0 +1,9 @@
+Model: BIOMD0000001033
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:10:35
+
+Synonyms:
+Uninfected_tumour_cells: ['tumor cells', 'cancer cells', 'neoplastic cells']
+Infected_tumour_cells: ['infected tumor cells', 'virus-infected cancer cells', 'oncolytic virus-infected cells']
+
+Reason: These species refer to tumor cells in different infection states; the uninfected are general tumor or cancer cells, while the infected are tumor cells infected by the oncolytic virus.

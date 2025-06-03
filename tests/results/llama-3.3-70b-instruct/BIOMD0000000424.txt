@@ -1,0 +1,13 @@
+Model: BIOMD0000000424
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:20:01
+
+Synonyms:
+RasGDP: ['guanosine diphosphate ras', 'ras-gdp', 'ras-guanosine diphosphate']
+PIP3: ['phosphatidylinositol 3,4,5-trisphosphate', 'phosphatidylinositol (3,4,5)-trisphosphate', 'pip3']
+PTEN_PI: ['UNK']
+PI3Ka_PI: ['UNK']
+RasGTP: ['guanosine triphosphate ras', 'ras-gtp', 'ras-guanosine triphosphate']
+PI2: ['phosphatidylinositol', 'phosphatidylinositol (4,5)-bisphosphate', 'pip2']
+
+Reason: RasGDP and RasGTP are identified as guanosine diphosphate and triphosphate-bound Ras proteins, respectively, based on their roles in the model and common biochemical nomenclature. PIP3 is identified as phosphatidylinositol 3,4,5-trisphosphate due to its involvement in the PI3K/Akt signaling pathway. PI2 is likely phosphatidylinositol (4,5)-bisphosphate, a precursor to PIP3. PTEN_PI and PI3Ka_PI are unknown as they appear to be protein complexes or modified forms, and their exact chemical structures are not clear from the model.

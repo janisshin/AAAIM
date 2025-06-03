@@ -1,0 +1,11 @@
+Model: BIOMD0000000039
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:43:48
+
+Synonyms:
+Ca_cyt: ['calcium(2+)', 'calcium ion', 'Ca2+']
+CaER: ['calcium', 'calcium ion', 'Ca2+']
+CaM: ['calmodulin', 'calcium-modulated protein', 'calcium-binding protein']
+CaPr: ['UNK']
+
+Reason: Ca_cyt, CaER, and CaM are likely related to calcium ions or proteins involved in calcium signaling, while CaPr has no clear display name or reaction information to determine its standardized name.

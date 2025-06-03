@@ -1,0 +1,17 @@
+Model: BIOMD0000000198
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:55:15
+
+Synonyms:
+NO: ['nitric oxide', 'NO', 'nitrogen monoxide']
+NO_sGCfast: ['soluble guanylate cyclase NO fast binding site', 'sGC NO fast', 'sGC NO binding']
+NO_sGCfast_6coord: ['sGC NO 6-coordinate complex', 'soluble guanylate cyclase NO 6-coordinate', 'sGC NO heme 6-coordinate']
+NO_sGCfast_5coord: ['sGC NO 5-coordinate complex', 'soluble guanylate cyclase NO 5-coordinate', 'sGC NO heme 5-coordinate']
+NO_sGCslow: ['soluble guanylate cyclase NO slow binding site', 'sGC NO slow', 'sGC NO slow binding']
+NO_sGCslow_6coord: ['sGC NO slow 6-coordinate complex', 'soluble guanylate cyclase NO slow 6-coordinate', 'sGC NO slow heme 6-coordinate']
+NO_sGCslow_6coord_NO_int: ['sGC NO slow 6-coordinate with non-heme NO interaction', 'sGC NO slow 6-coordinate + non-heme NO', 'sGC NO slow 6-coordinate complex with non-heme site']
+NO_sGCslow_5coord: ['sGC NO slow 5-coordinate complex', 'soluble guanylate cyclase NO slow 5-coordinate', 'sGC NO slow heme 5-coordinate']
+NO_sGC_5coord_tot: ['total 5-coordinate sGC NO complex', 'sGC 5-coordinate NO total', 'sGC total 5-coordinate nitrosyl']
+sGC_inact_tot: ['inactive soluble guanylate cyclase total', 'sGC inactive total', 'total inactive sGC']
+
+Reason: The species are related to nitric oxide binding to soluble guanylate cyclase (sGC) in different coordination states and binding kinetics, all of which are well-characterized chemical interactions involving NO and heme groups.

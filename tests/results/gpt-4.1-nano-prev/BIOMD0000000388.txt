@@ -1,0 +1,15 @@
+Model: BIOMD0000000388
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:53
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'ribulose bisphosphate', 'RuBP']
+PGA: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'PGA']
+DPGA: ['1,3-bisphosphoglycerate', '1,3-bisphosphoglyceric acid', 'DPGA']
+GAP: ['glyceraldehyde-3-phosphate', 'G3P', 'GAP']
+Ru5P: ['ribulose-5-phosphate', 'ribulose pentaphosphate', 'Ru5P']
+ADP: ['adenosine diphosphate', 'ADP']
+ATP: ['adenosine triphosphate', 'ATP']
+Pi: ['inorganic phosphate', 'phosphate', 'Pi']
+
+Reason: All are well-known metabolites in the Calvin cycle, with standard names and common synonyms.

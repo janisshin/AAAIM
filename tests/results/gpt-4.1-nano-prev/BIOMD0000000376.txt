@@ -1,0 +1,31 @@
+Model: BIOMD0000000376
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:35
+
+Synonyms:
+G6P: ['glucose-6-phosphate', 'G6P', 'glucose-6-phosphate']
+
+Reason: G6P is a well-known glycolytic intermediate, commonly named glucose-6-phosphate.
+
+FBP: "fructose-1,6-bisphosphate", "FBP", "fructose-1,6-bisphosphate"
+Reason: FBP is a key glycolytic metabolite, known as fructose-1,6-bisphosphate.
+
+NADHm: "NADH", "nicotinamide adenine dinucleotide, reduced form", "NADH"
+Reason: NADHm refers to the reduced form of NAD+, a common coenzyme in redox reactions.
+
+Cam: "cAMP", "cyclic AMP", "cyclic adenosine monophosphate"
+Reason: Cam likely refers to cAMP, a common signaling molecule.
+
+ADPm: "ATP", "adenosine triphosphate", "ATP"
+Reason: ADPm is probably a typo or shorthand for ATP, the primary energy currency.
+
+adp: "ADP", "adenosine diphosphate", "ADP"
+Reason: adp is a standard abbreviation for ADP, a nucleotide involved in energy transfer.
+
+c: "cytosol", "cytoplasm", "cell interior"
+Reason: 'c' in biochemical models often denotes cytosolic or cytoplasmic compartment.
+
+Caer: "Ca2+", "calcium ion", "calcium"
+Reason: Caer likely refers to extracellular calcium or calcium ions involved in signaling.
+
+Reason: All species are standard biochemical entities or common abbreviations; "c" is a compartment, others are metabolites or ions.

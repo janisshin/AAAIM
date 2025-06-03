@@ -1,0 +1,14 @@
+Model: BIOMD0000000453
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:23:43
+
+Synonyms:
+mw8f5a7b5c_ca4c_4a4c_85b1_e5d640c426bf: ['GDP', 'guanosine diphosphate', "Guanosine 5'-diphosphate"]
+mwf40d6176_abfc_4a30_886f_83a19fcffc48: ['UNK']
+mwa54a9c38_c98b_45e5_8432_4119fb777e44: ['GTP', 'guanosine triphosphate', "Guanosine 5'-triphosphate"]
+mw28464aad_8013_4a23_ae09_a406954859a6: ['UNK']
+mwdf82303e_323f_4c51_a858_56a59233cd98: ['UNK']
+mwd7bf31ba_b05c_4c45_bb2f_6a2468a2a507: ['UNK']
+mw83de7813_4941_45a6_a320_a551165bf22a: ['UNK']
+
+Reason: The species mw8f5a7b5c_ca4c_4a4c_85b1_e5d640c426bf and mwa54a9c38_c98b_45e5_8432_4119fb777e44 are annotated as "Ras-GDP" and "Ras-GTP" respectively, which are related to guanosine diphosphate and guanosine triphosphate. The other species do not have clear annotations or reactions that can be linked to specific chemical entities, so they are annotated as "UNK".

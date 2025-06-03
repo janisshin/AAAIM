@@ -1,0 +1,8 @@
+Model: BIOMD0000000927
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:08:56
+
+Synonyms:
+IAA: ['indole-3-acetic acid', 'auxin', 'IAA']
+
+Reason: IAA is a well-known plant hormone, indole-3-acetic acid, commonly referred to as auxin.

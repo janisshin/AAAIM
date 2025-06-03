@@ -1,0 +1,8 @@
+Model: BIOMD0000000002
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:41:36
+
+Synonyms:
+L: ['acetylcholine', 'ACh', 'acetylcholine chloride']
+
+Reason: The display name 'ACh' is a common abbreviation for acetylcholine, a neurotransmitter involved in the model's description of nicotinic acetylcholine receptors, making it the most likely standardized name.

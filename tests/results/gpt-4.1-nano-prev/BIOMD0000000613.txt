@@ -1,0 +1,18 @@
+Model: BIOMD0000000613
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:04:12
+
+Synonyms:
+B: ['calcitriol', 'active vitamin D3', '1,25-dihydroxyvitamin D3']
+SC: ['serum calcium', 'blood calcium', 'plasma calcium']
+P: ['phosphate', 'PO4', 'inorganic phosphate']
+ECCPhos: ['extracellular phosphate', 'EC phosphate', 'serum phosphate']
+T: ['intestinal calcium', 'calcium absorption', 'gut calcium']
+R: ['intestinal calcium', 'calcium intake', 'dietary calcium']
+HAp: ['hydroxyapatite', 'bone mineral', 'calcium phosphate mineral']
+PhosGut: ['gut phosphate', 'intestinal phosphate', 'dietary phosphate']
+IntraPO: ['intracellular phosphate', 'cellular phosphate', 'cytoplasmic phosphate']
+Q: ['serum calcium', 'extracellular calcium', 'blood calcium']
+Qbone: ['bone calcium', 'bone mineral', 'hydroxyapatite']
+
+Reason: The model describes calcium and phosphate homeostasis and bone mineralization; species are related to calcium/phosphate pools and bone mineral content.

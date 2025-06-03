@@ -1,0 +1,124 @@
+Model: BIOMD0000000450
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:46:54
+
+Synonyms:
+b_met: ['methionine', 'c_Methionine', 'MET']
+
+Reason: b_met is methionine, an essential amino acid involved in methylation and polyamine synthesis.
+
+b_ser: "serine", "L-Serine", "Ser"
+Reason: b_ser is serine, a common amino acid involved in metabolism and amino acid biosynthesis.
+
+b_gly: "glycine", "Gly", "Glycine"
+Reason: b_gly is glycine, a simple amino acid involved in various metabolic pathways.
+
+b_glu: "glutamate", "glutamic acid", "Glu"
+Reason: b_glu is glutamate, a key amino acid in nitrogen metabolism and neurotransmission.
+
+b_cys: "cysteine", "Cys", "L-Cysteine"
+Reason: b_cys is cysteine, a sulfur-containing amino acid involved in redox reactions.
+
+b_gsg: "GSSG", "oxidized glutathione", "GSSG"
+Reason: b_gsg is oxidized glutathione, the disulfide form of glutathione.
+
+b_gsh: "GSH", "reduced glutathione", "GSH"
+Reason: b_gsh is reduced glutathione, a major cellular antioxidant.
+
+GAR: "glycinamide ribonucleotide", "GAR", "Glycinamide ribonucleotide"
+Reason: GAR is glycinamide ribonucleotide, an intermediate in purine biosynthesis.
+
+NADPH: "NADPH", "Nicotinamide adenine dinucleotide phosphate", "reduced NADP"
+Reason: NADPH is a cofactor involved in reductive biosynthesis and antioxidant defense.
+
+BET: "betaine", "Trimethylglycine", "BET"
+Reason: BET is betaine, a methyl donor involved in methylation reactions.
+
+DUMP: "dUMP", "deoxyuridine monophosphate", "dUMP"
+Reason: DUMP is deoxyuridine monophosphate, a pyrimidine nucleotide precursor.
+
+H2O2: "hydrogen peroxide", "H2O2", "peroxide"
+Reason: H2O2 is hydrogen peroxide, a reactive oxygen species.
+
+c_thf: "tetrahydrofolate", "THF", "Tetrahydrofolate"
+Reason: c_thf is tetrahydrofolate, a cofactor in one-carbon transfer reactions.
+
+c_5mf: "5-methyl-THF", "methyl-THF", "c_5-methyl-THF"
+Reason: c_5mf is 5-methyl tetrahydrofolate, involved in methylation.
+
+c_2cf: "5,10-methylene-THF", "methylene-THF", "c_5,10-methylene-THF"
+Reason: c_2cf is 5,10-methylene tetrahydrofolate, involved in thymidylate synthesis.
+
+c_10f: "10-formyl-THF", "formyl-THF", "c_10-formyl-THF"
+Reason: c_10f is 10-formyl tetrahydrofolate, involved in purine synthesis.
+
+c_dhf: "dihydrofolate", "DHF", "Dihydrofolate"
+Reason: c_dhf is dihydrofolate, the oxidized form of tetrahydrofolate.
+
+aic: "AICAR", "5-Aminoimidazole-4-carboxamide ribonucleotide", "AICAR"
+Reason: aic is AICAR, an intermediate in purine biosynthesis.
+
+c_coo: "formate", "formic acid", "c_Formate"
+Reason: c_coo is formate, a one-carbon donor in folate metabolism.
+
+species_1: "S-adenosylmethionine", "SAM", "S-Adenosylmethionine"
+Reason: species_1 is SAM, a universal methyl donor.
+
+species_2: "Putrescine", "Putrescine", "1,4-diaminobutane"
+Reason: species_2 is putrescine, a polyamine involved in cell growth.
+
+species_3: "Spermine", "Spermine", "Polyamine"
+Reason: species_3 is spermine, a polyamine involved in stabilizing DNA.
+
+species_4: "Spermidine", "Spermidine", "Polyamine"
+Reason: species_4 is spermidine, a polyamine involved in cell proliferation.
+
+species_5: "Acetylspermine", "Acetylspermine", "N-Acetylspermine"
+Reason: species_5 is acetylspermine, a derivative of spermine.
+
+species_6: "Acetylspermidine", "Acetylspermidine", "N-Acetylspermidine"
+Reason: species_6 is acetylspermidine, a derivative of spermidine.
+
+species_7: "Ornithine", "Ornithine", "L-Ornithine"
+Reason: species_7 is ornithine, a precursor in polyamine synthesis.
+
+species_8: "Acetyl-CoA", "Acetyl-CoA", "acetyl coenzyme A"
+Reason: species_8 is acetyl-CoA, a central metabolite in energy and biosynthesis.
+
+species_9: "CoA", "Coenzyme A", "CoA"
+Reason: species_9 is CoA, a cofactor in acyl group transfer.
+
+CO: "carbon monoxide", "CO", "Carbon monoxide"
+Reason: CO is carbon monoxide, a gaseous signaling molecule.
+
+m_thf: "tetrahydrofolate", "THF", "Tetrahydrofolate"
+Reason: m_thf is methyl tetrahydrofolate, involved in methyl group transfer.
+
+m_2cf: "5,10-methylene-THF", "methylene-THF", "c_5,10-methylene-THF"
+Reason: m_2cf is 5,10-methylene tetrahydrofolate, involved in nucleotide synthesis.
+
+m_10f: "10-formyl-THF", "formyl-THF", "c_10-formyl-THF"
+Reason: m_10f is 10-formyl tetrahydrofolate, involved in purine biosynthesis.
+
+m_ser: "serine", "Ser", "L-Serine"
+Reason: m_ser is serine, involved in one-carbon metabolism.
+
+m_gly: "glycine", "Gly", "L-Glycine"
+Reason: m_gly is glycine, a one-carbon donor and amino acid.
+
+m_coo: "formate", "Formate", "c_Formate"
+Reason: m_coo is formate, a one-carbon unit donor.
+
+Fol: "Folate", "Folic acid", "Vitamin B9"
+Reason: Fol is folate, a vitamin involved in one-carbon metabolism.
+
+HCHO: "formaldehyde", "Formaldehyde", "HCHO"
+Reason: HCHO is formaldehyde, a simple aldehyde.
+
+src: "sarcosine", "N-methylglycine", "Sarcosine"
+Reason: src is sarcosine, an intermediate in glycine and methylation pathways.
+
+dmg: "dimethylglycine", "Dimethylglycine", "DMG"
+Reason: dmg is dimethylglycine, a methylation intermediate.
+
+Reason: All species are recognized as standard biochemical compounds or common synonyms. "UNK" is not necessary here.

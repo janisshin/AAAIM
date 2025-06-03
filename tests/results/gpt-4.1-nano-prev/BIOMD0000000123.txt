@@ -1,0 +1,9 @@
+Model: BIOMD0000000123
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:27
+
+Synonyms:
+Ca_Nuc: ['calcium ion', 'Ca2+', 'calcium in nucleus']
+Ca_Cyt: ['calcium ion', 'Ca2+', 'cytoplasmic calcium']
+
+Reason: Both species are calcium ions localized in different cellular compartments; "calcium ion" and "Ca2+" are common synonyms, with compartment-specific descriptors.

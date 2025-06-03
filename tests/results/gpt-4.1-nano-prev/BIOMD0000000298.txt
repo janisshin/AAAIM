@@ -1,0 +1,9 @@
+Model: BIOMD0000000298
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:32
+
+Synonyms:
+MP: ['myosin phosphatase', 'protein phosphatase', 'phosphatase enzyme']
+MT: ['microtubule', 'tubulin', 'mitotic spindle']
+
+Reason: MP and MT are common abbreviations in cell biology; MP likely refers to myosin phosphatase, and MT to microtubules. Since these are not explicitly defined in the model, the most probable chemical entities are these common biological molecules.

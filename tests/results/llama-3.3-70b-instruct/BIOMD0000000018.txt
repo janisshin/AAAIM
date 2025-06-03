@@ -1,0 +1,25 @@
+Model: BIOMD0000000018
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:43:11
+
+Synonyms:
+FH2f: ['dihydrofolate', '7,8-dihydrofolate', 'DHF']
+FH2b: ['dihydrofolate', '7,8-dihydrofolate', 'DHF']
+FH4: ['tetrahydrofolate', 'THF', '5,6,7,8-tetrahydrofolate']
+CH2FH4: ['5,10-methylenetetrahydrofolate', '5,10-CH2-THF', '5,10-methylene-THF']
+CH3FH4: ['5-methyltetrahydrofolate', '5-CH3-THF', '5-methyl-THF']
+CHOFH4: ['10-formyltetrahydrofolate', '10-formyl-THF', '10-CHO-THF']
+FFH2: ['10-formyldihydrofolate', '10-formyl-DHF', '10-CHO-DHF']
+HCHO: ['formaldehyde', 'methanal', 'H2CO']
+AICAR: ['5-amino-4-imidazolecarboxamide ribonucleotide', 'AICAR', 'ZMP']
+dUMP: ['deoxyuridine monophosphate', 'dUMP', "2'-deoxyuridine 5'-monophosphate"]
+serine: ['L-serine', 'Ser', '2-amino-3-hydroxypropanoic acid']
+formate: ['formic acid', 'HCOOH', 'methanoic acid']
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+glutamine: ['L-glutamine', 'Gln', '2-amino-4-carbamoylbutanoic acid']
+glycine: ['glycine', 'Gly', 'aminoacetic acid']
+NADP: ['nicotinamide adenine dinucleotide phosphate', 'NADP+', 'NADP']
+NADPH: ['nicotinamide adenine dinucleotide phosphate (reduced)', 'NADPH', 'NADP(H)']
+homocysteine: ['L-homocysteine', 'Hcy', '2-amino-4-mercaptopropanoic acid']
+
+Reason: The species names were matched to their corresponding display names and reactions in the model, and then standardized to common chemical names or synonyms. The likelihood of each match was ranked based on the clarity of the display name and the relevance of the reaction to the species.

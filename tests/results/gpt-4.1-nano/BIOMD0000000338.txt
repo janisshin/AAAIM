@@ -1,0 +1,11 @@
+Model: BIOMD0000000338
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:58:50
+
+Synonyms:
+ATIII_Heparin: ['antithrombin III', 'antithrombin', 'SERPINC1']
+Xa_ATIII_Heparin: ['activated factor X', 'factor Xa', 'FXa']
+IIa_ATIII_Heparin: ['thrombin', 'factor IIa', 'FIIa']
+IXa_ATIII_Heparin: ['activated factor IX', 'factor IXa', 'FIXa']
+
+Reason: These species represent complexes of coagulation factors with antithrombin III and heparin; the individual factors are well-known coagulation enzymes, and the complexes are commonly referenced in coagulation biology.

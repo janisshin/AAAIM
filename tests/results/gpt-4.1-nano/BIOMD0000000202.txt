@@ -1,0 +1,10 @@
+Model: BIOMD0000000202
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:55:23
+
+Synonyms:
+Ca_Cyt: ['calcium ion', 'Ca2+', 'cytoplasmic calcium']
+IP3_Cyt: ['inositol 1,4,5-trisphosphate', 'IP3', 'cytoplasmic IP3']
+Ca_ER: ['endoplasmic reticulum calcium', 'ER calcium', 'Ca2+ in ER']
+
+Reason: The reactions involve calcium flux between ER and cytoplasm and IP3 production, indicating these species are calcium ions in ER and cytoplasm and IP3 in cytoplasm.

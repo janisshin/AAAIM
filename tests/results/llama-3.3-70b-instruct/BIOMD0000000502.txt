@@ -1,0 +1,19 @@
+Model: BIOMD0000000502
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:06:51
+
+Synonyms:
+E4P: ['erythrose 4-phosphate', 'D-erythrose 4-phosphate']
+G6L: ['gluconolactone', 'D-gluconolactone']
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'reduced nicotinamide adenine dinucleotide phosphate']
+P6G: ['6-phosphogluconate', '6-phosphogluconic acid']
+R5P: ['ribose 5-phosphate', 'D-ribose 5-phosphate']
+Ru5P: ['ribulose 5-phosphate', 'D-ribulose 5-phosphate']
+S7P: ['sedoheptulose 7-phosphate', 'D-sedoheptulose 7-phosphate']
+X5P: ['xylulose 5-phosphate', 'D-xylulose 5-phosphate']
+NADP: ['nicotinamide adenine dinucleotide phosphate', 'NADP+', 'nicotinamide adenine dinucleotide phosphate(3-)']
+G6P: ['glucose 6-phosphate', 'D-glucose 6-phosphate']
+F6P: ['fructose 6-phosphate', 'D-fructose 6-phosphate']
+GAP: ['glyceraldehyde 3-phosphate', 'D-glyceraldehyde 3-phosphate']
+
+Reason: The species are annotated based on their display names and the context of the pentose phosphate pathway model. The reactions and notes provided in the model suggest that the species are involved in the pentose phosphate pathway, which is a metabolic pathway that generates NADPH and pentoses from glucose-6-phosphate. The display names for each species match common abbreviations used in biochemistry for these metabolites.

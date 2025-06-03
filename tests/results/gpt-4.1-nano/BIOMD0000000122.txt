@@ -1,0 +1,9 @@
+Model: BIOMD0000000122
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:53:11
+
+Synonyms:
+Ca_Nuc: ['calcium ion', 'Ca2+', 'calcium']
+Ca_Cyt: ['calcium ion', 'Ca2+', 'calcium']
+
+Reason: Both species represent calcium ions localized in different cellular compartments; "calcium" and "Ca2+" are common synonyms for free calcium ions in biological contexts.

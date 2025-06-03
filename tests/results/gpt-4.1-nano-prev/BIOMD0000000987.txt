@@ -1,0 +1,16 @@
+Model: BIOMD0000000987
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:09:46
+
+Synonyms:
+FITC_Dextran_three_compartment_model_compartment_1: ['fluorescein isothiocyanate dextran', 'FITC-dextran', 'fluorescein isothiocyanate dextran conjugate']
+FITC_Dextran_three_compartment_model_compartment_2: ['fluorescein isothiocyanate dextran', 'FITC-dextran', 'fluorescein isothiocyanate dextran conjugate']
+FITC_Dextran_three_compartment_model_compartment_3: ['fluorescein isothiocyanate dextran', 'FITC-dextran', 'fluorescein isothiocyanate dextran conjugate']
+FITC_Dextran_nine_compartment_model_compartment_4: ['fluorescein isothiocyanate dextran', 'FITC-dextran', 'fluorescein isothiocyanate dextran conjugate']
+FITC_Dextran_nine_compartment_model_compartment_5: ['fluorescein isothiocyanate dextran', 'FITC-dextran', 'fluorescein isothiocyanate dextran conjugate']
+FITC_Dextran_nine_compartment_model_compartment_6: ['fluorescein isothiocyanate dextran', 'FITC-dextran', 'fluorescein isothiocyanate dextran conjugate']
+FITC_Dextran_nine_compartment_model_compartment_7: ['fluorescein isothiocyanate dextran', 'FITC-dextran', 'fluorescein isothiocyanate dextran conjugate']
+FITC_Dextran_nine_compartment_model_compartment_8: ['fluorescein isothiocyanate dextran', 'FITC-dextran', 'fluorescein isothiocyanate dextran conjugate']
+FITC_Dextran_nine_compartment_model_compartment_9: ['fluorescein isothiocyanate dextran', 'FITC-dextran', 'fluorescein isothiocyanate dextran conjugate']
+
+Reason: All species refer to FITC-labeled dextran, a fluorescent polysaccharide commonly used in endocytosis studies. The compartments are model components, not distinct chemical entities.

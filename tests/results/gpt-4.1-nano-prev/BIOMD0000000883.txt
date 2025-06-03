@@ -1,0 +1,55 @@
+Model: BIOMD0000000883
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:08:53
+
+Synonyms:
+PIP3Active: ['phosphatidylinositol 3,4,5-trisphosphate', 'PIP3', 'PIP3']
+
+Reason: PIP3 is a well-known signaling lipid involved in cell signaling pathways.
+
+PIP3Inactive: "phosphatidylinositol 4,5-bisphosphate", "PIP2", "PIP2"
+Reason: PIP2 is the precursor to PIP3, commonly considered the inactive form.
+
+PLX4032: "Vemurafenib", "PLX4032", "Vemurafenib"
+Reason: PLX4032 is the chemical name for Vemurafenib, a BRAF inhibitor.
+
+TRADD_TRAF2_TRAF5_RIP1_bRafINH_Active: "TRADD:TRAF2:TRAF5:RIP1_bRafINH_Active", "TRADD complex", "TRADD:TRAF2:TRAF5:RIP1"
+Reason: Represents a protein complex involved in signaling; no direct chemical entity.
+
+TRADD_TRAF2_TRAF5_RIP1_bRafINH_Inactive: "TRADD:TRAF2:TRAF5:RIP1_bRafINH_Inactive", "TRADD complex", "TRADD:TRAF2:TRAF5:RIP1"
+Reason: Same as above, inactive form of the complex.
+
+TAB1_TAB2_TAB3_TAK1_bRafINH_Active: "TAB1:TAB2:TAB3:TAK1_bRafINH_Active", "TAK1 complex", "TAK1"
+Reason: Protein complex involved in signaling; no chemical entity.
+
+TAB1_TAB2_TAB3_TAK1_bRafINH_Inactive: "TAB1:TAB2:TAB3:TAK1_bRafINH_Inactive", "TAK1 complex", "TAK1"
+Reason: Same as above, inactive form.
+
+NIK_bRafINH_Active: "NIK kinase", "NIK", "NIK kinase"
+Reason: NIK is a kinase enzyme involved in signaling pathways.
+
+NIK_bRafINH_Inactive: "NIK kinase", "NIK", "NIK kinase"
+Reason: Same as above, inactive form.
+
+IKKbeta_IKKalfa_IKKgamma_bRafINH_Active: "IKK complex", "IKK complex", "IKK complex"
+Reason: Represents a protein kinase complex, not a chemical.
+
+IKKbeta_IKKalfa_IKKgamma_bRafINH_Inactive: "IKK complex", "IKK complex", "IKK complex"
+Reason: Same as above.
+
+Tpl2_NF_kB_bRafINH_Active: "MAP3K8", "TPL2 kinase", "MAP3K8"
+Reason: Tpl2 (MAP3K8) is a kinase enzyme involved in signaling.
+
+Tpl2_NF_kB_bRafINH_Inactive: "MAP3K8", "TPL2 kinase", "MAP3K8"
+Reason: Same as above.
+
+TRAF1_TRAF2_TRAF3_bRafINH_Active: "TRAF1:TRAF2:TRAF3 complex", "TRAF complex", "TRAF proteins"
+Reason: Protein complex involved in signaling, not chemical.
+
+TRAF1_TRAF2_TRAF3_bRafINH_Inactive: "TRAF1:TRAF2:TRAF3 complex", "TRAF complex", "TRAF proteins"
+Reason: Same as above.
+
+MAP3K8_inhibitor: "MAP3K8 inhibitor", "MAP3K8 inhibitor", "MAP3K8 inhibitor"
+Reason: Chemical inhibitor targeting MAP3K8 kinase.
+
+Reason: All species are either protein complexes, kinases, or signaling lipids, with no direct chemical entities, except for the lipid PIP3/PIP2 and the drug Vemurafenib.

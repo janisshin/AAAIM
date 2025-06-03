@@ -1,0 +1,20 @@
+Model: BIOMD0000000606
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:22:16
+
+Synonyms:
+glycerol_i: ['glycerol', 'glycerin', 'propan-1,2,3-triol']
+glucose_i: ['glucose', 'D-glucose', 'blood sugar']
+G6P: ['glucose-6-phosphate', 'D-glucose-6-phosphate', 'G6P']
+trehalose: ['trehalose', 'mycose', 'alpha,alpha-trehalose']
+F16DP: ['fructose-1,6-bisphosphate', 'D-fructose-1,6-bisphosphate', 'F1,6BP']
+pyruvate: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+acetate_i: ['acetic acid', 'acetate', 'ethanoic acid']
+ethanol_i: ['ethanol', 'ethyl alcohol', 'alcohol']
+glycerol_e: ['glycerol', 'glycerin', 'propan-1,2,3-triol']
+glucose_e: ['glucose', 'D-glucose', 'blood sugar']
+acetate_e: ['acetic acid', 'acetate', 'ethanoic acid']
+ethanol_e: ['ethanol', 'ethyl alcohol', 'alcohol']
+trehalose_e: ['trehalose', 'mycose', 'alpha,alpha-trehalose']
+
+Reason: The species were annotated based on their display names and reaction equations, where possible matches were found with common biochemical compounds, and standardized names were assigned accordingly. G6P and F16DP were matched with glucose-6-phosphate and fructose-1,6-bisphosphate, respectively, based on common abbreviations in biochemical models. The _i and _e suffixes were ignored for annotation purposes, as they likely refer to intracellular and extracellular compartments, respectively.

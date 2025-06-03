@@ -1,0 +1,22 @@
+Model: BIOMD0000000199
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:00:29
+
+Synonyms:
+FeIII: ['ferric ion', 'iron(3+)', 'Fe3+']
+FeII: ['ferrous ion', 'iron(2+)', 'Fe2+']
+FeII_O2: ['UNK']
+FeIII_star: ['UNK']
+FeII_star: ['UNK']
+FeII_star_O2: ['UNK']
+FeIII_NO: ['UNK']
+FeII_NO: ['UNK']
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'NADPH', 'reduced nicotinamide adenine dinucleotide phosphate']
+O2: ['oxygen', 'dioxygen', 'O2']
+citrulline: ['citrulline', 'L-citrulline', '2-amino-5-ureidopentanoic acid']
+NO3: ['nitrate', 'nitrate ion', 'NO3-']
+NO: ['nitric oxide', 'nitrogen monoxide', 'NO']
+NADPplus: ['nicotinamide adenine dinucleotide phosphate', 'NADP+', 'oxidized nicotinamide adenine dinucleotide phosphate']
+FeIII_t: ['UNK']
+
+Reason: The species with "_star" or "_O2" or "_NO" suffixes are likely intermediate or complex species and do not have standardized names, while others can be matched to common chemical names based on their display names and reaction contexts. NADPplus is assumed to be the oxidized form of NADPH. FeIII_t is unknown due to lack of information.

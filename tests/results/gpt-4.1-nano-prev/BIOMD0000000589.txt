@@ -1,0 +1,18 @@
+Model: BIOMD0000000589
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:03:08
+
+Synonyms:
+NADPH: ['NADPH', 'Nicotinamide adenine dinucleotide phosphate, reduced form', 'Reduced NADP+']
+NADPplus: ['NADP+', 'Nicotinamide adenine dinucleotide phosphate', 'Oxidized NADP+']
+GSH: ['glutathione', 'Reduced glutathione', 'GSH']
+GSSG: ['glutathione disulfide', 'oxidized glutathione', 'GSSG']
+ASC: ['ascorbate', 'Vitamin C', 'Ascorbic acid']
+DHA: ['dehydroascorbic acid', 'oxidized vitamin C', 'DHA']
+MDA: ['malondialdehyde', 'MDA', 'a marker of lipid peroxidation']
+H2O2: ['hydrogen peroxide', 'H2O2', 'hydrogen peroxide']
+CoI: ['cobalt ion', 'Co(II)', 'Cobalt(II)']
+CoII: ['cobalt ion', 'Co(II)', 'Cobalt(II)']
+O2neg: ['superoxide', 'O2−', 'superoxide anion']
+
+Reason: All are well-known chemical species or ions relevant to redox and antioxidant pathways; "CoI" and "CoII" are both cobalt ions in different oxidation states, and "O2neg" is superoxide, a common reactive oxygen species.

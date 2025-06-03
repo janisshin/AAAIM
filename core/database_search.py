@@ -13,8 +13,14 @@ from typing import Dict, List, Optional, Tuple
 from pathlib import Path
 from dataclasses import dataclass
 import logging
+import sys
+import chromadb
+from chromadb.utils import embedding_functions
 
 logger = logging.getLogger(__name__)
+
+# Global ChromaDB client cache to avoid conflicts
+_CHROMADB_CLIENTS = {}
 
 # Cache for loaded dictionaries
 _CHEBI_CLEANNAMES_DICT: Optional[Dict[str, List[str]]] = None
@@ -29,12 +35,12 @@ class Recommendation:
     synonyms: list  # List of synonyms predicted by LLM
     candidates: list  # List of ChEBI IDs
     candidate_names: list  # List of names of the predicted candidates
-    hit_count: list  # Number of hits in the synonyms
+    match_score: list  # Match scores (normalized hit count for direct search, cosine similarity for RAG)
 
 def get_data_dir() -> Path:
     """Get the path to the AAAIM data directory."""
     current_dir = Path(__file__).parent.parent
-    return current_dir / "data" / "chebi"
+    return current_dir / "data" 
 
 def load_chebi_cleannames_dict() -> Dict[str, List[str]]:
     """
@@ -46,7 +52,7 @@ def load_chebi_cleannames_dict() -> Dict[str, List[str]]:
     global _CHEBI_CLEANNAMES_DICT
     
     if _CHEBI_CLEANNAMES_DICT is None:
-        data_file = get_data_dir() / "cleannames2chebi.lzma"
+        data_file = get_data_dir() / "chebi" / "cleannames2chebi.lzma"
         
         if not data_file.exists():
             raise FileNotFoundError(f"ChEBI cleannames data file not found: {data_file}")
@@ -66,7 +72,7 @@ def load_chebi_label_dict() -> Dict[str, str]:
     global _CHEBI_LABEL_DICT
     
     if _CHEBI_LABEL_DICT is None:
-        data_file = get_data_dir() / "chebi2label.lzma"
+        data_file = get_data_dir() / "chebi" / "chebi2label.lzma"
         
         if not data_file.exists():
             raise FileNotFoundError(f"ChEBI label data file not found: {data_file}")
@@ -114,6 +120,19 @@ def get_species_recommendations_direct(species_ids: List[str], synonyms_dict) ->
         else:
             synonyms = [spec_id]
         
+        # Skip if only 'UNK' synonym
+        if synonyms == ['UNK'] or (len(synonyms) == 1 and synonyms[0] == 'UNK'):
+            # Create empty recommendation for UNK
+            recommendation = Recommendation(
+                id=spec_id,
+                synonyms=synonyms,
+                candidates=[],
+                candidate_names=[],
+                match_score=[]
+            )
+            recommendations.append(recommendation)
+            continue
+        
         all_candidates = []
         all_candidate_names = []
         hit_count = {}  # Dictionary to track how many times each candidate appears
@@ -134,8 +153,9 @@ def get_species_recommendations_direct(species_ids: List[str], synonyms_dict) ->
                         else:
                             hit_count[chebi_id] += 1
         
-        # Convert hit_count dict to list in the same order as candidates
-        hit_count_list = [hit_count.get(candidate, 0) for candidate in all_candidates]
+        # Calculate normalized match scores (hit_count / number_of_synonyms)
+        num_synonyms = len(synonyms)
+        match_score_list = [hit_count.get(candidate, 0) / num_synonyms for candidate in all_candidates]
         
         # Create recommendation object
         recommendation = Recommendation(
@@ -143,7 +163,211 @@ def get_species_recommendations_direct(species_ids: List[str], synonyms_dict) ->
             synonyms=synonyms,
             candidates=all_candidates,
             candidate_names=all_candidate_names,
-            hit_count=hit_count_list
+            match_score=match_score_list
+        )
+        recommendations.append(recommendation)
+    
+    return recommendations
+
+def get_embedding_function(model_type: str = "default"):
+    """
+    Get the appropriate embedding function based on model type.
+    
+    Args:
+        model_type: Type of embedding model ("default", "openai")
+        
+    Returns:
+        ChromaDB embedding function
+    """
+    if model_type == "openai":
+        if not os.getenv("OPENAI_API_KEY"):
+            raise ValueError("OPENAI_API_KEY environment variable is required for OpenAI embeddings")
+        logger.info("Using OpenAI text-embedding-ada-002 model")
+        return embedding_functions.OpenAIEmbeddingFunction(
+            api_key=os.environ.get("OPENAI_API_KEY"),
+            model_name="text-embedding-ada-002",
+        )
+    else:  # default
+        logger.info("Using sentence transformer all-MiniLM-L6-v2 model")
+        return embedding_functions.SentenceTransformerEmbeddingFunction(
+            model_name="all-MiniLM-L6-v2"
+        )
+
+def get_chromadb_client(persist_directory: str, collection_name: str, model_type: str = "default"):
+    """
+    Get or create a ChromaDB client and collection, handling conflicts properly.
+    
+    Args:
+        persist_directory: Directory for ChromaDB storage
+        collection_name: Name of the collection
+        model_type: Type of embedding model
+        
+    Returns:
+        Tuple of (client, collection)
+    """
+    client_key = f"{persist_directory}_{collection_name}_{model_type}"
+    
+    if client_key in _CHROMADB_CLIENTS:
+        return _CHROMADB_CLIENTS[client_key]
+    
+    try:
+        # Try to initialize ChromaDB client
+        client = chromadb.PersistentClient(path=persist_directory)
+        
+        # Get embedding function
+        embedding_function = get_embedding_function(model_type)
+        
+        # Get the collection
+        collection = client.get_collection(
+            name=collection_name,
+            embedding_function=embedding_function
+        )
+        
+        # Cache the client and collection
+        _CHROMADB_CLIENTS[client_key] = (client, collection)
+        
+        logger.info(f"Using RAG embeddings from collection '{collection_name}' with {model_type} model")
+        
+        return client, collection
+        
+    except Exception as e:
+        error_msg = str(e).lower()
+        
+        # Handle the specific "already exists" error
+        if "already exists" in error_msg and "different settings" in error_msg:
+            logger.warning(f"ChromaDB client conflict detected. Attempting to use in-memory client as fallback.")
+            
+            try:
+                # Try using an in-memory client as fallback (this won't persist but will work for queries)
+                client = chromadb.Client()
+                
+                # Try to load the collection from persistent storage manually
+                # This is a workaround - the collection might not be available in memory
+                raise ValueError(f"ChromaDB client conflict. Please restart Python session or check for other running processes using {persist_directory}")
+                
+            except Exception as fallback_error:
+                logger.error(f"Fallback client also failed: {fallback_error}")
+                raise ValueError(f"ChromaDB unavailable due to client conflict. Error: {e}")
+        else:
+            logger.error(f"Could not access ChromaDB collection '{collection_name}': {e}")
+            raise ValueError(f"ChromaDB collection not available. Make sure embeddings have been created first. Error: {e}")
+
+def force_clear_chromadb():
+    """
+    Force clear ChromaDB cache and try to cleanup any hanging clients.
+    """
+    global _CHROMADB_CLIENTS
+    
+    # Clear our cache
+    _CHROMADB_CLIENTS.clear()
+    
+    # Try to garbage collect
+    import gc
+    gc.collect()
+    
+    logger.info("Forced ChromaDB cleanup completed")
+
+def get_species_recommendations_rag(
+    species_ids: List[str], 
+    synonyms_dict, 
+    collection_name: str = "chebi_default",
+    model_type: str = "default",
+    persist_directory: str = "chroma_storage",
+    top_k: int = 5
+) -> List[Recommendation]:
+    """
+    Find ChEBI recommendations using RAG embeddings.
+    
+    Parameters:
+    - species_ids (list): List of species IDs to evaluate.
+    - synonyms_dict (dict): Mapping of species IDs to synonyms.
+    - collection_name (str): ChromaDB collection name.
+    - model_type (str): Type of embedding model ("default", "openai").
+    - persist_directory (str): ChromaDB storage directory.
+    - top_k (int): Number of top candidates to retrieve per species.
+    
+    Returns:
+    - list: List of Recommendation objects with candidates and similarity scores.
+    """
+    persist_directory = os.path.join(get_data_dir(), persist_directory)
+    
+    # Use the client manager to get or create client and collection
+    client, collection = get_chromadb_client(persist_directory, collection_name, model_type)
+    
+    recommendations = []
+    
+    for spec_id in species_ids:
+        # Get synonyms for this species ID
+        if isinstance(synonyms_dict, dict):
+            synonyms = synonyms_dict.get(spec_id, [spec_id])
+        elif isinstance(synonyms_dict, tuple) and len(synonyms_dict) == 2:
+            # If it's a tuple with two items (dict and reason)
+            synonyms = synonyms_dict[0].get(spec_id, [spec_id])
+        else:
+            synonyms = [spec_id]
+        
+        # Skip if only 'UNK' synonym
+        if synonyms == ['UNK'] or (len(synonyms) == 1 and synonyms[0] == 'UNK'):
+            # Create empty recommendation for UNK
+            recommendation = Recommendation(
+                id=spec_id,
+                synonyms=synonyms,
+                candidates=[],
+                candidate_names=[],
+                match_score=[]
+            )
+            recommendations.append(recommendation)
+            continue
+        
+        all_candidates = []
+        all_candidate_names = []
+        candidate_scores = {}  # Dictionary to track best score for each candidate
+        
+        # Query embeddings for each synonym
+        for synonym in synonyms:
+            try:
+                # Query the collection
+                results = collection.query(
+                    query_texts=[synonym],
+                    n_results=top_k,
+                    include=["metadatas", "distances"]
+                )
+                
+                # Process results
+                for metadata, distance in zip(results['metadatas'][0], results['distances'][0]):
+                    chebi_id = metadata.get('chebi_id', 'Unknown')
+                    chebi_name = metadata.get('name', 'Unknown')
+                    similarity_score = round(1 - distance, 3)  # Convert distance to similarity and only keep 3 decimal places
+                    
+                    if chebi_id not in candidate_scores:
+                        all_candidates.append(chebi_id)
+                        all_candidate_names.append(chebi_name)
+                        candidate_scores[chebi_id] = similarity_score
+                    else:
+                        # Keep the best (highest) similarity score for this candidate
+                        candidate_scores[chebi_id] = max(candidate_scores[chebi_id], similarity_score)
+            
+                # Only keep the top_k candidate for each species
+                if len(candidate_scores) > top_k:
+                    sorted_candidates = sorted(candidate_scores.items(), key=lambda x: x[1], reverse=True)[:top_k]
+                    all_candidates = [chebi_id for chebi_id, _ in sorted_candidates]
+                    all_candidate_names = [all_candidate_names[all_candidates.index(chebi_id)] for chebi_id, _ in sorted_candidates if chebi_id in all_candidates]
+                    candidate_scores = dict(sorted_candidates)
+
+            except Exception as e:
+                logger.warning(f"Error querying synonym '{synonym}' for species '{spec_id}': {e}")
+                continue
+        
+        # Convert candidate_scores dict to list in the same order as candidates
+        match_score_list = [candidate_scores.get(candidate, 0.0) for candidate in all_candidates]
+        
+        # Create recommendation object
+        recommendation = Recommendation(
+            id=spec_id,
+            synonyms=synonyms,
+            candidates=all_candidates,
+            candidate_names=all_candidate_names,
+            match_score=match_score_list
         )
         recommendations.append(recommendation)
     
@@ -231,8 +455,8 @@ def is_database_available(database: str) -> bool:
     if database.lower() == "chebi":
         try:
             data_dir = get_data_dir()
-            cleannames_file = data_dir / "cleannames2chebi.lzma"
-            labels_file = data_dir / "chebi2label.lzma"
+            cleannames_file = data_dir / "chebi" / "cleannames2chebi.lzma"
+            labels_file = data_dir / "chebi" / "chebi2label.lzma"
             return cleannames_file.exists() and labels_file.exists()
         except Exception:
             return False
@@ -256,3 +480,9 @@ def get_available_databases() -> List[str]:
     #     available.append("ncbigene")
     
     return available 
+
+def clear_chromadb_cache():
+    """
+    Clear the ChromaDB client cache. Useful for cleaning up between batch operations.
+    """
+    force_clear_chromadb() 

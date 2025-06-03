@@ -1,0 +1,9 @@
+Model: BIOMD0000000124
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:53:14
+
+Synonyms:
+c: ['calcium ion', 'Ca2+', 'cytosolic calcium']
+cer: ['endoplasmic reticulum calcium', 'ER calcium', 'Ca2+ in ER']
+
+Reason: Both species are calcium concentrations in different cellular compartments; "c" is cytosolic calcium, "cer" is ER calcium.

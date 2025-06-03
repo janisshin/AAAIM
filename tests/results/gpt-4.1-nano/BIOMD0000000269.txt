@@ -1,0 +1,10 @@
+Model: BIOMD0000000269
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:57:51
+
+Synonyms:
+ET: ['ethylene', 'ethylene (gas)', 'ethene']
+IAA: ['indole-3-acetic acid', 'auxin', 'IAA']
+ACC: ['1-aminocyclopropane-1-carboxylic acid', 'ACC', 'aminocyclopropane-1-carboxylic acid']
+
+Reason: The model involves plant hormones ethylene, auxin, and ACC (the ethylene precursor), which are well-known chemical entities. The display names confirm these identities.

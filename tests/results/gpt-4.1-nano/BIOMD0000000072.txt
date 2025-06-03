@@ -1,0 +1,9 @@
+Model: BIOMD0000000072
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:51:55
+
+Synonyms:
+Gd: ['GTP-bound G-alpha', 'G-alpha-GTP', 'G-protein alpha subunit GTP']
+Ga: ['GDP-bound G-alpha', 'G-alpha-GDP', 'G-protein alpha subunit GDP']
+
+Reason: Gd and Ga are the active and inactive forms of G-alpha, respectively, with GTP and GDP bound, which are standard biochemical forms of G-alpha subunits in G-protein signaling.

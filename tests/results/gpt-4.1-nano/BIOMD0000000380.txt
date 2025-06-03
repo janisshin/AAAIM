@@ -1,0 +1,23 @@
+Model: BIOMD0000000380
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:59:27
+
+Synonyms:
+glc: ['glucose', 'd-glucose', 'blood sugar']
+g1p: ['glucose 1-phosphate', 'glucose-1-phosphate']
+g6p: ['glucose 6-phosphate', 'glucose-6-phosphate']
+trh: ['trehalose', 'trehalose']
+t6p: ['trehalose 6-phosphate', 'trehalose-6-phosphate']
+udg: ['UDP-glucose', 'uridine diphosphate glucose']
+adp: ['ADP', 'adenosine diphosphate']
+atp: ['ATP', 'adenosine triphosphate']
+ppi: ['diphosphate', 'pyrophosphate']
+f6p: ['fructose 6-phosphate', 'fructose-6-phosphate']
+h: ['H+', 'proton']
+pho: ['phosphate', 'inorganic phosphate']
+udp: ['UDP', 'uridine diphosphate']
+utp: ['UTP', 'uridine triphosphate']
+h2o: ['water', 'H2O']
+glx: ['glucose', 'd-glucose', 'blood sugar']
+
+Reason: All species are common metabolites or cofactors involved in carbohydrate metabolism, especially trehalose biosynthesis. "glc" and "glx" are both glucose, "g1p" and "g6p" are phosphorylated glucose derivatives, and "trh" and "t6p" are trehalose and its phosphate. "udg", "udp", "utp" are nucleotide sugars and triphosphates. "pho" is inorganic phosphate, and "h" is a proton. "ppi" is pyrophosphate, a common byproduct.

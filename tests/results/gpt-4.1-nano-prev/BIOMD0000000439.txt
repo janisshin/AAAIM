@@ -1,0 +1,15 @@
+Model: BIOMD0000000439
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:46:37
+
+Synonyms:
+GaGTP: ['GTP', 'guanosine triphosphate', 'GTP']
+RGSGaGTP: ['GTP-bound G protein', 'GTP-Galpha', 'GTP complex']
+GaGDPP: ['GDP', 'guanosine diphosphate', 'GDP']
+GaGTPEffector: ['GTP-bound G protein', 'active GTP-Galpha', 'GTP-Galpha']
+inertGaGTP: ['Inactive GTP-bound G protein', 'GTP-Galpha inactive']
+RGSinertGaGTP: ['RGS-inhibited GTP-bound G protein', 'RGS-inhibited GTP-Galpha']
+GaGDP: ['GDP', 'guanosine diphosphate', 'GDP']
+P: ['inorganic phosphate', 'Pi']
+
+Reason: The species are GTP, GDP, and phosphate, which are standard biochemical entities. The others are GTP-bound or GDP-bound G proteins, or related complexes, which are best represented by their common nucleotide forms or functional states.

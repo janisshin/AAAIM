@@ -1,0 +1,14 @@
+Model: BIOMD0000000388
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:16:26
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'RuBP', 'ribulose 1,5-diphosphate']
+PGA: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'phosphoglycerate']
+GAP: ['glyceraldehyde 3-phosphate', 'glyceraldehyde-3-phosphate', 'G3P']
+Ru5P: ['ribulose-5-phosphate', 'ribulose phosphate', 'Ru-5-P']
+ADP: ['adenosine diphosphate', "adenosine 5'-diphosphate", 'ADP']
+ATP: ['adenosine triphosphate', "adenosine 5'-triphosphate", 'ATP']
+Pi: ['inorganic phosphate', 'orthophosphate', 'phosphate']
+
+Reason: The model is of the Calvin cycle, a series of biochemical reactions that occur in the stroma of chloroplasts in photosynthetic organisms, which helps to identify the species as common intermediates in this pathway. RuBP is the substrate for the RuBisCO enzyme, PGA and GAP are intermediates in the cycle, Ru5P is a precursor to RuBP, ADP and ATP are energy transfer molecules, and Pi is a phosphate group transferred in various reactions.

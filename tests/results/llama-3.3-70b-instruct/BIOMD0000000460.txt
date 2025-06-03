@@ -1,0 +1,8 @@
+Model: BIOMD0000000460
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:27:43
+
+Synonyms:
+IPTG: ['isopropyl beta-D-1-thiogalactopyranoside', 'isopropylthiogalactoside', 'IPTG']
+
+Reason: IPTG is a commonly used inducer molecule in molecular biology, and its full name is isopropyl beta-D-1-thiogalactopyranoside, with isopropylthiogalactoside being a synonym; the model notes confirm its use as an inducer in the context of the sigma B proteolysis model.

@@ -1,0 +1,18 @@
+Model: BIOMD0000000087
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:36:35
+
+Synonyms:
+ssDNA: ['single-stranded DNA', 'ssDNA', 'single-stranded nucleic acid']
+RPAssDNA: ['RPA-bound ssDNA', 'replication protein A bound ssDNA', 'RPA-ssDNA complex']
+RPAssDNA1: ['RPA-bound ssDNA', 'replication protein A bound ssDNA', 'RPA-ssDNA complex']
+RPAssDNA2: ['RPA-bound ssDNA', 'replication protein A bound ssDNA', 'RPA-ssDNA complex']
+Mec1RPAssDNA: ['Mec1-RPA-ssDNA complex', 'Mec1 bound to RPA-coated ssDNA', 'Mec1-RPA-ssDNA']
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate molecule']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate molecule']
+
+Reason: 
+ssDNA is a common form of nucleic acid, well known as single-stranded DNA.
+RPAssDNA, RPAssDNA1, RPAssDNA2 are all RPA-bound ssDNA complexes, with similar function; synonyms reflect RPA association.
+Mec1RPAssDNA is a complex of Mec1 kinase with RPA-coated ssDNA, a key DNA damage response component.
+ATP and ADP are standard nucleotides involved in energy transfer.

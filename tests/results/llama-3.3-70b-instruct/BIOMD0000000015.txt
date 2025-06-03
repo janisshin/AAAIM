@@ -1,0 +1,23 @@
+Model: BIOMD0000000015
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:42:36
+
+Synonyms:
+PRPP: ['phosphoribosyl pyrophosphate', '5-phosphoribosyl diphosphate', 'PRPP']
+IMP: ['inosine monophosphate', "inosine 5'-monophosphate", 'hypoxanthine riboside monophosphate']
+SAMP: ['adenylosuccinate', 'N-(5-amino-1-ribosyl-4-imidazolecarboxamido)succinic acid', 'SAICAR']
+ATP: ['adenosine triphosphate', "adenosine 5'-triphosphate", 'ATP']
+SAM: ['s-adenosylmethionine', 's-adenosyl-l-methionine', 'SAMe']
+Ade: ['adenine', '6-aminopurine', '9H-purin-6-amine']
+XMP: ['xanthosine monophosphate', "xanthosine 5'-monophosphate", 'xanthine riboside monophosphate']
+GTP: ['guanosine triphosphate', "guanosine 5'-triphosphate", 'GTP']
+dATP: ['deoxyadenosine triphosphate', "deoxyadenosine 5'-triphosphate", 'dATP']
+dGTP: ['deoxyguanosine triphosphate', "deoxyguanosine 5'-triphosphate", 'dGTP']
+HX: ['hypoxanthine', '6-hydroxypurine', '1H-purin-6(9H)-one']
+Xa: ['xanthine', '3,7-dihydroxypurine', '1H-purin-2,6(3H,7H)-dione']
+Gua: ['guanine', '2-amino-1,7-dihydro-6H-purin-6-one', '2-aminohypoxanthine']
+UA: ['uric acid', '7,9-dihydro-1H-purine-2,6,8(3H)-trione', '2,6,8-trihydroxypurine']
+R5P: ['ribose-5-phosphate', 'd-ribose 5-phosphate', 'ribulose-5-phosphate']
+Pi: ['phosphate', 'orthophosphate', 'inorganic phosphate']
+
+Reason: The standardized names and common synonyms for each species were determined based on their display names and the context of the purine metabolism model. The names were matched to known chemical entities in the ChEBI database, and up to three synonyms were provided for each species, ranked by likelihood. The model's display names and reaction equations were used to inform the matching process, and the resulting synonyms are consistent with the biochemical context of the model.

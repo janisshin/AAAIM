@@ -1,0 +1,8 @@
+Model: BIOMD0000000621
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:23:22
+
+Synonyms:
+Glucose: ['glucose', 'D-glucose', 'blood glucose']
+
+Reason: Glucose is a well-known chemical entity, and its standardized name is widely recognized. The display name is empty, but the context of the model and reactions suggests that it refers to the common biological molecule glucose. The reactions involving glucose, such as production and uptake, also support this identification.

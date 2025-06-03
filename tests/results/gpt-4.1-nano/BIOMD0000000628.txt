@@ -1,0 +1,32 @@
+Model: BIOMD0000000628
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:21:06
+
+Synonyms:
+Ca: ['calcium', 'Ca2+', 'calcium ion']
+CBPfastCa: ['CBP fast calcium complex', 'CBP fast Ca', 'calcium-bound CBP']
+CBPmediaCa: ['CBP media calcium complex', 'CBP media Ca', 'calcium-bound CBP']
+CBPvslowCa: ['CBP slow calcium complex', 'CBP slow Ca', 'calcium-bound CBP']
+CamR_Ca1_A: ['CamR calcium-bound A', 'CamR Ca1', 'Calcium-bound CamR']
+CamR_Ca2_AB: ['CamR calcium-bound AB', 'CamR Ca2', 'Calcium-bound CamR']
+CamR_Ca3_ABC: ['CamR calcium-bound ABC', 'CamR Ca3', 'Calcium-bound CamR']
+CamR_Ca4_ABCD: ['CamR calcium-bound ABCD', 'CamR Ca4', 'Calcium-bound CamR']
+CamT_Ca1_A: ['CamT calcium-bound A', 'CamT Ca1', 'Calcium-bound CamT']
+CamT_Ca2_AB: ['CamT calcium-bound AB', 'CamT Ca2', 'Calcium-bound CamT']
+CamT_Ca2_AD: ['CamT calcium-bound AD', 'CamT Ca2', 'Calcium-bound CamT']
+CamT_Ca3_ABC: ['CamT calcium-bound ABC', 'CamT Ca3', 'Calcium-bound CamT']
+CamT_Ca4_ABCD: ['CamT calcium-bound ABCD', 'CamT Ca4', 'Calcium-bound CamT']
+CamR_CaMKII: ['CaMKII calcium-bound', 'CamR CaMKII', 'Calcium-bound CaMKII']
+CamR_Ca1_A_CaMKII: ['CamR calcium-bound A CaMKII', 'CamR Ca1 CaMKII', 'Calcium-bound CaMKII']
+CamR_Ca1_B_CaMKII: ['CamR calcium-bound B CaMKII', 'CamR Ca1 CaMKII', 'Calcium-bound CaMKII']
+CamR_Ca2_AB_CaMKII: ['CamR calcium-bound AB CaMKII', 'CamR Ca2 CaMKII', 'Calcium-bound CaMKII']
+CamR_Ca3_ABC_CaMKII: ['CamR calcium-bound ABC CaMKII', 'CamR Ca3 CaMKII', 'Calcium-bound CaMKII']
+CamR_Ca4_ABCD_CaMKII: ['CamR calcium-bound ABCD CaMKII', 'CamR Ca4 CaMKII', 'Calcium-bound CaMKII']
+CamR_Ca1_A_PP2B: ['CamR PP2B calcium-bound A', 'CamR Ca1 PP2B', 'Calcium-bound PP2B']
+CamR_Ca2_AB_PP2B: ['CamR PP2B calcium-bound AB', 'CamR Ca2 PP2B', 'Calcium-bound PP2B']
+CamR_Ca3_ABC_PP2B: ['CamR PP2B calcium-bound ABC', 'CamR Ca3 PP2B', 'Calcium-bound PP2B']
+CamR_Ca4_ABCD_PP2B: ['CamR PP2B calcium-bound ABCD', 'CamR Ca4 PP2B', 'Calcium-bound PP2B']
+CamR_Ca1_A_CaMKIIp: ['CamR phosphorylated CaMKII calcium-bound A', 'CamR Ca1 CaMKIIp', 'Phosphorylated CaMKII']
+D: ['D', 'unknown', 'UNK']
+
+Reason: All are calcium-related species or complexes; "D" is unspecified, so "UNK".

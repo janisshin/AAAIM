@@ -1,0 +1,13 @@
+Model: BIOMD0000000038
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:43:42
+
+Synonyms:
+PyrPI: ['pyruvate phosphate', 'phosphopyruvate']
+EIICBPGlc: ['glucose-6-phosphate', 'glc-6-p']
+PEP: ['phosphoenolpyruvate', 'pep']
+Pyr: ['pyruvic acid', 'pyruvate']
+GlcP: ['glucose-6-phosphate', 'glc-6-p']
+Glc: ['glucose', 'd-glucose']
+
+Reason: The model is a phosphotransferase system, which is involved in glucose transport and phosphorylation, suggesting the species are related to glucose and pyruvate metabolism, and the names are inferred from common biochemical abbreviations and terminology.

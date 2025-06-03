@@ -1,0 +1,13 @@
+Model: BIOMD0000000087
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:52:26
+
+Synonyms:
+RPAssDNA: ['single-stranded DNA', 'ssDNA', 'unbound ssDNA']
+RPAssDNA1: ['single-stranded DNA', 'ssDNA', 'unbound ssDNA']
+RPAssDNA2: ['single-stranded DNA', 'ssDNA', 'unbound ssDNA']
+Mec1RPAssDNA: ['Mec1-bound ssDNA', 'Mec1-ssDNA complex', 'Mec1 ssDNA']
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+
+Reason: The species with "ssDNA" are likely single-stranded DNA molecules involved in DNA repair processes. "Mec1RPAssDNA" is a complex of Mec1 kinase bound to ssDNA. ATP and ADP are common nucleotides involved in energy transfer.

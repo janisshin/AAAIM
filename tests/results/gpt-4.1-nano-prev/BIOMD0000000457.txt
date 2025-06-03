@@ -1,0 +1,482 @@
+Model: BIOMD0000000457
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:47:56
+
+Synonyms:
+species_1: ['eIF2', 'eukaryotic initiation factor 2', 'eIF2-GDP']
+
+Reason: the display name is "eIF2_GDP", a well-known translation initiation factor.
+
+species_3: "eIF2B", "eukaryotic initiation factor 2B", "eIF2B"
+Reason: the display name is "eIF2_GDP_eIF2B", a translation factor involved in recycling eIF2.
+
+species_4: "eIF2", "eukaryotic initiation factor 2", "eIF2-GTP"
+Reason: the display name is "eIF2_GTP", a key translation initiation factor.
+
+species_5: "Met-tRNA", "methionine tRNA", "initiator tRNA"
+Reason: the display name is "Met-tRNA", the initiator tRNA for translation start.
+
+species_6: "eIF2", "eukaryotic initiation factor 2", "eIF2-GTP"
+Reason: same as species_4, involved in initiation.
+
+species_7: "eIF3", "eukaryotic initiation factor 3", "eIF3"
+Reason: directly named "eIF3", a translation initiation factor.
+
+species_8: "eIF5", "eukaryotic initiation factor 5", "eIF5"
+Reason: directly named "eIF5", involved in initiation.
+
+species_10: "eIF3", "eukaryotic initiation factor 3", "eIF3"
+Reason: same as species_7, involved in initiation complex.
+
+species_11: "eIF1", "eukaryotic initiation factor 1", "eIF1"
+Reason: directly named "eIF1", involved in scanning.
+
+species_12: "eIF1A", "eukaryotic initiation factor 1A", "eIF1A"
+Reason: directly named "eIF1A", part of initiation.
+
+species_13: "40S ribosomal subunit", "small ribosomal subunit", "40S"
+Reason: the display name is "40S", the small ribosomal subunit.
+
+species_14: "eIF1A", "eukaryotic initiation factor 1A", "eIF1A"
+Reason: same as species_12, involved in initiation.
+
+species_15: "40S ribosomal subunit", "small ribosomal subunit", "40S"
+Reason: same as species_13.
+
+species_16: "43S pre-initiation complex", "pre-initiation complex", "43S"
+Reason: the reaction involves formation of the 43S complex.
+
+species_17: "eIF4E", "eukaryotic initiation factor 4E", "eIF4E"
+Reason: directly named "eIF4E", cap-binding protein.
+
+species_18: "eIF4G", "eukaryotic initiation factor 4G", "eIF4G"
+Reason: directly named "eIF4G", scaffolding protein.
+
+species_20: "mRNA cap", "mRNA cap structure", "cap"
+Reason: display name "mRNA_cap", the 5' cap of mRNA.
+
+species_21: "Pab1", "Poly(A)-binding protein", "Pab1"
+Reason: directly named "Pab1", poly(A)-binding protein.
+
+species_22: "mRNA", "messenger RNA", "mRNA"
+Reason: display name "mRNA_Pab1", mRNA associated with Pab1.
+
+species_23: "eIF4E_eIF4G_mRNA_Pab1", "translation initiation complex", "eIF4 complex"
+Reason: complex of initiation factors and mRNA.
+
+species_24: "eIF4A", "eukaryotic initiation factor 4A", "eIF4A"
+Reason: directly named "eIF4A", helicase.
+
+species_25: "eIF4B", "eukaryotic initiation factor 4B", "eIF4B"
+Reason: directly named "eIF4B", auxiliary factor.
+
+species_27: "eIF4E_eIF4G_mRNA_Pab1_eIF4A_eIF4B", "multi-factor complex", "translation initiation complex"
+Reason: complex of multiple initiation factors.
+
+species_28: "48S pre-initiation complex", "48S complex", "pre-initiation complex"
+Reason: involved in early initiation.
+
+species_31: "eIF5B", "eukaryotic initiation factor 5B", "eIF5B"
+Reason: directly named "eIF5B", involved in subunit joining.
+
+species_32: "eIF5B_GTP", "eIF5B bound to GTP", "eIF5B-GTP"
+Reason: active form of eIF5B.
+
+species_33: "48S_Ded1_eIF5B_GTP", "ded1-containing complex", "translation initiation complex"
+Reason: complex involving Ded1 helicase.
+
+species_34: "60S ribosomal subunit", "large ribosomal subunit", "60S"
+Reason: display name "60S".
+
+species_35: "eEF1A_GDP", "eukaryotic elongation factor 1A GDP", "eEF1A-GDP"
+Reason: elongation factor in GDP form.
+
+species_37: "eEF1A_GDP_eEF1B", "eEF1A with eEF1B", "elongation factor complex"
+Reason: complex involving eEF1A and eEF1B.
+
+species_38: "eEF1A_GTP", "eukaryotic elongation factor 1A GTP", "eEF1A-GTP"
+Reason: active elongation factor.
+
+species_39: "aa-tRNA", "aminoacyl-tRNA", "charged tRNA"
+Reason: aminoacylated tRNA.
+
+species_40: "aa-tRNA_eEF1A_GTP", "elongation factor-bound aminoacyl-tRNA", "charged tRNA"
+Reason: aminoacyl-tRNA bound to eEF1A-GTP.
+
+species_41: "eEF2_GDP", "eukaryotic elongation factor 2 GDP", "eEF2-GDP"
+Reason: inactive form of eEF2.
+
+species_42: "eEF2_GTP", "eukaryotic elongation factor 2 GTP", "eEF2-GTP"
+Reason: active elongation factor.
+
+species_43: "eEF3_GDP", "eukaryotic elongation factor 3 GDP", "eEF3-GDP"
+Reason: inactive form of eEF3.
+
+species_44: "eEF3_GTP", "eukaryotic elongation factor 3 GTP", "eEF3-GTP"
+Reason: active form of eEF3.
+
+species_45: "tRNA", "transfer RNA", "tRNA"
+Reason: general tRNA.
+
+species_46: "80S ribosome", "eukaryotic ribosome", "80S"
+Reason: the large ribosomal complex.
+
+species_47: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome with eEF2-GTP", "active 80S ribosome"
+Reason: ribosome with elongation factor.
+
+species_48: "80S_aa-tRNA", "active 80S ribosome", "elongating ribosome"
+Reason: ribosome with aminoacyl-tRNA.
+
+species_49: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_50: "80S", "eukaryotic ribosome", "80S"
+Reason: general ribosome.
+
+species_51: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: ribosome with eEF1A-GTP.
+
+species_52: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_53: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_54: "80S_tRNA", "eukaryotic ribosome with tRNA", "80S"
+Reason: general ribosome with tRNA.
+
+species_55: "80S_tRNA_eEF3_GTP", "elongating ribosome with eEF3-GTP", "active 80S"
+Reason: ribosome with eEF3.
+
+species_56: "80S_3", "ribosome complex", "80S"
+Reason: a specific ribosomal state.
+
+species_57: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_58: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_59: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_60: "80S_tRNA", "eukaryotic ribosome with tRNA", "80S"
+Reason: general ribosome.
+
+species_61: "80S_tRNA_eEF3_GTP", "elongating ribosome with eEF3", "active 80S"
+Reason: same as species_55.
+
+species_62: "80S_4", "ribosome state", "80S"
+Reason: specific ribosomal state.
+
+species_63: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_64: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_65: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_66: "80S_tRNA", "eukaryotic ribosome with tRNA", "80S"
+Reason: general ribosome.
+
+species_67: "80S_tRNA_eEF3_GTP", "elongating ribosome with eEF3", "active 80S"
+Reason: same as species_55.
+
+species_68: "80S_5", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_69: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_70: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_71: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_72: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_73: "80S_tRNA_eEF3_GTP", "elongating ribosome with eEF3", "active 80S"
+Reason: same as species_55.
+
+species_74: "80S_6", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_75: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_76: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_77: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_78: "80S_tRNA", "eukaryotic ribosome with tRNA", "80S"
+Reason: general ribosome.
+
+species_79: "80S_tRNA_eEF3_GTP", "elongating ribosome with eEF3", "active 80S"
+Reason: same as species_55.
+
+species_80: "80S_7", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_81: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_82: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_83: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_84: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_85: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_86: "80S_8", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_87: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_88: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_89: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_90: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_91: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_92: "80S_9", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_93: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_94: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_95: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_96: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_97: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_98: "80S_10", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_99: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_100: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_101: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_102: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_103: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_104: "80S_11", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_105: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_106: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_107: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_108: "80S_12", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_109: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_110: "80S_13", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_111: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_112: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_113: "80S_14", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_114: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_115: "80S_15", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_116: "80S_16", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_117: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_118: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_119: "80S_17", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_120: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_121: "80S_18", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_122: "80S_tRNA", "eukaryotic ribosome with tRNA", "80S"
+Reason: general ribosome with tRNA.
+
+species_123: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_124: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_125: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_126: "80S_tRNA", "eukaryotic ribosome with tRNA", "80S"
+Reason: general ribosome with tRNA.
+
+species_127: "80S_eRF1_eRF3_GTP", "termination complex", "release factor complex"
+Reason: complex involved in termination.
+
+species_128: "80S_tRNA_eEF3_GTP", "elongating ribosome with eEF3", "active 80S"
+Reason: same as species_55.
+
+species_129: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_130: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_131: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_132: "80S_tRNA", "eukaryotic ribosome with tRNA", "80S"
+Reason: general ribosome with tRNA.
+
+species_133: "80S_tRNA_eEF3_GTP", "elongating ribosome with eEF3", "active 80S"
+Reason: same as species_55.
+
+species_134: "80S_16", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_135: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_136: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_137: "80S_tRNA", "eukaryotic ribosome with tRNA", "80S"
+Reason: general ribosome with tRNA.
+
+species_138: "80S_tRNA_16", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_139: "80S_tRNA_eEF3_GTP", "elongating ribosome with eEF3", "active 80S"
+Reason: same as species_55.
+
+species_140: "80S_17", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_141: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_142: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_143: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_144: "80S_18", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_145: "80S_tRNA_eEF3_GTP", "elongating ribosome with eEF3", "active 80S"
+Reason: same as species_55.
+
+species_146: "80S_19", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_147: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_148: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_149: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_150: "80S_20", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_151: "80S_tRNA_eEF3_GTP", "elongating ribosome with eEF3", "active 80S"
+Reason: same as species_55.
+
+species_152: "80S_21", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_153: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_154: "80S_aa-tRNA", "active ribosome", "elongating ribosome"
+Reason: same as species_48.
+
+species_155: "80S_22", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_156: "80S_aa-tRNA_eEF2_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_47.
+
+species_157: "80S_tRNA_eEF3_GTP", "elongating ribosome with eEF3", "active 80S"
+Reason: same as species_55.
+
+species_158: "80S_23", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_159: "80S_aa-tRNA_eEF1A_GTP", "elongating ribosome", "active 80S"
+Reason: same as species_51.
+
+species_160: "80S_24", "ribosomal state", "80S"
+Reason: specific ribosomal state.
+
+species_161: "eRF3_GDP", "eukaryotic release factor 3 GDP", "eRF3-GDP"
+Reason: inactive form of eRF3.
+
+species_162: "eRF3_GTP", "eukaryotic release factor 3 GTP", "eRF3-GTP"
+Reason: active form of eRF3.
+
+species_163: "eRF1", "eukaryotic release factor 1", "eRF1"
+Reason: directly named "eRF1", involved in termination.
+
+species_164: "eRF1_eRF3_GTP", "release factor complex", "termination complex"
+Reason: complex of eRF1 and eRF3-GTP.
+
+species_165: "80S_eRF1_eRF3_GTP", "termination complex", "release factors"
+Reason: complex involved in termination.
+
+species_166: "eIF4A_eIF4E_eIF4G_mRNA_Pab1", "multi-factor complex", "translation initiation complex"
+Reason: complex of multiple initiation factors.

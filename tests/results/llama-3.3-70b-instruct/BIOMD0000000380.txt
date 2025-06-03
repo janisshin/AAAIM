@@ -1,0 +1,23 @@
+Model: BIOMD0000000380
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:15:21
+
+Synonyms:
+glc: ['glucose', 'D-glucose', 'alpha-D-glucose']
+g1p: ['glucose 1-phosphate', 'D-glucose 1-phosphate', 'alpha-D-glucose 1-phosphate']
+g6p: ['glucose 6-phosphate', 'D-glucose 6-phosphate', 'alpha-D-glucose 6-phosphate']
+trh: ['trehalose', 'mycose', 'trehalose dihydrate']
+t6p: ['trehalose 6-phosphate', 'trehalose-6-phosphate', 'alpha,alpha-trehalose 6-phosphate']
+udg: ['UDP-glucose', 'Uridine diphosphate glucose', 'UDP-D-glucose']
+adp: ['adenosine diphosphate', 'ADP', "5'-adenylic acid"]
+atp: ['adenosine triphosphate', 'ATP', "5'-adenosine triphosphate"]
+ppi: ['diphosphate', 'pyrophosphate', 'inorganic diphosphate']
+f6p: ['fructose 6-phosphate', 'D-fructose 6-phosphate', 'beta-D-fructose 6-phosphate']
+h: ['hydrogen ion', 'proton', 'H+']
+pho: ['phosphate', 'inorganic phosphate', 'orthophosphate']
+udp: ['uridine diphosphate', 'UDP', "uridine 5'-diphosphate"]
+utp: ['uridine triphosphate', 'UTP', "5'-uridine triphosphate"]
+h2o: ['water', 'H2O', 'oxidane']
+glx: ['glucose', 'D-glucose', 'alpha-D-glucose']
+
+Reason: The species are annotated based on their display names and the context of the trehalose biosynthesis model. The display names provide a clear indication of the chemical identity of each species, and the model reactions confirm these identities. For example, glc is clearly glucose, while udg is UDP-glucose. The reactions also provide evidence for the identities of t6p and trh as trehalose 6-phosphate and trehalose, respectively. The other species are annotated based on their common biochemical names and the context of the model.

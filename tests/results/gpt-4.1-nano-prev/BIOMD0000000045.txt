@@ -1,0 +1,11 @@
+Model: BIOMD0000000045
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:53
+
+Synonyms:
+EC: ['calcium', 'Ca2+', 'calcium ion']
+Z: ['calcium', 'Ca2+', 'calcium ion']
+Y: ['calcium', 'Ca2+', 'calcium ion']
+X: ['calcium', 'Ca2+', 'calcium ion']
+
+Reason: All species are involved in calcium oscillation models; EC, Z, Y, and X are likely different calcium pools or forms, so standard names relate to calcium ions.

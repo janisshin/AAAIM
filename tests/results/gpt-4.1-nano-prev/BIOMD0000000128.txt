@@ -1,0 +1,14 @@
+Model: BIOMD0000000128
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:30
+
+Synonyms:
+c: ['cytosolic calcium', 'intracellular calcium', 'Ca2+']
+
+Reason: The display name indicates cytosolic calcium concentration, a common form of calcium in the cytoplasm.
+
+cer: "endoplasmic reticulum calcium", "ER calcium", "calcium in ER"
+Reason: The display name specifies ER calcium concentration, a well-known calcium store.
+
+cAMP: "cyclic AMP", "cAMP", "adenylyl cyclase product"
+Reason: The display name is "cAMP", a common second messenger derived from ATP.

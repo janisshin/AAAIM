@@ -1,0 +1,32 @@
+Model: BIOMD0000000572
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:17:04
+
+Synonyms:
+G6P: ['glucose-6-phosphate', 'D-glucose-6-phosphate', 'glucose 6-phosphate']
+ATP: ["adenosine 5'-triphosphate", 'ATP', 'adenosine triphosphate']
+ADP: ["adenosine 5'-diphosphate", 'ADP', 'adenosine diphosphate']
+Pint: ['inorganic phosphate', 'phosphate', 'orthophosphate']
+F6P: ['fructose-6-phosphate', 'D-fructose-6-phosphate', 'fructose 6-phosphate']
+FBP: ['fructose-1,6-bisphosphate', 'D-fructose-1,6-bisphosphate', 'fructose 1,6-bisphosphate']
+G3P: ['glyceraldehyde-3-phosphate', 'D-glyceraldehyde-3-phosphate', 'glyceraldehyde 3-phosphate']
+BPG: ['1,3-bisphosphoglycerate', '1,3-bisphosphoglyceric acid', '1,3-bisphosphoglycerate(3-)']
+PEP: ['phosphoenolpyruvate', 'phosphoenolpyruvic acid', '2-phosphoenolpyruvate']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+', 'nicotinamide adenine dinucleotide(1+)']
+NADH: ['nicotinamide adenine dinucleotide(reduced)', 'NADH', 'nicotinamide adenine dinucleotide reduced form']
+PYR: ['pyruvate', 'pyruvic acid', '2-oxopropanoic acid']
+AcetCoA: ['acetyl-CoA', 'acetyl coenzyme A', 'S-acetyl-CoA']
+Acetoin: ['acetoin', '3-hydroxy-2-butanone', '3-hydroxybutan-2-one']
+Mannitol: ['mannitol', 'D-mannitol', 'mannite']
+Mannitol1Phosphate: ['mannitol 1-phosphate', 'D-mannitol 1-phosphate', 'mannitol-1-phosphate']
+CoA: ['coenzyme A', 'CoA', 'coenzyme A(4-)']
+Pext: ['UNK']
+Lactate: ['lactic acid', 'lactate', '2-hydroxypropanoic acid']
+Ethanol: ['ethanol', 'ethyl alcohol', 'alcohol']
+Acetate: ['acetate', 'acetic acid', 'ethanoic acid']
+Glucose: ['glucose', 'D-glucose', 'blood sugar']
+Acetoin_Ext: ['UNK']
+Mannitol_Ext: ['UNK']
+Formate: ['formate', 'formic acid', 'methanoic acid']
+
+Reason: The species were matched to their corresponding standardized names based on their display names and reaction equations. Pext, Acetoin_Ext, and Mannitol_Ext were returned as "UNK" because they appear to be external or boundary species, and their chemical structures or standardized names are not explicitly defined in the model.

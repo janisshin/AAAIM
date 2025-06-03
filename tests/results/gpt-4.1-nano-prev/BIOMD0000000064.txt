@@ -1,0 +1,83 @@
+Model: BIOMD0000000064
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:35:36
+
+Synonyms:
+GLCi: ['glucose', 'd-glucose', 'blood glucose']
+
+Reason: GLCi is labeled as "Glucose in Cytosol," which corresponds to intracellular glucose, a common form of glucose in metabolic contexts.
+
+G6P: "glucose-6-phosphate", "G6P", "glucose-6-P"
+Reason: G6P is explicitly named as "Glucose 6 Phosphate," a standard biochemical name.
+
+F6P: "fructose-6-phosphate", "F6P", "fructose-6-P"
+Reason: F6P stands for "Fructose 6 Phosphate," a common glycolytic intermediate.
+
+F16P: "fructose-1,6-bisphosphate", "F1,6P", "F16P"
+Reason: F16P is "Fructose-1,6 bisphosphate," a key glycolytic metabolite.
+
+TRIO: "triose-phosphate", "glyceraldehyde-3-phosphate", "dihydroxyacetone phosphate"
+Reason: TRIO is "Triose-phosphate," which can refer to G3P or DHAP, both common glycolytic intermediates.
+
+BPG: "1,3-bisphosphoglycerate", "1,3-BPG", "BPG"
+Reason: BPG is "1,3-bisphosphoglycerate," a glycolytic intermediate.
+
+P3G: "3-phosphoglycerate", "3PG", "3-phosphoglycerate"
+Reason: P3G is "3-phosphoglycerate," a glycolytic metabolite.
+
+P2G: "2-phosphoglycerate", "2PG", "2-phosphoglycerate"
+Reason: P2G is "2-phosphoglycerate," a glycolytic intermediate.
+
+PEP: "phosphoenolpyruvate", "PEP", "enolpyruvate"
+Reason: PEP is "Phosphoenolpyruvate," a key glycolytic substrate.
+
+PYR: "pyruvate", "pyruvic acid", "pyruvate anion"
+Reason: PYR is "Pyruvate," the end product of glycolysis.
+
+ACE: "acetaldehyde", "ethanal", "acetaldehyde (common)"
+Reason: ACE is "Acetaldehyde," a known metabolite.
+
+P: "inorganic phosphate", "Pi", "phosphate"
+Reason: P is "High energy phosphates" or "inorganic phosphate," involved in energy transfer.
+
+NAD: "nicotinamide adenine dinucleotide", "NAD+", "nicotinamide adenine dinucleotide (oxidized)"
+Reason: NAD is "NAD," the oxidized form.
+
+NADH: "reduced nicotinamide adenine dinucleotide", "NADH", "NADH + H+"
+Reason: NADH is the reduced form of NAD.
+
+Glyc: "glycogen", "glycogen (storage form)", "animal starch"
+Reason: Glyc is "Glycogen," the storage form of glucose.
+
+Trh: "trehalose", "trehalose (disaccharide)", "mycose"
+Reason: Trh is "Trehalose," a disaccharide.
+
+CO2: "carbon dioxide", "CO2", "carbonic acid (dissolved)"
+Reason: CO2 is "Carbon dioxide," a common metabolic product.
+
+SUCC: "succinate", "butanedioate", "succinate ion"
+Reason: SUCC is "Succinate," a TCA cycle intermediate.
+
+GLCo: "extracellular glucose", "glucose outside cell", "blood glucose"
+Reason: GLCo is "Extracellular Glucose," indicating outside the cell.
+
+ETOH: "ethanol", "ethyl alcohol", "alcohol"
+Reason: ETOH is "Ethanol," a common metabolite.
+
+GLY: "glycerol", "glycerin", "glycerol backbone"
+Reason: GLY is "Glycerol," a simple polyol.
+
+ATP: "adenosine triphosphate", "ATP", "energy currency"
+Reason: ATP is "Adenosine triphosphate," the primary energy carrier.
+
+ADP: "adenosine diphosphate", "ADP", "adenosine diphosphate"
+Reason: ADP is "Adenosine diphosphate," a product of ATP hydrolysis.
+
+AMP: "adenosine monophosphate", "AMP", "adenylate"
+Reason: AMP is "Adenosine monophosphate," a lower-energy nucleotide.
+
+SUM_P: "total adenine nucleotides", "total AXP", "total phosphate nucleotides"
+Reason: SUM_P is "sum of AXP," representing total adenine nucleotides.
+
+F26BP: "fructose-2,6-bisphosphate", "F2,6P", "F26BP"
+Reason: F26BP is "F2,6P," a regulator of glycolysis and gluconeogenesis.

@@ -1,0 +1,11 @@
+Model: BIOMD0000000083
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:36:25
+
+Synonyms:
+Mb: ['molecular beacon', 'myoglobin', 'metabolic biomarker']
+Mc: ['methylcobalamin', 'methylcobalamin', 'cobalamin derivative']
+Mp: ['methylphosphonate', 'methylphosphonic acid', 'organophosphonate']
+Mr: ['methylrhodamine', 'methylrhodamine B', 'fluorescent dye']
+
+Reason: These species are labeled with generic abbreviations and are not standard biochemical entities. The model relates to circadian regulation, not specific chemical compounds, so these are likely to be model-specific identifiers or placeholders.

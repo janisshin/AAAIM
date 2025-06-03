@@ -31,24 +31,16 @@ AAAIM currently provides two main workflows:
 
 ### 1. Annotation Workflow (for new models)
 
-For models with no or limited existing annotations. Annotates all species in the model:
+- **Purpose**: Annotate models with no or limited existing annotations
+- **Input**: All species in the model
+- **Output**: Annotation recommendations for all species
+- **Metrics**: Accuracy is NA when no existing annotations available
 
 ```python
 from core import annotate_model
 
 # Annotate all species in a model
-recommendations_df, metrics = annotate_model(
-    model_file="path/to/model.xml",
-    llm_model="gpt-4o-mini"
-)
-
-print(f"Total entities: {metrics['total_entities']}")
-print(f"Annotation rate: {metrics['annotation_rate']:.1%}")
-if not pd.isna(metrics['accuracy']):
-    print(f"Accuracy: {metrics['accuracy']:.1%}")
-else:
-    print("Accuracy: N/A (no existing annotations)")
-print(f"Total time: {metrics['total_time']:.2f}s")
+recommendations_df, metrics = annotate_model(model_file="path/to/model.xml")
 
 # Save results
 recommendations_df.to_csv("annotation_results.csv", index=False)
@@ -56,20 +48,19 @@ recommendations_df.to_csv("annotation_results.csv", index=False)
 
 ### 2. Curation Workflow (for models with existing annotations)
 
-For models that already have annotations. Evaluates and improves existing annotations:
+- **Purpose**: Evaluate and improve existing annotations
+- **Input**: Only species that already have annotations
+- **Output**: Validation and improvement recommendations
+- **Metrics**: Accuracy calculated against existing annotations
 
 ```python
-from AAAIM.core import curate_model
+from core import curate_model
 
 # Curate existing annotations
-curations_df, metrics = curate_model(
-    model_file="path/to/model.xml",
-    llm_model="gpt-4o-mini"
-)
+curations_df, metrics = curate_model(model_file="path/to/model.xml")
 
 print(f"Entities with existing annotations: {metrics['total_entities']}")
 print(f"Accuracy: {metrics['accuracy']:.1%}")
-print(f"Total time: {metrics['total_time']:.2f}s")
 
 # Save results
 curations_df.to_csv("curation_results.csv", index=False)
@@ -80,11 +71,12 @@ curations_df.to_csv("curation_results.csv", index=False)
 ```python
 # More control over parameters
 recommendations_df, metrics = annotate_model(
-    model_file="model.xml",
-    llm_model="meta-llama/llama-3.3-70b-instruct:free",
-    max_entities=50,
-    entity_type="chemical",
-    database="chebi"
+    model_file = "path/to/model.xml",
+    llm_model = "meta-llama/llama-3.3-70b-instruct:free",       # the LLM model used to predict annotations
+    max_entities = 100,					 # maximum number of entities to annotate (None for all)
+    entity_type = "chemical",				 # type of entities to annotate ("chemical", "gene", "protein")
+    database = "chebi",					 # database to use ("chebi", "ncbigene", "uniprot")
+    method = "direct"					 # method used to find the ontology ID ("direct", "rag")
 )
 ```
 
@@ -95,29 +87,23 @@ recommendations_df, metrics = annotate_model(
 python examples/simple_example.py
 ```
 
-## Workflows
+## Methods
 
-### Annotation Workflow
+### Direct matching
 
-- **Purpose**: Annotate models with no or limited existing annotations
-- **Input**: All species in the model
-- **Output**: Annotation recommendations for all species
-- **Metrics**: Accuracy is NA when no existing annotations available
+After LLM performs synonym normalization, use direct dictionary matching to find ontology ID and report hit counting.
 
-### Curation Workflow
+### Retrival augmented generation (RAG)
 
-- **Purpose**: Evaluate and improve existing annotations
-- **Input**: Only species that already have annotations
-- **Output**: Validation and improvement recommendations
-- **Metrics**: Accuracy calculated against existing annotations
+After LLM performs synonym normalization, use direct dictionary matching to find ontology ID and report hit counting.
 
 ## Databases
 
 ### Currently Supported
 
 - **ChEBI**: Chemical Entities of Biological Interest
-  - Direct dictionary matching using compressed files
-  - Synonym normalization and hit counting
+  - **Direct**: Dictionary of standard names to ontology ID.
+  - **RAG**: Embeddings of ontology terms.
 
 ### Future Support
 
@@ -125,33 +111,6 @@ python examples/simple_example.py
 - **UniProt**: Protein annotation
 - **Rhea**: Reaction annotation
 - **GO**: Gene Ontology terms
-
-## Configuration
-
-For more, see [config.yaml](config.yaml)
-
-### LLM Model Selection
-
-```python
-# OpenAI models
-llm_model = "gpt-4o-mini"      # Fast and cost-effective
-llm_model = "gpt-4.1-nano"   
-
-# OpenRouter models  
-llm_model = "meta-llama/llama-3.3-70b-instruct:free"  # Free Llama model
-```
-
-### Entity Types and Databases
-
-```python
-# Currently supported
-entity_type = "chemical"
-database = "chebi"
-
-# Future support
-entity_type = "gene"      # database = "ncbigene"
-entity_type = "protein"   # database = "uniprot"
-```
 
 ## Data Files
 
@@ -191,5 +150,5 @@ aaaim/
 ### Planned Features
 
 - **Multi-Database Support**: NCBI Gene, UniProt, GO, Rhea
-- **RAG Integration**: Replace dictionary matching with vector embeddings
+- **RAG improvement**: Reduce vector embedding size
 - **Web Interface**: User-friendly annotation tool

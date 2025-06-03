@@ -1,0 +1,11 @@
+Model: BIOMD0000000481
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:55:48
+
+Synonyms:
+E2: ['estradiol', '17β-estradiol', 'estradiol-17β']
+P4: ['progesterone', 'pregn-4-ene-3,20-dione', 'progestogen']
+OT: ['oxytocin', 'OT hormone', 'pitocin']
+PGF: ['prostaglandin F2α', 'PGF2α', 'prostaglandin F']
+
+Reason: E2 is commonly known as estradiol, P4 as progesterone, OT as oxytocin, and PGF as prostaglandin F2α; these are standard biochemical names.

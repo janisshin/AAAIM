@@ -1,0 +1,8 @@
+Model: BIOMD0000000642
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:21:49
+
+Synonyms:
+E: ['estradiol', 'estrogen', '17β-estradiol']
+
+Reason: The species E is explicitly labeled as "estrogen" in the display names, which is a well-known hormone also called estradiol or 17β-estradiol, common in biological contexts.

@@ -1,0 +1,10 @@
+Model: BIOMD0000000321
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:43:05
+
+Synonyms:
+A_dopa: ['L-dopa', 'levodopa', '3,4-dihydroxy-L-phenylalanine']
+C_dopa: ['dopamine', 'dopamine', '3,4-dihydroxyphenethylamine']
+C_OMD: ['3-O-methyldopa', '3-O-methyl-DOPA', '3-methoxy-4-hydroxyphenylalanine']
+
+Reason: The model references L-dopa (A_dopa), its methylated metabolite 3-OMD (C_OMD), and the reaction involving C_dopa, which is likely dopamine, a common catecholamine derived from L-dopa.

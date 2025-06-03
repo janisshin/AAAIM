@@ -1,0 +1,9 @@
+Model: BIOMD0000000166
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:56:20
+
+Synonyms:
+Y: ['calcium ion', 'Ca2+', 'calcium']
+Z: ['calcium ion', 'Ca2+', 'calcium']
+
+Reason: Both Y and Z are related to Calcium in the display names and the model description, with Y being "Calcium in store" and Z being "Calcium in cytoplasm", indicating they refer to the same chemical entity, calcium ion, in different cellular locations.

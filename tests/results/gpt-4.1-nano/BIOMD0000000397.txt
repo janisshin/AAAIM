@@ -1,0 +1,10 @@
+Model: BIOMD0000000397
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:00:08
+
+Synonyms:
+s32: ['ATP', 'adenosine triphosphate', 'ATP molecule']
+s33: ['ADP', 'adenosine diphosphate', 'ADP molecule']
+s304: ["6-bromoindirubin-3'-oxime", '6-bromoindirubin oxime', 'Br-INDO']
+
+Reason: s32 and s33 are well-known nucleotides involved in energy transfer; s304 is a chemical compound, a known bioactive molecule, with its name provided.

@@ -1,0 +1,18 @@
+Model: BIOMD0000000690
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:22:19
+
+Synonyms:
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+AMP: ['adenosine monophosphate', 'AMP', 'adenylic acid']
+p_ABA: ['p-aminobenzoic acid', 'p-ABA', 'para-aminobenzoic acid']
+H2_Pteroate: ['H2-pteroate', 'dihydropteroate', 'pteroate']
+L_Glutamate: ['L-glutamate', 'glutamic acid', 'glutamate']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+DHF: ['dihydrofolate', 'DHF', 'folate derivative']
+L_serine: ['L-serine', 'serine', '2-amino-3-hydroxypropanoic acid']
+Glycine: ['glycine', 'gly', 'aminoacetic acid']
+NADPH: ['NADPH', 'nicotinamide adenine dinucleotide phosphate (reduced)', 'reduced NADP']
+CH2_THF: ['5,10-methylenetetrahydrofolate', 'CH2-THF', 'methylene tetrahydrofolate']
+
+Reason: All are well-established biochemical names or common synonyms for these molecules, relevant in folate and energy metabolism pathways.

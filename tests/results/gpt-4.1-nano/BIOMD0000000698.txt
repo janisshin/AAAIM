@@ -1,0 +1,11 @@
+Model: BIOMD0000000698
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:22:25
+
+Synonyms:
+Methionine: ['methionine', 'L-methionine', 'MET']
+AdoMet: ['S-adenosylmethionine', 'SAM', 'AdoMet']
+Homocysteine: ['homocysteine', 'Hcy', 'L-homocysteine']
+Cystathionine: ['cystathionine', 'L-cystathionine', 'cystathionine beta-synthase substrate']
+
+Reason: These are well-established biochemical names for the respective species involved in the methionine cycle.

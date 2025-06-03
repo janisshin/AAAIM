@@ -1,0 +1,9 @@
+Model: BIOMD0000000320
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:11:04
+
+Synonyms:
+A_dopa: ['levodopa', 'L-dopa', '3,4-dihydroxyphenylalanine']
+C_dopa: ['3-O-methyldopa', '3-OMD', '3-methoxytyrosine']
+
+Reason: The model description and notes mention "L-dopa" and its metabolite "3-O-methyldopa (3-OMD)", which directly correspond to A_dopa and C_dopa, respectively. The standardized names and synonyms are based on common chemical names and abbreviations used in biochemistry and pharmacology.

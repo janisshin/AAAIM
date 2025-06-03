@@ -1,0 +1,13 @@
+Model: BIOMD0000000292
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:21
+
+Synonyms:
+NADPH: ['NADPH', 'Nicotinamide adenine dinucleotide phosphate (reduced)', 'NADP(H)']
+ADP: ['ADP', 'Adenosine diphosphate']
+ATP: ['ATP', 'Adenosine triphosphate']
+X: ['UNK']
+Y: ['UNK']
+NADP: ['NADP+', 'Nicotinamide adenine dinucleotide phosphate (oxidized)', 'NADP']
+
+Reason: X and Y are unspecified species with no given synonyms; NADPH and NADP are related redox forms of NADP, with NADPH being the reduced form and NADP+ the oxidized form.

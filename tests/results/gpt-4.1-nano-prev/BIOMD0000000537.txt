@@ -1,0 +1,8 @@
+Model: BIOMD0000000537
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:01:14
+
+Synonyms:
+mwf345ed7a_0622_403c_b816_c8749a2c9ded: ['Anti-IL6 receptor antibody', 'IL-6R antibody', 'Tocilizumab']
+
+Reason: The species is associated with an anti-IL6 receptor monoclonal antibody, specifically tocilizumab, used in Crohn's disease models.

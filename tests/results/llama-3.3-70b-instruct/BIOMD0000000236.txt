@@ -1,0 +1,14 @@
+Model: BIOMD0000000236
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:03:54
+
+Synonyms:
+GLC: ['glucose', 'D-glucose', 'blood glucose']
+G6P_F6P: ['glucose-6-phosphate', 'fructose-6-phosphate', 'hexose phosphate']
+F6P: ['fructose-6-phosphate', 'fructose 6-phosphate', '6-phosphofructose']
+FBP: ['fructose-1,6-bisphosphate', 'fructose 1,6-diphosphate', 'fructose-1,6-biphosphate']
+G3P: ['glyceraldehyde-3-phosphate', '3-phosphoglyceraldehyde', 'glyceraldehyde 3-phosphate']
+DHAP: ['dihydroxyacetone phosphate', 'dihydroxyacetonephosphate', 'glycerone phosphate']
+DHAP_G3P: ['dihydroxyacetone phosphate - glyceraldehyde-3-phosphate pool', 'DHAP-G3P', 'triose phosphate pool']
+
+Reason: The model is a glycolysis model, and the display names and reactions suggest that the species are intermediates in the glycolytic pathway. The names are standardized based on common biochemical nomenclature. GLC is likely glucose, G6P_F6P is likely a pool of glucose-6-phosphate and fructose-6-phosphate, F6P is fructose-6-phosphate, FBP is fructose-1,6-bisphosphate, G3P is glyceraldehyde-3-phosphate, DHAP is dihydroxyacetone phosphate, and DHAP_G3P is a pool of dihydroxyacetone phosphate and glyceraldehyde-3-phosphate.

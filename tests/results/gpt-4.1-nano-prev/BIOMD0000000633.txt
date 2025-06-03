@@ -1,0 +1,13 @@
+Model: BIOMD0000000633
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:04:53
+
+Synonyms:
+glc_ext: ['glucose', 'blood glucose', 'glucose (extracellular)']
+lac_ext: ['lactate', 'lactic acid', 'blood lactate']
+glc: ['glucose', 'd-glucose', 'blood glucose']
+bpg13: ['1,3-bisphosphoglycerate', '1,3-BPG', 'biphosphoglycerate']
+lac: ['lactate', 'lactic acid', 'lactate ion']
+glc_er: ['glucose', 'endoplasmic reticulum glucose', 'intracellular glucose']
+
+Reason: All species are related to glucose or lactate, key metabolites in hepatic glucose metabolism. "glc_ext" and "lac_ext" are extracellular forms, hence their common synonyms. "bpg13" is a specific glycolytic intermediate. "glc_er" likely refers to intracellular glucose within the endoplasmic reticulum.

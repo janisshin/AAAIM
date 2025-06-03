@@ -1,0 +1,24 @@
+Model: BIOMD0000000259
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:41:23
+
+Synonyms:
+s1: ['ferrous iron', 'Fe(II)', 'iron(II)']
+s2: ['ferric iron', 'Fe(III)', 'iron(III)']
+s3: ['red blood cell iron', 'hemoglobin iron', 'erythrocyte iron']
+s4: ['spleen iron', 'splenic iron', 'iron in spleen']
+s5: ['liver iron', 'hepatic iron', 'iron in liver']
+s6: ['muscle iron', 'myocyte iron', 'iron in muscle tissue']
+s7: ['duodenal iron', 'intestinal iron', 'iron in duodenum']
+s8: ['skin iron', 'integument iron', 'iron in skin']
+s9: ['intestinal iron', 'gut iron', 'iron in intestine']
+s10: ['extracellular iron', 'plasma iron', 'iron outside cells']
+s11: ['heart iron', 'cardiac iron', 'iron in heart']
+s12: ['lung iron', 'pulmonary iron', 'iron in lungs']
+s13: ['kidney iron', 'renal iron', 'iron in kidneys']
+s14: ['testicular iron', 'testes iron', 'iron in testes']
+s15: ['stomach iron', 'gastric iron', 'iron in stomach']
+s16: ['adipose tissue iron', 'fat tissue iron', 'iron in fat']
+s17: ['brain iron', 'neural iron', 'iron in brain']
+
+Reason: All species are labeled as specific tissue or compartment iron pools; they are best represented by common or standard terms for iron in those tissues or compartments.

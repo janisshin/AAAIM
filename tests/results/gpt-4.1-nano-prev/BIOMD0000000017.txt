@@ -1,0 +1,25 @@
+Model: BIOMD0000000017
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:21
+
+Synonyms:
+ADP: ['ADP', 'adenosine diphosphate', 'ADP']
+NAD: ['NAD', 'nicotinamide adenine dinucleotide', 'NAD']
+ATP: ['ATP', 'adenosine triphosphate', 'ATP']
+NADH: ['NADH', 'reduced nicotinamide adenine dinucleotide', 'NADH']
+pyruvate: ['pyruvate', 'pyruvic acid', 'pyruvate']
+lactate: ['lactate', 'lactic acid', 'lactate']
+CoA: ['CoA', 'coenzyme A', 'coenzyme A']
+AcCoA: ['acetyl-CoA', 'acetyl coenzyme A', 'acetyl-CoA']
+AcP: ['acetyl phosphate', 'acetyl phosphate', 'AcP']
+Ac: ['acetate', 'acetic acid', 'acetate']
+AcO: ['acetaldehyde', 'acetaldehyde', 'AcO']
+EtOH: ['ethanol', 'ethyl alcohol', 'ethanol']
+AcLac: ['acetolactate', 'acetolactate', 'AcLac']
+AcetoinIn: ['acetoin', 'acetoin', 'Acetoin']
+AcetoinOut: ['acetoin', 'acetoin', 'Acetoin']
+Butanediol: ['butanediol', '1,4-butanediol', 'butanediol']
+O2: ['oxygen', 'O2', 'dioxygen']
+PO4: ['phosphate', 'inorganic phosphate', 'PO4']
+
+Reason: All species are common biochemical entities with well-established standardized names or synonyms. "AcO" is likely acetaldehyde, a common metabolite.

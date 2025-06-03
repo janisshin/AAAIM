@@ -1,0 +1,8 @@
+Model: BIOMD0000000561
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:01:58
+
+Synonyms:
+Amyloid: ['amyloid', 'amyloid fibril', 'amyloid protein']
+
+Reason: Amyloid refers to a class of insoluble protein aggregates associated with various diseases; no specific protein is given, so the general term is used.

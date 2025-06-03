@@ -1,0 +1,16 @@
+Model: BIOMD0000000415
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:00:30
+
+Synonyms:
+species_1: ['linoleic acid', '18:2 delta9,12', 'linoleic acid (cis,cis-9,12-octadecadienoic acid)']
+species_7: ['hydroperoxy-octadecadienoic acid', 'HODE', 'hydroxy-octadecadienoic acid']
+species_8: ['hydroperoxy-octadecadienoic acid', 'HODE', 'hydroxy-octadecadienoic acid']
+species_9: ['hydroperoxy-octadecadienoic acid', 'HODE', 'hydroxy-octadecadienoic acid']
+species_10: ['hydroperoxy-octadecadienoic acid', 'HODE', 'hydroxy-octadecadienoic acid']
+species_11: ['hydroperoxy-octadecadienoic acid', 'HODE', 'hydroxy-octadecadienoic acid']
+species_12: ['hydroperoxy-octadecadienoic acid', 'HODE', 'hydroxy-octadecadienoic acid']
+species_13: ['hydroperoxy-octadecadienoic acid', 'HODE', 'hydroxy-octadecadienoic acid']
+species_14: ['hydroperoxy-octadecadienoic acid', 'HODE', 'hydroxy-octadecadienoic acid']
+
+Reason: The species are likely various hydroxy- or hydroperoxy derivatives of linoleic acid, which are common LOX pathway intermediates. The abbreviations and naming conventions suggest these are oxidized fatty acids related to soybean LOX activity.

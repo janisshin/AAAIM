@@ -1,0 +1,9 @@
+Model: BIOMD0000000047
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:58
+
+Synonyms:
+CaER: ['endoplasmic reticulum calcium', 'ER calcium', 'Ca2+ in ER']
+Ca_Cyt: ['cytoplasmic calcium', 'cytosolic calcium', 'Ca2+ in cytoplasm']
+
+Reason: CaER and Ca_Cyt are likely referring to calcium concentrations in the endoplasmic reticulum and cytoplasm, respectively, based on common cellular calcium terminology.

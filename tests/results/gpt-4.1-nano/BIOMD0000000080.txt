@@ -1,0 +1,13 @@
+Model: BIOMD0000000080
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:52:04
+
+Synonyms:
+DRG_GDP: ['dinitrogen glycine diphosphate', 'UNK', 'UNK']
+G_GDP: ['guanine diphosphate', 'GDP', 'guanosine diphosphate']
+GDP: ['guanosine diphosphate', 'GDP', 'guanyl diphosphate']
+DRG_GTP: ['dinitrogen glycine triphosphate', 'UNK', 'UNK']
+GTP: ['guanosine triphosphate', 'GTP', 'guanyl triphosphate']
+G_GTP: ['guanine triphosphate', 'GTP', 'guanosine triphosphate']
+
+Reason: The species appear to be nucleotide derivatives involved in GTP/GDP cycling, with "GTP" and "GDP" being standard nucleotides. "DRG" likely refers to a specific protein or complex, not a chemical entity, so "DRG_GDP" and "DRG_GTP" are uncertain; "GTP" and "GDP" are well-established.

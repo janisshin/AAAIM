@@ -1,0 +1,32 @@
+Model: BIOMD0000000426
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:00:47
+
+Synonyms:
+species_20: ['AMP', 'adenosine monophosphate', 'adenylate']
+species_3: ['ADP', 'adenosine diphosphate', 'adenylate']
+species_29: ['PG2', '2-phosphoglycerate', '3-phosphoglycerate']
+species_4: ['ATP', 'adenosine triphosphate', 'adenylate']
+species_14: ['X5P', 'xylulose-5-phosphate', 'pentose phosphate']
+species_33: ['CO2', 'carbon dioxide']
+species_6: ['F16P', 'fructose 1,6-bisphosphate', 'FDP']
+species_7: ['E4P', 'erythrose-4-phosphate', 'E4P']
+species_18: ['NADH', 'nicotinamide adenine dinucleotide (reduced)', 'reduced NAD']
+species_2: ['G6P', 'glucose-6-phosphate', 'glucose-6-P']
+species_1: ['GLC', 'glucose', 'd-glucose']
+species_13: ['RU5P', 'ribulose-5-phosphate', 'pentose phosphate']
+species_30: ['PEP', 'phosphoenolpyruvate', 'enolpyruvate']
+species_34: ['O2', 'oxygen', 'dioxygen']
+species_11: ['NADPH', 'nicotinamide adenine dinucleotide phosphate (reduced)', 'reduced NADP']
+species_9: ['GLC_e', 'extracellular glucose', 'glucose outside cell']
+species_17: ['S7P', 'sedoheptulose-7-phosphate', 'heptulose phosphate']
+species_22: ['G1P', 'glucose-1-phosphate', 'glucose-6-phosphate isomer']
+species_15: ['R5P', 'ribose-5-phosphate', 'pentose phosphate']
+species_16: ['GAP', 'glyceraldehyde-3-phosphate', 'G3P']
+species_31: ['PYR', 'pyruvate', 'pyruvic acid']
+species_8: ['PGN', 'phosphoglycerate', '3-phosphoglycerate']
+species_32: ['LAC', 'lactate', 'lactic acid']
+species_27: ['DHAP', 'dihydroxyacetone phosphate', 'DHAP']
+species_5: ['F6P', 'fructose-6-phosphate', 'FDP']
+
+Reason: The species are identified as common metabolites involved in central carbon metabolism, glycolysis, and nucleotide biosynthesis pathways, with standard names or well-known synonyms.

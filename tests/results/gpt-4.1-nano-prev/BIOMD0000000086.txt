@@ -1,0 +1,18 @@
+Model: BIOMD0000000086
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:36:33
+
+Synonyms:
+species_3: ['thymine', 'dTMP', 'deoxythymidine monophosphate']
+species_5: ['guanosine triphosphate', 'GTP', "guanosine 5'-triphosphate"]
+species_6: ['GDP', 'guanosine diphosphate', "guanosine 5'-diphosphate"]
+species_7: ['inorganic phosphate', 'Pi', 'phosphate']
+species_8: ['dATP', 'deoxyadenosine triphosphate', 'adenosine triphosphate']
+species_10: ['RG*AT', 'GTPase', 'GTP-binding protein']
+species_11: ['G*AT', 'GTPase', 'GTP-binding protein']
+species_12: ['GAD', 'glutamate decarboxylase', 'glutamate decarboxylase enzyme']
+species_13: ['RGD', 'integrin receptor', 'cell adhesion receptor']
+species_15: ['RG*AT', 'GTPase', 'GTP-binding protein']
+species_16: ['RGAD', 'GTPase complex', 'GTP-binding protein complex']
+
+Reason: The model references GTPase-cycle components and nucleotides, so these are standard names for such molecules. "Pi" is inorganic phosphate, and the others are likely protein or enzyme complexes or nucleotide derivatives.

@@ -15,7 +15,7 @@ import numpy as np
 
 from .model_info import find_species_with_chebi_annotations, extract_model_info, format_prompt, get_species_display_names, get_all_species_ids
 from .llm_interface import SYSTEM_PROMPT, query_llm, parse_llm_response
-from .database_search import get_species_recommendations_direct, Recommendation
+from .database_search import Recommendation, get_species_recommendations_direct, get_species_recommendations_rag
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,8 @@ logger = logging.getLogger(__name__)
 
 def annotate_single_model(model_file: str, 
                   llm_model: str = "gpt-4o-mini",
-                  max_entities: int = 100,
+                  method: str = "direct",
+                  max_entities: int = None,
                   entity_type: str = "chemical",
                   database: str = "chebi") -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """
@@ -35,7 +36,8 @@ def annotate_single_model(model_file: str,
     Args:
         model_file: Path to SBML model file
         llm_model: LLM model to use ("gpt-4o-mini", "meta-llama/llama-3.3-70b-instruct:free")
-        max_entities: Maximum number of entities to annotate
+        method: Method to use for database search ("direct", "rag")
+        max_entities: Maximum number of entities to annotate (None for all)
         entity_type: Type of entities to annotate ("chemical", "gene", "protein")
         database: Target database ("chebi", "ncbigene", "uniprot")
         
@@ -48,6 +50,7 @@ def annotate_single_model(model_file: str,
     
     logger.info(f"Starting annotation for model: {model_file}")
     logger.info(f"Using LLM model: {llm_model}")
+    logger.info(f"Using method: {method} for database search")
     logger.info(f"Entity type: {entity_type}, Database: {database}")
     
     # Step 1: Get all species from model
@@ -70,8 +73,12 @@ def annotate_single_model(model_file: str,
         logger.warning(f"Entity type {entity_type} with database {database} not yet supported")
     
     # Step 3: Select entities to evaluate (limit if needed)
-    specs_to_evaluate = all_species_ids[:max_entities]
-    logger.info(f"Selected {len(specs_to_evaluate)} entities for annotation")
+    if max_entities:
+        specs_to_evaluate = all_species_ids[:max_entities]
+        logger.info(f"Selected {max_entities} entities for annotation")
+    else:
+        specs_to_evaluate = all_species_ids
+        logger.info(f"Annotate all {len(specs_to_evaluate)} entities")
     
     # Step 4: Extract model context
     logger.info("Step 4: Extracting model context...")
@@ -124,12 +131,17 @@ def annotate_single_model(model_file: str,
     search_start = time.time()
     
     if database == "chebi":
-        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict)
+        if method == "direct":
+            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict)
+        elif method == "rag":
+            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict)
+        else:
+            logger.error(f"Invalid method: {method}")
+            return pd.DataFrame(), {"error": f"Invalid method: {method}"}
     else:
-        # Future: support other databases
         logger.error(f"Database {database} not yet supported")
         return pd.DataFrame(), {"error": f"Database {database} not yet supported"}
-    
+
     search_time = time.time() - search_start
     logger.info(f"Database search completed in {search_time:.2f}s")
     
@@ -191,8 +203,8 @@ def _generate_recommendation_table(model_file: str,
             # Determine if this is an existing annotation
             existing = 1 if candidate in existing_annotations.get(rec.id, []) else 0
             
-            # Calculate match score (hits / total synonyms)
-            match_score = rec.hit_count[i] / len(rec.synonyms) if rec.synonyms else 0
+            # match score
+            match_score = rec.match_score[i]
             
             # Determine update action - for new annotations, suggest adding top candidates
             if existing:

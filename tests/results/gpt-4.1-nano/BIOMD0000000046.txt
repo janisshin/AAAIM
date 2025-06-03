@@ -1,0 +1,18 @@
+Model: BIOMD0000000046
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:50:43
+
+Synonyms:
+NADH: ['nicotinamide adenine dinucleotide, reduced form', 'NADH', 'NADH']
+O2: ['oxygen', 'dioxygen', 'O2']
+H2O2: ['hydrogen peroxide', 'H2O2', 'peroxide']
+ArH: ['aryl hydride', 'aryl hydride', 'ArH']
+Ar: ['aryl group', 'aryl', 'aromatic group']
+NADrad: ['NAD radical', 'NAD radical', 'NAD•']
+super: ['superoxide', 'superoxide anion', 'O2−']
+NAD2: ['NAD dimer', 'NAD2', 'NAD', '(assuming as NAD dimer)']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD', 'nicotinamide adenine dinucleotide']
+O2g: ['gaseous oxygen', 'O2g', 'oxygen gas']
+NADHres: ['NADH reserve', 'NADH residual', 'NADH']
+
+Reason: The model involves common redox species and reactive oxygen species; NADH, O2, and H2O2 are standard biochemical entities. ArH and Ar are likely aromatic or aryl groups. NADrad and NADHres are radicals or residual forms, respectively. O2g is gaseous oxygen, and NAD2 is presumed as a dimer form of NAD.

@@ -1,0 +1,14 @@
+Model: BIOMD0000000388
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:59:39
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'RuBP', 'ribulose bisphosphate']
+PGA: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'PGA']
+GAP: ['glyceraldehyde-3-phosphate', 'G3P', 'GAP']
+Ru5P: ['ribulose-5-phosphate', 'Ru5P', 'ribulose phosphate']
+ADP: ['adenosine diphosphate', 'ADP', 'adenine nucleotide']
+ATP: ['adenosine triphosphate', 'ATP', 'adenine nucleotide']
+Pi: ['inorganic phosphate', 'Pi', 'phosphate']
+
+Reason: These are standard biochemical names for the Calvin cycle intermediates and nucleotides, well-recognized in biochemistry.

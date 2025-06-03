@@ -1,0 +1,8 @@
+Model: BIOMD0000000826
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:23:30
+
+Synonyms:
+STAT3uStattic: ['STAT3', 'Signal transducer and activator of transcription 3', 'STAT3 protein']
+
+Reason: The species name suggests a form of STAT3, specifically the unphosphorylated or inactive form ("uStattic" indicating unphosphorylated or inactive STAT3). The model name referencing "EGFR_PYK2_c_Met_interaction" supports involvement of signaling pathways where STAT3 is a common transcription factor.

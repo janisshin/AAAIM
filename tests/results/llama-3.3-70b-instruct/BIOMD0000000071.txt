@@ -1,0 +1,32 @@
+Model: BIOMD0000000071
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:49:10
+
+Synonyms:
+GlcI: ['glucose', 'D-glucose', 'blood sugar']
+Glc6P: ['glucose 6-phosphate', 'D-glucose 6-phosphate', 'G6P']
+Fru6P: ['fructose 6-phosphate', 'D-fructose 6-phosphate', 'F6P']
+Fru16BP: ['fructose 1,6-bisphosphate', 'D-fructose 1,6-bisphosphate', 'FBP']
+DHAP: ['dihydroxyacetone phosphate', 'glycerone phosphate', 'DHAP']
+GAP: ['glyceraldehyde 3-phosphate', 'D-glyceraldehyde 3-phosphate', 'G3P']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+', 'diphosphopyridine nucleotide']
+BPGA13: ['1,3-bisphosphoglycerate', '1,3-bisphosphoglyceric acid', '1,3-BPG']
+NADH: ['nicotinamide adenine dinucleotide reduced', 'NADH', 'reduced diphosphopyridine nucleotide']
+Pyr: ['pyruvate', 'pyruvic acid', '2-oxopropanoic acid']
+Nb: ['UNK']
+Gly: ['glycerol', 'glycerin', 'propan-1,2,3-triol']
+GlcE: ['glucose', 'D-glucose', 'blood sugar']
+Gly3P: ['glycerol 3-phosphate', 'D-glycerol 3-phosphate', 'G3P']
+ATPc: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+ADPc: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+ATPg: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+ADPg: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+DHAPg: ['dihydroxyacetone phosphate', 'glycerone phosphate', 'DHAP']
+DHAPc: ['dihydroxyacetone phosphate', 'glycerone phosphate', 'DHAP']
+Gly3Pc: ['glycerol 3-phosphate', 'D-glycerol 3-phosphate', 'G3P']
+Gly3Pg: ['glycerol 3-phosphate', 'D-glycerol 3-phosphate', 'G3P']
+PGAg: ['3-phosphoglycerate', '3-phosphoglyceric acid', '3-PGA']
+PEPc: ['phosphoenolpyruvate', 'PEP', '2-phosphoenolpyruvate']
+PyrE: ['pyruvate', 'pyruvic acid', '2-oxopropanoic acid']
+
+Reason: The species names were matched to their corresponding display names and then standardized to common chemical names or synonyms. For species "Nb", no clear match was found, so it was labeled as "UNK". The model context and display names were used to disambiguate species with similar names, such as "Gly3P" and "Gly3Pg", which both refer to glycerol 3-phosphate but in different cellular compartments.

@@ -1,0 +1,9 @@
+Model: BIOMD0000000827
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:33:39
+
+Synonyms:
+X_7_MET_MET: ['MET protein', 'hepatocyte growth factor receptor', 'MET proto-oncogene']
+X_10_p_MET_MET: ['phosphorylated MET', 'p-MET', 'MET phosphoprotein']
+
+Reason: The model is based on the MET gene amplification and its role in gefitinib resistance, X_7_MET_MET is likely the MET protein dimer, and X_10_p_MET_MET is likely the phosphorylated form of the MET protein, as indicated by the "p-" prefix in its display name and its involvement in phosphorylation reactions.

@@ -1,0 +1,35 @@
+Model: BIOMD0000000013
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:42:20
+
+Synonyms:
+x_CO2: ['carbon dioxide']
+x_NADPH_ch: ['NADPH', 'nicotinamide adenine dinucleotide phosphate']
+x_NADP_ch: ['NADP', 'nicotinamide adenine dinucleotide phosphate']
+GAP_ch: ['glyceraldehyde 3-phosphate', 'G3P', '3-phosphoglyceraldehyde']
+Pi_ch: ['phosphate', 'inorganic phosphate', 'orthophosphate']
+DHAP_ch: ['dihydroxyacetone phosphate', 'DHAP', 'glycerone phosphate']
+FBP_ch: ['fructose-1,6-bisphosphate', 'FBP', 'fructose 1,6-diphosphate']
+F6P_ch: ['fructose 6-phosphate', 'F6P', 'hexose phosphate']
+E4P_ch: ['erythrose 4-phosphate', 'E4P', 'pentose phosphate']
+X5P_ch: ['xylulose 5-phosphate', 'X5P', 'pentose phosphate']
+SBP_ch: ['sedoheptulose 1,7-bisphosphate', 'SBP', 'sedoheptulose diphosphate']
+S7P_ch: ['sedoheptulose 7-phosphate', 'S7P', 'heptose phosphate']
+R5P_ch: ['ribose 5-phosphate', 'R5P', 'pentose phosphate']
+Ru5P_ch: ['ribulose 5-phosphate', 'Ru5P', 'pentose phosphate']
+x_Pi_cyt: ['phosphate', 'inorganic phosphate', 'orthophosphate']
+x_GAP_cyt: ['glyceraldehyde 3-phosphate', 'G3P', '3-phosphoglyceraldehyde']
+G6P_ch: ['glucose 6-phosphate', 'G6P', 'hexose phosphate']
+ADP_ch: ['ADP', 'adenosine diphosphate']
+x_DHAP_cyt: ['dihydroxyacetone phosphate', 'DHAP', 'glycerone phosphate']
+G1P_ch: ['glucose 1-phosphate', 'G1P', 'hexose phosphate']
+ATP_ch: ['ATP', 'adenosine triphosphate']
+x_Proton_ch: ['hydrogen ion', 'proton', 'H+']
+x_Starch_ch: ['UNK']
+x_PGA_cyt: ['UNK']
+BPGA_ch: ['1,3-bisphosphoglycerate', '1,3-BPG', 'glycerate 1,3-bisphosphate']
+RuBP_ch: ['ribulose-1,5-bisphosphate', 'RuBP', 'ribulose diphosphate']
+PGA_ch: ['3-phosphoglycerate', '3-PGA', 'glycerate 3-phosphate']
+UNK: ['UNK']
+
+Reason: The model appears to be a representation of the Calvin cycle, a series of biochemical reactions that occur in the stroma of chloroplasts in photosynthetic organisms. The reactions and species names are consistent with this interpretation. Species with display names or reactants that match known biochemical compounds were assigned standardized names or common synonyms. Species without display names or reactants that do not match known biochemical compounds were assigned "UNK". x_Starch_ch and x_PGA_cyt were assigned "UNK" because they do not have display names or reactants that match known biochemical compounds.

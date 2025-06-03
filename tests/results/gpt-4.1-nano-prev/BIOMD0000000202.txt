@@ -1,0 +1,10 @@
+Model: BIOMD0000000202
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:39:28
+
+Synonyms:
+Ca_Cyt: ['calcium ion', 'Ca2+', 'calcium']
+IP3_Cyt: ['inositol 1,4,5-trisphosphate', 'IP3']
+Ca_ER: ['calcium ion', 'Ca2+', 'endoplasmic reticulum calcium']
+
+Reason: Ca_Cyt and Ca_ER are both calcium ions in different cellular compartments; IP3_Cyt is a signaling molecule involved in calcium release.

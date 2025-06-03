@@ -1,0 +1,31 @@
+Model: BIOMD0000000512
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:11:08
+
+Synonyms:
+A_b: ['arachidonic acid', 'arachidate', 'eicosatetraenoic acid']
+O_b: ['oleic acid', 'oleate', 'octadecenoic acid']
+P_b: ['palmitic acid', 'palmitate', 'hexadecanoic acid']
+L_b: ['linoleic acid', 'linoleate', 'octadecadienoic acid']
+NAPE_b: ['N-arachidonoylethanolamine', 'anandamide precursor', 'NAEA']
+NOPE_b: ['N-oleoylethanolamine', 'oleoylethanolamine', 'OEA']
+NPPE_b: ['N-palmitoylethanolamine', 'palmitoylethanolamine', 'PEA']
+NLPE_b: ['N-linoleoylethanolamine', 'linoleoylethanolamine', 'LEA']
+A_r: ['arachidonic acid', 'arachidate', 'eicosatetraenoic acid']
+O_r: ['oleic acid', 'oleate', 'octadecenoic acid']
+P_r: ['palmitic acid', 'palmitate', 'hexadecanoic acid']
+L_r: ['linoleic acid', 'linoleate', 'octadecadienoic acid']
+NAPE_r: ['N-arachidonoylethanolamine', 'anandamide precursor', 'NAEA']
+NOPE_r: ['N-oleoylethanolamine', 'oleoylethanolamine', 'OEA']
+NPPE_r: ['N-palmitoylethanolamine', 'palmitoylethanolamine', 'PEA']
+NLPE_r: ['N-linoleoylethanolamine', 'linoleoylethanolamine', 'LEA']
+A_m: ['arachidonic acid', 'arachidate', 'eicosatetraenoic acid']
+O_m: ['oleic acid', 'oleate', 'octadecenoic acid']
+P_m: ['palmitic acid', 'palmitate', 'hexadecanoic acid']
+L_m: ['linoleic acid', 'linoleate', 'octadecadienoic acid']
+A_p: ['arachidonic acid', 'arachidate', 'eicosatetraenoic acid']
+O_p: ['oleic acid', 'oleate', 'octadecenoic acid']
+P_p: ['palmitic acid', 'palmitate', 'hexadecanoic acid']
+L_p: ['linoleic acid', 'linoleate', 'octadecadienoic acid']
+
+Reason: The model appears to be related to fatty acid metabolism and endocannabinoid production, with species names suggesting fatty acid and ethanolamine derivatives. The suffixes (_b, _r, _m, _p) likely indicate different compartments or locations (e.g., brain, plasma, membrane, periphery). The standardized names are based on common biochemical nomenclature and synonyms for these compounds.

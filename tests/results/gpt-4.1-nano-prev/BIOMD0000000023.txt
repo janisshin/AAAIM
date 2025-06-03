@@ -1,0 +1,27 @@
+Model: BIOMD0000000023
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:33
+
+Synonyms:
+Fru: ['fructose', 'fruit sugar', 'levulose']
+Glc: ['glucose', 'dextrose', 'blood sugar']
+HexP: ['hexose phosphate', 'glucose-6-phosphate', 'fructose-6-phosphate']
+Suc6P: ['sucrose-6-phosphate', 'sucrose-6-phosphate', 'sucrose-6-phosphate']
+Suc: ['sucrose', 'table sugar', 'disaccharide']
+Sucvac: ['sucrose', 'table sugar', 'disaccharide']
+glycolysis: ['glycolysis', 'glucose metabolism', 'embden-meyerhof pathway']
+phos: ['phosphate', 'inorganic phosphate', 'Pi']
+UDP: ['uridine diphosphate', 'UDP', "uridine 5'-diphosphate"]
+ADP: ['adenosine diphosphate', 'ADP', 'adenine nucleotide']
+ATP: ['adenosine triphosphate', 'ATP', 'energy currency']
+Glcex: ['glucose export', 'glucose outside cell', 'extracellular glucose']
+Fruex: ['fructose export', 'fructose outside cell', 'extracellular fructose']
+
+Reason: 
+Fru and Glc are common monosaccharides, well-known sugars.
+HexP likely refers to a hexose phosphate, such as glucose-6-phosphate.
+Suc6P is a sucrose-6-phosphate, a known intermediate.
+Suc and Sucvac are sucrose, with "vac" possibly indicating vacuolar or extracellular form.
+glycolysis is a metabolic pathway involving glucose breakdown.
+phos, UDP, ADP, ATP are common inorganic and nucleotide phosphates.
+Glcex and Fruex are likely extracellular or exported forms of glucose and fructose.

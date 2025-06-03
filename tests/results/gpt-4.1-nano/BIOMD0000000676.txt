@@ -1,0 +1,21 @@
+Model: BIOMD0000000676
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:22:11
+
+Synonyms:
+Arg: ['arginine', 'L-arginine', 'arginine amino acid']
+Fe3__enos: ['Fe3+ (endothelial nitric oxide synthase)', 'ferric ion', 'iron(III)']
+Fe3__Arg: ['Fe3+ (arginine complex)', 'ferric-arginine complex', 'iron(III)-arginine']
+Fe2: ['Fe2+', 'ferrous ion', 'iron(II)']
+Fe2__Arg: ['Fe2+ (arginine complex)', 'ferrous-arginine', 'iron(II)-arginine']
+Fe3__NO: ['Fe3+ nitric oxide complex', 'ferric nitric oxide', 'iron(III)-NO']
+NO: ['nitric oxide', 'NO', 'nitrogen monoxide']
+Fe2__NO: ['Fe2+ nitric oxide complex', 'ferrous nitric oxide', 'iron(II)-NO']
+Fe3__NOHA: ['Fe3+ NOHA complex', 'ferric NOHA', 'iron(III)-NOHA']
+Fe2__NOHA: ['Fe2+ NOHA complex', 'ferrous NOHA', 'iron(II)-NOHA']
+O2: ['oxygen', 'O2', 'dioxygen']
+Fe3__O2__Arg: ['Fe3+ O2-Arg complex', 'ferric oxygen-arginine complex', 'iron(III)-oxygen-arginine']
+Fe3__O2__NOHA: ['Fe3+ O2-NOHA complex', 'ferric oxygen-NOHA', 'iron(III)-oxygen-NOHA']
+Citrulline: ['citrulline', 'L-citrulline', 'citrulline amino acid']
+
+Reason: all species are chemical entities involved in biochemical pathways, mostly metal complexes or amino acids; "Arg" and "Citrulline" are standard amino acid names; iron species are well-known oxidation states.

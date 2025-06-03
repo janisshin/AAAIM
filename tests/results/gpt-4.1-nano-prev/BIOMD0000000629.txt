@@ -1,0 +1,11 @@
+Model: BIOMD0000000629
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:04:50
+
+Synonyms:
+L: ['ligand', 'retinoic acid', 'all-trans-retinoic acid']
+LR: ['ligand-receptor', 'RAR', 'retinoic acid receptor']
+CA: ['coactivator', 'co-activator', 'transcriptional coactivator']
+LRCA: ['ligand-receptor-coactivator', 'RAR-coactivator complex', 'retinoic acid receptor complex']
+
+Reason: L is the ligand (retinoid), LR is the receptor-ligand complex (RAR), CA is a coactivator protein, and LRCA is the receptor-ligand-coactivator complex involved in transcription regulation.

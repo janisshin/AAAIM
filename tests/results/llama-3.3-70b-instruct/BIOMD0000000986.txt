@@ -1,0 +1,11 @@
+Model: BIOMD0000000986
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:42:54
+
+Synonyms:
+Pyranine_single_compartment_model: ['8-Hydroxypyrene-1,3,6-trisulfonic acid', 'Pyranine', '8-Hydroxypyrene-1,3,6-trisulphonic acid']
+Pyranine_three_compartment_model_compartment_1: ['8-Hydroxypyrene-1,3,6-trisulfonic acid', 'Pyranine', '8-Hydroxypyrene-1,3,6-trisulphonic acid']
+Pyranine_three_compartment_model_compartment_2: ['8-Hydroxypyrene-1,3,6-trisulfonic acid', 'Pyranine', '8-Hydroxypyrene-1,3,6-trisulphonic acid']
+Pyranine_three_compartment_model_compartment_3: ['8-Hydroxypyrene-1,3,6-trisulfonic acid', 'Pyranine', '8-Hydroxypyrene-1,3,6-trisulphonic acid']
+
+Reason: All species are likely referring to Pyranine, a fluorescent dye, as the model is about its kinetics in Dictyostelium discoideum, and the display names and reactions suggest different compartments for Pyranine, but do not provide distinct chemical identities.

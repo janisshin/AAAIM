@@ -1,0 +1,27 @@
+Model: BIOMD0000000576
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:18:48
+
+Synonyms:
+s114: ['cortisol', 'hydrocortisone', 'cortisone']
+s84: ['glucocorticoid receptor', 'nuclear receptor subfamily 3 group C member 1', 'GR']
+s165: ['cytochrome P450', 'CYP', 'cytochrome P450 enzyme']
+s109: ['pregnane X receptor', 'nuclear receptor subfamily 1 group I member 2', 'PXR']
+s87: ['glucocorticoid receptor', 'nuclear receptor subfamily 3 group C member 1', 'GR']
+s119: ['pregnane X receptor', 'nuclear receptor subfamily 1 group I member 2', 'PXR']
+s183: ['tyrosine aminotransferase', 'TAT', 'glutamate--pyruvate aminotransferase']
+Cortisone: ['cortisone', '11-dehydro-17-hydrocortisone', '17-deoxy-11-dehydrocortisol']
+DEX: ['dexamethasone', '9-fluoro-11,17-dihydroxy-6-methylpregna-1,4-diene-3,20-dione', '9-alpha-fluoro-16-alpha-methylprednisolone']
+GRprot_DEX: ['glucocorticoid receptor-dexamethasone complex', 'GR-dexamethasone', 'nuclear receptor subfamily 3 group C member 1-dexamethasone']
+PXRprot_DEX: ['pregnane X receptor-dexamethasone complex', 'PXR-dexamethasone', 'nuclear receptor subfamily 1 group I member 2-dexamethasone']
+CYPgene_PXRprot_DEX: ['cytochrome P450 gene-PXR-dexamethasone complex', 'CYP-PXR-DEX', 'cytochrome P450 enzyme gene-PXR-dexamethasone']
+PXRgene_GRprot_DEX: ['pregnane X receptor gene-GR-dexamethasone complex', 'PXR-GR-DEX', 'nuclear receptor subfamily 1 group I member 2 gene-GR-dexamethasone']
+GRgene_GRprot_DEX: ['glucocorticoid receptor gene-GR-dexamethasone complex', 'GR-GR-DEX', 'nuclear receptor subfamily 3 group C member 1 gene-GR-dexamethasone']
+TATgene_GRprot_DEX: ['tyrosine aminotransferase gene-GR-dexamethasone complex', 'TAT-GR-DEX', 'glutamate--pyruvate aminotransferase gene-GR-dexamethasone']
+s2: ['cortisol', 'hydrocortisone', 'cortisone']
+DEXout: ['dexamethasone', '9-fluoro-11,17-dihydroxy-6-methylpregna-1,4-diene-3,20-dione', '9-alpha-fluoro-16-alpha-methylprednisolone']
+CBG_CortOUT: ['corticosteroid-binding globulin-cortisol complex', 'CBG-cortisol', 'transcortin-cortisol']
+Alb_CortOUT: ['albumin-cortisol complex', 'Alb-cortisol', 'human serum albumin-cortisol']
+CortAdded: ['cortisol', 'hydrocortisone', 'cortisone']
+
+Reason: The species were annotated based on their display names and the context of the model, which is a nuclear receptor-mediated cortisol signalling network. The annotations for s114, s2, CortAdded, and Cortisone are based on their display names, which directly correspond to cortisol or cortisone. The annotations for DEX and DEXout are based on their display names, which correspond to dexamethasone. The annotations for GRprot_DEX, PXRprot_DEX, CYPgene_PXRprot_DEX, PXRgene_GRprot_DEX, GRgene_GRprot_DEX, and TATgene_GRprot_DEX are based on their display names and the context of the model, which suggests that they are complexes or genes related to glucocorticoid receptor, pregnane X receptor, cytochrome P450, and tyrosine aminotransferase. The annotations for CBG_CortOUT and Alb_CortOUT are based on their display names, which correspond to corticosteroid-binding globulin and albumin, respectively. The annotations for s84, s87, s109, s119, s165, and s183 are based on their display names and the context of the model, which suggests that they are related to glucocorticoid receptor, pregnane X receptor, cytochrome P450, and tyrosine aminotransferase.

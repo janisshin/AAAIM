@@ -1,0 +1,17 @@
+Model: BIOMD0000001055
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:10:55
+
+Synonyms:
+Glucose: ['glucose', 'd-glucose', 'blood sugar']
+Fructose_6_Phosphate: ['fructose-6-phosphate', 'F6P', 'sodium 6-phosphofructose']
+Fructose_1_6_Bisphosphate: ['fructose-1,6-bisphosphate', 'F1,6BP', 'bisphospho-D-fructose']
+_3_Phosphoglycerate: ['3-phosphoglycerate', '3PG', 'glycerate-3-phosphate']
+Phosphoenolpyruvate: ['phosphoenolpyruvate', 'PEP', 'pyruvate phosphate']
+Pyruvate: ['pyruvate', 'pyruvic acid', 'pyruvate ion']
+Oxaloacetate: ['oxaloacetate', 'OAA', 'oxaloacetate ion']
+Metabolic_outcome_of_Pentose_Phosphate_Shunt: ['pentose phosphate pathway products', 'ribose-5-phosphate', 'NADPH']
+Metabolic_outcome_of_Serine_Biosynthesis_Flux: ['serine biosynthesis products', '3-phosphoserine', 'glycine']
+Metabolic_outcome_of_Glycolytic_Flux: ['glycolytic products', 'lactate', 'pyruvate']
+
+Reason: All species are key metabolites in central carbon metabolism pathways, with standard biochemical names and common synonyms. The metabolic outcomes are pathway end-products or flux indicators.

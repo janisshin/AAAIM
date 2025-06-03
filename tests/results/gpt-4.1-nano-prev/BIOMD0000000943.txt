@@ -1,0 +1,12 @@
+Model: BIOMD0000000943
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:09:01
+
+Synonyms:
+Mdm2_mRNA: ['MDM2', 'HDM2', 'murine double minute 2']
+Wip1_mRNA: ['WIP1', 'PPM1D', 'wild-type p53-induced phosphatase 1']
+PTEN_mRNA: ['PTEN', 'phosphatase and tensin homolog', 'MMAC1']
+p21_mRNA: ['CDKN1A', 'p21', 'cyclin-dependent kinase inhibitor 1']
+Bax_mRNA: ['BAX', 'Bcl-2-associated X protein', 'apoptosis regulator BAX']
+
+Reason: All are well-characterized gene products involved in p53 pathways; their common names or gene symbols are standard for annotation.

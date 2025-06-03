@@ -1,0 +1,8 @@
+Model: BIOMD0000000277
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:05
+
+Synonyms:
+Ca: ['calcium ion', 'calcium', 'Ca(2+)']
+
+Reason: The species Ca in the model refers to plasma ionized calcium concentration, which corresponds to calcium ions in biological context.

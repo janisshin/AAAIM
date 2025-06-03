@@ -1,0 +1,9 @@
+Model: BIOMD0000000113
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:53:05
+
+Synonyms:
+Z: ['UNK']
+Y: ['UNK']
+
+Reason: No display names or chemical context provided; species likely represent a protein or a non-chemical entity, not identifiable as a chemical species.

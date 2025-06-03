@@ -1,0 +1,17 @@
+Model: BIOMD0000000689
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:22:15
+
+Synonyms:
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+AMP: ['adenosine monophosphate', 'AMP', 'adenylic acid']
+p_ABA: ['p-aminobenzoic acid', 'para-aminobenzoic acid', 'p-ABA']
+H2_Pteroate: ['H2-pteroate', '2-hydroxy-4-aminobenzoyl-PABA', 'pteroate']
+L_Glutamate: ['L-glutamate', 'glutamic acid', '2-aminopentanedioic acid']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+DHF: ['dihydrofolate', 'dihydrofolic acid', 'DHF']
+L_serine: ['L-serine', 'serine', '2-amino-3-hydroxypropanoic acid']
+NADPH: ['NADPH', 'nicotinamide adenine dinucleotide phosphate (reduced)', 'reduced NADP']
+CH2_THF: ['5,10-methylenetetrahydrofolate', 'CH2-THF', 'methylene tetrahydrofolate']
+
+Reason: All species are recognized as common biochemical entities, mostly cofactors or amino acids, with standard synonyms. p_ABA is a known form of p-aminobenzoic acid, and H2_Pteroate is a pteroate derivative.

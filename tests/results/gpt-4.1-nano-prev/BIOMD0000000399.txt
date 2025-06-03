@@ -1,0 +1,34 @@
+Model: BIOMD0000000399
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:45:30
+
+Synonyms:
+x20: ['epidermal growth factor', 'EGF', 'epidermal growth factor receptor ligand']
+x21: ['EGF', 'epidermal growth factor', 'EGF ligand']
+
+Reason: Both x20 and x21 are labeled as EGF or its ligand, indicating they are the same or similar molecules involved in receptor activation.
+x26: "Ras", "Ras protein", "Ras GTPase"
+x27: "Ras", "Ras protein", "Ras GTPase"
+Reason: Both are Ras-related molecules, with x26 as Ras-GDP and x27 as Ras-GTP, key in signaling pathways.
+x28: "Ras", "Ras protein", "Ras GTPase"
+Reason: Similar to x26 and x27, involved in Ras signaling cycle.
+x29: "Ras", "Ras protein", "Ras GTPase"
+Reason: Same as above, part of Ras activation cycle.
+x36: "EGFR", "epidermal growth factor receptor", "EGFR"
+x37: "EGFR", "epidermal growth factor receptor", "EGFR"
+Reason: Both are EGFR, receptor involved in EGF signaling.
+x42: "Raf", "Raf kinase", "MAPKKK"
+x43: "Ras", "Ras protein", "Ras GTPase"
+Reason: x42 is Raf, downstream kinase; x43 is Ras-GTP, upstream activator.
+x67: "EGFR", "epidermal growth factor receptor", "EGFR"
+x68: "EGFR", "epidermal growth factor receptor", "EGFR"
+Reason: Both are EGFR, receptor involved in EGF signaling.
+x69: "Ras", "Ras GTPase", "Ras"
+x70: "Ras", "Ras GTPase", "Ras"
+x71: "Ras", "Ras GTPase", "Ras"
+x89: "Ras", "Ras GTPase", "Ras"
+x90: "Ras", "Ras GTPase", "Ras"
+x93: "EGF-EGFR complex", "EGF receptor complex", "EGF-EGFR binding"
+x94: "EGF-EGFR complex", "EGF receptor complex", "EGF-EGFR binding"
+Reason: All Ras-GTP and Ras-GDP are standard GTPase cycle components; EGF-EGFR complexes are ligand-receptor complexes involved in signaling.
+Reason: The species are involved in EGF receptor signaling pathway, with common names for receptor, ligand, and Ras GTPase.

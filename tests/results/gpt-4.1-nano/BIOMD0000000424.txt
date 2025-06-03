@@ -1,0 +1,14 @@
+Model: BIOMD0000000424
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:00:40
+
+Synonyms:
+RasGDP: ['Ras GDP', 'Ras guanosine diphosphate', 'Ras inactive form']
+RasGTP: ['Ras GTP', 'Ras guanosine triphosphate', 'Ras active form']
+PI2: ['Phosphatidylinositol 2', 'PI(2) lipid', 'PI(4)P', 'PI2', '(assuming a typo for PI(4)P', 'but likely  as phosphatidylinositol 2)']
+PIP3: ['Phosphatidylinositol 3,4,5-trisphosphate', 'PIP3', 'PI(3,4,5)P3']
+PTEN_PI: ['PTEN phosphatase complex', 'PTEN lipid phosphatase', 'PTEN-associated phosphoinositide']
+PI3Ka_PI: ['PI3K alpha complex', 'PI3K alpha with PIP2', 'PI3K catalytic subunit alpha complex']
+Species to annotate: ['RasGDP', 'PI2', 'PIP3', 'PTEN_PI', 'PI3Ka_PI', 'RasGTP']
+
+Reason: RasGDP and RasGTP are inactive and active forms of Ras, respectively. PIP3 and PI2 are phosphoinositide lipids involved in signaling pathways. PTEN_PI and PI3Ka_PI are complexes involving PTEN and PI3K alpha, key regulators in PI3K/AKT pathway.

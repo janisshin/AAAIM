@@ -1,0 +1,10 @@
+Model: BIOMD0000000191
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:39:12
+
+Synonyms:
+ARGex: ['arginine', 'L-arginine', 'arginine (free amino acid)']
+ORN: ['ornithine', 'L-ornithine', 'ornithine (amino acid)']
+ARGin: ['arginine', 'L-arginine', 'arginine (free amino acid)']
+
+Reason: ARGex and ARGin both refer to arginine, with ARGex likely representing extracellular or transported arginine, and ARGin intracellular; ORN is clearly ornithine, a known amino acid involved in arginine metabolism.

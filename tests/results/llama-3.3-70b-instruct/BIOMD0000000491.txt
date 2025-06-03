@@ -1,0 +1,10 @@
+Model: BIOMD0000000491
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:00:09
+
+Synonyms:
+s2: ['sodium chloride', 'common salt', 'table salt']
+s4: ['hydrogen peroxide', 'H2O2', 'dihydrogen dioxide']
+s6: ['ethene', 'ethylene', 'C2H4']
+
+Reason: s2 is annotated as "Salt" which is likely referring to sodium chloride, a common salt. s4 is annotated as "H2O2" which is a direct reference to hydrogen peroxide. s6 is annotated as "Ethylene" which is a common name for the chemical compound ethene.

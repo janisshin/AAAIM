@@ -1,0 +1,8 @@
+Model: BIOMD0000000112
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:53:16
+
+Synonyms:
+Pi: ['phosphate', 'inorganic phosphate', 'orthophosphate']
+
+Reason: Pi is likely to represent inorganic phosphate, a common molecule in biological systems, given its involvement in the Smad signaling pathway as a product of the reaction.

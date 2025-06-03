@@ -1,0 +1,25 @@
+Model: BIOMD0000000164
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:38:14
+
+Synonyms:
+Carrier_RanGTP_Cytosol: ['Ran GTP', 'Ran GTPase', 'Ran']
+RanBP1_Carrier_RanGTP_Cytosol: ['RanBP1', 'Ran-binding protein 1', 'RanBP1']
+RanGDP_Nucleus: ['Ran GDP', 'Ran guanosine diphosphate', 'Ran']
+RanGTP_Nucleus: ['Ran GTP', 'Ran GTPase', 'Ran']
+NTF2_RanGDP_Nucleus: ['Nuclear transport factor 2', 'NTF2', 'Ran GDP']
+RanGDP_Cytosol: ['Ran GDP', 'Ran guanosine diphosphate', 'Ran']
+Carrier_RanGTP_Nucleus: ['Ran GTP', 'Ran GTPase', 'Ran']
+NTF2_RanGDP_Cytosol: ['Nuclear transport factor 2', 'NTF2', 'Ran GDP']
+FRanGTP_Cytosol: ['Ran GTP', 'Ran GTPase', 'Ran']
+FCarrier_RanGTP_Cytosol: ['Ran GTP', 'Ran GTPase', 'Ran']
+FRanGDP_Cytosol: ['Ran GDP', 'Ran guanosine diphosphate', 'Ran']
+FNTF2_RanGDP_Cytosol: ['Nuclear transport factor 2', 'NTF2', 'Ran GDP']
+FRanBP1_Carrier_RanGTP_Cytosol: ['RanBP1', 'Ran-binding protein 1', 'RanBP1']
+FCarrier_RanGTP_Nucleus: ['Ran GTP', 'Ran GTPase', 'Ran']
+FRanGDP_Nucleus: ['Ran GDP', 'Ran guanosine diphosphate', 'Ran']
+FNTF2_RanGDP_Nucleus: ['Nuclear transport factor 2', 'NTF2', 'Ran GDP']
+FRanGTP_Nucleus: ['Ran GTP', 'Ran GTPase', 'Ran']
+RanGTP_Cytosol: ['Ran GTP', 'Ran GTPase', 'Ran']
+
+Reason: All species are related to Ran GTPase cycle components, primarily Ran GTP and Ran GDP, which are well-established chemical entities involved in nuclear transport. The proteins RanBP1 and NTF2 are transport factors, not chemical entities, so they are annotated with their common protein names.

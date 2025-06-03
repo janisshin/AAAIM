@@ -1,0 +1,15 @@
+Model: BIOMD0000000146
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:54:45
+
+Synonyms:
+AktPIP3: ['phosphatidylinositol 3,4,5-trisphosphate', 'PIP3', 'inositol 1,4,5-trisphosphate']
+AktPIPP: ['phosphatidylinositol 3,4,5-trisphosphate', 'PIP3', 'phosphatidylinositol']
+ERKP: ['extracellular signal-regulated kinase', 'ERK', 'mitogen-activated protein kinase']
+ERKPP: ['extracellular signal-regulated kinase', 'ERK', 'mitogen-activated protein kinase']
+MEKP: ['mitogen-activated protein kinase kinase', 'MEK', 'MAP2K']
+RasGDP: ['guanosine diphosphate', 'GDP', 'ras protein']
+RasGTP: ['guanosine triphosphate', 'GTP', 'ras protein']
+PIP3: ['phosphatidylinositol 3,4,5-trisphosphate', 'inositol 1,4,5-trisphosphate', 'PIP3']
+
+Reason: The species names are annotated based on their display names and reaction equations. For example, AktPIP3 is likely "phosphatidylinositol 3,4,5-trisphosphate" due to the presence of "PIP3" in the display names and reactions. Similarly, ERKP and ERKPP are likely related to "extracellular signal-regulated kinase" due to their names and reaction equations. RasGDP and RasGTP are likely related to "guanosine diphosphate" and "guanosine triphosphate" respectively, due to their names and reaction equations. MEKP is likely "mitogen-activated protein kinase kinase" due to its name and reaction equations. PIP3 is likely "phosphatidylinositol 3,4,5-trisphosphate" due to its name and reaction equations.

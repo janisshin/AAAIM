@@ -1,0 +1,19 @@
+Model: BIOMD0000000152
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:49
+
+Synonyms:
+Ca: ['calcium', 'calcium ion', 'Ca2+']
+PP2BinactiveCa2: ['calcium-bound PP2B', 'PP2B calcium complex', 'PP2B-Ca2+']
+cAMP: ['cyclic AMP', 'cAMP', 'adenylyl cyclase product']
+cAMP_R2C2: ['cAMP-R2C2 complex', 'cyclic AMP bound R2C2', 'cAMP-R2C2']
+cAMP2_R2C2: ['cAMP2-R2C2 complex', 'cyclic AMP dimer R2C2', 'cAMP2-R2C2']
+cAMP3_R2C2: ['cAMP3-R2C2 complex', 'cyclic AMP trimer R2C2', 'cAMP3-R2C2']
+cAMP4_R2C2: ['cAMP4-R2C2 complex', 'cyclic AMP tetramer R2C2', 'cAMP4-R2C2']
+cAMP4_R2C: ['cAMP4-R2C', 'cyclic AMP tetramer', 'cAMP4-R2C']
+cAMP4_R2: ['cAMP4-R2', 'cyclic AMP tetramer', 'cAMP4-R2']
+cAMP_PDE: ['cAMP phosphodiesterase', 'cAMP-PDE', 'cyclic AMP PDE enzyme']
+AMP: ['adenosine monophosphate', 'AMP', 'adenylate']
+cAMP_PDEP: ['cAMP-PDEP complex', 'cAMP-PDEP', 'cyclic AMP PDEP complex']
+
+Reason: All are well-known biochemical entities; calcium and cAMP are common signaling molecules, and the complexes are named accordingly. "PP2BinactiveCa2" indicates calcium-bound PP2B, a phosphatase complex. "PDEP" is a phosphodiesterase-related entity, and "AMP" is a standard nucleotide.

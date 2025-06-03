@@ -1,0 +1,9 @@
+Model: BIOMD0000000609
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:22:43
+
+Synonyms:
+Sulphate__PAPS: ["3'-phosphoadenosine 5'-phosphosulfate", 'PAPS', 'phosphoadenosine phosphosulfate']
+GSH: ['glutathione', 'reduced glutathione', 'L-glutathione']
+
+Reason: Sulphate__PAPS is likely 3'-phosphoadenosine 5'-phosphosulfate, a common cofactor in sulfation reactions, given its involvement in the Reddyhoff2015 model of acetaminophen metabolism. GSH is likely glutathione, a well-known antioxidant, due to its participation in reactions related to acetaminophen metabolism and toxicity.

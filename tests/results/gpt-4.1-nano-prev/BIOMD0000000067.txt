@@ -1,0 +1,12 @@
+Model: BIOMD0000000067
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:35:43
+
+Synonyms:
+AcCoA: ['acetyl-CoA', 'acetyl coenzyme A', 'acetyl-CoA']
+AcP: ['acetyl phosphate', 'acetyl phosphate', 'Acetyl phosphate']
+OAc: ['acetate', 'acetic acid', 'ethanoate']
+HOAc: ['protonated acetate', 'acetic acid', 'ethanoic acid']
+HOAc_E: ['acetate export', 'excreted acetate', 'exported acetic acid']
+
+Reason: The display names clearly indicate that AcCoA is acetyl-CoA, AcP is acetyl phosphate, OAc and HOAc are acetate and acetic acid respectively, and HOAc_E refers to acetate export.

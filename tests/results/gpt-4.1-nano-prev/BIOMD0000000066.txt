@@ -1,0 +1,18 @@
+Model: BIOMD0000000066
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:35:41
+
+Synonyms:
+aspp: ['L-aspartyl phosphate', 'Aspartyl phosphate', 'UNK']
+asa: ['Aspartate beta-semialdehyde', 'Aspartate semialdehyde', 'UNK']
+hs: ['Homoserine', 'L-Homoserine', 'UNK']
+hsp: ['O-Phospho-homoserine', 'O-phospho-homoserine', 'UNK']
+phos: ['Phosphate', 'Inorganic phosphate', 'Pi']
+thr: ['Threonine', 'L-Threonine', 'UNK']
+asp: ['Aspartate', 'L-Aspartate', 'Asp']
+nadp: ['NADP+', 'Nicotinamide adenine dinucleotide phosphate', 'UNK']
+nadph: ['NADPH', 'Nicotinamide adenine dinucleotide phosphate (reduced)', 'UNK']
+adp: ['ADP', 'Adenosine diphosphate', 'UNK']
+atp: ['ATP', 'Adenosine triphosphate', 'UNK']
+
+Reason: All are recognized biochemical species with standard names or common synonyms; "UNK" if no standard name is evident.

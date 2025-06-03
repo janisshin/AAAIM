@@ -1,0 +1,15 @@
+Model: BIOMD0000000439
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:01:10
+
+Synonyms:
+GaGTP: ['GTP', 'guanosine triphosphate', 'GTP (guanosine triphosphate)']
+RGSGaGTP: ['GTP', 'guanosine triphosphate', 'GTP (guanosine triphosphate)']
+GaGDPP: ['GDP', 'guanosine diphosphate', 'GDP']
+GaGTPEffector: ['GTP', 'guanosine triphosphate', 'GTP (guanosine triphosphate)']
+inertGaGTP: ['GTP', 'guanosine triphosphate', 'GTP (guanosine triphosphate)']
+RGSinertGaGTP: ['GTP', 'guanosine triphosphate', 'GTP (guanosine triphosphate)']
+GaGDP: ['GDP', 'guanosine diphosphate', 'GDP']
+P: ['phosphate', 'inorganic phosphate', 'Pi']
+
+Reason: All species are derivatives or related molecules of GTP or GDP, which are well-established nucleotides involved in G protein signaling. "P" is a common abbreviation for inorganic phosphate.

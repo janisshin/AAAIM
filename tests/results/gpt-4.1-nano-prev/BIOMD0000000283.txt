@@ -1,0 +1,10 @@
+Model: BIOMD0000000283
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:13
+
+Synonyms:
+X: ['UNK']
+P: ['peroxidase', 'horseradish peroxidase']
+Q: ['UNK']
+
+Reason: P is explicitly identified as peroxidase in the context of enzyme kinetics; X and Q are only labeled with single letters and no chemical or biological names are provided.

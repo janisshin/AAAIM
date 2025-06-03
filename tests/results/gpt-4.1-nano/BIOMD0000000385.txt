@@ -1,0 +1,12 @@
+Model: BIOMD0000000385
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:59:33
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'RuBP', 'ribulose bisphosphate']
+PGA: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'PGA']
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'NADPH', 'reduced NADP']
+CO2: ['carbon dioxide', 'CO2', 'carbonic acid']
+O2: ['oxygen', 'O2', 'dioxygen']
+
+Reason: These are key metabolites in the Calvin cycle, with standard biochemical names and common synonyms. NADPH and NADP are related redox cofactors; CO2 and O2 are gases involved in the reactions; PGA and RuBP are well-known Calvin cycle intermediates.

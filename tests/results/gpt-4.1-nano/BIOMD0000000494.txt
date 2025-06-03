@@ -1,0 +1,9 @@
+Model: BIOMD0000000494
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:12:34
+
+Synonyms:
+E2: ['estradiol', '17β-estradiol', 'E2']
+P4: ['progesterone', 'P4']
+
+Reason: E2 and P4 are well-known hormones, with E2 being estradiol and P4 being progesterone, both common in reproductive biology.

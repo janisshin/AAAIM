@@ -1,0 +1,23 @@
+Model: BIOMD0000000161
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:55:14
+
+Synonyms:
+PIP_PM: ['phosphatidylinositol 4-phosphate', 'phosphatidylinositol-4-phosphate', 'PIP']
+PI_PM: ['phosphatidylinositol', 'phosphatidyl inositol']
+CaCAPRI_PM_PM: ['UNK']
+PIP2_PM: ['phosphatidylinositol 4,5-bisphosphate', 'phosphatidylinositol-4,5-bisphosphate', 'PIP2']
+Ca: ['calcium', 'calcium ion', 'Ca2+']
+RinhCa: ['UNK']
+IP3: ['inositol 1,4,5-trisphosphate', 'inositol trisphosphate', 'IP3']
+Ca_RasGRP_GM_GM: ['UNK']
+DAG_GM_GM: ['diacylglycerol', 'diglyceride', 'DAG']
+CaCAPRI_cyt: ['UNK']
+DAG_PM: ['diacylglycerol', 'diglyceride', 'DAG']
+Ca_PLCe_cyt: ['UNK']
+Ras_CaPLCe_GM: ['UNK']
+PIP2_GM_GM: ['phosphatidylinositol 4,5-bisphosphate', 'phosphatidylinositol-4,5-bisphosphate', 'PIP2']
+Ca_ER: ['calcium', 'calcium ion', 'Ca2+']
+CaRasGRP1_cyt: ['UNK']
+
+Reason: Most species are annotated based on their display names and common biochemical knowledge. Species with no clear display names or ambiguous names are annotated as "UNK". PIP, PI, PIP2, IP3, DAG, and Ca are well-known biochemical molecules, while CaCAPRI, RinhCa, Ca_RasGRP_GM_GM, Ca_PLCe_cyt, Ras_CaPLCe_GM, and CaRasGRP1_cyt are unclear without more context, likely being specific proteins or complexes in the Ras activation pathway.

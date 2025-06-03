@@ -1,0 +1,16 @@
+Model: BIOMD0000000400
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:00:18
+
+Synonyms:
+Gd: ['Gd', 'Gadolinium', 'Gadolinium ion']
+Gt: ['Gt', 'Guanosine triphosphate', 'GTP']
+Rg: ['Rg', 'G protein', 'Guanine nucleotide-binding protein']
+Rlg: ['Rlg', 'G protein', 'Guanine nucleotide-binding protein']
+Rlgp: ['Rlgp', 'G protein', 'Guanine nucleotide-binding protein']
+Pc: ['PC', 'Phosphatidylcholine', 'Phosphatidylcholine molecule']
+Pcg: ['Pcg', 'Phosphatidylglycerol', 'Phosphatidylglycerol']
+Pg: ['Pg', 'Phosphatidylglycerol', 'Phosphatidylglycerol']
+Ca: ['Ca', 'Calcium', 'Calcium ion']
+
+Reason: All species are likely related to signaling molecules or ions involved in cardiac myocyte signaling pathways; Gd is Gadolinium, a contrast agent or metal ion; Gt and Rg are GTP-binding proteins; P species are phospholipids; Ca is calcium, a key signaling ion.

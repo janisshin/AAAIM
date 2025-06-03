@@ -1,0 +1,8 @@
+Model: BIOMD0000000829
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:33:46
+
+Synonyms:
+Glucose_G: ['glucose', 'D-glucose', 'blood glucose']
+
+Reason: Glucose_G is likely to be glucose, a common energy source for cells, given its role in regulating cell cycle dynamics and its administration via intravenous infusions in the model. The display name 'Glucose G' suggests a direct reference to glucose, and the context of the model, which involves glucose level control and its effect on cell proliferation, further supports this annotation.

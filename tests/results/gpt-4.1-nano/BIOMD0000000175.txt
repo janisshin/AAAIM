@@ -1,0 +1,10 @@
+Model: BIOMD0000000175
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:54:24
+
+Synonyms:
+P3: ['phosphatidylinositol (3,4,5)-trisphosphate', 'PIP3', 'phosphatidylinositol-3,4,5-trisphosphate']
+RsD: ['Ras GDP', 'Ras guanosine diphosphate', 'Ras-GDP']
+RsT: ['Ras GTP', 'Ras guanosine triphosphate', 'Ras-GTP']
+
+Reason: P3 is a well-known lipid signaling molecule (PIP3). RsD and RsT are the inactive and active forms of Ras, respectively, with RasGDP and RasGTP being common synonyms. The model name "ErbB" suggests signaling pathways involving Ras and PIP3.

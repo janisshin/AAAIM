@@ -1,0 +1,29 @@
+Model: BIOMD0000000636
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:21:42
+
+Synonyms:
+mwa2c44a01_28c9_4dbd_b034_364f9b5b6cc3: ['GaiGTP', 'Gi alpha GTP', 'G-protein alpha subunit GTP']
+mwfed0682b_39f1_4b09_94e8_c45a51744092: ['GaolfGDP', 'Golf GTP', 'G-protein alpha subunit GTP']
+mw8e34c23f_1891_4dc9_8f97_dc2f12a1706c: ['GTP-Golf', 'Golf GTP', 'G-protein alpha subunit GTP']
+mw1c97b02d_169a_4eb8_bc84_1be57c51a255: ['cAMP', 'cyclic AMP', "adenosine 3',5'-cyclic monophosphate"]
+mwccd3a17c_e207_4663_9b16_327b78882497: ['Ca', 'Calcium ion', 'Ca2+']
+mwfe9ed415_d5af_469c_a549_d8981f1eb01f: ['Adenosine', 'Adenosine', 'Adenosine']
+mw65a14789_ffcf_4bfd_9d53_d2eb2f4d0896: ['Ca2+', 'Calcium ion', 'Ca']
+mw8a4a0733_64dd_4474_9aaf_7d750b27ae5b: ['Ca2+', 'Calcium ion', 'Ca']
+mw74e54eed_0d25_4fb0_b677_1192f238c03b: ['ATP', 'adenosine triphosphate', 'ATP']
+mwffd5a553_8e03_443d_a67e_0cf39d03f89f: ['cAMP', 'cyclic AMP', "adenosine 3',5'-cyclic monophosphate"]
+mwd1171b65_ed6c_4413_bf47_5ed80038a7bd: ['PP2B', 'Protein phosphatase 2B', 'Calcineurin']
+mw3fcd1ec2_a459_49d4_89f7_361e276096d6: ['PDE10', 'Phosphodiesterase 10', 'PDE10']
+mw9bfd7713_4c48_492c_8583_006bf1b54a1b: ['PDE10', 'Phosphodiesterase 10', 'PDE10']
+mwbe974953_e869_4622_b4a8_745555c8d7fd: ['Adn', 'Adenosine', 'Adenosine']
+mwb80e4fa1_4849_4ed5_b3b0_3e3025c61ad8: ['Gbgolf', 'G-protein beta gamma complex', 'G beta gamma']
+mw619502c3_e319_4e29_a677_b2b5f74fc2cf: ['ATP', 'adenosine triphosphate', 'ATP']
+mw9d5c5c9d_301d_4e43_ba7b_7d21ccbdc2c2: ['D2RDA', 'D2 dopamine receptor activated', 'D2 receptor']
+mwe4e36b8e_18b8_4c76_bd46_13614b71da5c: ['D2RDAGi', 'D2 receptor G-protein complex', 'D2 receptor G-protein']
+mw9bcba6bc_9788_4f7f_afb5_1c8f3b33c3d1: ['GaiGDP', 'Gi alpha GDP', 'G-protein alpha GDP']
+mw3e1a2fbf_37b1_490c_9528_6cb6bbf11b21: ['DA', 'dopamine', 'dopamine']
+mw6e845d87_603e_4463_874d_866f554303df: ['PDE10', 'Phosphodiesterase 10', 'PDE10']
+mw1f3b8982_3b8c_42b6_8b0f_49b037cbda43: ['PDE10', 'Phosphodiesterase 10', 'PDE10']
+
+Reason: The species are mostly G-protein subunits, second messengers, or enzymes involved in cAMP/PKA signaling pathways in neurons, with some representing calcium ions or neuromodulators like adenosine and dopamine.

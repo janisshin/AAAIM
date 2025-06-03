@@ -1,0 +1,9 @@
+Model: BIOMD0000000322
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:43:06
+
+Synonyms:
+species_1: ['uridine', 'uracil', 'RNA nucleotide uracil']
+species_2: ['y', 'unknown', 'UNK']
+
+Reason: species_1 is likely a uridine nucleotide involved in transcription; species_2 is labeled as 'y' with no clear chemical identity, so uncertain.

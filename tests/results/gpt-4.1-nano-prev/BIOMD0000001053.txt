@@ -1,0 +1,13 @@
+Model: BIOMD0000001053
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:10:49
+
+Synonyms:
+Gp: ['glycine', 'gly', 'Gly']
+Ai: ['ammonia', 'NH3', 'ammonium']
+Am: ['ammonia', 'NH3', 'ammonium']
+Ap: ['ammonia', 'NH3', 'ammonium']
+Gm: ['glutamate', 'glutamic acid', 'L-glutamate']
+Gi: ['glutamate', 'glutamic acid', 'L-glutamate']
+
+Reason: The species are involved in nitrogen and amino acid metabolism, with Gp likely representing glycine, and Ai, Am, Ap representing forms of ammonia. Gm and Gi are involved in glutamate metabolism, a common amino acid.

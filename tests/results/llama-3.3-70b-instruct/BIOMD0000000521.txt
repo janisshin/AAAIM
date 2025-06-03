@@ -1,0 +1,11 @@
+Model: BIOMD0000000521
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:13:31
+
+Synonyms:
+C: ['plasma', 'blood plasma', 'serum']
+Q: ['quiescent cells', 'dormant cells', 'non-proliferative cells']
+P: ['proliferative cells', 'cancer cells', 'tumor cells']
+Qp: ['damaged quiescent cells', 'injured quiescent cells', 'quiescent tissue damage']
+
+Reason: The annotations are based on the display names provided in the model, where C is annotated as 'PCV_plasma', Q as 'nonproliferative quiescent tissue', P as 'Proliferative tissue', and Qp as 'damaged quiescent cells'. The standardized names and common synonyms are chosen based on the context of the model, which appears to be a tumor growth inhibition model for low-grade glioma.

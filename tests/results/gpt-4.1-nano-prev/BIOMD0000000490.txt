@@ -1,0 +1,15 @@
+Model: BIOMD0000000490
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:55:59
+
+Synonyms:
+AA_b: ['amino acid', 'amino acids', 'UNK']
+Hn_b: ['histamine', 'histamines', 'UNK']
+AA_aw: ['amino acid', 'amino acids', 'UNK']
+Hn_aw: ['histamine', 'histamines', 'UNK']
+ZF_intes: ['zinc finger', 'zinc finger protein', 'UNK']
+ZF_blood: ['zinc finger', 'zinc finger protein', 'UNK']
+ML_intes: ['mucus layer', 'mucus', 'UNK']
+ML_blood: ['mucus', 'mucus layer', 'UNK']
+
+Reason: The species are labeled with abbreviations that suggest they are biological molecules or tissue compartments, not specific chemical entities. "AA" likely refers to amino acids, "Hn" to histamine, "ZF" to zinc finger proteins, and "ML" to mucus. Since they are not explicitly chemical compounds, they are normalized to general biological terms or "UNK" if uncertain.

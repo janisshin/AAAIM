@@ -1,0 +1,16 @@
+Model: BIOMD0000000947
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:23:57
+
+Synonyms:
+C_para_Apical: ['paracetamol', 'acetaminophen', 'para-hydroxyacetanilide']
+C_para_Caco_2: ['paracetamol', 'acetaminophen', 'para-hydroxyacetanilide']
+C_para__Basolateral___HepG2_: ['paracetamol', 'acetaminophen', 'para-hydroxyacetanilide']
+C_sulf_Apical: ['paracetamol sulfate', 'acetaminophen sulfate', 'paracetamol O-sulfate']
+C_sulf_Caco_2: ['paracetamol sulfate', 'acetaminophen sulfate', 'paracetamol O-sulfate']
+C_sulf__Basolateral___HepG2_: ['paracetamol sulfate', 'acetaminophen sulfate', 'paracetamol O-sulfate']
+C_glu_Apical: ['paracetamol glucuronide', 'acetaminophen glucuronide', 'paracetamol O-glucuronide']
+C_glu_Caco_2: ['paracetamol glucuronide', 'acetaminophen glucuronide', 'paracetamol O-glucuronide']
+C_glu__Basolateral___HepG2_: ['paracetamol glucuronide', 'acetaminophen glucuronide', 'paracetamol O-glucuronide']
+
+Reason: All species are derivatives or conjugates of paracetamol, a common analgesic and antipyretic drug. The sulfate and glucuronide conjugates are well-known metabolites.

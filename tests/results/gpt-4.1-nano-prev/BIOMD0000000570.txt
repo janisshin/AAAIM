@@ -1,0 +1,65 @@
+Model: BIOMD0000000570
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:02:18
+
+Synonyms:
+species_1: ['sodium ion', 'Na+', 'natrium']
+
+Reason: Na+ is a common abbreviation for sodium ion, a well-known electrolyte.
+
+species_2: "adenosine triphosphate", "ATP", "adenosine triphosphate"
+Reason: ATP is a standard name for the energy currency molecule.
+
+species_3: "adenosine diphosphate", "ADP", "adenosine diphosphate"
+Reason: ADP is a common name for the molecule involved in energy transfer.
+
+species_4: "glucose", "d-glucose", "blood sugar"
+Reason: GLC is a standard abbreviation for glucose, a primary energy source.
+
+species_5: "glyceraldehyde-3-phosphate", "G3P", "GAP"
+Reason: GAP is a common abbreviation for glyceraldehyde-3-phosphate, a glycolytic intermediate.
+
+species_6: "nicotinamide adenine dinucleotide", "NAD+", "NAD"
+Reason: NAD+ is the oxidized form of the coenzyme involved in redox reactions.
+
+species_7: "nicotinamide adenine dinucleotide, reduced form", "NADH", "NADH"
+Reason: NADH is the reduced form of NAD+ involved in electron transport.
+
+species_8: "pyruvate", "pyruvic acid", "PYR"
+Reason: PYR is a standard abbreviation for pyruvate, a key metabolic intermediate.
+
+species_9: "phosphoenolpyruvate", "PEP", "PEP"
+Reason: PEP is a common glycolytic intermediate.
+
+species_10: "lactate", "lactic acid", "LAC"
+Reason: LAC is a standard abbreviation for lactate, a product of anaerobic glycolysis.
+
+species_11: "phosphocreatine", "PCr", "creatine phosphate"
+Reason: PCr is a common abbreviation for phosphocreatine, involved in energy buffering.
+
+species_12: "creatine", "Cr", "creatine"
+Reason: Cr is a standard abbreviation for creatine, involved in energy storage.
+
+species_13: "oxygen", "O2", "dioxygen"
+Reason: O2 is the standard chemical formula for molecular oxygen.
+
+species_14: "unknown", "UNK", "unknown"
+Reason: No display name provided; likely unknown or not a chemical species.
+
+species_15: "glucose", "d-glucose", "blood sugar"
+Reason: GLC again, as a primary energy source.
+
+species_16: "lactate", "lactic acid", "LAC"
+Reason: LAC, as above, a glycolytic product.
+
+species_17: "glucose", "d-glucose", "blood sugar"
+Reason: GLC again, consistent with previous entries.
+
+species_18: "lactate", "lactic acid", "LAC"
+Reason: LAC, as above, a glycolytic product.
+
+species_19: "oxygen", "O2", "dioxygen"
+Reason: O2, as above, molecular oxygen.
+
+dHb: "deoxyhemoglobin", "deoxygenated hemoglobin", "dHb"
+Reason: dHb is a standard abbreviation for deoxyhemoglobin, involved in blood oxygenation.

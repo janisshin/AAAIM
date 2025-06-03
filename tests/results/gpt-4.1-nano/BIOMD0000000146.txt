@@ -1,0 +1,15 @@
+Model: BIOMD0000000146
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:53:31
+
+Synonyms:
+AktPIP3: ['Akt phosphorylated at PIP3 site', 'Akt-PIP3', 'Akt bound to PIP3']
+AktPIPP: ['Akt phosphorylated at PIP3 and P site', 'Akt-PIP3-P', 'Dual phosphorylated Akt']
+ERKP: ['ERK phosphorylated', 'p-ERK', 'Extracellular signal-regulated kinase phosphorylated']
+ERKPP: ['ERK doubly phosphorylated', 'p-ERK2', 'ERK with two phosphorylation sites']
+MEKP: ['MEK phosphorylated', 'p-MEK', 'Mitogen-activated protein kinase kinase phosphorylated']
+PIP3: ['Phosphatidylinositol (3,4,5)-trisphosphate', 'PIP3', 'Phosphatidylinositol triphosphate']
+RasGDP: ['Ras in GDP-bound form', 'Ras-GDP', 'Inactive Ras']
+RasGTP: ['Ras in GTP-bound form', 'Ras-GTP', 'Active Ras']
+
+Reason: All are well-known signaling molecules and their phosphorylated forms or states, common in kinase signaling pathways. "PIP3" is a standard lipid second messenger. RasGDP and RasGTP are canonical forms of Ras.

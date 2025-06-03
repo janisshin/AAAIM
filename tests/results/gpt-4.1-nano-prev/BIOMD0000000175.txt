@@ -1,0 +1,11 @@
+Model: BIOMD0000000175
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:38:27
+
+Synonyms:
+P2: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'PI(4,5)P2']
+P3: ['phosphatidylinositol 3,4,5-trisphosphate', 'PIP3', 'PI(3,4,5)P3']
+RsD: ['RasGDP', 'Ras guanosine diphosphate', 'Ras inactive form']
+RsT: ['RasGTP', 'Ras guanosine triphosphate', 'Ras active form']
+
+Reason: P2 and P3 are phosphoinositides involved in signaling pathways; RsD and RsT are inactive and active forms of Ras, respectively.

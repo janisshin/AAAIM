@@ -1,0 +1,35 @@
+Model: BIOMD0000000575
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:19:16
+
+Synonyms:
+Dopamine: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+OH: ['hydroxide', 'hydroxyl group', 'OH']
+OH_radical: ['hydroxyl radical', 'OH•', 'hydroxyl free radical']
+H2O2: ['hydrogen peroxide', 'H2O2']
+DA_quinone: ['dopamine quinone', 'dopamine-o-quinone']
+Fragments: ['protein fragments', 'peptide fragments', 'molecular fragments']
+L_Dopa: ['L-Dopa', 'levodopa', 'dopamine precursor']
+DOPAL: ['DOPAL', '3,4-dihydroxyphenylacetaldehyde']
+DOPAC: ['DOPAC', '3,4-dihydroxyphenylacetic acid']
+GSH: ['glutathione', 'GSH']
+GSSG: ['glutathione disulfide', 'GSSG']
+Fe2: ['ferrous iron', 'Fe(II)', 'Fe2+']
+Fe3: ['ferric iron', 'Fe(III)', 'Fe3+']
+DA_S_parkin: ['dopamine-s-parkin complex', 'Dopamine Parkin complex']
+O2: ['oxygen', 'O2']
+DA_GSH: ['dopamine-glutathione conjugate', 'Dopamine GSH']
+Neuromelanin: ['neuromelanin', 'brain pigment', 'neuromelanin pigment']
+Neuromelanin_ntox_Fe3: ['neuromelanin-iron complex', 'neuromelanin bound Fe3+']
+ATP: ['adenosine triphosphate', 'ATP']
+L_Tyr: ['L-Tyrosine', 'tyrosine']
+CO2: ['carbon dioxide', 'CO2']
+O2_0: ['oxygen', 'O2', '(same as O2', 'indicating molecular oxygen)']
+NH3: ['ammonia', 'NH3']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+']
+NADH: ['reduced NAD', 'NADH']
+H2O: ['water', 'H2O']
+Cysteine: ['cysteine', 'Cys']
+V_DA: ['vesicular dopamine', 'vesicular dopamine']
+
+Reason: All species are recognized as biochemical entities, mostly standard neurotransmitters, radicals, cofactors, or metabolites. "Fragments" and "Vesicle" are more general but are included as they are relevant to the model context.

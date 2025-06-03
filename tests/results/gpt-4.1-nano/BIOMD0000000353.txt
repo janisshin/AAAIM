@@ -1,0 +1,20 @@
+Model: BIOMD0000000353
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:59:05
+
+Synonyms:
+cpd_C00080_CY: ['H+', 'proton', 'hydrogen ion']
+cpd_C00208_CY: ['maltose', 'maltose (α-D-glucopyranosyl-(1→4)-D-glucose)']
+cpd_C00208_CS: ['maltose', 'maltose (α-D-glucopyranosyl-(1→4)-D-glucose)']
+cpd_G00343_CS: ['maltopentaose', 'malto-pentaose']
+cpd_C01835_CS: ['maltotriose', 'maltotriose (α-D-glucopyranosyl-(1→4)-D-glucose)']
+cpd_C00031_CS: ['glucose', '(D)-glucose', 'dextrose']
+cpd_C00031_CY: ['glucose', '(D)-glucose', 'dextrose']
+cpd_C00002tot_CY: ['ATP', 'adenosine triphosphate']
+cpd_C00009tot_CY: ['orthophosphate', 'Pi', 'inorganic phosphate']
+cpd_C00092tot_CY: ['glucose-6-phosphate', 'G6P', 'glucose-6-phosphate pool']
+cpd_C00660tot_CY: ['glucose-1,6-bisphosphate', 'G1,6BP', 'fructose-1,6-bisphosphate']
+cpd_C03339tot_CY: ['2,3-bisphosphoglycerate', '2,3-BPG']
+cpd_C00103tot_CY: ['glucose-1-phosphate', 'G1P', 'glucopyranosyl phosphate']
+
+Reason: all are well-known biochemical compounds or ions involved in plant starch degradation and energy metabolism.

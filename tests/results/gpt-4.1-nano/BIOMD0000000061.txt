@@ -1,0 +1,30 @@
+Model: BIOMD0000000061
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:51:07
+
+Synonyms:
+GlcX: ['glucose', 'd-glucose', 'blood sugar']
+Glc: ['glucose', 'd-glucose', 'blood sugar']
+ATP: ['adenosine triphosphate']
+G6P: ['glucose-6-phosphate']
+ADP: ['adenosine diphosphate']
+FBP: ['fructose 1,6-bisphosphate']
+GAP: ['glyceraldehyde 3-phosphate']
+DHAP: ['dihydroxyacetone phosphate']
+NAD: ['nicotinamide adenine dinucleotide']
+BPG: ['1,3-bisphosphoglycerate']
+NADH: ['nicotinamide adenine dinucleotide, reduced']
+PEP: ['phosphoenolpyruvate']
+Pyr: ['pyruvate']
+ACA: ['acetaldehyde']
+EtOH: ['ethanol']
+EtOHX: ['extracellular ethanol']
+Glyc: ['glycerol']
+GlycX: ['extracellular glycerol']
+ACAX: ['extracellular acetaldehyde']
+CNX: ['extracellular cyanide']
+AMP: ['adenosine monophosphate']
+CNX0: ['mixed flow cyanide']
+GlcX0: ['mixed flow glucose']
+
+Reason: The model involves glycolytic metabolites; extracellular and cytosolic glucose are distinguished, and common biochemical synonyms are provided. Extracellular species are annotated with their extracellular context.

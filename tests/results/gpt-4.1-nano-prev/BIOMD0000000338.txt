@@ -1,0 +1,17 @@
+Model: BIOMD0000000338
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:43:49
+
+Synonyms:
+VKH2: ['vitamin K hydroquinone', 'vitamin K2', 'menaquinone-4']
+ATIII_Heparin: ['antithrombin III', 'antithrombin', 'SERPINC1']
+Xa_ATIII_Heparin: ['activated factor Xa', 'factor Xa', 'FXa']
+VK: ['vitamin K', 'phylloquinone', 'menaquinone']
+C_warf: ['warfarin', 'coumarin anticoagulant', 'warfarin sodium']
+VKO: ['vitamin K oxidized form', 'vitamin K epoxide', 'vitamin K1 epoxide']
+IIa_ATIII_Heparin: ['activated thrombin', 'factor IIa', 'thrombin']
+A_warf: ['warfarin', 'coumarin anticoagulant', 'warfarin sodium']
+IXa_ATIII_Heparin: ['activated factor IX', 'factor IXa', 'FIXa']
+VK_p: ['vitamin K epoxide', 'vitamin K1 epoxide', 'vitamin K oxidized form']
+
+Reason: The species are related to coagulation factors, vitamin K forms, and anticoagulants. "VKH2" and "VKO" are vitamin K derivatives, "ATIII_Heparin" and related species are antithrombin complexes, "Xa" and "IXa" are coagulation factors, "VK" and "VK_p" are vitamin K forms, and "C_warf" and "A_warf" are warfarin. The reactions involve activation and conversion steps typical of coagulation pathways.

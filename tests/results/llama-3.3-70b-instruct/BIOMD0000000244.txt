@@ -1,0 +1,24 @@
+Model: BIOMD0000000244
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:05:41
+
+Synonyms:
+ACT: ['acetic acid', 'acetate', 'ethanoic acid']
+GLC: ['glucose', 'D-glucose', 'blood sugar']
+ACoA: ['acetyl-CoA', 'acetyl coenzyme A', 'coenzyme A acetate']
+AKG: ['alpha-ketoglutaric acid', '2-oxoglutaric acid', 'ketoglutaric acid']
+cAMP: ['cyclic adenosine monophosphate', 'cyclic AMP', "3',5'-cyclic adenosine monophosphate"]
+FBP: ['fructose-1,6-bisphosphate', 'fructose 1,6-diphosphate', 'FBP']
+G6P: ['glucose-6-phosphate', 'D-glucose-6-phosphate', 'G6P']
+GLX: ['glyoxylate', 'hydroxyacetic acid', 'glyoxylic acid']
+ICT: ['isocitrate', 'isocitric acid', 'three-Ds-isocitrate']
+MAL: ['malate', 'malic acid', 'L-malic acid']
+OAA: ['oxaloacetic acid', 'oxaloacetate', '2-oxosuccinic acid']
+PEP: ['phosphoenolpyruvic acid', 'phosphoenolpyruvate', 'PEP']
+PG3: ['3-phosphoglyceric acid', '3-phosphoglycerate', 'PGA']
+PYR: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+CraFBP: ['catabolite activator protein-fructose-1,6-bisphosphate', 'CRP-FBP', 'cAMP receptor protein-fructose-1,6-bisphosphate']
+CrpcAMP: ['cAMP receptor protein-cAMP', 'CRP-cAMP', 'catabolite activator protein-cAMP']
+PdhRPYR: ['pyruvate dehydrogenase complex-pyruvate', 'PDH-pyruvate', 'pyruvate dehydrogenase-pyruvate']
+
+Reason: The model appears to be a metabolic model of E. coli, and the species names are matched to common biochemical names based on the reactions and display names provided. The species with multiple possible names (e.g. ACT, ACoA) are matched to the most likely names based on their roles in the reactions. The species with less clear names (e.g. CraFBP, CrpcAMP, PdhRPYR) are matched to names based on their display names and the context of the model.

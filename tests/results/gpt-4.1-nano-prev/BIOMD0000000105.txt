@@ -1,0 +1,11 @@
+Model: BIOMD0000000105
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:11
+
+Synonyms:
+ROS: ['reactive oxygen species', 'hydrogen peroxide', 'superoxide']
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+AMP: ['adenosine monophosphate', 'AMP', 'adenosine monophosphate']
+
+Reason: These are common, well-established chemical names or synonyms for the molecules involved in cellular energy and oxidative stress processes.

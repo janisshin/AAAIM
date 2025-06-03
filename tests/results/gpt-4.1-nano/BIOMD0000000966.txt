@@ -1,0 +1,8 @@
+Model: BIOMD0000000966
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:24:14
+
+Synonyms:
+Zn_2: ['zinc(II) ion', 'zinc ion', 'Zn^2+']
+
+Reason: The display name "Zn^2" indicates a divalent zinc cation, commonly represented as Zn^2+ or zinc(II) ion in biochemical contexts.

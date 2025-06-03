@@ -1,0 +1,8 @@
+Model: BIOMD0000000560
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:01:57
+
+Synonyms:
+ROS: ['reactive oxygen species', 'oxygen free radicals', 'oxidative molecules']
+
+Reason: ROS refers to chemically reactive molecules containing oxygen, commonly known as reactive oxygen species or free radicals involved in oxidative stress.

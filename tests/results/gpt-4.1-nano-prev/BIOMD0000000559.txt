@@ -1,0 +1,42 @@
+Model: BIOMD0000000559
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:01:50
+
+Synonyms:
+s482: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s483: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s484: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s489: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s490: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s491: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s492: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s493: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s445: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s446: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s447: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s448: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s451: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s524: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s525: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s526: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s527: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s528: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s529: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s530: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s531: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s535: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s536: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s1: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s2: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s5: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s6: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s7: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s17: ['alpha-synuclein', 'SNCA', "protein involved in Parkinson's"]
+s21: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s22: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s25: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s26: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s27: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+s35: ['proteasome', 'proteolytic complex', 'protein degradation machinery']
+
+Reason: The species are mostly labeled as "DopModWTasyn" variants or "Dopamine" and related proteins involved in dopamine metabolism or Parkinson's disease pathways, with some species representing proteins like alpha-synuclein or proteasome components. The model describes reactions involving dopamine synthesis, degradation, and alpha-synuclein interactions.

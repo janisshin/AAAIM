@@ -1,0 +1,8 @@
+Model: BIOMD0000000119
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:26
+
+Synonyms:
+Ca: ['calcium ion', 'calcium', 'Ca2+']
+
+Reason: The species "Ca" in biochemical models typically refers to calcium ions, which are commonly represented as "Ca" or "Ca2+" in biochemical and physiological contexts. Given the reaction shows "=> Ca" with no other reactants, it likely represents free calcium ions in the model.

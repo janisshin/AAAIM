@@ -1,0 +1,33 @@
+Model: BIOMD0000000513
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:11:16
+
+Synonyms:
+DHAP_c: ['dihydroxyacetone phosphate', 'DHAP', 'glycerone phosphate']
+ATP_g: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+DHAP_g: ['dihydroxyacetone phosphate', 'DHAP', 'glycerone phosphate']
+ADP_g: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+Glc6P_g: ['glucose 6-phosphate', 'G6P', 'D-glucose 6-phosphate']
+ADP_c: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+_3PGA_c: ['3-phosphoglycerate', '3-phosphoglyceric acid', '3-PGA']
+O2_c: ['oxygen', 'dioxygen', 'O2']
+Gly_e: ['glycine', 'aminoacetic acid', '2-aminoethanoic acid']
+ATP_c: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+Glc_c: ['glucose', 'D-glucose', 'blood sugar']
+Glc_e: ['glucose', 'D-glucose', 'blood sugar']
+Glc_g: ['glucose', 'D-glucose', 'blood sugar']
+Pyr_c: ['pyruvate', 'pyruvic acid', '2-oxopropanoic acid']
+Pyr_e: ['pyruvate', 'pyruvic acid', '2-oxopropanoic acid']
+Fru16BP_g: ['fructose 1,6-bisphosphate', 'F1,6BP', 'D-fructose 1,6-bisphosphate']
+GA3P_g: ['glyceraldehyde 3-phosphate', 'G3P', 'D-glyceraldehyde 3-phosphate']
+CO2_c: ['carbon dioxide', 'CO2', 'carbonic anhydride']
+CO2_g: ['carbon dioxide', 'CO2', 'carbonic anhydride']
+Gly3P_c: ['glycerol 3-phosphate', 'G3P', 'D-glycerol 3-phosphate']
+Gly3P_g: ['glycerol 3-phosphate', 'G3P', 'D-glycerol 3-phosphate']
+PEP_c: ['phosphoenolpyruvate', 'PEP', '2-phosphoenolpyruvate']
+AMP_g: ['adenosine monophosphate', 'AMP', "adenosine 5'-monophosphate"]
+_3PGA_g: ['3-phosphoglycerate', '3-phosphoglyceric acid', '3-PGA']
+AMP_c: ['adenosine monophosphate', 'AMP', "adenosine 5'-monophosphate"]
+NADH_g: ['nicotinamide adenine dinucleotide + hydrogen', 'NADH', 'reduced nicotinamide adenine dinucleotide']
+
+Reason: The model is a glycolysis model in Trypanosoma brucei, and most of the species are common metabolites in glycolysis, pentose phosphate pathway, and other related metabolic pathways. The standardized names are based on common biochemical nomenclature and ChEBI ontology. The likelihood of each name is ranked based on the frequency of usage in the literature and the context of the model. Some species like Gly_e (glycine) seem out of context, but it's still a common amino acid and its presence might be related to other metabolic pathways not explicitly mentioned in the model.

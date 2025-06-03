@@ -1,0 +1,18 @@
+Model: BIOMD0000000467
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:02:28
+
+Synonyms:
+s3: ['calcium ion', 'Ca²⁺', 'calcium']
+s45: ['endothelial nitric oxide synthase', 'eNOS', 'nitric oxide synthase 3']
+s47: ['calmodulin', 'CaM', 'calcium/calmodulin complex']
+s48: ['calcium ion', 'Ca²⁺', 'calcium']
+s50: ['endothelial nitric oxide synthase', 'eNOS', 'nitric oxide synthase 3']
+s58: ['Hsp90-eNOS-calmodulin complex', 'Hsp90-eNOS-CaM', 'Hsp90-eNOS-CaM-Ca4']
+s60: ['Hsp90-phosphorylated eNOS-calmodulin complex', 'Hsp90-p-eNOS-CaM', 'Hsp90-p-eNOS-CaM-Ca4']
+s61: ['Hsp90-eNOS-calmodulin complex', 'Hsp90-eNOS-CaM', 'Hsp90-eNOS-CaM-Ca2']
+s62: ['Hsp90-phosphorylated eNOS-calmodulin complex', 'Hsp90-p-eNOS-CaM', 'Hsp90-p-eNOS-CaM-Ca4']
+s63: ['L-arginine', 'L-Arg', 'arginine']
+s64: ['nitric oxide', 'NO', 'nitrogen monoxide']
+
+Reason: The species are involved in nitric oxide synthase signaling pathways, with s63 as the substrate L-Arg, s64 as NO, and others as complexes or enzymes related to eNOS and Hsp90.

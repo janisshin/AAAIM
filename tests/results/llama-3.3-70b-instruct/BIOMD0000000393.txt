@@ -1,0 +1,24 @@
+Model: BIOMD0000000393
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:17:54
+
+Synonyms:
+SBP: ['sedoheptulose 1,7-bisphosphate', 'sedoheptulose-1,7-bisphosphate']
+S7P: ['sedoheptulose 7-phosphate', 'sedoheptulose-7-phosphate']
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'NADPH', 'reduced nicotinamide adenine dinucleotide phosphate']
+Pi: ['phosphate', 'inorganic phosphate', 'orthophosphate']
+CO2: ['carbon dioxide', 'CO2', 'carbonic acid']
+GLYc: ['glyceraldehyde 3-phosphate', 'glyceraldehyde-3-phosphate', 'G3P']
+SERc: ['3-phosphoserine', 'phosphoserine', 'O-phosphoserine']
+SucPc: ['sucrose phosphate', 'sucrose-6-phosphate', 'sucrose-6F-phosphate']
+NADH: ['nicotinamide adenine dinucleotide', 'NADH', 'reduced nicotinamide adenine dinucleotide']
+GLUc: ['glucose 6-phosphate', 'glucose-6-phosphate', 'G6P']
+Pic: ['inorganic phosphate', 'phosphate', 'orthophosphate']
+PiTc: ['inorganic phosphate', 'phosphate', 'orthophosphate']
+ATPc: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+ADPc: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+PiPic: ['inorganic phosphate', 'phosphate', 'orthophosphate']
+
+Reason: The model is based on the Calvin-Benson cycle, which is a series of biochemical reactions that occur in the stroma of chloroplasts and are involved in the fixation of carbon dioxide into glucose. The species names are annotated based on their roles in the reactions and the context of the model. The display names provided in the model are used to infer the standardized names. For example, SBP is likely sedoheptulose 1,7-bisphosphate, which is an intermediate in the Calvin-Benson cycle. Similarly, ATP, ADP, NADPH, and NADH are all energy-rich molecules that play crucial roles in the cycle. The phosphate species (Pi, Pic, PiTc, PiPic) are all likely inorganic phosphate, which is a reactant or product in several reactions. The sugar phosphates (GLYc, SERc, SucPc, GLUc) are all intermediates in the cycle or related pathways.

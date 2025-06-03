@@ -1,0 +1,8 @@
+Model: BIOMD0000000341
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:43:56
+
+Synonyms:
+G: ['glucose', 'blood sugar', 'D-glucose']
+
+Reason: The display name is 'glucose', and the model discusses glucose kinetics in diabetes, making "glucose" the primary chemical species.

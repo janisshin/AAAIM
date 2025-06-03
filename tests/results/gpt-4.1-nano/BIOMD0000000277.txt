@@ -1,0 +1,8 @@
+Model: BIOMD0000000277
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:57:54
+
+Synonyms:
+Ca: ['calcium ion', 'Ca(2+)', 'calcium']
+
+Reason: The species Ca in the context of plasma calcium regulation refers to ionized calcium, a common biological form of calcium in blood plasma.

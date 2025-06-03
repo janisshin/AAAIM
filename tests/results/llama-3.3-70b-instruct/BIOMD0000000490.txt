@@ -1,0 +1,16 @@
+Model: BIOMD0000000490
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:00:05
+
+Synonyms:
+AA_b: ['arachidonic acid', 'eicosatetraenoic acid', '5,8,11,14-eicosatetraenoic acid']
+Hn_b: ['eosinophil', 'human neutrophil', 'leukocyte']
+AA_aw: ['arachidonic acid', 'eicosatetraenoic acid', '5,8,11,14-eicosatetraenoic acid']
+Hn_aw: ['eosinophil', 'human neutrophil', 'leukocyte']
+ZF_intes: ['zileuton', '5-lipoxygenase inhibitor', 'ABT-761']
+ZF_blood: ['zileuton', '5-lipoxygenase inhibitor', 'ABT-761']
+ZF_airways: ['zileuton', '5-lipoxygenase inhibitor', 'ABT-761']
+ML_intes: ['leukotriene', 'LTB4', 'leukotriene B4']
+ML_blood: ['leukotriene', 'LTB4', 'leukotriene B4']
+
+Reason: The model is described as a pharmacokinetic-pharmacodynamic model of 5-lipoxygenase inhibitors, and the display names and reactions suggest that AA_b and AA_aw are related to arachidonic acid, Hn_b and Hn_aw are related to eosinophils or neutrophils, ZF_intes, ZF_blood, and ZF_airways are related to zileuton, and ML_intes and ML_blood are related to leukotrienes. The standardized names and common synonyms are based on the context of the model and the known biochemical pathways involved.

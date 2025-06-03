@@ -1,0 +1,26 @@
+Model: BIOMD0000000303
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:58:21
+
+Synonyms:
+PC: ['phosphatidylcholine', 'lecithin', 'PC']
+PC_CRP: ['phosphatidylcholine', 'lecithin', 'PC']
+PC_CRP_C1: ['phosphatidylcholine', 'lecithin', 'PC']
+GlcNac: ['N-acetylglucosamine', 'GlcNAc', 'NAG']
+GlcNac_LF: ['N-acetylglucosamine', 'GlcNAc', 'NAG']
+GlcNac_LF_MASP: ['N-acetylglucosamine', 'GlcNAc', 'NAG']
+PC_CRP_LF: ['phosphatidylcholine', 'lecithin', 'PC']
+PC_CRP_LF_MASP: ['phosphatidylcholine', 'lecithin', 'PC']
+GlcNac_LF_CRP: ['N-acetylglucosamine', 'GlcNAc', 'NAG']
+GlcNac_LF_CRP_C1: ['N-acetylglucosamine', 'GlcNAc', 'NAG']
+C4BP_PC_CRP: ['C4b-binding protein', 'C4BP', 'complement regulator']
+C4BP_GlcNac_LF_CRP: ['C4b-binding protein', 'C4BP', 'complement regulator']
+PC_CRP_LF_C1: ['phosphatidylcholine', 'lecithin', 'PC']
+C4BP_PC_CRP_LF: ['C4b-binding protein', 'C4BP', 'complement regulator']
+GlcNac_LF_CRP_MASP: ['N-acetylglucosamine', 'GlcNAc', 'NAG']
+PC_CRP_LF_C1_MASP: ['phosphatidylcholine', 'lecithin', 'PC']
+GlcNac_LF_C1_MASP: ['N-acetylglucosamine', 'GlcNAc', 'NAG']
+GlcNac_HF: ['N-acetylglucosamine', 'GlcNAc', 'NAG']
+GlcNac_HF_MASP: ['N-acetylglucosamine', 'GlcNAc', 'NAG']
+
+Reason: All are biochemical species involved in the complement system; PC is phosphatidylcholine, a common membrane phospholipid; GlcNAc is N-acetylglucosamine, a sugar component; C4BP is a known complement regulator. The others are combinations or derivatives thereof, but their core identities are these.

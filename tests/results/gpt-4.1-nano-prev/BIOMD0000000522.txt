@@ -1,0 +1,8 @@
+Model: BIOMD0000000522
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:01:00
+
+Synonyms:
+Cytokinin: ['cytokinin', 'cytokinin nucleoside', 'plant hormone cytokinin']
+
+Reason: The species is explicitly named "Cytokinin," a class of plant hormones involved in cell division and differentiation. Common synonyms include "cytokinin" and related nucleosides.

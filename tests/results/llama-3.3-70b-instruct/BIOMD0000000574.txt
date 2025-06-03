@@ -1,0 +1,8 @@
+Model: BIOMD0000000574
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:17:12
+
+Synonyms:
+ca: ['calcium', 'calcium ion', 'Ca2+']
+
+Reason: The species 'ca' is likely to be calcium, as the model is described as a "Hemiconcerted MWC model of intact calmodulin with two targets" and calmodulin is a calcium-binding protein, with the notes mentioning "binding of calcium" and "calcium-regulated biological phenomena".

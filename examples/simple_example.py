@@ -2,7 +2,6 @@
 """
 Simple AAAIM Example
 
-Demonstrates the streamlined core interface for annotating models.
 Shows both annotation (for models without annotations) and curation (for models with existing annotations).
 """
 
@@ -10,13 +9,15 @@ import os
 import sys
 from pathlib import Path
 import pandas as pd
+from dotenv import load_dotenv
+load_dotenv()
 
 # Add the project root to the Python path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 # Import the main AAAIM interfaces
-from AAAIM.core import annotate_model, curate_model, print_results
+from core import annotate_model, curate_model, print_results
 
 def main():
     """
@@ -27,6 +28,7 @@ def main():
     
     # Configuration
     model_file = "tests/test_models/BIOMD0000000190.xml"
+    model_curation_file = "tests/190_few_anno.xml"
     llm_model = "meta-llama/llama-3.3-70b-instruct:free"  # or "gpt-4o-mini"
     
     # Check if model file exists
@@ -51,7 +53,7 @@ def main():
         print("-" * 60)
         
         recommendations_df, metrics = curate_model(
-            model_file=model_file,
+            model_file=model_curation_file,
             llm_model=llm_model,
             max_entities=5,  # Limit for demo
             entity_type="chemical",
@@ -79,7 +81,7 @@ def main():
         print("\n" + "="*60 + "\n")
         
         # Example 2: Annotation workflow (for models without existing annotations)
-        print("EXAMPLE 2: Annotation workflow (all species, regardless of existing annotations)")
+        print("EXAMPLE 2: Annotation workflow (all species)")
         print("-" * 80)
         
         recommendations_df2, metrics2 = annotate_model(

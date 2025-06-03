@@ -1,0 +1,8 @@
+Model: BIOMD0000000112
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:53:04
+
+Synonyms:
+Pi: ['inorganic phosphate', 'phosphate', 'orthophosphate']
+
+Reason: Pi in biochemical models typically refers to inorganic phosphate, a common substrate or product in phosphorylation reactions.

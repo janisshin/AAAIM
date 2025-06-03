@@ -1,0 +1,17 @@
+Model: BIOMD0000000736
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:23:13
+
+Synonyms:
+FeDuo: ['ferrous duodenal iron', 'duodenal iron', 'Fe(II) in duodenum']
+FeRBC: ['red blood cell iron', 'hemoglobin iron', 'erythrocyte iron']
+FeSpleen: ['spleen iron', 'splenic iron', 'iron in spleen']
+FeLiver: ['liver iron', 'hepatic iron', 'iron in liver']
+Fe2Tf: ['ferrous transferrin', 'Fe(II)-transferrin', 'reduced transferrin']
+Fe1Tf: ['ferric transferrin', 'Fe(III)-transferrin', 'oxidized transferrin']
+NTBI: ['non-transferrin bound iron', 'free iron', 'labile plasma iron']
+FeRest: ['rest of iron pool', 'stored iron', 'non-specific iron pool']
+FeOutside: ['extracellular iron', 'plasma iron', 'iron outside cells']
+FeBM: ['bone marrow iron', 'marrow iron', 'iron in bone marrow']
+
+Reason: all are related to iron species in different tissues or forms; "FeDuo" is duodenal iron, "FeRBC" and "FeSpleen" are tissue-specific iron, "Fe2Tf" and "Fe1Tf" are transferrin-bound iron forms, "NTBI" is non-transferrin bound iron, "FeRest" and "FeOutside" are extracellular pools, "FeBM" is bone marrow iron.

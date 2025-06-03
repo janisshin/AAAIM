@@ -1,0 +1,23 @@
+Model: BIOMD0000000702
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:22:53
+
+Synonyms:
+Tem1GTP: ['Tem1 GTP', 'Tem1 GTPase', 'Tem1 GTP-bound']
+Tem1GDP: ['Tem1 GDP', 'Tem1 GDPase', 'Tem1 GDP-bound']
+T_Tem1GTP: ['T-Tem1 GTP', 'Tem1 GTP', 'Tem1 GTPase']
+T_Tem1GDP: ['T-Tem1 GDP', 'Tem1 GDP', 'Tem1 GDPase']
+B_Bfa1_Tem1GTP: ['Bfa1-Tem1 GTP', 'Bfa1 GTPase', 'Bfa1-Tem1 complex']
+B_Bfa1P4_Tem1GTP: ['Bfa1P4-Tem1 GTP', 'Bfa1 phosphorylation site 4', 'Bfa1-Tem1 GTP complex']
+B_Bfa1P5_Tem1GTP: ['Bfa1P5-Tem1 GTP', 'Bfa1 phosphorylation site 5', 'Bfa1-Tem1 GTP complex']
+B_Bfa1_Tem1GDP: ['Bfa1-Tem1 GDP', 'Bfa1 GTPase', 'Bfa1-Tem1 complex']
+B_Bfa1P4_Tem1GDP: ['Bfa1P4-Tem1 GDP', 'Bfa1 phosphorylation site 4', 'Bfa1-Tem1 GDP complex']
+B_Bfa1P5_Tem1GDP: ['Bfa1P5-Tem1 GDP', 'Bfa1 phosphorylation site 5', 'Bfa1-Tem1 GDP complex']
+Bfa1_Tem1GTP: ['Bfa1-Tem1 GTP', 'Bfa1 GTPase', 'Bfa1-Tem1 complex']
+Bfa1P4_Tem1GTP: ['Bfa1P4-Tem1 GTP', 'Bfa1 phosphorylation site 4', 'Bfa1-Tem1 GTP complex']
+Bfa1P5_Tem1GTP: ['Bfa1P5-Tem1 GTP', 'Bfa1 phosphorylation site 5', 'Bfa1-Tem1 GTP complex']
+Bfa1_Tem1GDP: ['Bfa1-Tem1 GDP', 'Bfa1 GTPase', 'Bfa1-Tem1 complex']
+Bfa1P4_Tem1GDP: ['Bfa1P4-Tem1 GDP', 'Bfa1 phosphorylation site 4', 'Bfa1-Tem1 GDP complex']
+Bfa1P5_Tem1GDP: ['Bfa1P5-Tem1 GDP', 'Bfa1 phosphorylation site 5', 'Bfa1-Tem1 GDP complex']
+
+Reason: These species are involved in the regulation of Tem1 by Bfa1 in yeast cell cycle checkpoint, with GTP and GDP forms indicating active/inactive states; the prefixes denote phosphorylation or complex formation.

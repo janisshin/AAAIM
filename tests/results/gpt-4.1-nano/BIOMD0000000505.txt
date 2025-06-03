@@ -1,0 +1,40 @@
+Model: BIOMD0000000505
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:16:02
+
+Synonyms:
+C16AcylCoAMAT: ['palmitoyl-CoA', 'C16 acyl-CoA', 'palmitoyl-CoA thioester']
+C16EnoylCoAMAT: ['palmitoyl-CoA enoyl', 'C16 enoyl-CoA', 'palmitoyl-CoA cis-Δ^2-enoyl']
+C16KetoacylCoAMAT: ['palmitoyl-CoA ketoacyl', 'C16 ketoacyl-CoA', 'palmitoyl-CoA β-ketoacyl']
+C14AcylCoAMAT: ['myristoyl-CoA', 'C14 acyl-CoA', 'tetradecanoyl-CoA']
+C14EnoylCoAMAT: ['myristoyl-CoA enoyl', 'C14 enoyl-CoA', 'myristoyl-CoA cis-Δ^2-enoyl']
+C14KetoacylCoAMAT: ['myristoyl-CoA ketoacyl', 'C14 ketoacyl-CoA', 'myristoyl-CoA β-ketoacyl']
+C12AcylCoAMAT: ['lauryl-CoA', 'C12 acyl-CoA', 'dodecanoyl-CoA']
+C12EnoylCoAMAT: ['lauryl-CoA enoyl', 'C12 enoyl-CoA', 'lauroyl-CoA cis-Δ^2-enoyl']
+C12KetoacylCoAMAT: ['lauryl-CoA ketoacyl', 'C12 ketoacyl-CoA', 'lauroyl-CoA β-ketoacyl']
+C10AcylCoAMAT: ['capryl-CoA', 'C10 acyl-CoA', 'decanyl-CoA']
+C10EnoylCoAMAT: ['capryl-CoA enoyl', 'C10 enoyl-CoA', 'capryl-CoA cis-Δ^2-enoyl']
+C10KetoacylCoAMAT: ['capryl-CoA ketoacyl', 'C10 ketoacyl-CoA', 'capryl-CoA β-ketoacyl']
+C8AcylCoAMAT: ['octanoyl-CoA', 'C8 acyl-CoA', 'octanoyl-CoA']
+C8EnoylCoAMAT: ['octanoyl-CoA enoyl', 'C8 enoyl-CoA', 'octanoyl-CoA cis-Δ^2-enoyl']
+C8KetoacylCoAMAT: ['octanoyl-CoA ketoacyl', 'C8 ketoacyl-CoA', 'octanoyl-CoA β-ketoacyl']
+C6AcylCoAMAT: ['hexanoyl-CoA', 'C6 acyl-CoA', 'hexanoyl-CoA']
+C6EnoylCoAMAT: ['hexanoyl-CoA enoyl', 'C6 enoyl-CoA', 'hexanoyl-CoA cis-Δ^2-enoyl']
+C6KetoacylCoAMAT: ['hexanoyl-CoA ketoacyl', 'C6 ketoacyl-CoA', 'hexanoyl-CoA β-ketoacyl']
+C4AcylCoAMAT: ['butyryl-CoA', 'C4 acyl-CoA', 'butanoyl-CoA']
+C4EnoylCoAMAT: ['butyryl-CoA enoyl', 'C4 enoyl-CoA', 'butanoyl-CoA cis-Δ^2-enoyl']
+C4AcetoacylCoAMAT: ['acetoacetyl-CoA', 'C4 acetoacetyl-CoA', 'butanoyl-CoA diketone']
+C4KetoacylCoAMAT: ['butyryl-CoA ketoacyl', 'C4 ketoacyl-CoA', 'butanoyl-CoA β-ketoacyl']
+AcetylCoAMAT: ['acetyl-CoA', 'acetyl-CoA', 'acetyl-CoA']
+FADHMAT: ['FADH2', 'flavin adenine dinucleotide reduced', 'FADH2']
+NADHMAT: ['NADH', 'nicotinamide adenine dinucleotide reduced', 'NADH']
+CoAMAT: ['CoA', 'coenzyme A', 'pantetheine-CoA']
+C16AcylCoACYT: ['palmitoyl-CoA', 'C16 acyl-CoA', 'palmitoyl-CoA']
+CarCYT: ['carnitine', 'L-carnitine', 'carnitine']
+CoACYT: ['CoA', 'coenzyme A', 'pantetheine-CoA']
+MalCoACYT: ['malonyl-CoA', 'malonyl-CoA', 'malonyl-CoA']
+CarMAT: ['carnitine', 'L-carnitine', 'carnitine']
+FADtMAT: ['FAD', 'flavin adenine dinucleotide', 'FAD']
+CoAMATt: ['CoA', 'coenzyme A', 'pantetheine-CoA']
+
+Reason: These species are all related to fatty acid β-oxidation intermediates, primarily acyl-CoA derivatives, which are well-known molecules in lipid metabolism. The abbreviations and suffixes indicate chain length and functional groups, matching known fatty acyl-CoA compounds and related cofactors.

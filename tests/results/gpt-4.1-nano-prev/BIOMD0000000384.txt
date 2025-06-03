@@ -1,0 +1,13 @@
+Model: BIOMD0000000384
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:45
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'RuBP', 'ribulose bisphosphate']
+PGA: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'PGA']
+NADPH: ['NADPH', 'nicotinamide adenine dinucleotide phosphate (reduced)', 'reduced NADP']
+CO2: ['carbon dioxide', 'CO2', 'carbonic acid (unstable in aqueous solution)']
+O2: ['oxygen', 'O2', 'dioxygen']
+NADP: ['NADP+', 'nicotinamide adenine dinucleotide phosphate', 'oxidized NADP']
+
+Reason: All are well-known biochemical species involved in the Calvin cycle; their names are standard or common synonyms.

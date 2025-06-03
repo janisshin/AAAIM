@@ -1,0 +1,12 @@
+Model: BIOMD0000000108
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:19
+
+Synonyms:
+species_0000001: ['superoxide anion', 'O2−', 'superoxide radical']
+species_0000006: ['hydrogen peroxide', 'H2O2', 'peroxide']
+species_0000008: ['hydroxyl radical', 'OH•', 'hydroxyl radical']
+species_0000009: ['lipid hydroperoxide', 'LOOH', 'lipid peroxide']
+species_0000011: ['L*', 'free radical', 'reactive species']
+
+Reason: The species are involved in oxidative stress reactions; "species_0000001" is superoxide, "species_0000006" is hydrogen peroxide, "species_0000008" is hydroxyl radical, "species_0000009" is lipid hydroperoxide, and "species_0000011" appears to be a radical or reactive intermediate.

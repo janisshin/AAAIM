@@ -1,0 +1,11 @@
+Model: BIOMD0000000464
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:02:21
+
+Synonyms:
+s1: ['calcium ion', 'Ca2+', 'calcium']
+s2: ['calcium ion', 'Ca2+', 'calcium']
+s3: ['inositol 1,4,5-trisphosphate', 'IP3', 'inositol trisphosphate']
+s4: ['calcium ion', 'Ca2+', 'calcium']
+
+Reason: s1, s2, and s4 are all related to calcium ions; s3 is inositol trisphosphate, a common signaling molecule; s6 is also IP3, indicating a focus on calcium signaling pathways.

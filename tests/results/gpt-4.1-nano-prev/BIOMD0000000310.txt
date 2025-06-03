@@ -1,0 +1,9 @@
+Model: BIOMD0000000310
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:51
+
+Synonyms:
+R: ['UNK', 'unknown', 'protein']
+E: ['UNK', 'unknown', 'protein']
+
+Reason: No display names or reaction context provided; species are unspecified proteins or molecules involved in mutual inhibition.

@@ -1,0 +1,10 @@
+Model: BIOMD0000000215
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:40:01
+
+Synonyms:
+Tbet_mRNA: ['TBX21 mRNA', 'T-bet mRNA', 'T-box transcription factor mRNA']
+Ifn_mRNA: ['IFNG mRNA', 'interferon gamma mRNA', 'IFN-γ mRNA']
+Rec_mRNA: ['unknown', 'UNK', 'not specified']
+
+Reason: Tbet_mRNA and Ifn_mRNA are well-known cytokine and transcription factor mRNAs respectively, which can be mapped to their canonical names. Rec_mRNA is unspecified and not directly linked to a known receptor or gene, so it remains unknown.

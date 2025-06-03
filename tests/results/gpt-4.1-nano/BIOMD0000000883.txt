@@ -1,0 +1,10 @@
+Model: BIOMD0000000883
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:23:50
+
+Synonyms:
+PIP3Active: ['phosphatidylinositol 3,4,5-trisphosphate', 'PIP3', 'PIP3 (phosphatidylinositol (3,4,5)-trisphosphate)']
+PIP3Inactive: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'PIP2 (phosphatidylinositol 4,5-bisphosphate)']
+PLX4032: ['vemurafenib', 'PLX4032', 'RG7204']
+
+Reason: PIP3Active and PIP3Inactive are active and inactive forms of PIP3, a well-known phosphoinositide involved in signaling; PLX4032 is a known BRAF inhibitor also called vemurafenib.

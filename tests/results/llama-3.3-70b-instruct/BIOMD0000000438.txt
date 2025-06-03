@@ -1,0 +1,8 @@
+Model: BIOMD0000000438
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:21:34
+
+Synonyms:
+s4: ['N-(3-oxododecanoyl)-L-homoserine lactone', '3-oxo-dodecanoyl-L-homoserine lactone', '3OC12HSL']
+
+Reason: The display name for s4 is '3OC12HSL', which is a common abbreviation for N-(3-oxododecanoyl)-L-homoserine lactone, a type of Acyl Homoserine Lactone (AHL). The notes also mention '3OC12HSL' as the inducer, confirming this identification.

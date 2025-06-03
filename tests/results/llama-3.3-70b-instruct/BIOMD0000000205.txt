@@ -1,0 +1,43 @@
+Model: BIOMD0000000205
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:00:56
+
+Synonyms:
+species_17: ['GDP', 'guanosine diphosphate']
+species_18: ['UNK']
+species_19: ['GTP', 'guanosine triphosphate']
+species_22: ['UNK']
+species_24: ['Raf1', 'c-Raf']
+species_55: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2']
+species_56: ['phosphatidylinositol 3-kinase', 'PI3K']
+species_57: ['phosphatidylinositol 3,4,5-trisphosphate', 'PIP3']
+species_59: ['protein kinase B', 'Akt']
+species_61: ['protein kinase B', 'Akt']
+species_62: ['phosphatidylinositol 3-kinase', 'Akt']
+species_65: ['protein kinase B', 'Akt']
+species_66: ['Raf1', 'c-Raf']
+species_72: ['phosphatase and tensin homolog', 'PTEN']
+species_74: ['guanine nucleotide exchange factor', 'RacGEF']
+species_75: ['GDP', 'guanosine diphosphate']
+species_76: ['Rac-GDP', 'Ras-related C3 botulinum toxin substrate 1']
+species_77: ['GTP', 'guanosine triphosphate']
+species_79: ['Rho GDP-dissociation inhibitor', 'RhoGDI']
+species_81: ['Rac-GTP', 'Ras-related C3 botulinum toxin substrate 1']
+species_86: ['RhoA', 'Ras homolog gene family, member A']
+species_88: ['epidermal growth factor receptor', 'EGFR']
+species_148: ['UNK']
+species_149: ['UNK']
+species_150: ['UNK']
+species_151: ['UNK']
+species_152: ['UNK']
+species_153: ['UNK']
+species_154: ['UNK']
+species_155: ['UNK']
+species_156: ['UNK']
+species_157: ['UNK']
+species_158: ['UNK']
+species_159: ['UNK']
+species_160: ['UNK']
+species_161: ['UNK']
+
+Reason: Most species are annotated based on their display names, which often contain common synonyms or standardized names. Species without clear display names or those that are part of large complexes are annotated as "UNK" due to uncertainty. Reactions are used to inform annotations, but are not always sufficient to determine the exact identity of a species.

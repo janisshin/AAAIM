@@ -1,0 +1,10 @@
+Model: BIOMD0000000054
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:45:58
+
+Synonyms:
+I: ['inorganic ion', 'ion', 'metal ion']
+E: ['energy', 'ATP', 'adenosine triphosphate']
+A: ['adenylate', 'adenine nucleotide', 'AMP']
+
+Reason: I is annotated as "Ions" which is a broad term, but based on the context of the model, it is likely referring to inorganic ions. E is annotated as "Energy pool" which is likely referring to ATP or other high-energy molecules. A is annotated as "Adenylate pool" which refers to a group of adenine nucleotides, including AMP, ADP, and ATP.

@@ -1,0 +1,12 @@
+Model: BIOMD0000000354
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:59:07
+
+Synonyms:
+CaI: ['calcium ion', 'Ca2+', 'calcium']
+IP3: ['inositol 1,4,5-trisphosphate', 'IP3', 'InsP3']
+CaO: ['calcium oxide', 'lime', 'quicklime']
+CaS: ['calcium sulfide', 'CaS', 'calcium sulfide compound']
+CaM: ['calmodulin', 'CaM', 'calcium-modulated protein']
+
+Reason: CaI and CaO are likely calcium ions and calcium oxide, respectively. CaS is calcium sulfide, a common compound. CaM is calmodulin, a well-known calcium-binding messenger protein. IP3 is inositol trisphosphate, a common second messenger.

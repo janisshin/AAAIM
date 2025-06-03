@@ -1,0 +1,10 @@
+Model: BIOMD0000001032
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:10:34
+
+Synonyms:
+uninfected_cancer_cells: ['cancer cell', 'tumor cell', 'malignant cell']
+infected_cancer_cells: ['infected cancer cell', 'virus-infected tumor cell', 'malignant cell']
+damaged_cancer_cells: ['damaged cancer cell', 'injured tumor cell', 'necrotic cell']
+
+Reason: All are cancer-related cell types; the terms are generalized to common cancer cell synonyms.

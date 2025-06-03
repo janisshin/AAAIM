@@ -1,0 +1,13 @@
+Model: BIOMD0000000053
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:35:12
+
+Synonyms:
+Glucose: ['glucose', 'D-glucose', 'blood sugar']
+Lysine: ['lysine', 'L-lysine', 'aminohexanoic acid']
+Glyoxal: ['glyoxal', 'ethanedial', 'glycolaldehyde']
+
+Reason: 
+Glucose is a common monosaccharide, well-known as blood sugar.
+Lysine is an essential amino acid, commonly referenced as lysine.
+Glyoxal is a reactive aldehyde, often called glyoxal or ethanedial.

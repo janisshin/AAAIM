@@ -1,0 +1,16 @@
+Model: BIOMD0000000540
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:13:46
+
+Synonyms:
+s3: ['fructose-6-phosphate', 'D-fructose-6-phosphate', 'F6P']
+s4: ['fructose-1,6-bisphosphate', 'D-fructose-1,6-bisphosphate', 'F1,6BP']
+s5: ['phosphoenolpyruvate', 'PEP', '2-phosphoenolpyruvate']
+s6: ['isocitrate', 'isocitric acid', 'D-isocitrate']
+s7: ['2-oxoglutarate', '2-oxoglutaric acid', 'alpha-ketoglutarate']
+s8: ['malate', 'malic acid', 'L-malate']
+s9: ['fructose-2,6-bisphosphate', 'D-fructose-2,6-bisphosphate', 'F2,6BP']
+s10: ['citrate', 'citric acid', 'sodium citrate']
+s22: ['fructose-6-phosphate', 'D-fructose-6-phosphate', 'F6P_proxy']
+
+Reason: The species names were matched to their display names in the model, and then standardized to common chemical names or synonyms. s22 is likely a proxy for fructose-6-phosphate due to its reaction with s4 (fructose-1,6-bisphosphate), which is a key intermediate in glycolysis. The other species were matched based on their display names and known biochemical pathways, such as the citric acid cycle (s6, s7, s8, s10) and glycolysis (s3, s4, s5, s9).

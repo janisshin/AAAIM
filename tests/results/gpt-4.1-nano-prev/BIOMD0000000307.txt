@@ -1,0 +1,8 @@
+Model: BIOMD0000000307
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:48
+
+Synonyms:
+E: ['UNK']
+
+Reason: The model indicates E and Ep are interconvertible species, likely proteins or gene products, but no specific names or synonyms are provided. Without additional context, they cannot be reliably mapped to chemical entities.

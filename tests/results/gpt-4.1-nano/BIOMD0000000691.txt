@@ -1,0 +1,19 @@
+Model: BIOMD0000000691
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:22:23
+
+Synonyms:
+S1__Cell_1_: ['glucose', 'd-glucose', 'blood sugar']
+S1__Cell_2_: ['glucose', 'd-glucose', 'blood sugar']
+S3__Cell_1_: ['unknown', 'UNK', 'not specified']
+S3__Cell_2_: ['unknown', 'UNK', 'not specified']
+N2__Cell_1_: ['ethanol', 'ethyl alcohol', 'alcohol']
+N2__Cell_2_: ['ethanol', 'ethyl alcohol', 'alcohol']
+A3__Cell_1_: ['acetaldehyde', 'ethanal', 'acetaldehyde (common name)']
+A3__Cell_2_: ['acetaldehyde', 'ethanal', 'acetaldehyde (common name)']
+N1__Cell_1_: ['unknown', 'UNK', 'not specified']
+N1__Cell_2_: ['unknown', 'UNK', 'not specified']
+A2__Cell_1_: ['glycerol', 'glycerine', 'glycerol (common name)']
+A2__Cell_2_: ['glycerol', 'glycerine', 'glycerol (common name)']
+
+Reason: The model discusses glycolytic oscillations in yeast, involving glucose, ethanol, acetaldehyde, and glycerol, which are well-known metabolites. Some species are not explicitly named or are placeholders, hence "unknown".

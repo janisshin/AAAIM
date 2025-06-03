@@ -1,0 +1,9 @@
+Model: BIOMD0000000019
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:27
+
+Synonyms:
+x26: ['Ras-GDP', 'Ras guanosine diphosphate', 'Ras inactive form']
+x28: ['Ras-GTP', 'Ras guanosine triphosphate', 'Ras active form']
+
+Reason: These species represent different activation states of the Ras protein involved in signal transduction pathways, with GDP-bound being inactive and GTP-bound being active.

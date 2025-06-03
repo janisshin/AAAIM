@@ -1,0 +1,24 @@
+Model: BIOMD0000000212
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:01:54
+
+Synonyms:
+Asp: ['aspartic acid', 'aspartate', 'L-aspartic acid']
+Lys: ['lysine', 'L-lysine', 'α-llysine']
+AdoMet: ['S-adenosylmethionine', 'SAM', 'S-adenosyl-L-methionine']
+AspP: ['aspartyl phosphate', 'O-phospho-L-aspartic acid', 'aspartic acid phosphate']
+Thr: ['threonine', 'L-threonine', 'α-threonine']
+ASA: ['aspartic acid semialdehyde', 'aspartate semialdehyde', 'L-aspartic semialdehyde']
+Hser: ['homoserine', 'L-homoserine', 'α-homoserine']
+PHser: ['phosphohomoserine', 'O-phospho-L-homoserine', 'L-phosphohomoserine']
+Phosphate: ['phosphate', 'inorganic phosphate', 'orthophosphate']
+Cys: ['cysteine', 'L-cysteine', 'α-cysteine']
+Cysta: ['cystathionine', 'L-cystathionine', 'α-cystathionine']
+Ile: ['isoleucine', 'L-isoleucine', 'α-isoleucine']
+Val: ['valine', 'L-valine', 'α-valine']
+ThrTRNA: ['threonyl-tRNA', 'L-threonyl-tRNA', 'threonine-tRNA']
+IleTRNA: ['isoleucyl-tRNA', 'L-isoleucyl-tRNA', 'isoleucine-tRNA']
+Sacc: ['saccharopine', 'L-saccharopine', 'α-saccharopine']
+Gly: ['glycine', 'glycine amino acid', 'α-glycine']
+
+Reason: The provided display names and the context of the "Curien2009_Aspartate_Metabolism" model were used to determine the standardized names or common synonyms for each species. The display names directly provided the basis for most of the annotations, while general biochemical knowledge was applied to ensure the names conformed to standardized or common synonyms found in biochemical ontologies like ChEBI.

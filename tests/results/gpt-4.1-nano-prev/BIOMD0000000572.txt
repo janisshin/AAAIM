@@ -1,0 +1,33 @@
+Model: BIOMD0000000572
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:02:31
+
+Synonyms:
+G6P: ['glucose-6-phosphate', 'glucose 6-phosphate', 'G6P']
+ATP: ['adenosine triphosphate', 'ATP']
+ADP: ['adenosine diphosphate', 'ADP']
+Pint: ['inorganic phosphate', 'Pi', 'phosphate']
+F6P: ['fructose-6-phosphate', 'F6P']
+FBP: ['fructose-1,6-bisphosphate', 'FBP']
+G3P: ['glyceraldehyde-3-phosphate', 'G3P']
+BPG: ['1,3-bisphosphoglycerate', 'BPG']
+PEP: ['phosphoenolpyruvate', 'PEP']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD']
+NADH: ['reduced nicotinamide adenine dinucleotide', 'NADH']
+PYR: ['pyruvate', 'pyruvic acid']
+AcetCoA: ['acetyl-CoA', 'acetyl coenzyme A']
+Acetoin: ['acetoin', 'acetyl methyl carbinol']
+Mannitol: ['mannitol', 'mannitol']
+Mannitol1Phosphate: ['mannitol-1-phosphate', 'mannitol 1-phosphate']
+CoA: ['coenzyme A', 'CoA']
+Pext: ['extracellular phosphate', 'Pi outside cell', 'external phosphate']
+Lactate: ['lactic acid', 'lactate']
+Ethanol: ['ethanol', 'ethyl alcohol']
+Acetate: ['acetic acid', 'acetate']
+Butanediol: ['butanediol', '2,3-butanediol']
+Glucose: ['glucose', 'd-glucose']
+Acetoin_Ext: ['acetoin', 'acetoin']
+Mannitol_Ext: ['mannitol', 'mannitol']
+Formate: ['formic acid', 'formate']
+
+Reason: The species are biochemical metabolites or cofactors involved in central metabolism, with standard names or common synonyms suitable for ontology lookup. "Pint" and "Pext" are inorganic phosphates, and "Acetoin_Ext" and "Mannitol_Ext" are external forms of these metabolites.

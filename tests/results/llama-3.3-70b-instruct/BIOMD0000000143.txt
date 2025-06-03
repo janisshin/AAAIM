@@ -1,0 +1,23 @@
+Model: BIOMD0000000143
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:54:19
+
+Synonyms:
+H2O2_p: ['hydrogen peroxide', 'H2O2', 'dihydrogen dioxide']
+MLTH_p: ['melatonin', 'N-acetyl-5-methoxytryptamine', '5-methoxytryptamine']
+MLT_p: ['melatonin radical', 'N-acetyl-5-methoxytryptamine radical', '5-methoxytryptamine radical']
+O2minus_p: ['superoxide', 'super oxide anion', 'dioxide(1-)']
+H_p: ['hydrogen', 'hydron', 'hydrogen ion']
+O2_p: ['oxygen', 'dioxygen', 'molecular oxygen']
+NADPH_c: ['nicotinamide adenine dinucleotide phosphate', 'NADPH', 'reduced nicotinamide adenine dinucleotide phosphate']
+O2_c: ['oxygen', 'dioxygen', 'molecular oxygen']
+NADPplus_c: ['nicotinamide adenine dinucleotide phosphate', 'NADP+', 'oxidized nicotinamide adenine dinucleotide phosphate']
+H2O2_c: ['hydrogen peroxide', 'H2O2', 'dihydrogen dioxide']
+NADP_c: ['nicotinamide adenine dinucleotide phosphate', 'NADP', 'nicotinamide adenine dinucleotide phosphate(4-)']
+O2minus_c: ['superoxide', 'super oxide anion', 'dioxide(1-)']
+H_c: ['hydrogen', 'hydron', 'hydrogen ion']
+MLT_c: ['melatonin radical', 'N-acetyl-5-methoxytryptamine radical', '5-methoxytryptamine radical']
+MLTH_c: ['melatonin', 'N-acetyl-5-methoxytryptamine', '5-methoxytryptamine']
+NADP2_c: ['UNK']
+
+Reason: The species were annotated based on their display names and the context of the model, which describes the oscillatory metabolism of activated neutrophils. The display names provided a clear indication of the chemical identity of most species. However, NADP2_c was annotated as "UNK" because its display name is the same as NADP_c, but its reactions suggest it might be a dimer or a different state of NADP, which is not a standard chemical entity.

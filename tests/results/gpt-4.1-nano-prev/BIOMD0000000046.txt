@@ -1,0 +1,18 @@
+Model: BIOMD0000000046
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:56
+
+Synonyms:
+NADH: ['nicotinamide adenine dinucleotide, reduced form', 'NADH', 'nicotinamide adenine dinucleotide (reduced)']
+O2: ['oxygen', 'O2', 'dioxygen']
+H2O2: ['hydrogen peroxide', 'H2O2', 'peroxide']
+ArH: ['aryl hydride', 'aryl hydride', 'aromatic hydride']
+Ar: ['aryl group', 'aryl', 'aromatic group']
+NADrad: ['NAD radical', 'NAD radical', 'oxidized NAD']
+super: ['superoxide', 'superoxide anion', 'O2−']
+NAD2: ['NAD dimer', 'NAD2', 'NAD dimer (oxidized)']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+', 'nicotinamide adenine dinucleotide (oxidized)']
+O2g: ['gaseous oxygen', 'O2', 'oxygen gas']
+NADHres: ['NADH residual', 'NADH', 'reduced NAD']
+
+Reason: The species are standard biochemical entities related to redox reactions involving NAD/NADH, oxygen, and reactive oxygen species. "ArH" and "Ar" are aromatic or aryl groups, and "super" is superoxide. "NADrad" and "NADHres" are likely radical or residual forms of NAD/NADH.

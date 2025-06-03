@@ -1,0 +1,12 @@
+Model: BIOMD0000000165
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:56:15
+
+Synonyms:
+Gsa_gdp_cell: ['guanosine diphosphate', 'GDP', "guanosine 5'-diphosphate"]
+Gsa_gtp_cell: ['guanosine triphosphate', 'GTP', "guanosine 5'-triphosphate"]
+ATP_cell: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+cAMP_cell: ['cyclic adenosine monophosphate', 'cAMP', "3',5'-cyclic AMP"]
+DMNB_cAMP_cell: ['UNK']
+
+Reason: Gsa_gdp_cell, Gsa_gtp_cell, ATP_cell, and cAMP_cell can be annotated based on their display names and common biochemical knowledge. DMNB_cAMP_cell is unknown because 'DMNB' is not a standard biochemical abbreviation, and without further context, it cannot be mapped to a known chemical entity.

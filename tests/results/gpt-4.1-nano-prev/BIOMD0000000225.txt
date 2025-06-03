@@ -1,0 +1,12 @@
+Model: BIOMD0000000225
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:40:19
+
+Synonyms:
+GLC: ['glucose', 'D-glucose', 'blood sugar']
+G6P_F6P: ['glucose-6-phosphate', 'fructose-6-phosphate', 'G6P']
+F6P: ['fructose-6-phosphate', 'F6P', 'hexose phosphate']
+FBP: ['fructose-1,6-bisphosphate', 'FBP', 'F1,6BP']
+G3P: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde 3-phosphate']
+
+Reason: The abbreviations GLC, G6P, F6P, FBP, and G3P are standard biochemical shorthand for these well-known glycolytic intermediates.

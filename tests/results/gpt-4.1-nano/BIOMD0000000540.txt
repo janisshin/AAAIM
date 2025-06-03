@@ -1,0 +1,16 @@
+Model: BIOMD0000000540
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:18:00
+
+Synonyms:
+s3: ['fructose-6-phosphate', 'F6P', 'sugar phosphate']
+s4: ['fructose-1,6-bisphosphate', 'F1,6BP', 'fructose bisphosphate']
+s5: ['phosphoenolpyruvate', 'PEP', 'pyruvate phosphate']
+s6: ['isocitrate', 'citric acid isomer', 'tricarboxylic acid intermediate']
+s7: ['2-oxoglutarate', 'alpha-ketoglutarate', 'AKG']
+s8: ['malate', 'malic acid', 'malate ion']
+s9: ['fructose-2,6-bisphosphate', 'F2,6BP', 'glycolytic regulator']
+s10: ['citrate', 'citric acid', 'tricarboxylic acid cycle intermediate']
+s22: ['fructose-6-phosphate', 'F6P', 'sugar phosphate']
+
+Reason: s3 and s22 are both F6P, a key glycolytic intermediate; s4 is F1,6BP, another glycolytic metabolite; s5 is PEP, a glycolytic substrate; s6 and s10 are TCA cycle intermediates (isocitrate and citrate); s7 is alpha-ketoglutarate; s8 is malate; s9 is F2,6BP, a glycolytic regulator. s22 is a proxy for F6P, matching its display name.

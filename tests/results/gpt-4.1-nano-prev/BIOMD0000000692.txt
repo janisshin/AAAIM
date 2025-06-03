@@ -1,0 +1,9 @@
+Model: BIOMD0000000692
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:06:42
+
+Synonyms:
+Pi: ['inorganic phosphate', 'orthophosphate', 'Pi']
+RasGDP_minus_NF1_Pi: ['inorganic phosphate', 'Pi', 'phosphate']
+
+Reason: Pi is a common abbreviation for inorganic phosphate; RasGDP_minus_NF1_Pi likely refers to Pi associated with RasGDP complex, so both are best matched to inorganic phosphate or Pi.

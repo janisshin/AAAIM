@@ -1,0 +1,21 @@
+Model: BIOMD0000000232
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:03:47
+
+Synonyms:
+ADP: ['adenosine diphosphate', 'ADP', 'ADP(3-)']
+ATP: ['adenosine triphosphate', 'ATP', 'ATP(4-)']
+H: ['hydrogen ion', 'proton', 'H+']
+He: ['UNK']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+', 'NAD(1+)']
+NADH: ['nicotinamide adenine dinucleotide reduced', 'NADH', 'NADH(2-)']
+AcCoA: ['acetyl-CoA', 'acetyl coenzyme A', 'acetyl-CoA(4-)']
+KG: ['alpha-ketoglutarate', '2-oxoglutarate', 'alpha-ketoglutaric acid']
+Cit: ['citric acid', 'citrate', 'citrate(3-)']
+OAA: ['oxaloacetate', 'oxaloacetic acid', 'oxaloacetate(2-)']
+O2: ['oxygen', 'dioxygen', 'O2']
+iP: ['phosphate', 'inorganic phosphate', 'phosphate(3-)']
+Pyr: ['pyruvate', 'pyruvic acid', 'pyruvate(1-)']
+H2O: ['water', 'H2O', 'oxidane']
+
+Reason: The given model is a simplified representation of the TCA cycle, respiratory chain, and ATP synthesis, which provides context for annotating the species. Most species have display names that match common biochemical names. He is unknown because its display name "H+" is already assigned to species H, and its reaction "vleak: $He => $H" suggests it might be an error or a non-standard representation, so it is annotated as "UNK".

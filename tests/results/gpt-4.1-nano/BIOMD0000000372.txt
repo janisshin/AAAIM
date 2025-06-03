@@ -1,0 +1,8 @@
+Model: BIOMD0000000372
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:59:10
+
+Synonyms:
+G: ['glucose', 'blood sugar', 'D-glucose']
+
+Reason: The model discusses insulin-glucose feedback, and G is likely representing glucose, a central component in this system.

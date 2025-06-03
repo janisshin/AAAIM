@@ -1,0 +1,9 @@
+Model: BIOMD0000000040
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:50:25
+
+Synonyms:
+Br: ['bromide', 'bromine ion', 'Br−']
+BrO3: ['bromate', 'bromate ion', 'bromic acid']
+
+Reason: Br is a common bromide ion; BrO3 is the bromate ion, a well-known inorganic species.

@@ -1,0 +1,18 @@
+Model: BIOMD0000000404
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:45:35
+
+Synonyms:
+asp: ['aspartate', 'L-aspartic acid', 'aspartic acid']
+ni: ['nickel ion', 'Ni(2+)', 'nickel']
+Tasp: ['phosphorylated aspartate', 'Asp-P', 'aspartate phosphate']
+Tni: ['phosphorylated nickel', 'Ni-P', 'nickel phosphate']
+Tasp_W: ['Asp complex', 'Asp receptor complex', 'aspartate receptor complex']
+Tni_W: ['Ni complex', 'nickel receptor complex', 'Ni receptor complex']
+Tasp_A: ['Asp bound', 'Asp receptor', 'aspartate receptor']
+Tni_A: ['Ni bound', 'nickel receptor', 'nickel aspartate complex']
+Tasp_WA: ['Asp-Ni complex', 'Asp-Ni receptor complex', 'aspartate-nickel complex']
+Tni_WA: ['Ni-Asp complex', 'nickel-aspartate complex', 'Ni-Asp receptor']
+species_1: ['ATP', 'adenosine triphosphate', 'ATP molecule']
+
+Reason: Asp is a common abbreviation for aspartate; ni for nickel ion; Tasp and Tni are phosphorylated forms of aspartate and nickel, respectively; the W and A suffixes suggest receptor complexes or bound states; species_1 is explicitly labeled as ATP.

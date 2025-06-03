@@ -1,0 +1,33 @@
+Model: BIOMD0000000571
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:02:26
+
+Synonyms:
+CRP_cAMP: ['cyclic AMP', 'cAMP', "adenosine 3',5'-cyclic monophosphate"]
+CRP_cAMP_CRPsiteI_crp: ['CRP-cAMP complex', 'cAMP-CRP', 'cyclic AMP receptor protein']
+CRP_cAMP_CRPsiteII_crp: ['CRP-cAMP complex', 'cAMP-CRP', 'cyclic AMP receptor protein']
+CRP_cAMP_CRPsite_cyaA: ['cAMP', 'cyclic AMP', "adenosine 3',5'-cyclic monophosphate"]
+CRP_cAMP_CRPsite_genome: ['DNA', 'genomic DNA', 'bacterial genome']
+CRP_cAMP_CRPsite_ptsGp1: ['phosphotransferase system component', 'PTS protein', 'PTS enzyme I']
+CRP_cAMP_CRPsite_ptsGp2: ['PTS enzyme II', 'PTS protein', 'phosphotransferase system component']
+CRP_cAMP_CRPsite_ptsHp0: ['PTS histidine protein', 'PTS HPr', 'phosphotransferase system protein']
+CRP_cAMP_CRPsite_ptsHp1: ['PTS HPr', 'phosphotransferase protein', 'PTS histidine protein']
+CRP_cAMP_CRPsite_ptsIp0: ['PTS enzyme I', 'PTS I', 'phosphotransferase system component']
+CRP_cAMP_CRPsite_ptsIp1: ['PTS enzyme I', 'PTS I', 'phosphotransferase system component']
+CRP_cAMP_CRPsite_mlcp1: ['Mlc phosphatase', 'Mlc phosphatase enzyme', 'MLCP']
+CRP_cAMP_CRPsite_mlcp2: ['Mlc phosphatase', 'Mlc phosphatase enzyme', 'MLCP']
+mRNA_cyaA: ['cyaA mRNA', 'adenylate cyclase mRNA', 'cyclic AMP synthase mRNA']
+mRNA_crp: ['crp mRNA', 'cAMP receptor protein mRNA', 'CRP mRNA']
+mRNA_ptsG: ['ptsG mRNA', 'glucose transporter mRNA', 'PTS permease mRNA']
+mRNA_ptsH: ['ptsH mRNA', 'PTS histidine protein mRNA', 'PTS HPr mRNA']
+mRNA_ptsI: ['ptsI mRNA', 'enzyme I mRNA', 'PTS enzyme I mRNA']
+mRNA_crr: ['crr mRNA', 'phosphocarrier protein mRNA', 'PTS crr mRNA']
+mRNA_mlc: ['mlc mRNA', 'global regulator mRNA', 'Mlc mRNA']
+cAMP: ['cyclic AMP', "adenosine 3',5'-cyclic monophosphate", 'cAMP']
+Pyr: ['pyruvate', 'pyruvic acid', 'pyruvate ion']
+PEP: ['phosphoenolpyruvate', 'PEP', 'enolpyruvate']
+Glc6P: ['glucose-6-phosphate', 'G6P', 'glucose-6-phosphate']
+Glucose: ['glucose', 'd-glucose', 'blood sugar']
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+
+Reason: All are well-known chemical entities or nucleotides involved in cellular metabolism or regulation.

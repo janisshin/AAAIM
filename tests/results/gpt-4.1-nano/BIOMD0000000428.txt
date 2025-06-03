@@ -1,0 +1,35 @@
+Model: BIOMD0000000428
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:00:56
+
+Synonyms:
+ATP_g: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate (ATP)']
+ATP_c: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate (ATP)']
+Pyr_c: ['pyruvate', 'pyruvic acid', 'pyruvate (PYR)']
+DHAP_c: ['dihydroxyacetone phosphate', 'DHAP', 'dihydroxyacetone phosphate']
+Pyr_e: ['pyruvate', 'pyruvic acid', 'pyruvate (PYR)']
+Gly3P_c: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde 3-phosphate']
+DHAP_g: ['dihydroxyacetone phosphate', 'DHAP', 'dihydroxyacetone phosphate']
+Glc6P_g: ['glucose-6-phosphate', 'G6P', 'glucose-6-phosphate']
+Fru16BP_g: ['fructose-1,6-bisphosphate', 'FBP', 'fructose 1,6-bisphosphate']
+ADP_c: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+_3PGA_c: ['3-phosphoglycerate', '3PG', '3-phosphoglycerate']
+Gly_g: ['glycerol', 'glycerin', 'glycerol']
+Fru6P_g: ['fructose-6-phosphate', 'F6P', 'fructose 6-phosphate']
+Gly_e: ['glycerol', 'glycerin', 'glycerol']
+_3PGA_g: ['3-phosphoglycerate', '3PG', '3-phosphoglycerate']
+Gly_c: ['glycine', 'glycine', 'amino acetic acid']
+Pi_g: ['inorganic phosphate', 'Pi', 'phosphate']
+AMP_c: ['adenosine monophosphate', 'AMP', 'adenosine monophosphate']
+O2_c: ['oxygen', 'O2', 'dioxygen']
+GA3P_g: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde 3-phosphate']
+Gly3P_g: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde 3-phosphate']
+ADP_g: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+PEP_c: ['phosphoenolpyruvate', 'PEP', 'phosphoenolpyruvate']
+AMP_g: ['adenosine monophosphate', 'AMP', 'adenosine monophosphate']
+Glc_c: ['glucose', 'glucose', 'dextrose']
+Glc_e: ['glucose', 'glucose', 'dextrose']
+Glc_g: ['glucose', 'glucose', 'dextrose']
+NADH_g: ['nicotinamide adenine dinucleotide (reduced)', 'NADH', 'reduced nicotinamide adenine dinucleotide']
+
+Reason: All species are standard metabolites involved in glycolysis or energy metabolism; the synonyms reflect common biochemical nomenclature. "Gly" and "Glycerol" are included as they are common names for related compounds. "UNK" is not appropriate as all species are recognizable metabolites.

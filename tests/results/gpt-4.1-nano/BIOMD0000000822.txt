@@ -1,0 +1,10 @@
+Model: BIOMD0000000822
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:23:29
+
+Synonyms:
+Cytosolic_Rapamycin: ['rapamycin', 'sirolimus', 'rapamune']
+mTOR_Rapamycin: ['mTOR inhibitor', 'rapamycin', 'sirolimus']
+mTORC1_Rapamycin: ['mTORC1 inhibitor', 'rapamycin', 'sirolimus']
+
+Reason: All species involve rapamycin interacting with mTOR complexes; "rapamycin" and "sirolimus" are common synonyms. The cytosolic form refers to rapamycin localized in the cytosol, and the others are specific to mTOR complexes targeted by rapamycin.

@@ -1,0 +1,11 @@
+Model: BIOMD0000000052
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:50:57
+
+Synonyms:
+Glu: ['glucose', 'D-glucose', 'blood sugar']
+Formic_acid: ['formic acid', 'methanoic acid', 'formate']
+Acetic_acid: ['acetic acid', 'vinegar acid', 'ethanoic acid']
+lys_R: ['lysine residue', 'lysine side chain', 'L-lysine']
+
+Reason: The model involves common biochemical compounds; Glu is glucose, a central sugar; Formic_acid and Acetic_acid are well-known organic acids; lys_R likely refers to a lysine residue, a common amino acid side chain in proteins.

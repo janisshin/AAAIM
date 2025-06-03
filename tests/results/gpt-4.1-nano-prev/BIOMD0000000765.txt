@@ -1,0 +1,9 @@
+Model: BIOMD0000000765
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:08:09
+
+Synonyms:
+C: ['caffeine', 'unknown', 'UNK']
+A_T: ['acetyl-CoA', 'acetic-CoA', 'UNK']
+
+Reason: C is likely a drug or compound represented as "C", but no specific info is provided; A_T appears as a coenzyme or metabolite similar to acetyl-CoA, common in pharmacokinetic models; both are inferred based on typical biochemical context.

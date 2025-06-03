@@ -1,0 +1,17 @@
+Model: BIOMD0000000494
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:56:04
+
+Synonyms:
+E2: ['estradiol', '17β-estradiol', 'E2']
+P4: ['progesterone', 'P4']
+Ago_c: ['arginine-vasopressin', 'AVP', 'arginine vasopressin']
+Ago_d: ['vasopressin', 'AVP', 'arginine vasopressin']
+Ago_R_i: ['vasopressin receptor type 1', 'AVPR1', 'vasopressin receptor 1']
+Ago_R_a: ['vasopressin receptor type 2', 'AVPR2', 'vasopressin receptor 2']
+Ant_d: ['antigen D', 'UNK', '(not a chemical', 'likely a protein or antigen)']
+Ant_c: ['antigen C', 'UNK', '(not a chemical', 'likely a protein or antigen)']
+Ant_p: ['antigen P', 'UNK', '(not a chemical', 'likely a protein or antigen)']
+Ant_R: ['antigen receptor', 'UNK', '(not a chemical', 'likely a receptor protein)']
+
+Reason: E2 and P4 are well-known hormones; Ago species are vasopressin-related peptides and receptors; Ant species are likely proteins or antigens, not chemicals, hence "UNK".

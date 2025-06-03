@@ -1,0 +1,9 @@
+Model: BIOMD0000000264
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:41:40
+
+Synonyms:
+EGFR_i: ['epidermal growth factor receptor', 'EGFR', 'HER1']
+EGF_EGFR_i: ['EGF-EGFR complex', 'EGF receptor complex', 'EGF bound EGFR']
+
+Reason: EGFR_i appears to be the epidermal growth factor receptor, a well-known receptor tyrosine kinase; EGF_EGFR_i suggests a complex or interaction between EGF and EGFR, likely the ligand-receptor complex.

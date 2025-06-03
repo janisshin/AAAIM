@@ -1,0 +1,32 @@
+Model: BIOMD0000000082
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:36:24
+
+Synonyms:
+agonist: ['UNK']
+
+Reason: No chemical or biological context provided; "agonist" is a functional term, not a chemical species.
+
+DR: "dopamine receptor", "dopamine receptor D2", "D2 receptor"
+Reason: "DR" commonly refers to dopamine receptor in biochemical contexts.
+
+DRG_GDP: "GDP", "guanosine diphosphate", "guanosine diphosphate (GDP)"
+Reason: "DRG_GDP" indicates a GDP-bound form of a G-protein; "GTP" and "GDP" are standard nucleotides.
+
+DRG: "G-protein", "heterotrimeric G protein", "guanine nucleotide-binding protein"
+Reason: "DRG" likely refers to a G-protein involved in receptor signaling.
+
+GDP: "guanosine diphosphate", "GDP", "guanosine 5'-diphosphate"
+Reason: Standard nucleotide name.
+
+DRG_GTP: "GTP", "guanosine triphosphate", "GTP"
+Reason: GTP-bound form of G-protein.
+
+GTP: "guanosine triphosphate", "GTP", "guanosine 5'-triphosphate"
+Reason: Standard nucleotide name.
+
+G_GDP: "GDP", "guanosine diphosphate", "GDP"
+Reason: G_GDP indicates G-protein bound to GDP.
+
+G_GTP: "GTP", "guanosine triphosphate", "GTP"
+Reason: G-protein bound to GTP.

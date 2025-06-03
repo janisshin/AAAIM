@@ -1,0 +1,9 @@
+Model: BIOMD0000001058
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:11:25
+
+Synonyms:
+Sic1t: ['Sic1', 'Cyclin-dependent kinase inhibitor Sic1', 'UNK']
+Cdh1: ['Cdh1', 'Anaphase-promoting complex subunit Cdh1', 'UNK']
+
+Reason: Sic1 is a well-known cyclin-dependent kinase inhibitor in yeast, often referred to as Sic1. Cdh1 is a regulatory subunit of the anaphase-promoting complex (APC/C). Both are proteins involved in cell cycle regulation; their names are standard in cell biology.

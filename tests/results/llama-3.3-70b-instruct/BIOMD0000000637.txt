@@ -1,0 +1,13 @@
+Model: BIOMD0000000637
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:28:15
+
+Synonyms:
+Gt: ['G protein', 'GTP-binding protein', 'guanine nucleotide-binding protein']
+Gd: ['GDP-bound G protein', 'GDP-bound guanine nucleotide-binding protein', 'inactive G protein']
+LRGt: ['ligand-activated G protein-coupled receptor-G protein complex', 'active GPCR-G complex', 'agonist-bound GPCR-G complex']
+RGd: ['regulator of G protein signaling-inactive G protein complex', 'RGS-inactive G complex', 'inhibitory G protein complex']
+RGt: ['regulator of G protein signaling-G protein complex', 'RGS-G complex', 'G protein-regulator complex']
+LRGd: ['ligand-activated G protein-coupled receptor-inactive G protein complex', 'inactive GPCR-G complex', 'antagonist-bound GPCR-G complex']
+
+Reason: The model appears to describe a G protein-coupled receptor (GPCR) signaling pathway, with species representing different states of G proteins and their complexes with receptors and regulators. The names are based on the context of the model and the notes provided, which mention GPCR, G protein, and regulator of G protein signaling (RGS). The likelihood of each name is ranked based on the relevance to the model and the standard terminology used in the field.

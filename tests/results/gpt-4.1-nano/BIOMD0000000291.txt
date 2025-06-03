@@ -1,0 +1,13 @@
+Model: BIOMD0000000291
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:58:08
+
+Synonyms:
+x2: ['bilirubin', 'biliverdin', 'UNK']
+x3: ['albumin', 'human serum albumin', 'UNK']
+x6: ['bilirubin', 'bilirubin', 'UNK']
+x7: ['carbon', 'graphite', 'UNK']
+B0: ['bicarbonate', 'bicarbonate ion', 'UNK']
+C0: ['carbon dioxide', 'CO2', 'UNK']
+
+Reason: The model discusses albumin-bilirubin complex adsorption, so x3 and x6 are likely albumin and bilirubin respectively. x2 appears to be bilirubin based on context. x7 is likely a carbon-based surface or material, given the surface adsorption context. B0 and C0 are less clear but may relate to bicarbonate and CO2, common in biological systems involving surface interactions.

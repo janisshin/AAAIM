@@ -1,0 +1,14 @@
+Model: BIOMD0000000394
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:45:18
+
+Synonyms:
+s125: ['GDP', 'guanosine diphosphate', 'guanosine diphosphate (GDP)']
+
+Reason: s125 is labeled as "GDP," a well-known nucleotide involved in energy transfer and signaling.
+
+s126: "GTP", "guanosine triphosphate", "guanosine triphosphate (GTP)"
+Reason: s126 is labeled as "GTP," a common nucleotide involved in signaling and G-protein activation.
+
+s142: "erlotinib", "Erlotinib hydrochloride", "Tarceva"
+Reason: s142 is labeled as "erlotinib," a known tyrosine kinase inhibitor used in cancer therapy.

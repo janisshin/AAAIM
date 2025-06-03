@@ -1,0 +1,13 @@
+Model: BIOMD0000000291
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:20
+
+Synonyms:
+x2: ['bilirubin', 'biliverdin', 'UNK']
+x3: ['albumin', 'human serum albumin', 'UNK']
+x6: ['bilirubin', 'biliverdin', 'UNK']
+x7: ['albumin', 'human serum albumin', 'UNK']
+B0: ['bilirubin', 'bilirubin', 'UNK']
+C0: ['albumin', 'human serum albumin', 'UNK']
+
+Reason: The model discusses albumin-bilirubin complex binding, so x2, x3, x6, x7, B0, and C0 are likely related to bilirubin and albumin, which are common biological molecules. "UNK" is used when no clear chemical name is evident.

@@ -1,0 +1,18 @@
+Model: BIOMD0000000066
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:47:31
+
+Synonyms:
+aspp: ['aspartyl phosphate', 'L-aspartyl phosphate', 'aspartate phosphate']
+asa: ['aspartate beta-semialdehyde', 'L-aspartate beta-semialdehyde', '3-aspartate semialdehyde']
+hs: ['homoserine', 'L-homoserine', 'homoserine amino acid']
+hsp: ['O-phosphohomoserine', 'L-O-phosphohomoserine', 'phosphohomoserine']
+phos: ['phosphate', 'inorganic phosphate', 'orthophosphate']
+thr: ['threonine', 'L-threonine', 'threonine amino acid']
+asp: ['aspartate', 'L-aspartate', 'aspartic acid']
+nadp: ['NADP', 'nicotinamide adenine dinucleotide phosphate', 'NADP(+)']
+nadph: ['NADPH', 'nicotinamide adenine dinucleotide phosphate (reduced)', 'NADPH (reduced)']
+adp: ['ADP', 'adenosine diphosphate', "adenosine 5'-diphosphate"]
+atp: ['ATP', 'adenosine triphosphate', "adenosine 5'-triphosphate"]
+
+Reason: The standardized names and common synonyms are based on the display names provided in the model and common biochemical nomenclature. The likelihood of each name is ranked based on the specificity and common usage of the name in biochemistry. The names are standardized to match the ChEBI ontology.

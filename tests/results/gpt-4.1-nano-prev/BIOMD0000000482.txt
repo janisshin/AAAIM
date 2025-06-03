@@ -1,0 +1,16 @@
+Model: BIOMD0000000482
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:55:52
+
+Synonyms:
+LAC: ['lactic acid', 'lactate', 'lactic acid (D-)']
+GLY: ['glycerol', 'glycerine', 'glycerol (G)']
+PYRin: ['pyruvate', 'pyruvic acid', 'pyruvate (anion)']
+G1P: ['glucose-1-phosphate', 'G1P', 'glucose-1-phosphate']
+PYRout: ['pyruvate', 'pyruvic acid', 'pyruvate (anion)']
+OAA: ['oxaloacetate', 'oxaloacetate (dicarboxylic acid)', 'OAA']
+GLCex: ['glucose', 'glucose (free)', 'd-glucose']
+mRNA: ['messenger RNA', 'mRNA', 'RNA']
+
+Reason: 
+LAC is commonly lactic acid or lactate; GY is glycerol; PYRin and PYRout are both pyruvate; G1P is glucose-1-phosphate; OAA is oxaloacetate; GLCex is glucose; mRNA is messenger RNA. All are well-established biochemical entities.

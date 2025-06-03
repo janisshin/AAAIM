@@ -1,0 +1,46 @@
+Model: BIOMD0000000575
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:02:43
+
+Synonyms:
+Dopamine: ['dopamine', 'DA', 'dopaminergic neurotransmitter']
+OH: ['hydroxide', 'hydroxyl group', 'hydroxy']
+OH_radical: ['hydroxyl radical', 'OH•', 'hydroxyl free radical']
+H2O2: ['hydrogen peroxide', 'H2O2']
+DA_quinone: ['dopamine quinone', 'DA quinone', 'dopaminergic quinone']
+Fragments: ['Fragments', 'protein fragments', 'peptide fragments']
+L_Dopa: ['L-Dopa', 'levodopa', 'L-3,4-dihydroxyphenylalanine']
+DOPAL: ['DOPAL', '3,4-Dihydroxyphenylacetaldehyde', 'dopamine aldehyde']
+DOPAC: ['DOPAC', '3,4-Dihydroxyphenylacetic acid', 'dopamine metabolite']
+GSH: ['glutathione', 'GSH', 'reduced glutathione']
+GSSG: ['glutathione disulfide', 'GSSG', 'oxidized glutathione']
+Fe2: ['ferrous iron', 'Fe(II)', 'Fe2+']
+Fe3: ['ferric iron', 'Fe(III)', 'Fe3+']
+DA_S_parkin: ['Dopamine-S-parkin', 'Dopamine conjugate with Parkin', 'Parkin-associated dopamine']
+O2: ['oxygen', 'O2', 'dioxygen']
+DA_GSH: ['dopamine-glutathione conjugate', 'DA-GSH', 'dopamine bound to glutathione']
+Neuromelanin: ['neuromelanin', 'brain pigment', 'neural melanin']
+Neuromelanin_ntox_Fe3: ['neuromelanin with Fe3+', 'neurotoxic neuromelanin', 'Fe3+ bound neuromelanin']
+ATP: ['adenosine triphosphate', 'ATP', 'energy currency']
+L_Tyr: ['L-tyrosine', 'tyrosine', 'L-tyrosinate']
+CO2: ['carbon dioxide', 'CO2', 'carbonic acid (dissolved)']
+Neurotoxins: ['neurotoxins', 'neurotoxic agents', 'neurotoxic substances']
+Bioamines: ['biogenic amines', 'bioamines', 'neurotransmitter amines']
+O2_0: ['oxygen', 'O2', 'dioxygen']
+NH3: ['ammonia', 'NH3', 'ammonium']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+', 'oxidized NAD']
+NADH: ['reduced NAD', 'NADH', 'nicotinamide adenine dinucleotide (reduced)']
+H2O: ['water', 'H2O', 'dihydrogen monoxide']
+Cysteine: ['cysteine', 'Cys', 'amino acid cysteine']
+V_DA: ['vesicular dopamine', 'V-DA', 'dopamine in vesicles']
+V_ntox_ba: ['vesicular neurotoxins', 'V-ntox-ba', 'vesicle-associated neurotoxins']
+
+Reason: 
+- Species like dopamine, L-Dopa, DOPAL, DOPAC are well-known neurotransmitters or metabolites.
+- OH, OH_radical, H2O2, O2 are common reactive oxygen species or molecules involved in oxidative processes.
+- Fe2+, Fe3+ are standard iron oxidation states relevant in redox reactions.
+- GSH, GSSG are key glutathione forms in cellular redox balance.
+- Neuromelanin and related species are specific brain pigments involved in neurodegeneration.
+- ATP, CO2, NH3 are fundamental small molecules with well-established names.
+- Species like bioamines, neurotoxins, fragments are general or broad categories, hence included as synonyms.
+- "UNK" is not applicable here because all species are identifiable as known biochemical entities.

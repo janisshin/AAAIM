@@ -1,0 +1,8 @@
+Model: BIOMD0000000621
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:20:35
+
+Synonyms:
+Glucose: ['glucose', 'd-glucose', 'blood sugar']
+
+Reason: The species is explicitly named "Glucose," which is a common monosaccharide involved in energy metabolism. Standard synonyms include "d-glucose" and "blood sugar" for broader context.

@@ -1,0 +1,20 @@
+Model: BIOMD0000000145
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:39
+
+Synonyms:
+Galpha_GTP: ['G alpha GTP', 'G protein alpha subunit GTP-bound', 'GTP-Gα']
+
+Reason: It refers to the G protein alpha subunit in its GTP-bound active form, a common signaling molecule.
+
+IP3: "Inositol 1,4,5-trisphosphate", "IP3", "InsP3"
+Reason: Well-known second messenger involved in calcium release from ER.
+
+Ca_ER: "Calcium in endoplasmic reticulum", "ER calcium", "Ca2+ in ER"
+Reason: Indicates calcium stored within the ER, a key intracellular calcium reservoir.
+
+Ca_Cyt: "Cytosolic calcium", "intracellular calcium", "Ca2+ in cytoplasm"
+Reason: Represents calcium in the cytoplasm, involved in signaling.
+
+DG: "Diacylglycerol", "DAG", "Diacylglycerol lipid"
+Reason: A lipid second messenger generated alongside IP3 in signaling pathways.

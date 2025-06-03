@@ -1,0 +1,17 @@
+Model: BIOMD0000000736
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:07:26
+
+Synonyms:
+FeDuo: ['ferrous duodenal iron', 'Fe(II) duodenal iron', 'duodenal ferrous iron']
+FeRBC: ['red blood cell iron', 'hemoglobin iron', 'erythrocyte iron']
+FeSpleen: ['spleen iron', 'splenic iron', 'iron in spleen']
+FeLiver: ['liver iron', 'hepatic iron', 'iron in liver']
+Fe2Tf: ['ferrous transferrin', 'Fe(II)-transferrin', 'reduced transferrin iron']
+Fe1Tf: ['ferric transferrin', 'Fe(III)-transferrin', 'oxidized transferrin iron']
+NTBI: ['non-transferrin bound iron', 'labile plasma iron', 'free serum iron']
+FeRest: ['rest of iron', 'residual iron', 'unbound iron']
+FeOutside: ['extracellular iron', 'outside cell iron', 'plasma iron']
+FeBM: ['bone marrow iron', 'erythroid precursor iron', 'marrow iron']
+
+Reason: These species represent iron pools and transport forms in mice, with standard names reflecting their biological context and chemical form.

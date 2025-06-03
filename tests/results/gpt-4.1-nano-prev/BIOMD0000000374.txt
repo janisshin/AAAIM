@@ -1,0 +1,9 @@
+Model: BIOMD0000000374
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:29
+
+Synonyms:
+Ca_er_Ca_equations: ['calcium in endoplasmic reticulum', 'ER calcium', 'calcium store ER']
+Ca_i: ['cytoplasmic calcium', 'Ca2+', 'intracellular calcium']
+
+Reason: Ca_er_Ca_equations likely refers to calcium in the endoplasmic reticulum, a common intracellular calcium store; Ca_i is cytoplasmic calcium, a standard term for free calcium in the cell's cytoplasm.

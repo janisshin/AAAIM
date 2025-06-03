@@ -1,0 +1,10 @@
+Model: BIOMD0000000053
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:50:59
+
+Synonyms:
+Glucose: ['glucose', 'D-glucose', 'blood sugar']
+Lysine: ['lysine', 'L-lysine', 'aminohexanoic acid']
+Glyoxal: ['glyoxal', 'ethanedial', 'glyoxal']
+
+Reason: The model involves known biochemical reactions where glucose and lysine are substrates, and glyoxal is a reactive aldehyde intermediate. The reactions suggest typical metabolic or glycation pathways, supporting these standard names.

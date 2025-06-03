@@ -1,0 +1,151 @@
+Model: BIOMD0000000088
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:36:52
+
+Synonyms:
+s165: ['inositol', 'myo-inositol', 'inositol phosphate']
+
+Reason: s165 is labeled as "Inositol," a common signaling molecule precursor.
+
+s48: "GTP", "guanosine triphosphate", "GTP molecule"
+Reason: s48 is explicitly named "GTP" in display names.
+
+s187: "GTP", "guanosine triphosphate", "GTP molecule"
+Reason: s187 is "G_sub_q_endsub__alpha_.GTP", indicating GTP bound to Gα_q.
+
+s50: "GDP", "guanosine diphosphate", "GDP molecule"
+Reason: s50 is labeled as "GDP" in display names.
+
+s173: "IP3", "inositol 1,4,5-trisphosphate", "IP3"
+Reason: s173 is "3IP3.IP3", a well-known second messenger.
+
+s153: "DAG", "diacylglycerol", "diacylglycerol"
+Reason: s153 is "DAG," a common signaling lipid.
+
+s152: "IP3", "inositol 1,4,5-trisphosphate", "IP3"
+Reason: s152 is "IP3," a second messenger.
+
+s214: "Rho GTPase", "Rho", "Rho protein"
+Reason: s214 is "Rho.GTP", a small GTP-binding protein.
+
+s151: "PIP2", "phosphatidylinositol 4,5-bisphosphate", "PIP2"
+Reason: s151 is "PIP2," a membrane phospholipid.
+
+s231: "Rho GTP", "Rho", "Rho GTPase"
+Reason: s231 is "Rho.GTP", active form of Rho.
+
+s252: "Rho GTP", "Rho", "Rho GTPase"
+Reason: s252 is "Rho.GTP", active Rho.
+
+s277: "Calcium", "Ca2+", "calcium ion"
+Reason: s277 is "Ca_super_2_plus__endsuper_.CaM", indicating calcium.
+
+s278: "Calcium", "Ca2+", "calcium ion"
+Reason: s278 is "2Ca_super_2_plus__endsuper_.CaM", indicating calcium.
+
+s279: "Calcium", "Ca2+", "calcium ion"
+Reason: s279 is "3Ca_super_2_plus__endsuper_.CaM", indicating calcium.
+
+s280: "Calcium", "Ca2+", "calcium ion"
+Reason: s280 is "4Ca_super_2_plus__endsuper_.CaM", indicating calcium.
+
+s292: "MLC", "myosin light chain", "myosin regulatory light chain"
+Reason: s292 is "MLCK.Ca_super_2_plus__endsuper_.CaM", related to MLC regulation.
+
+s293: "MLC", "myosin light chain", "myosin regulatory light chain"
+Reason: s293 is "MLCK.2Ca_super_2_plus__endsuper_.CaM", related to MLC.
+
+s294: "MLC", "myosin light chain", "myosin regulatory light chain"
+Reason: s294 is "MLCK.3Ca_super_2_plus__endsuper_.CaM", related to MLC.
+
+s295: "MLC", "myosin light chain", "myosin regulatory light chain"
+Reason: s295 is "MLCK.4Ca_super_2_plus__endsuper_.CaM", related to MLC.
+
+s311: "DAG", "diacylglycerol", "diacylglycerol"
+Reason: s311 is "PKC.DAG", indicating DAG.
+
+s430: "Calcium", "Ca2+", "calcium ion"
+Reason: s430 is "Ca_super_2_plus__endsuper_ trunsp", indicating calcium.
+
+s432: "Calcium", "Ca2+", "calcium ion"
+Reason: s432 is "Ca_super_2_plus__endsuper_ pump", indicating calcium.
+
+s436: "GTP", "guanosine triphosphate", "GTP molecule"
+Reason: s436 is "p115RhoGEF.GTP_alpha_", indicating GTP-bound form.
+
+s438: "GTP", "guanosine triphosphate", "GTP molecule"
+Reason: s438 is "G_sub_12_endsub__alpha_.GTP", GTP-bound Gα12.
+
+s439: "GTP", "guanosine triphosphate", "GTP molecule"
+Reason: s439 is "G_sub_12_endsub__alpha_.GTP", GTP-bound Gα12.
+
+s440: "GDP", "guanosine diphosphate", "GDP molecule"
+Reason: s440 is "G_sub_q_endsub__alpha_.GDP", GTP hydrolyzed to GDP.
+
+s441: "GTP", "guanosine triphosphate", "GTP molecule"
+Reason: s441 is "G_sub_q_endsub__alpha_.GTP", GTP-bound Gαq.
+
+s442: "GTP", "guanosine triphosphate", "GTP molecule"
+Reason: s442 is "G_sub_q_endsub__alpha__beta__gamma_", indicating GTP-bound Gαq.
+
+s443: "GTP", "guanosine triphosphate", "GTP molecule"
+Reason: s443 is "PLC_beta_.G_sub_q_endsub__alpha_.GTP", active Gαq.
+
+s444: "Calcium", "Ca2+", "calcium ion"
+Reason: s444 is "2Ca_super_2_plus__endsuper_ .Ca_super_2_plus__endsuper_ trunsp", indicating calcium.
+
+s446: "Calcium", "Ca2+", "calcium ion"
+Reason: s446 is "Ca_super_2_plus__endsuper_  pump.Ca_super_2_plus__endsuper_", indicating calcium.
+
+s449: "Rho GTPase", "Rho", "Rho GTP"
+Reason: s449 is "Rho.GTP.Rho-kinase.MLC", involving Rho GTP.
+
+s456: "Rho GTPase", "Rho", "Rho GTP"
+Reason: s456 is "Rho.GTP.Rho-kinase.MLC", similar to above.
+
+s506: "MLCK", "myosin light chain kinase", "MLCK enzyme"
+Reason: s506 is "MLCK.4Ca_super_2_plus__endsuper_.CaM.MLC", indicating MLCK.
+
+s512: "MLCK", "myosin light chain kinase", "MLCK enzyme"
+Reason: s512 is "MLCK.3Ca_super_2_plus__endsuper_.CaM.MLC".
+
+s513: "MLCK", "myosin light chain kinase", "MLCK enzyme"
+Reason: s513 is "MLCK.4Ca_super_2_plus__endsuper_.CaM.MLC".
+
+s520: "MLCK", "myosin light chain kinase", "MLCK enzyme"
+Reason: s520 is "MLCK.3Ca_super_2_plus__endsuper_.CaM.MLC".
+
+s526: "MLCK", "myosin light chain kinase", "MLCK enzyme"
+Reason: s526 is "MLCK.2Ca_super_2_plus__endsuper_.CaM.MLC".
+
+s539: "MLCK", "myosin light chain kinase", "MLCK enzyme"
+Reason: s539 is "MLCK.2Ca_super_2_plus__endsuper_.CaM.MLC".
+
+s546: "MLC", "myosin light chain", "myosin regulatory light chain"
+Reason: s546 is "MLCK.Ca_super_2_plus__endsuper_.CaM.MLC".
+
+s551: "MLC", "myosin light chain", "myosin regulatory light chain"
+Reason: s551 is "MLCK.Ca_super_2_plus__endsuper_.CaM.MLC".
+
+s564: "PLC beta", "phospholipase C beta", "PLC beta enzyme"
+Reason: s564 is "PLC_beta_.G_sub_q_endsub__alpha_.GTP.Ca_super_2_plus__endsuper_".
+
+s565: "PKC", "protein kinase C", "PKC enzyme"
+Reason: s565 is "PKC.Ca_super_2_plus__endsuper_.DAG".
+
+s566: "PKC", "protein kinase C", "PKC enzyme"
+Reason: s566 is "PKC.Ca_super_2_plus__endsuper_".
+
+s567: "PLC beta", "phospholipase C beta", "PLC beta enzyme"
+Reason: s567 is "PLC_beta_.G_sub_q_endsub_.GTP.Ca.PIP2".
+
+s568: "PLC beta", "phospholipase C beta", "PLC beta enzyme"
+Reason: s568 is "PLC_beta_.Ca.PIP2".
+
+s569: "PLC beta", "phospholipase C beta", "PLC beta enzyme"
+Reason: s569 is "PLC_beta_.Ca_super_2_plus__endsuper_".
+
+s570: "MYPT1 phosphatase", "Myosin phosphatase", "MLCP"
+Reason: s570 is "MYPT1_PPase", a phosphatase for MLC.
+
+Reason: The species are mostly signaling molecules, kinases, GTPases, and calcium ions involved in myosin phosphorylation regulation. Species names are normalized to common biochemical entities for ontology lookup.

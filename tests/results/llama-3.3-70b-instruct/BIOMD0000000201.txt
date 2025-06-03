@@ -1,0 +1,9 @@
+Model: BIOMD0000000201
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:00:33
+
+Synonyms:
+Rasa: ['Ras protein', 'GTPase HRas', 'H-Ras']
+Rasi: ['GDP-bound Ras', 'inactive Ras protein', 'Ras-GDP']
+
+Reason: Rasa and Rasi are annotated based on their display names as "active Ras" and "inactive Ras" respectively, which corresponds to the active GTP-bound and inactive GDP-bound states of the Ras protein.

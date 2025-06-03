@@ -1,0 +1,70 @@
+Model: BIOMD0000000734
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:07:15
+
+Synonyms:
+FeDuo: ['ferric duodenal', 'iron duodenal', 'FeDuo']
+
+Reason: Likely a ferric iron species in the duodenum, a common site for iron absorption.
+
+FeDuo_0: "ferric duodenal", "iron duodenal", "FeDuo"
+Reason: Same as above, with "_0" indicating initial or baseline state.
+
+FeRBC: "ferric red blood cell", "iron RBC", "FeRBC"
+Reason: Represents iron within red blood cells, a common form of stored or transported iron.
+
+FeRBC_0: "ferric red blood cell", "iron RBC", "FeRBC"
+Reason: Same as above, initial or baseline state.
+
+FeSpleen: "spleen iron", "iron spleen", "FeSpleen"
+Reason: Iron stored or present in spleen tissue.
+
+FeSpleen_0: "spleen iron", "iron spleen", "FeSpleen"
+Reason: Baseline or initial spleen iron.
+
+FeLiver: "liver iron", "hepatic iron", "FeLiver"
+Reason: Iron stored in liver tissue.
+
+FeLiver_0: "liver iron", "hepatic iron", "FeLiver"
+Reason: Baseline or initial liver iron.
+
+Fe2Tf: "ferrous transferrin", "Fe(II) transferrin", "Fe2Tf"
+Reason: Transferrin bound to ferrous (Fe2+) iron, a common transport form.
+
+NTBI: "non-transferrin bound iron", "free iron", "NTBI"
+Reason: Iron not bound to transferrin, often labile or circulating free iron.
+
+Fe1Tf: "ferric transferrin", "Fe(III) transferrin", "Fe1Tf"
+Reason: Transferrin bound to ferric (Fe3+) iron, the main transport form.
+
+Fe2Tf_0: "ferrous transferrin", "Fe(II) transferrin", "Fe2Tf"
+Reason: Same as Fe2Tf, baseline state.
+
+Fe1Tf_0: "ferric transferrin", "Fe(III) transferrin", "Fe1Tf"
+Reason: Same as Fe1Tf, initial state.
+
+NTBI_0: "non-transferrin bound iron", "free iron", "NTBI"
+Reason: Baseline or initial free iron.
+
+Fe2Tf_: "ferrous transferrin", "Fe(II) transferrin", "Fe2Tf"
+Reason: Same as Fe2Tf, possibly a different compartment or state.
+
+FeRest: "resting iron", "tissue iron", "FeRest"
+Reason: Iron stored or present in tissues, not actively transported.
+
+FeOutside: "extracellular iron", "outside cell iron", "FeOutside"
+Reason: Iron outside cells or in extracellular space.
+
+FeRest_0: "resting iron", "tissue iron", "FeRest"
+Reason: Baseline tissue iron.
+
+FeOutside_0: "extracellular iron", "outside cell iron", "FeOutside"
+Reason: Initial extracellular iron.
+
+FeBM: "bone marrow iron", "hematopoietic iron", "FeBM"
+Reason: Iron in bone marrow, involved in erythropoiesis.
+
+FeBM_0: "bone marrow iron", "hematopoietic iron", "FeBM"
+Reason: Baseline bone marrow iron.
+
+Reason: All species are related to iron forms or locations in biological tissues, with standard names aligning with common biochemical terminology.

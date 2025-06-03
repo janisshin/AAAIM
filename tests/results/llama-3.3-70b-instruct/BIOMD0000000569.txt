@@ -1,0 +1,8 @@
+Model: BIOMD0000000569
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:16:04
+
+Synonyms:
+glu: ['glutamic acid', 'glutamate', 'L-glutamic acid']
+
+Reason: The model appears to be related to AMPA receptors and glutamatergic hippocampal neurons, and "glu" is a common abbreviation for glutamic acid or glutamate in biochemical contexts. The reactions also suggest that "glu" is a substrate or ligand, which is consistent with the role of glutamate as a neurotransmitter.

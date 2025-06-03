@@ -1,0 +1,18 @@
+Model: BIOMD0000000221
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:56:10
+
+Synonyms:
+aca: ['acetate', 'acetic acid', 'UNK']
+oaa: ['oxaloacetate', 'oxaloacetate (cyclic)', 'UNK']
+coa: ['coenzyme A', 'CoA', 'UNK']
+cit: ['citrate', 'citric acid', 'sodium citrate']
+icit: ['isocitrate', 'isocitric acid', 'UNK']
+akg: ['alpha-ketoglutarate', 'alpha-ketoglutaric acid', 'UNK']
+sca: ['succinate', 'succinate (anion)', 'UNK']
+suc: ['succinate', 'succinate (anion)', 'UNK']
+fa: ['fatty acid', 'fatty acids', 'UNK']
+mal: ['malate', 'malic acid', 'UNK']
+gly: ['glycine', 'glycolate', 'UNK']
+
+Reason: All species are metabolites involved in the TCA cycle or related pathways; "aca" is acetate, "oaa" is oxaloacetate, "coa" is coenzyme A, "cit" is citrate, "icit" is isocitrate, "akg" is alpha-ketoglutarate, "sca" and "suc" are succinate, "fa" is fatty acids, "mal" is malate, "gly" is glycine or glycolate. The display names are empty, but based on the context, these are standard metabolites.

@@ -1,0 +1,19 @@
+Model: BIOMD0000000541
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:01:23
+
+Synonyms:
+s3: ['fructose-6-phosphate', 'F6P', 'sugar phosphate']
+s4: ['fructose-1,6-bisphosphate', 'F1,6BP', 'FBP']
+s5: ['phosphoenolpyruvate', 'PEP', 'PEP molecule']
+s6: ['isocitrate', 'citric acid isocitrate', 'cyclic citrate']
+s7: ['2-oxoglutarate', 'alpha-ketoglutarate', 'AKG']
+s8: ['malate', 'malic acid', 'malate ion']
+s9: ['F2,6BP', 'fructose 2,6-bisphosphate', 'FDP']
+s10: ['citrate', 'citric acid', 'sodium citrate']
+s22: ['fructose-6-phosphate proxy', 'F6P', 'sugar phosphate']
+s25: ['p1IR complex', 'phosphorylated IR complex', 'insulin receptor complex']
+s26: ['p2IR complex', 'second insulin receptor complex', 'IR phosphorylation complex']
+s27: ['p1p2IR complex', 'insulin receptor complex', 'IR dimer']
+
+Reason: The species are involved in glycolysis and insulin signaling pathways; many are standard metabolic intermediates or complexes. "s22" and "s25" are proxies or complexes related to insulin signaling, so "UNK" is less appropriate.

@@ -1,0 +1,10 @@
+Model: BIOMD0000000037
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:50:19
+
+Synonyms:
+Pfr: ['phytochrome Pfr', 'Pfr', 'phytochrome photoactivated form']
+Pr: ['phytochrome Pr', 'Pr', 'phytochrome inactive form']
+Gluc: ['glucose', 'D-glucose', 'blood sugar']
+
+Reason: Pfr and Pr are forms of phytochrome, a photoreceptor protein, while Gluc is a common abbreviation for glucose, a key sugar molecule.

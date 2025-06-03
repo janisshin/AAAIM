@@ -1,0 +1,14 @@
+Model: BIOMD0000000245
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:56:54
+
+Synonyms:
+s_glu: ['glucose', 'd-glucose', 'blood sugar']
+s_pyr: ['pyruvate', 'pyruvic acid', 'pyruvate ion']
+s_acetald: ['acetaldehyde', 'ethanal', 'acetaldehyde (ethanal)']
+s_EtOH: ['ethanol', 'ethyl alcohol', 'alcohol']
+CO2: ['carbon dioxide', 'CO2', 'carbonic acid gas']
+Red: ['NADH', 'reduced nicotinamide adenine dinucleotide', 'NADH']
+S_f: ['glucose feed', 'glucose feedstock', 'glucose input']
+
+Reason: All species are biochemical compounds involved in yeast metabolism; "s_glu" and "s_pyr" are common metabolic intermediates, "s_acetald" and "s_EtOH" are key in fermentation, "CO2" is a gaseous byproduct, "Red" is a coenzyme in redox reactions, and "S_f" is a substrate feed.

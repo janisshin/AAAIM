@@ -1,0 +1,31 @@
+Model: BIOMD0000000281
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:11
+
+Synonyms:
+GLU: ['glucose', 'dextrose', 'blood sugar']
+ENG: ['glucose-6-phosphate', 'glucose phosphate', 'glucose-6-phosphate (cytoplasm)']
+TP1: ['ATP', 'adenosine triphosphate', 'ATP (cytoplasm)']
+ADP: ['ADP', 'adenosine diphosphate', 'ADP (cytoplasm)']
+GLP: ['glucose-6-phosphate', 'glucose phosphate', 'glucose-6-phosphate (cytoplasm)']
+ETG: ['fructose-6-phosphate', 'F6P', 'phosphofructokinase intermediate']
+GPP: ['glucose-6-phosphate diphosphate', 'hexose diphosphate', 'G6P diphosphate']
+GAP: ['glyceraldehyde 3-phosphate', 'G3P', 'triose phosphate']
+DHA: ['dihydroxyacetone phosphate', 'DHAP', 'glycerone phosphate']
+DPN: ['NADH', 'reduced nicotinamide adenine dinucleotide', 'diphospyridine nucleotide (reduced)']
+DPH: ['NADH', 'reduced nicotinamide adenine dinucleotide', 'diphospyridine nucleotide (reduced)']
+PID: ['inorganic phosphate', 'Pi', 'orthophosphate']
+DGA: ['1,3-bisphosphoglycerate', '1,3-BPG', '3-phosphoglyceroyl phosphate']
+PGA: ['3-phosphoglycerate', '3PG', '3-phosphoglyceric acid']
+PYR: ['pyruvate', 'pyruvic acid', 'pyruvate (metabolite)']
+LAC: ['lactate', 'lactic acid', 'lactate (metabolite)']
+DIN: ['inorganic phosphate', 'Pi', 'orthophosphate']
+DIH: ['reduced diphospyridine nucleotide', 'NADH', 'reduced NAD']
+OXY: ['oxygen', 'O2', 'dioxygen']
+TP2: ['ATP', 'adenosine triphosphate (mitochondria)', 'mitochondrial ATP']
+DBP: ['dibromophenol', 'dibromophenol', 'UNK']
+PUE: ['ATP-utilizing enzyme', 'ATPase', 'energy-consuming enzyme']
+MOD: ['glyceraldehyde 3-phosphate dehydrogenase-DPN complex', 'GAPDH-DPN complex', 'enzyme complex']
+MOB: ['glyceraldehyde 3-phosphate dehydrogenase acyl enzyme intermediate', 'GAPDH intermediate', 'enzyme intermediate']
+
+Reason: The species are mostly known metabolites or cofactors involved in glycolysis and energy metabolism pathways. Some are specific enzyme intermediates or cofactors, which are best represented by their common biochemical names. "Dibromophenol" is a chemical compound, but given the context, it is best labeled as "UNK" for a biochemical species.

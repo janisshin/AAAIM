@@ -1,0 +1,8 @@
+Model: BIOMD0000000574
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:02:34
+
+Synonyms:
+ca: ['calcium ion', 'calcium', 'Ca2+']
+
+Reason: The species "ca" in biochemical contexts typically refers to calcium ions, which are commonly represented as "Ca" or "Ca2+" in biochemical literature.

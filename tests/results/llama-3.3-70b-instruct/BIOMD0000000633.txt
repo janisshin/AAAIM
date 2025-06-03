@@ -1,0 +1,13 @@
+Model: BIOMD0000000633
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:25:55
+
+Synonyms:
+glc_ext: ['glucose', 'D-glucose', 'blood glucose']
+lac_ext: ['lactate', 'lactic acid', 'L-lactate']
+glc: ['glucose', 'D-glucose', 'glucose molecule']
+bpg13: ['UNK']
+lac: ['lactate', 'lactic acid', 'L-lactate']
+glc_er: ['glucose', 'endoplasmic reticulum glucose', 'glucose in endoplasmic reticulum']
+
+Reason: The model is about hepatic glucose metabolism, so glc_ext and glc are likely to be glucose, lac_ext and lac are likely to be lactate, and glc_er is likely to be glucose in a specific cellular compartment. bpg13 has no clear relation to known biochemical entities, so it is annotated as "UNK".

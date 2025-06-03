@@ -1,0 +1,8 @@
+Model: BIOMD0000000299
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:33
+
+Synonyms:
+M: ['mRNA', 'frq mRNA', 'frequency']
+
+Reason: In the context of Neurospora circadian models, "M" typically represents the mRNA of the frq gene, which is central to the feedback loop. It is a nucleic acid molecule involved in gene expression regulation.

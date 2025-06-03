@@ -1,0 +1,9 @@
+Model: BIOMD0000000313
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:53
+
+Synonyms:
+SOCS3mRNA: ['SOCS3 mRNA', 'suppressor of cytokine signaling 3 mRNA', 'SOCS3 transcript']
+CD274mRNA: ['PD-L1 mRNA', 'CD274 transcript', 'programmed death ligand 1 mRNA']
+
+Reason: Both are mRNA species for cytokine signaling regulators; SOCS3 is a known cytokine signaling inhibitor, CD274 encodes PD-L1, involved in immune regulation.

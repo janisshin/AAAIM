@@ -1,0 +1,33 @@
+Model: BIOMD0000000513
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:17:03
+
+Synonyms:
+DHAP_c: ['dihydroxyacetone phosphate', 'DHAP', 'dihydroxyacetone phosphate (cytoplasmic)']
+ATP_g: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate (cytoplasmic)']
+DHAP_g: ['dihydroxyacetone phosphate', 'DHAP', 'dihydroxyacetone phosphate (glycosomal)']
+ADP_g: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate (glycosomal)']
+Glc6P_g: ['glucose-6-phosphate', 'G6P', 'glucose-6-phosphate (glycosomal)']
+ADP_c: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate (cytoplasmic)']
+_3PGA_c: ['3-phosphoglycerate', '3-PGA', '3-phosphoglycerate (cytoplasmic)']
+O2_c: ['oxygen', 'O2', 'molecular oxygen (cytoplasmic)']
+Gly_e: ['glycine', 'Gly', 'glycine (extracellular)']
+ATP_c: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate (cytoplasmic)']
+Glc_c: ['glucose', 'Glc', 'glucose (cytoplasmic)']
+Glc_e: ['glucose', 'Glc', 'glucose (extracellular)']
+Glc_g: ['glucose', 'Glc', 'glucose (glycosomal)']
+Pyr_c: ['pyruvate', 'Pyr', 'pyruvate (cytoplasmic)']
+Pyr_e: ['pyruvate', 'Pyr', 'pyruvate (extracellular)']
+Fru16BP_g: ['fructose-1,6-bisphosphate', 'F-1,6-BP', 'fructose-1,6-bisphosphate (glycosomal)']
+GA3P_g: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde-3-phosphate (glycosomal)']
+CO2_c: ['carbon dioxide', 'CO2', 'carbon dioxide (cytoplasmic)']
+CO2_g: ['carbon dioxide', 'CO2', 'carbon dioxide (glycosomal)']
+Gly3P_c: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde-3-phosphate (cytoplasmic)']
+Gly3P_g: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde-3-phosphate (glycosomal)']
+PEP_c: ['phosphoenolpyruvate', 'PEP', 'phosphoenolpyruvate (cytoplasmic)']
+AMP_g: ['adenosine monophosphate', 'AMP', 'adenosine monophosphate (glycosomal)']
+_3PGA_g: ['3-phosphoglycerate', '3-PGA', '3-phosphoglycerate (glycosomal)']
+AMP_c: ['adenosine monophosphate', 'AMP', 'adenosine monophosphate (cytoplasmic)']
+NADH_g: ['nicotinamide adenine dinucleotide (reduced)', 'NADH', 'NADH (glycosomal)']
+
+Reason: All are standard metabolic intermediates or cofactors involved in glycolysis, energy transfer, or cellular metabolism, with clear common names and synonyms.

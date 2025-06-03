@@ -1,0 +1,10 @@
+Model: BIOMD0000000043
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:50:35
+
+Synonyms:
+EC: ['endoplasmic reticulum calcium ATPase', 'SERCA', 'sarcoplasmic/endoplasmic reticulum calcium ATPase']
+Z: ['cytosolic calcium', 'Ca2+', 'free calcium']
+Y: ['calcium store', 'intracellular calcium reservoir', 'ER calcium']
+
+Reason: The model discusses calcium oscillations involving intracellular calcium pools and channels. EC likely refers to the calcium pump (SERCA) in the ER membrane, Z is the cytosolic free calcium, and Y is the calcium stored in the ER or other intracellular stores.

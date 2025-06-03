@@ -1,0 +1,10 @@
+Model: BIOMD0000000883
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:34:27
+
+Synonyms:
+PIP3Active: ['phosphatidylinositol 3,4,5-trisphosphate', 'PIP3', 'inositol 1,4,5-trisphosphate']
+PIP3Inactive: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'phosphatidylinositol(4,5)P2']
+PLX4032: ['vemurafenib', 'PLX4032', 'RG7204']
+
+Reason: PIP3Active and PIP3Inactive are annotated based on their display names and known biochemical roles, with PIP3 being a common synonym for phosphatidylinositol 3,4,5-trisphosphate and PIP2 being a common synonym for phosphatidylinositol 4,5-bisphosphate. PLX4032 is annotated based on its known identity as the BRAF inhibitor vemurafenib, with PLX4032 and RG7204 being alternative names or identifiers for the same compound.

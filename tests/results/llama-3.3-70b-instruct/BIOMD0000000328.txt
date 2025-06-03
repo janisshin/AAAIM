@@ -1,0 +1,16 @@
+Model: BIOMD0000000328
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:12:24
+
+Synonyms:
+AS_m: ['atorvastatin', 'Atorvastatin calcium', 'Lipitor']
+ASoOH_m: ['o-hydroxyatorvastatin', '2-hydroxyatorvastatin', 'o-Hydroxy atorvastatin']
+ASpOH_m: ['p-hydroxyatorvastatin', '4-hydroxyatorvastatin', 'p-Hydroxy atorvastatin']
+AS_c: ['atorvastatin', 'Atorvastatin calcium', 'Lipitor']
+ASpOH_c: ['p-hydroxyatorvastatin', '4-hydroxyatorvastatin', 'p-Hydroxy atorvastatin']
+ASoOH_c: ['o-hydroxyatorvastatin', '2-hydroxyatorvastatin', 'o-Hydroxy atorvastatin']
+ASpOH_b: ['p-hydroxyatorvastatin', '4-hydroxyatorvastatin', 'p-Hydroxy atorvastatin']
+ASoOH_b: ['o-hydroxyatorvastatin', '2-hydroxyatorvastatin', 'o-Hydroxy atorvastatin']
+AS_b: ['atorvastatin', 'Atorvastatin calcium', 'Lipitor']
+
+Reason: The model is for atorvastatin metabolism, and the species names are annotated based on the reactions and the context of the model, with _m, _c, and _b likely referring to different compartments or locations (e.g., mitochondria, cytosol, blood), and the prefixes o- and p- likely referring to hydroxylation at ortho and para positions, respectively.

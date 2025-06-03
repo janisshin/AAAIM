@@ -1,0 +1,26 @@
+Model: BIOMD0000000315
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:43:00
+
+Synonyms:
+T1: ['deoxythymidine monophosphate', 'dTMP', 'thymidine monophosphate']
+alpha: ['alpha DNA strand', 'single-stranded DNA', 'DNA primer']
+alpha_T1: ['alpha DNA-T1 complex', 'DNA-T1 hybrid', 'DNA strand with T1']
+alpha_T1_alpha: ['alpha-T1-alpha complex', 'DNA hybrid with T1', 'DNA duplex involving T1']
+T1_alpha: ['T1-alpha complex', 'DNA hybrid with T1', 'T1 bound to alpha']
+alpha_alpha_T1: ['alpha-alpha-T1 complex', 'DNA duplex with T1', 'hybrid involving T1']
+T2: ['deoxycytidine monophosphate', 'dCMP', 'cytidine monophosphate']
+alpha_T2: ['alpha DNA-T2 complex', 'DNA-T2 hybrid', 'DNA strand with T2']
+alpha_T2_beta: ['alpha-T2-beta complex', 'DNA hybrid involving T2 and beta', 'DNA duplex with T2 and beta']
+beta: ['deoxyguanosine monophosphate', 'dGMP', 'guanine monophosphate']
+T2_beta: ['T2-beta complex', 'DNA hybrid with T2 and beta', 'DNA duplex involving T2 and beta']
+alpha_beta_T2: ['alpha-beta-T2 complex', 'DNA hybrid involving T2, alpha, beta', 'DNA duplex with T2, alpha, beta']
+T3: ['deoxythymidine triphosphate', 'dTTP', 'thymidine triphosphate']
+beta_T3: ['beta-T3 complex', 'DNA hybrid with T3 and beta', 'T3 bound to beta']
+beta_T3_Inh: ['beta-T3 inhibitor complex', 'T3-inhibited beta complex', 'beta-T3 with Inh']
+Inh: ['Inhibitor molecule', 'Inhibition agent', 'Inhibitory compound']
+T3_Inh: ['T3-Inh complex', 'T3 bound to Inh', 'Inhibitor complex with T3']
+beta_Inh_T3: ['beta-Inh-T3 complex', 'T3-inhibited beta complex', 'beta bound to Inh and T3']
+Inh_T1: ['Inh-T1 complex', 'Inhibitor bound to T1', 'Inh associated with T1']
+
+Reason: All species are DNA or nucleotide related, with some involved in complexes or inhibition; the names reflect their roles in DNA hybridization or enzyme inhibition within the DNA oscillator system.

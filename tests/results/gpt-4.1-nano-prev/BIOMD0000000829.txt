@@ -1,0 +1,9 @@
+Model: BIOMD0000000829
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:08:19
+
+Synonyms:
+Glucose_G: ['glucose', 'D-glucose', 'blood sugar']
+Drug_D: ['drug D', 'unknown drug', 'experimental drug']
+
+Reason: Glucose is a common monosaccharide involved in cellular metabolism; Drug D is unspecified, so treated as an experimental or unknown compound.

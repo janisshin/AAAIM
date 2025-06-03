@@ -1,0 +1,19 @@
+Model: BIOMD0000000389
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:56
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'RuBP', 'ribulose bisphosphate']
+PGA: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'PGA']
+HeP: ['hexose phosphate', 'hexose phosphate', 'hexose phosphate', '(unspecific', 'likely a hexose phosphate)']
+Ru5P: ['ribulose-5-phosphate', 'ribulose 5-phosphate', 'Ru5P']
+UTP: ['uridine triphosphate', 'UTP', 'uridine triphosphate']
+UDP: ['uridine diphosphate', 'UDP', 'uridine diphosphate']
+Pi: ['inorganic phosphate', 'phosphate', 'Pi']
+CO2: ['carbon dioxide', 'CO2', 'carbon dioxide']
+HePc: ['hexose phosphate carrier', '(likely a transporter or complex', 'uncertain; no standard name)']
+Suc: ['sucrose', 'sucrose', 'table sugar']
+Pic: ['picolinic acid', '(but context suggests a different compound; likely a precursor or intermediate', 'but uncertain)']
+SucV: ['sucrose transporter', '(likely a transporter protein or complex', 'uncertain)']
+
+Reason: All species are biochemical compounds or common metabolites involved in photosynthesis or carbohydrate metabolism; some, like HePc and SucV, are likely transporters or complexes, not standard small molecules, hence "UNK" for uncertain or non-chemical entities.

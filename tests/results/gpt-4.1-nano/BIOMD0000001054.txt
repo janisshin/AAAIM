@@ -1,0 +1,11 @@
+Model: BIOMD0000001054
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:24:33
+
+Synonyms:
+FM: ['fibrin', 'fibrinogen', 'fibrin monomer']
+C1: ['fibrin monomer', 'fibrin fragment', 'fibrin']
+Thb: ['thrombin', 'thrombin enzyme', 'thrombin protease']
+C2: ['fibrin oligomer', 'fibrin polymer', 'fibrin crosslink']
+
+Reason: The model references fibrin polymerization, with FM likely representing fibrin monomer, C1 as fibrin monomer or fragment, Thb as thrombin, and C2 as fibrin oligomer or polymer.

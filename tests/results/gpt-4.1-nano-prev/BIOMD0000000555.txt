@@ -1,0 +1,8 @@
+Model: BIOMD0000000555
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:01:41
+
+Synonyms:
+Amyloid: ['amyloid fibril', 'amyloid', 'protein aggregate']
+
+Reason: The species "Amyloid" refers to protein aggregates characterized by fibrillar structures associated with neurodegenerative diseases; thus, these are common synonyms or related terms.

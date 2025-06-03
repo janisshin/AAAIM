@@ -1,0 +1,14 @@
+Model: BIOMD0000000266
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:07:47
+
+Synonyms:
+X0: ['glucose', 'D-glucose', 'blood sugar']
+X1: ['glucose', 'D-glucose', 'blood sugar']
+X2: ['glucose-6-phosphate', 'G6P', 'D-glucose-6-phosphate']
+X3: ['glucose-1-phosphate', 'G1P', 'D-glucose-1-phosphate']
+X4: ['uridine diphosphate glucose', 'UDPG', 'UDP-glucose']
+X6: ['trehalose-6-phosphate', 'T6P', 'alpha,alpha-trehalose 6-phosphate']
+X7: ['trehalose', 'mycose', 'alpha,alpha-trehalose']
+
+Reason: The display names provided in the model are used to determine the standardized names for each species. For X0 and X1, the display name "glucose" is used. For X2, X3, X4, X6, and X7, the display names "G6P", "G1P", "UDPG", "T6P", and "trehalose" are used, respectively, and then mapped to their corresponding standardized names. The reactions provided do not contain explicit biochemical reactions, but the model description and display names suggest that the species are involved in the trehalose cycle, which supports the chosen standardized names.

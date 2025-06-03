@@ -1,0 +1,15 @@
+Model: BIOMD0000000255
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:41:19
+
+Synonyms:
+c2: ['ATP', 'adenosine triphosphate', 'adenosine triphosphate (ATP)']
+c3: ['EGF', 'epidermal growth factor', 'EGF']
+c4: ['EGF', 'epidermal growth factor', 'EGF']
+c10: ['ATP', 'adenosine triphosphate', 'adenosine triphosphate (ATP)']
+c11: ['EGF', 'epidermal growth factor', 'EGF']
+c106: ['PIP3', 'phosphatidylinositol (3,4,5)-trisphosphate', 'PIP3']
+c285: ['Inh', 'inhibitor', 'UNK']
+c462: ['PIP3', 'phosphatidylinositol (3,4,5)-trisphosphate', 'PIP3']
+
+Reason: c2, c10, c11 are all ATP or EGF related molecules; c3 is EGF; c4 is EGF; c106 and c462 are PIP3, a well-known signaling lipid; c285 is labeled as Inh, likely an inhibitor, but unspecified, so "UNK".

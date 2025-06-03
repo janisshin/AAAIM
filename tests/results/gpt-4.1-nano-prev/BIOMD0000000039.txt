@@ -1,0 +1,12 @@
+Model: BIOMD0000000039
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:41
+
+Synonyms:
+Ca_cyt: ['calcium ion', 'cytosolic calcium', 'Ca2+']
+CaER: ['endoplasmic reticulum calcium', 'ER calcium', 'Ca2+ in ER']
+CaM: ['calmodulin', 'Ca2+ calmodulin complex', 'calcium-bound calmodulin']
+CaPr: ['calcium-protein complex', 'Ca2+ protein complex', 'calcium-bound protein']
+Pr: ['protein', 'peptide', 'polypeptide']
+
+Reason: Ca_cyt and CaER are cytosolic and ER calcium ions, respectively; CaM is calmodulin, a calcium-binding messenger protein; CaPr is a calcium-protein complex; Pr is a generic protein. All are standard biochemical entities related to calcium signaling.

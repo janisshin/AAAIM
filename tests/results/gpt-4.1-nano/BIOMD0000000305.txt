@@ -1,0 +1,11 @@
+Model: BIOMD0000000305
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:58:26
+
+Synonyms:
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+S1: ['myosin S1', 'myosin head domain', 'myosin subfragment 1']
+Pi_: ['inorganic phosphate', 'Pi', 'phosphate']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+
+Reason: These are standard biochemical names for the molecules involved in myosin ATPase activity. S1 is a specific myosin domain, and Pi_ is inorganic phosphate.

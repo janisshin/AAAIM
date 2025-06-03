@@ -1,0 +1,15 @@
+Model: BIOMD0000000986
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:09:40
+
+Synonyms:
+FITC_Dextran_single_compartment_model: ['fluorescein isothiocyanate dextran', 'FITC-dextran', 'fluorescein isothiocyanate dextran conjugate']
+Pyranine_single_compartment_model: ['pyranine', '8-hydroxypyrene-1,3,6-trisulfonic acid', 'HPTS']
+FITC_Dextran_three_compartment_model_compartment_1: ['FITC-dextran', 'fluorescein isothiocyanate dextran', 'FITC-dextran']
+FITC_Dextran_three_compartment_model_compartment_2: ['FITC-dextran', 'fluorescein isothiocyanate dextran', 'FITC-dextran']
+FITC_Dextran_three_compartment_model_compartment_3: ['FITC-dextran', 'fluorescein isothiocyanate dextran', 'FITC-dextran']
+Pyranine_three_compartment_model_compartment_1: ['pyranine', '8-hydroxypyrene-1,3,6-trisulfonic acid', 'HPTS']
+Pyranine_three_compartment_model_compartment_2: ['pyranine', '8-hydroxypyrene-1,3,6-trisulfonic acid', 'HPTS']
+Pyranine_three_compartment_model_compartment_3: ['pyranine', '8-hydroxypyrene-1,3,6-trisulfonic acid', 'HPTS']
+
+Reason: The species are labeled as fluorescent dyes used in cellular studies; FITC-dextran is a fluorescein-labeled polysaccharide, and Pyranine is a fluorescent pH indicator dye.

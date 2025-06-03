@@ -1,0 +1,10 @@
+Model: BIOMD0000000012
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:03
+
+Synonyms:
+X: ['LacI mRNA', 'Lac repressor mRNA', 'lacI transcript']
+Y: ['TetR mRNA', 'tetracycline repressor mRNA', 'tetR transcript']
+Z: ['cI mRNA', 'lambda cI repressor mRNA', 'cl transcript']
+
+Reason: The species are explicitly named as mRNA for LacI, TetR, and cI in the display names, indicating their roles as messenger RNAs for these well-characterized transcriptional repressors.

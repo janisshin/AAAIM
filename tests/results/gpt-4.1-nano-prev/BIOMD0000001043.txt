@@ -1,0 +1,10 @@
+Model: BIOMD0000001043
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:10:39
+
+Synonyms:
+uninfected_tumor_cells: ['tumor cells', 'neoplastic cells', 'cancer cells']
+infected_tumor_cells: ['infected tumor cells', 'virus-infected cancer cells', 'oncolytic virus-infected cells']
+overall_tumor_size: ['tumor burden', 'tumor mass', 'cancer volume']
+
+Reason: These are standard terms for tumor cell populations and tumor size metrics in cancer modeling; the species are not biochemical entities but cell populations, so normalized names are general cancer-related terms.

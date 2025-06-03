@@ -1,0 +1,9 @@
+Model: BIOMD0000000801
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:08:11
+
+Synonyms:
+B: ['glucose', 'blood sugar', 'D-glucose']
+S: ['s', 'serum', 'serum marker']
+
+Reason: B is involved in glucose metabolism; S appears to be a serum component, likely a biomarker or serum glucose.

@@ -1,0 +1,9 @@
+Model: BIOMD0000000654
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:05:52
+
+Synonyms:
+PIP2: ['phosphatidylinositol 4,5-bisphosphate', 'PI(4,5)P2', 'PIP2']
+PIP3: ['phosphatidylinositol 3,4,5-trisphosphate', 'PI(3,4,5)P3', 'PIP3']
+
+Reason: Both are well-known phosphoinositides involved in signaling pathways, commonly referred to as PIP2 and PIP3 in biochemical contexts.

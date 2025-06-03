@@ -1,0 +1,10 @@
+Model: BIOMD0000000224
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:03:14
+
+Synonyms:
+CaI: ['calcium ion', 'Ca2+', 'calcium(2+)']
+IP3: ['inositol 1,4,5-trisphosphate', 'D-myo-inositol 1,4,5-trisphosphate', 'IP3(4-)']
+CaS: ['UNK']
+
+Reason: CaI is likely calcium ion due to its involvement in calcium spiking and the model's context, IP3 is identified as inositol 1,4,5-trisphosphate from the model's name and notes, CaS has no display name or reaction information to determine its identity.

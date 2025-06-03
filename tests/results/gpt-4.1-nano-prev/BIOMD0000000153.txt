@@ -1,0 +1,88 @@
+Model: BIOMD0000000153
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:59
+
+Synonyms:
+PP2B: ['protein phosphatase 2B', 'calcineurin', 'PP2B']
+
+Reason: PP2B is a common abbreviation for calcineurin, a well-known calcium/calmodulin-dependent serine/threonine phosphatase.
+
+D34_PP2B: "protein phosphatase 2B", "calcineurin", "PP2B"
+Reason: Same as PP2B, likely referring to calcineurin in a specific context.
+
+D34_75_PP2B: "protein phosphatase 2B", "calcineurin", "PP2B"
+Reason: Same as PP2B, indicating calcineurin.
+
+D34_137_PP2B: "protein phosphatase 2B", "calcineurin", "PP2B"
+Reason: Same as PP2B, indicating calcineurin.
+
+D34_75_137_PP2B: "protein phosphatase 2B", "calcineurin", "PP2B"
+Reason: Same as PP2B, calcineurin.
+
+Ca: "calcium", "Ca2+", "calcium ion"
+Reason: Ca is a standard abbreviation for calcium ion.
+
+PP2BinactiveCa2: "inactive calcineurin", "PP2B", "calcineurin"
+Reason: Represents inactive form of calcineurin bound to calcium.
+
+cAMP: "cyclic AMP", "cAMP", "adenylyl cyclase product"
+Reason: cAMP is a well-known cyclic nucleotide involved in signaling.
+
+cAMP_R2C2: "cAMP", "cyclic AMP", "adenosine 3',5'-cyclic monophosphate"
+Reason: Represents cAMP bound to R2C2 complex; standard name is cAMP.
+
+cAMP2_R2C2: "cAMP", "cyclic AMP", "adenosine 3',5'-cyclic monophosphate"
+Reason: Same as above, indicating second cAMP molecule.
+
+cAMP3_R2C2: "cAMP", "cyclic AMP", "adenosine 3',5'-cyclic monophosphate"
+Reason: Same as above, third cAMP molecule.
+
+cAMP4_R2C2: "cAMP", "cyclic AMP", "adenosine 3',5'-cyclic monophosphate"
+Reason: Same as above, fourth cAMP molecule.
+
+cAMP4_R2: "cAMP", "cyclic AMP", "adenosine 3',5'-cyclic monophosphate"
+Reason: cAMP molecule involved in signaling.
+
+cAMP4_R2: "cAMP", "cyclic AMP", "adenosine 3',5'-cyclic monophosphate"
+Reason: Same as above.
+
+cAMP_PDE: "cyclic AMP phosphodiesterase", "cAMP PDE", "phosphodiesterase"
+Reason: Enzyme degrading cAMP.
+
+AMP: "adenosine monophosphate", "AMP", "adenylate"
+Reason: Standard nucleotide monophosphate.
+
+cAMP_PDEP: "cAMP phosphodiesterase", "cAMP PDE", "phosphodiesterase"
+Reason: Same enzyme as cAMP_PDE.
+
+D34_75_PP2ACa: "protein phosphatase 2B", "calcineurin", "PP2B"
+Reason: Calcineurin bound to D34:75 and calcium.
+
+D34_75_137_PP2ACa: "protein phosphatase 2B", "calcineurin", "PP2B"
+Reason: Same as above, with additional D34:137 context.
+
+D75_PP2ACa: "protein phosphatase 2B", "calcineurin", "PP2B"
+Reason: Calcineurin in D75 context.
+
+D75_137_PP2ACa: "protein phosphatase 2B", "calcineurin", "PP2B"
+Reason: Same as above.
+
+D34_75_PP2APCa: "protein phosphatase 2B", "calcineurin", "PP2B"
+Reason: Calcineurin with D34:75 and PCa.
+
+PP2APCa: "protein phosphatase 2B", "calcineurin", "PP2B"
+Reason: Calcineurin with PCa.
+
+D34_75_137_PP2APCa: "protein phosphatase 2B", "calcineurin", "PP2B"
+Reason: Same as above, with additional D34:137.
+
+D75_PP2APCa: "protein phosphatase 2B", "calcineurin", "PP2B"
+Reason: Calcineurin with D75 and PCa.
+
+D75_137_PP2APCa: "protein phosphatase 2B", "calcineurin", "PP2B"
+Reason: Same as above.
+
+PP2ACa_PKA: "protein phosphatase 2B calcium-bound", "calcineurin", "PP2B"
+Reason: Calcineurin bound to calcium and PKA.
+
+Reason: The species are mostly abbreviations for calcineurin (PP2B), calcium, cAMP, and their complexes, all well-established chemical or biological entities.

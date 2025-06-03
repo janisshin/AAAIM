@@ -1,0 +1,12 @@
+Model: BIOMD0000000601
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:19:42
+
+Synonyms:
+mwd805cc43_4a96_472f_a894_c119a6aa895f: ['calcium', 'Ca2+', 'calcium ion']
+mw447078ee_8bc8_4358_abcd_ade10dba93b0: ['calcium', 'Ca2+', 'calcium ion']
+mw40a96ef6_32da_46d1_9712_4f53f60bad43: ['calcium', 'Ca2+', 'calcium ion']
+mwe1a0a651_d2d5_4f75_8d45_9336c60eb9a6: ['calcium', 'Ca2+', 'calcium ion']
+mw168e0d8a_b9f7_4d4c_b437_a81206c5d381: ['caffeine', 'C8H10N4O2', 'methylxanthine']
+
+Reason: All species are labeled with identifiers related to calcium or caffeine; the context indicates calcium concentrations and caffeine application, so normalized names are standard calcium ions and caffeine.

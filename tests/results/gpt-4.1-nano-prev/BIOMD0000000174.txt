@@ -1,0 +1,11 @@
+Model: BIOMD0000000174
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:38:25
+
+Synonyms:
+r5: ['Rab5', 'Rab5-GTP', 'Rab5 GTPase']
+R5: ['Rab5', 'Rab5-GTP', 'Rab5 GTPase']
+r7: ['Rab7', 'Rab7-GDP', 'Rab7 GTPase']
+R7: ['Rab7', 'Rab7-GTP', 'Rab7 GTPase']
+
+Reason: The species are Rab GTPases involved in endosomal trafficking. The uppercase/lowercase variants likely denote different nucleotide states (GDP or GTP). Standard names are "Rab" proteins with their nucleotide-bound states.

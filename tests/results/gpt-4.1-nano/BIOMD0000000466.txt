@@ -1,0 +1,9 @@
+Model: BIOMD0000000466
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:02:24
+
+Synonyms:
+s102: ['GTP-bound Ras', 'Ras GTP', 'Ras active']
+s103: ['GDP-bound Ras', 'Ras GDP', 'Ras inactive']
+
+Reason: s102 and s103 represent the active and inactive states of Ras, distinguished by their bound nucleotides GTP and GDP, respectively.

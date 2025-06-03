@@ -1,0 +1,21 @@
+Model: BIOMD0000000607
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:04:02
+
+Synonyms:
+glycerol_i: ['glycerol', 'glycerol-3-phosphate', 'glycerol backbone']
+cin: ['UNK']
+glucose_i: ['glucose', 'blood sugar', 'D-glucose']
+G6P: ['glucose-6-phosphate', 'G6P', 'phosphoglucose']
+trehalose: ['trehalose', 'maltose', 'mycose']
+F16DP: ['fructose-1,6-bisphosphate', 'F16BP', 'FDP']
+pyruvate: ['pyruvate', 'pyruvic acid', 'pyruvate ion']
+acetate_i: ['acetate', 'acetic acid', 'acetate ion']
+ethanol_i: ['ethanol', 'ethyl alcohol', 'alcohol']
+glycerol_e: ['glycerol', 'glycerol extracellular', 'glycerol outside cell']
+glucose_e: ['glucose', 'glucose extracellular', 'blood glucose']
+acetate_e: ['acetate', 'extracellular acetate', 'acetate outside cell']
+ethanol_e: ['ethanol', 'extracellular ethanol', 'ethanol outside cell']
+trehalose_e: ['trehalose', 'extracellular trehalose', 'trehalose outside cell']
+
+Reason: Species are mostly common metabolites involved in central carbon metabolism, with some extracellular and intracellular distinctions. "cin" is unknown or not a standard metabolite.

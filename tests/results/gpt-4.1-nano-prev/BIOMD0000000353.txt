@@ -1,0 +1,46 @@
+Model: BIOMD0000000353
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:18
+
+Synonyms:
+cpd_C00080_CY: ['H+', 'proton', 'hydrogen ion']
+
+Reason: The display name indicates it's a proton (H+), a common biochemical species.
+
+cpd_C00369_CS: "starch", "amylose", "glucan"
+Reason: Named as "Starch" in display names, a polysaccharide.
+
+cpd_C00369Glc_CS: "starch glucosyl unit", "glucose unit", "glucan fragment"
+Reason: Derived from "Starch Glucosyl unit", a glucose residue in starch.
+
+cpd_C00369db_CS: "starch exposed to Beta Amylase", "starch degradation product", "dextrin"
+Reason: Describes starch after enzymatic action, likely a degradation intermediate.
+
+cpd_C00208_CY: "maltose", "maltose", "malt sugar"
+Reason: Named as "Maltose" in display names, a disaccharide.
+
+cpd_C00208_CS: "maltose", "maltose", "malt sugar"
+Reason: Same as above, a disaccharide.
+
+cpd_C01835_CS: "maltotriose", "maltotriose", "trisaccharide"
+Reason: Named as "Maltotriose", a trisaccharide.
+
+cpd_G00343_CS: "maltopentaose", "maltopentaose", "pentasaccharide"
+Reason: Named as "Maltopentaose", a pentasaccharide.
+
+cpd_C00031_CS: "(D)-Glucose", "glucose", "d-glucose"
+Reason: Named as "(D)-Glucose", a common monosaccharide.
+
+cpd_C00031_CY: "(D)-Glucose", "glucose", "d-glucose"
+Reason: Same as above, a monosaccharide.
+
+cpd_C00092tot_CY: "G6P pool", "glucose-6-phosphate", "G6P"
+Reason: Named as "G6P pool", indicating glucose-6-phosphate.
+
+cpd_C00002tot_CY: "ATP pool", "adenosine triphosphate", "ATP"
+Reason: Named as "ATP pool", a key energy currency.
+
+cpd_C00008tot_CY: "ADP pool", "adenosine diphosphate", "ADP"
+Reason: Named as "ADP pool", a nucleotide involved in energy transfer.
+
+Reason: All species are standard biochemical entities, mostly sugars, phosphate, or energy carriers, suitable for ontology lookup.

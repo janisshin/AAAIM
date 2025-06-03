@@ -1,0 +1,23 @@
+Model: BIOMD0000000579
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:19:30
+
+Synonyms:
+s4: ['cis-Aconitate', 'aconitate', 'trans-Aconitate']
+s188: ['D-Xylulose-5-phosphate', 'Xylulose5P', 'X5P']
+s49: ['UREA', 'Urea', 'Carbamoyl isocyanate']
+s335: ['UDP-Glucose', 'Uridine diphosphate glucose', 'UDP-glucose']
+s199: ['UDP', 'Uridine diphosphate', 'Uridine diphosphate']
+s292: ['Triglyceride', 'Triacylglycerol', 'TAG']
+s297: ['Trehalose', 'α,α-Trehalose', 'Trehalose disaccharide']
+s94: ['TPP', 'Thiamine pyrophosphate', 'Thiamine diphosphate']
+s284: ['Sucrose', 'Table sugar', 'Disaccharide']
+s7: ['Succinate', 'Butanedioate', 'Succinic acid']
+s244: ['Sedoheptulase-7-phosphate', 'Sedoheptulose-7-phosphate', 'S7P']
+s6: ['S-CoA', 'Coenzyme A', 'CoA']
+s187: ['Ribose-5-phosphate', 'Ribose5P', 'R5P']
+s11: ['Pyruvate', 'Pyruvic acid', '2-Oxopropanoate']
+s200: ['PPi', 'Pyrophosphate', 'Inorganic pyrophosphate']
+s363: ['PPi', 'Pyrophosphate', 'Inorganic pyrophosphate']
+
+Reason: The model focuses on human metabolism, energy pathways, and common metabolites; many species are standard biochemical compounds. Some species are labeled with generic codes, but their display names clarify their identities.

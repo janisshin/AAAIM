@@ -1,0 +1,9 @@
+Model: BIOMD0000000117
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:53:31
+
+Synonyms:
+z: ['calcium', 'Ca2+', 'calcium ion']
+y: ['calcium', 'Ca2+', 'calcium ion']
+
+Reason: Both z and y are likely to represent calcium ions, as indicated by their display names and the context of the model, which involves Ca2+ oscillations and Ca2+-induced Ca2+ release. The display names 'Ca in the cytosol' and 'Ca in the InsP3-insensitive pool' suggest that z and y represent calcium ions in different cellular compartments.

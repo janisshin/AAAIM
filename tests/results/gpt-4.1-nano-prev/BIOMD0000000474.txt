@@ -1,0 +1,36 @@
+Model: BIOMD0000000474
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:55:33
+
+Synonyms:
+PI345P3: ['phosphatidylinositol (3,4,5)-trisphosphate', 'PIP3', 'PI(3,4,5)P3']
+PIP2: ['phosphatidylinositol (4,5)-bisphosphate', 'PIP2', 'PI(4,5)P2']
+PI345P3_mol: ['phosphatidylinositol (3,4,5)-trisphosphate molecule', 'PIP3 molecule', 'PI(3,4,5)P3']
+PIP2_mol: ['phosphatidylinositol (4,5)-bisphosphate molecule', 'PIP2 molecule', 'PI(4,5)P2']
+extracellular_ROS: ['extracellular reactive oxygen species', 'extracellular ROS', 'oxidative molecules outside cell']
+ROS: ['reactive oxygen species', 'ROS', 'oxidative molecules']
+GSH: ['glutathione', 'reduced glutathione', 'GSH']
+GSSG: ['glutathione disulfide', 'oxidized glutathione', 'GSSG']
+dnabound_Foxo1_Pa0_Pd0_Pe0_pUb0: ['FoxO1 bound to DNA, unphosphorylated, unubiquitinated', 'FoxO1-DNA complex', 'FoxO1 active form']
+dnabound_Foxo1_Pa0_Pd0_Pe0_pUb1: ['FoxO1 bound to DNA, unphosphorylated, ubiquitinated', 'FoxO1-DNA complex ubiquitinated', 'FoxO1 active ubiquitinated']
+dnabound_Foxo1_Pa0_Pd0_Pe1_pUb0: ['FoxO1 bound to DNA, phosphorylated, unubiquitinated', 'FoxO1 phosphorylated DNA complex', 'FoxO1 phosphorylated active']
+dnabound_Foxo1_Pa0_Pd0_Pe1_pUb1: ['FoxO1 bound to DNA, phosphorylated, ubiquitinated', 'FoxO1 phosphorylated DNA ubiquitinated', 'FoxO1 phosphorylated active ubiquitinated']
+dnabound_Foxo1_Pa0_Pd1_Pe0_pUb0: ['FoxO1 bound to DNA, phosphorylated, unubiquitinated', 'FoxO1 phosphorylated DNA complex', 'FoxO1 phosphorylated active']
+dnabound_Foxo1_Pa0_Pd1_Pe0_pUb1: ['FoxO1 bound to DNA, phosphorylated, ubiquitinated', 'FoxO1 phosphorylated DNA ubiquitinated', 'FoxO1 phosphorylated active ubiquitinated']
+dnabound_Foxo1_Pa0_Pd1_Pe1_pUb0: ['FoxO1 bound to DNA, phosphorylated, unubiquitinated', 'FoxO1 phosphorylated DNA complex', 'FoxO1 phosphorylated active']
+dnabound_Foxo1_Pa0_Pd1_Pe1_pUb1: ['FoxO1 bound to DNA, phosphorylated, ubiquitinated', 'FoxO1 phosphorylated DNA ubiquitinated', 'FoxO1 phosphorylated active ubiquitinated']
+dnabound_Foxo1_Pa1_Pd0_Pe0_pUb0: ['FoxO1 bound to DNA, unphosphorylated, unubiquitinated', 'FoxO1-DNA complex', 'FoxO1 active form']
+dnabound_Foxo1_Pa1_Pd0_Pe0_pUb1: ['FoxO1 bound to DNA, unphosphorylated, ubiquitinated', 'FoxO1-DNA complex ubiquitinated', 'FoxO1 active ubiquitinated']
+dnabound_Foxo1_Pa1_Pd0_Pe1_pUb0: ['FoxO1 bound to DNA, phosphorylated, unubiquitinated', 'FoxO1 phosphorylated DNA complex', 'FoxO1 active phosphorylated']
+dnabound_Foxo1_Pa1_Pd0_Pe1_pUb1: ['FoxO1 bound to DNA, phosphorylated, ubiquitinated', 'FoxO1 phosphorylated DNA ubiquitinated', 'FoxO1 active phosphorylated ubiquitinated']
+dnabound_Foxo1_Pa1_Pd1_Pe0_pUb0: ['FoxO1 bound to DNA, unphosphorylated, unubiquitinated', 'FoxO1-DNA complex', 'FoxO1 active form']
+dnabound_Foxo1_Pa1_Pd1_Pe0_pUb1: ['FoxO1 bound to DNA, unphosphorylated, ubiquitinated', 'FoxO1-DNA complex ubiquitinated', 'FoxO1 active ubiquitinated']
+dnabound_Foxo1_Pa1_Pd1_Pe1_pUb0: ['FoxO1 bound to DNA, phosphorylated, unubiquitinated', 'FoxO1 phosphorylated DNA complex', 'FoxO1 active phosphorylated']
+dnabound_Foxo1_Pa1_Pd1_Pe1_pUb1: ['FoxO1 bound to DNA, phosphorylated, ubiquitinated', 'FoxO1 phosphorylated DNA ubiquitinated', 'FoxO1 active phosphorylated ubiquitinated']
+dnabound_Foxo1_tot: ['total FoxO1-DNA complex', 'FoxO1 bound to DNA total', 'FoxO1-DNA complex sum']
+nucleus_RNA_InR: ['nuclear RNA of insulin receptor', 'nuclear insulin receptor RNA', 'nuclear IR mRNA']
+cytoplasm_RNA_InR: ['cytoplasmic RNA of insulin receptor', 'cytoplasmic insulin receptor RNA', 'cytoplasm IR mRNA']
+nucleus_RNA_SOD2: ['nuclear RNA of superoxide dismutase 2', 'nuclear SOD2 mRNA', 'nuclear mitochondrial SOD2 RNA']
+cytoplasm_RNA_SOD2: ['cytoplasmic RNA of superoxide dismutase 2', 'cytoplasmic SOD2 mRNA', 'cytoplasm mitochondrial SOD2 RNA']
+
+Reason: These are standard names or common synonyms for phosphoinositides, reactive oxygen species, glutathione forms, and FoxO1-DNA complexes, as well as RNA species, relevant for biological ontologies.

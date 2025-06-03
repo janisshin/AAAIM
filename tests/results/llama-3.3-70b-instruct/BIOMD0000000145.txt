@@ -1,0 +1,12 @@
+Model: BIOMD0000000145
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:54:26
+
+Synonyms:
+Galpha_GTP: ['GTP-bound G alpha subunit', 'Galpha-GTP', 'guanosine triphosphate-bound G alpha']
+IP3: ['inositol 1,4,5-trisphosphate', 'D-myo-inositol 1,4,5-trisphosphate', 'IP3']
+Ca_ER: ['calcium(2+) ion', 'Ca2+', 'calcium ion']
+Ca_Cyt: ['calcium(2+) ion', 'Ca2+', 'calcium ion']
+DG: ['1,2-diacyl-sn-glycerol', 'diacylglycerol', 'diglyceride']
+
+Reason: Galpha_GTP is likely a G-protein alpha subunit bound to GTP, IP3 is a well-known second messenger, Ca_ER and Ca_Cyt are calcium ions in different compartments, and DG is diacylglycerol, a common intermediate in cell signaling pathways, as inferred from the display names, reactions, and model description.

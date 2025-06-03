@@ -1,0 +1,28 @@
+Model: BIOMD0000000326
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:11:43
+
+Synonyms:
+Ca2_buff: ['calcium ion', 'calcium(2+)', 'calcium']
+Ca2_free: ['calcium ion', 'calcium(2+)', 'calcium']
+G_GTP: ["guanosine 5'-triphosphate", 'GTP', 'guanosine triphosphate']
+Ga_GDP: ["guanosine 5'-diphosphate", 'GDP', 'guanosine diphosphate']
+Ga_GTP: ['GTP-bound G-alpha', 'G-protein alpha subunit', 'guanine nucleotide-binding protein']
+Ga_GTP_PDE_a_Ga_GTP: ['UNK']
+Ga_GTP_a_PDE_a_Ga_GTP: ['UNK']
+Ops_G_GTP: ['UNK']
+PDE_Ga_GTP: ['UNK']
+PDE_a_Ga_GTP: ['UNK']
+R0_G_GTP: ['UNK']
+R1_G_GTP: ['UNK']
+R2_G_GTP: ['UNK']
+R3_G_GTP: ['UNK']
+R4_G_GTP: ['UNK']
+R5_G_GTP: ['UNK']
+R6_G_GTP: ['UNK']
+RGS_Ga_GTP_a_PDE_a_Ga_GTP: ['UNK']
+RGS_PDE_a_Ga_GTP: ['UNK']
+Rec_wCa2_RK: ['UNK']
+cGMP: ['cyclic GMP', "guanosine 3',5'-cyclic monophosphate", 'cyclic guanosine monophosphate']
+
+Reason: Most species names are not directly related to chemical entities, but rather to proteins or protein complexes, making it difficult to provide standardized chemical names. Only Ca2_buff, Ca2_free, G_GTP, Ga_GDP, Ga_GTP, and cGMP have clear chemical counterparts, while the others are related to proteins or complexes involved in the phototransduction cascade.

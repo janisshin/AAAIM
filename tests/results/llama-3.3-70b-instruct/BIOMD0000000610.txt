@@ -1,0 +1,20 @@
+Model: BIOMD0000000610
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:22:57
+
+Synonyms:
+glycerol_i: ['glycerol', 'glycerin', 'propane-1,2,3-triol']
+glucose_i: ['glucose', 'D-glucose', 'blood sugar']
+G6P: ['glucose-6-phosphate', 'D-glucose-6-phosphate', 'G6P']
+trehalose: ['trehalose', 'mycose', 'trehalose dihydrate']
+F16DP: ['fructose-1,6-bisphosphate', 'D-fructose-1,6-bisphosphate', 'F1,6BP']
+pyruvate: ['pyruvic acid', '2-oxopropanoic acid', 'pyruvate']
+acetate_i: ['acetic acid', 'acetate', 'ethanoic acid']
+ethanol_i: ['ethanol', 'ethyl alcohol', 'alcohol']
+glycerol_e: ['glycerol', 'glycerin', 'propane-1,2,3-triol']
+glucose_e: ['glucose', 'D-glucose', 'blood sugar']
+acetate_e: ['acetic acid', 'acetate', 'ethanoic acid']
+ethanol_e: ['ethanol', 'ethyl alcohol', 'alcohol']
+trehalose_e: ['trehalose', 'mycose', 'trehalose dihydrate']
+
+Reason: The model is a metabolic model of osmoadaptation in yeast, and the species are metabolites involved in glycolysis, glycerol production, and other related pathways. The standardized names are based on common biochemical nomenclature and the context of the model. The suffixes "_i" and "_e" likely indicate intracellular and extracellular species, respectively, but do not affect the chemical identity of the species.

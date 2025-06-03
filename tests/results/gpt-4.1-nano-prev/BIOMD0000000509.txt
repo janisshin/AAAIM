@@ -1,0 +1,12 @@
+Model: BIOMD0000000509
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:59:46
+
+Synonyms:
+x: ['unknown', 'UNK', 'unknown species']
+ip3: ['inositol 1,4,5-trisphosphate', 'IP3', 'inositol triphosphate']
+atp: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+y: ['unknown', 'UNK', 'unknown species']
+ca: ['calcium ion', 'Ca2+', 'calcium']
+
+Reason: The species are labeled as generic variables or abbreviations without explicit chemical names. "ip3" and "ca" are known biochemical entities, but "x", "y", and "species" are unspecified or generic variables.

@@ -1,0 +1,14 @@
+Model: BIOMD0000000068
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:51:29
+
+Synonyms:
+Phser: ['phosphohomoserine', 'O-phosphohomoserine', 'Homoserine phosphate']
+Thr: ['threonine', 'L-threonine', '3-hydroxy-2-aminopropanoic acid']
+Cystathionine: ['cystathionine', 'L-cystathionine', 'homocystathionine']
+Hser: ['homoserine', 'L-homoserine', 'O-aminoserine']
+Phi: ['inorganic phosphate', 'orthophosphate', 'Pi']
+Cys: ['cysteine', 'L-cysteine', '2-amino-3-mercaptopropanoic acid']
+AdoMet: ['S-adenosylmethionine', 'SAM', 'adenosylmethionine']
+
+Reason: All are well-established chemical names or common synonyms for these biochemical species.

@@ -1,0 +1,8 @@
+Model: BIOMD0000000659
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:05:56
+
+Synonyms:
+Ca: ['calcium ion', 'calcium', 'Ca2+']
+
+Reason: The species "Ca" in biological signaling models typically refers to calcium ions, which are crucial secondary messengers involved in various cellular processes, including ERK-MAPK signaling.

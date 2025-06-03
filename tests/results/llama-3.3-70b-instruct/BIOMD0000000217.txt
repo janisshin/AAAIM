@@ -1,0 +1,19 @@
+Model: BIOMD0000000217
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:02:27
+
+Synonyms:
+UTP: ["uridine 5'-triphosphate", 'UTP', 'uridine triphosphate']
+PPi: ['diphosphate', 'pyrophosphate', 'inorganic diphosphate']
+GLN: ['glutamine', 'L-glutamine', 'glutamic acid amide']
+UMP: ["uridine 5'-monophosphate", 'UMP', 'uridine monophosphate']
+AMP: ["adenosine 5'-monophosphate", 'AMP', 'adenosine monophosphate']
+NH4: ['ammonium', 'ammonium ion', 'NH4+']
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'NADPH', 'reduced nicotinamide adenine dinucleotide phosphate']
+GLU: ['glutamate', 'L-glutamate', 'glutamic acid']
+NADP: ['nicotinamide adenine dinucleotide phosphate', 'NADP+', 'oxidized nicotinamide adenine dinucleotide phosphate']
+ATP: ["adenosine 5'-triphosphate", 'ATP', 'adenosine triphosphate']
+ADP: ["adenosine 5'-diphosphate", 'ADP', 'adenosine diphosphate']
+P_i: ['phosphate', 'inorganic phosphate', 'orthophosphate']
+
+Reason: The model is related to ammonium assimilation in Escherichia coli, and the species are all related to energy transfer, nitrogen metabolism, or signaling molecules, so the standardized names are based on common biochemical nomenclature. The display names provided in the model are already standardized, so they are used as the primary names. The reactions are not provided, but the context of the model and the display names allow for accurate annotation of the species.

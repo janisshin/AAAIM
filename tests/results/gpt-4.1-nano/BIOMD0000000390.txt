@@ -1,0 +1,14 @@
+Model: BIOMD0000000390
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:59:44
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'ribulose bisphosphate', 'RuBP']
+PGA: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'PGA']
+Ru5P: ['ribulose-5-phosphate', 'ribulose 5-phosphate', 'Ru5P']
+Pi: ['inorganic phosphate', 'phosphate', 'Pi']
+ATP: ['adenosine triphosphate', 'ATP']
+ADP: ['adenosine diphosphate', 'ADP']
+Pic: ['picolinic acid', 'picolinate', 'Pic']
+
+Reason: All species are well-known biochemical compounds involved in the Calvin cycle, with standard names matching common biochemical terminology.

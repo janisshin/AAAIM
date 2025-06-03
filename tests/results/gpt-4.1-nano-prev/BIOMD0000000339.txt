@@ -1,0 +1,17 @@
+Model: BIOMD0000000339
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:43:52
+
+Synonyms:
+VKH2: ['Vitamin K hydroquinone', 'Vitamin K2', 'menaquinone']
+ATIII_Heparin: ['Antithrombin III', 'Antithrombin', 'Serpin C1']
+Xa_ATIII_Heparin: ['Factor Xa complex with Antithrombin', 'Xa-antithrombin complex', 'Activated Factor X']
+VK: ['Vitamin K', 'Phylloquinone', 'Vitamin K1']
+C_warf: ['Warfarin', 'Coumarin anticoagulant', 'Warfarin sodium']
+VKO: ['Vitamin K oxidized form', 'Vitamin K epoxide', 'Vitamin K1 epoxide']
+IIa_ATIII_Heparin: ['Thrombin-antithrombin complex', 'Factor IIa complex', 'FIIa-AT complex']
+A_warf: ['Warfarin', 'Coumarin anticoagulant', 'Warfarin sodium']
+IXa_ATIII_Heparin: ['Factor IXa complex with Antithrombin', 'IXa-antithrombin complex', 'Activated Factor IX']
+VK_p: ['Vitamin K epoxide', 'Vitamin K oxidized form', 'Vitamin K1 epoxide']
+
+Reason: These species are components of the coagulation pathway and anticoagulant drugs, with standard names and common synonyms available in biochemical ontologies.

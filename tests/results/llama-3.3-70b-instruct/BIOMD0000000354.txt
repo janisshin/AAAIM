@@ -1,0 +1,12 @@
+Model: BIOMD0000000354
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:14:08
+
+Synonyms:
+CaI: ['calcium ion', 'Ca2+', 'calcium(2+)']
+IP3: ['inositol 1,4,5-trisphosphate', 'D-myo-inositol 1,4,5-trisphosphate', 'IP3']
+CaO: ['UNK']
+CaS: ['calcium ion', 'Ca2+', 'calcium(2+)']
+CaM: ['calmodulin', 'calcium-modulated protein', 'calcium-binding protein']
+
+Reason: CaI and CaS are likely calcium ions based on the model context and reaction equations, IP3 is a well-known signaling molecule, CaM is likely calmodulin due to its role in calcium signaling, and CaO has no clear identification based on the provided information.

@@ -1,0 +1,11 @@
+Model: BIOMD0000000093
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:00
+
+Synonyms:
+mRNAn: ['messenger RNA', 'mRNA', 'mRNA molecule']
+
+Reason: mRNAn refers to nuclear mRNA, which is a type of messenger RNA involved in gene expression.
+
+mRNAc: "cytoplasmic mRNA", "mRNA", "messenger RNA"
+Reason: mRNAc indicates cytoplasmic mRNA, the form present in the cytoplasm for translation.

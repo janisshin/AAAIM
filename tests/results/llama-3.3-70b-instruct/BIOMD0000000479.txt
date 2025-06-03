@@ -1,0 +1,18 @@
+Model: BIOMD0000000479
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:59:24
+
+Synonyms:
+GaGTP: ['guanosine triphosphate', 'GTP', "guanosine 5'-triphosphate"]
+GaGTPEffector: ['UNK']
+GaGTPEffectorOFF: ['UNK']
+RGSmGaGTP: ['UNK']
+RGSmGaGTPEffectorOFF: ['UNK']
+LRRGSmGaGTP: ['UNK']
+RRGSmGaGTP: ['UNK']
+LRRGSmGaGTPEffectorOFF: ['UNK']
+GaGDPP: ['guanosine diphosphate', 'GDP', "guanosine 5'-diphosphate"]
+GaGDP: ['guanosine diphosphate', 'GDP', "guanosine 5'-diphosphate"]
+P: ['phosphate', 'inorganic phosphate', 'orthophosphate']
+
+Reason: The species names are annotated based on their display names and reaction equations. GaGTP and GaGDPP/GaGDP are likely to be guanosine triphosphate and diphosphate, respectively, due to their involvement in G-protein signaling pathways. The other species are unknown (UNK) as their display names do not provide clear information about their chemical identities, and their reaction equations do not provide sufficient context to determine their chemical structures.

@@ -1,0 +1,21 @@
+Model: BIOMD0000000051
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:35:09
+
+Synonyms:
+cpep: ['phosphoenolpyruvate', 'PEP', 'pyruvate phosphoenol transferase']
+cglcex: ['extracellular glucose', 'glucose outside cell', 'glucose (extracellular)']
+cg6p: ['glucose-6-phosphate', 'G6P', 'glucose-6-phosphate']
+cpyr: ['pyruvate', 'pyruvic acid', 'pyruvate']
+cf6p: ['fructose-6-phosphate', 'F6P', 'fructose-6-phosphate']
+cg1p: ['glucose-1-phosphate', 'G1P', 'glucose-1-phosphate']
+cpg: ['6-phosphogluconate', '6PG', 'gluconate-6-phosphate']
+cfdp: ['fructose-1,6-bisphosphate', 'F1,6BP', 'fructose-1,6-bisphosphate']
+csed7p: ['sedoheptulose-7-phosphate', 'S7P', 'sedoheptulose-7-phosphate']
+cgap: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde-3-phosphate']
+ce4p: ['erythrose-4-phosphate', 'E4P', 'erythrose-4-phosphate']
+cxyl5p: ['xylulose-5-phosphate', 'X5P', 'xylulose-5-phosphate']
+crib5p: ['ribose-5-phosphate', 'R5P', 'ribose-5-phosphate']
+cdhap: ['dihydroxyacetone phosphate', 'DHAP', 'dihydroxyacetone phosphate']
+
+Reason: All are well-known metabolic intermediates in central carbon metabolism, with standard names matching common biochemical terminology. No reactions are specified, but display names clearly identify these as common metabolites.

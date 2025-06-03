@@ -1,0 +1,24 @@
+Model: BIOMD0000000474
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:58:47
+
+Synonyms:
+GSH: ['glutathione', 'reduced glutathione', 'GSH(2-)']
+GSSG: ['oxidized glutathione', 'glutathione disulfide', 'GSSG(2-)']
+dnabound_Foxo1_Pa0_Pd0_Pe0_pUb0: ['UNK']
+dnabound_Foxo1_Pa0_Pd0_Pe0_pUb1: ['UNK']
+dnabound_Foxo1_Pa0_Pd1_Pe0_pUb0: ['UNK']
+dnabound_Foxo1_Pa0_Pd1_Pe0_pUb1: ['UNK']
+dnabound_Foxo1_Pa0_Pd1_Pe1_pUb0: ['UNK']
+dnabound_Foxo1_Pa0_Pd1_Pe1_pUb1: ['UNK']
+dnabound_Foxo1_Pa1_Pd0_Pe0_pUb0: ['UNK']
+dnabound_Foxo1_Pa1_Pd0_Pe0_pUb1: ['UNK']
+dnabound_Foxo1_Pa1_Pd0_Pe1_pUb0: ['UNK']
+dnabound_Foxo1_Pa1_Pd0_Pe1_pUb1: ['UNK']
+dnabound_Foxo1_Pa1_Pd1_Pe0_pUb0: ['UNK']
+dnabound_Foxo1_Pa1_Pd1_Pe0_pUb1: ['UNK']
+dnabound_Foxo1_Pa1_Pd1_Pe1_pUb0: ['UNK']
+dnabound_Foxo1_Pa1_Pd1_Pe1_pUb1: ['UNK']
+dnabound_Foxo1_tot: ['UNK']
+
+Reason: GSH and GSSG are identified as glutathione and its oxidized form based on their display names and reaction equations, while the dnabound_Foxo1 species are not clearly identifiable as chemical entities due to their complex names and lack of clear chemical structure or reaction information.

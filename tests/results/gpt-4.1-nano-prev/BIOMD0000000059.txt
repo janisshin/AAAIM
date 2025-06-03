@@ -1,0 +1,13 @@
+Model: BIOMD0000000059
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:35:18
+
+Synonyms:
+Ca_cyt: ['calcium ion', 'Ca2+', 'cytosolic calcium']
+Ca_er: ['endoplasmic reticulum calcium', 'ER calcium', 'Ca2+ in ER']
+IP3_cyt: ['inositol 1,4,5-trisphosphate', 'IP3', 'cytosolic IP3']
+Na_cyt: ['sodium ion', 'Na+', 'cytosolic sodium']
+ATP_cyt: ['adenosine triphosphate', 'ATP', 'cytosolic ATP']
+ADP_cyt: ['adenosine diphosphate', 'ADP', 'cytosolic ADP']
+
+Reason: All are well-known ions or molecules involved in cellular signaling and energy metabolism, with standard chemical names or common synonyms.

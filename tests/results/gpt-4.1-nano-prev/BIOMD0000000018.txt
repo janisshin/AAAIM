@@ -1,0 +1,25 @@
+Model: BIOMD0000000018
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:26
+
+Synonyms:
+FH2f: ['dihydrofolate', 'tetrahydrofolate', 'FH2']
+FH2b: ['dihydrofolate', 'tetrahydrofolate', 'FH2']
+FH4: ['tetrahydrofolate', 'FH4', 'tetrahydrofolic acid']
+CH2FH4: ['5,10-methylene-tetrahydrofolate', 'methylene tetrahydrofolate', 'CH2FH4']
+CH3FH4: ['5-methyl-tetrahydrofolate', 'methyl tetrahydrofolate', 'CH3FH4']
+CHOFH4: ['10-formyl-tetrahydrofolate', 'formyl tetrahydrofolate', 'CHOFH4']
+FFH2: ['10-formyl-tetrahydrofolate', 'formyl tetrahydrofolate', 'FFH2']
+HCHO: ['formaldehyde', 'methanal', 'formic aldehyde']
+AICAR: ['5-Aminoimidazole-4-carboxamide ribonucleotide', 'AICAR', 'AICAR ribonucleotide']
+dUMP: ['deoxyuridine monophosphate', 'dUMP', 'deoxyuridylate']
+serine: ['serine', '2-amino-3-hydroxypropanoic acid']
+formate: ['formic acid', 'methanoic acid', 'formic acid']
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+glutamine: ['glutamine', 'L-glutamine']
+glycine: ['glycine', 'gly']
+NADP: ['nicotinamide adenine dinucleotide phosphate', 'NADP+', 'NADP']
+NADPH: ['reduced nicotinamide adenine dinucleotide phosphate', 'NADPH', 'NADPH']
+homocysteine: ['homocysteine', '2-amino-4-mercaptobutanoic acid']
+
+Reason: All species are recognized as biochemical compounds, mostly well-known vitamins, cofactors, amino acids, or small molecules involved in folate and one-carbon metabolism. "HCHO" is formaldehyde, a common chemical, and "AICAR" is a known nucleotide analog. No ambiguous or non-chemical entities are present.

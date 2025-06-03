@@ -1,0 +1,9 @@
+Model: BIOMD0000000504
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:58:58
+
+Synonyms:
+SP1_TIMP1_DNA: ['TIMP1', 'TIMP-1', 'Tissue inhibitor of metalloproteinases 1']
+TIMP1_DNA: ['TIMP1', 'TIMP-1', 'Tissue inhibitor of metalloproteinases 1']
+
+Reason: Both species refer to the gene encoding TIMP-1, a well-known inhibitor of matrix metalloproteinases, which is a recognized protein name. The DNA notation indicates the gene, but for biochemical context, the protein name is more relevant for ChEBI lookup.

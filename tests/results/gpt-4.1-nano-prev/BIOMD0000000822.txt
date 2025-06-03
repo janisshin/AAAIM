@@ -1,0 +1,10 @@
+Model: BIOMD0000000822
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:08:14
+
+Synonyms:
+Cytosolic_Rapamycin: ['rapamycin', 'sirolimus', 'rapamycin (cytosol)']
+mTOR_Rapamycin: ['rapamycin', 'sirolimus', 'rapamycin (mTOR complex)']
+mTORC1_Rapamycin: ['rapamycin', 'sirolimus', 'mTORC1 inhibitor']
+
+Reason: All species involve rapamycin interacting with mTOR complexes; "cytosolic" indicates location, but the core compound is rapamycin. The mTORC1 species specifically refers to rapamycin's effect on mTORC1 complex.

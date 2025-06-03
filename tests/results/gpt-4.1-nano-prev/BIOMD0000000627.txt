@@ -1,0 +1,152 @@
+Model: BIOMD0000000627
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:04:37
+
+Synonyms:
+species_23: ['oxygen', 'O2', 'dioxygen']
+
+Reason: labeled as 'O2' in display names, indicating molecular oxygen.
+
+species_24: "carbon dioxide", "CO2", "dioxide"
+Reason: labeled as 'CO2' in display names, indicating carbon dioxide.
+
+species_25: "glucose", "glucose", "blood sugar"
+Reason: labeled as 'GLC' in display names, a common abbreviation for glucose.
+
+species_26: "lactate", "lactic acid", "lactate ion"
+Reason: labeled as 'LAC' in display names, a common abbreviation for lactate.
+
+species_27: "glucose", "glucose", "blood sugar"
+Reason: labeled as 'GLC' in display names, a common abbreviation for glucose.
+
+species_28: "lactate", "lactic acid", "lactate ion"
+Reason: labeled as 'LAC' in display names, indicating lactate.
+
+dHb: "deoxyhemoglobin", "deoxygenated hemoglobin", "dHb"
+Reason: standard abbreviation for deoxyhemoglobin, involved in blood oxygenation.
+
+species_1: "glucose", "glucose", "blood sugar"
+Reason: labeled as 'GLC' in display names, a common form of glucose.
+
+species_2: "glucose-6-phosphate", "G6P", "glucose-6-phosphate"
+Reason: labeled as 'G6P' in display names, a key glycolytic intermediate.
+
+species_3: "ATP", "adenosine triphosphate", "energy currency"
+Reason: labeled as 'ATP' in display names, the primary energy molecule.
+
+species_4: "glucose", "glucose", "blood sugar"
+Reason: labeled as 'GLC' in display names, indicating glucose.
+
+species_5: "ATP", "adenosine triphosphate", "energy currency"
+Reason: labeled as 'ATP' in display names, central energy molecule.
+
+species_6: "glucose-6-phosphate", "G6P", "glucose-6-phosphate"
+Reason: labeled as 'G6P' in display names, glycolytic intermediate.
+
+species_7: "fructose-6-phosphate", "F6P", "F6P"
+Reason: labeled as 'F6P' in display names, glycolytic intermediate.
+
+species_8: "fructose-1,6-bisphosphate", "F1,6BP", "FDP"
+Reason: labeled as 'F6P' in display names, but context suggests F6P; likely F1,6BP is intended, but based on display name, F6P is primary.
+
+species_9: "glyceraldehyde-3-phosphate", "G3P", "GAP"
+Reason: labeled as 'GAP' in display names, glycolytic intermediate.
+
+species_10: "glyceraldehyde-3-phosphate", "G3P", "GAP"
+Reason: labeled as 'GAP' in display names, glycolytic intermediate.
+
+species_11: "NADH", "nicotinamide adenine dinucleotide (reduced)", "NADH"
+Reason: labeled as 'NADH' in display names, reduced form of NAD+.
+
+species_12: "phosphoenolpyruvate", "PEP", "PEP"
+Reason: labeled as 'PEP' in display names, glycolytic intermediate.
+
+species_13: "NAD+", "nicotinamide adenine dinucleotide (oxidized)", "NAD+"
+Reason: labeled as 'NAD' in display names, oxidized form.
+
+species_14: "phosphoenolpyruvate", "PEP", "PEP"
+Reason: labeled as 'PEP' in display names, glycolytic intermediate.
+
+species_15: "pyruvate", "PYR", "pyruvic acid"
+Reason: labeled as 'PYR' in display names, end product of glycolysis.
+
+species_16: "oxygen", "O2", "dioxygen"
+Reason: labeled as 'O2' in display names, molecular oxygen.
+
+species_17: "pyruvate", "PYR", "pyruvic acid"
+Reason: labeled as 'PYR' in display names, glycolytic end product.
+
+species_18: "lactate", "lactic acid", "lactate ion"
+Reason: labeled as 'LAC' in display names, lactate.
+
+species_19: "lactate", "lactic acid", "lactate ion"
+Reason: labeled as 'LAC' in display names, lactate.
+
+species_20: "oxygen", "O2", "dioxygen"
+Reason: labeled as 'O2' in display names, molecular oxygen.
+
+species_21: "phosphocreatine", "PCr", "creatine phosphate"
+Reason: labeled as 'PCr' in display names, energy reservoir in muscles and brain.
+
+species_22: "carbon dioxide", "CO2", "dioxide"
+Reason: labeled as 'CO2' in display names, metabolic waste product.
+
+species_1: "glucose", "glucose", "blood sugar"
+Reason: labeled as 'GLC' in display names, glucose.
+
+species_2: "glucose-6-phosphate", "G6P", "glucose-6-phosphate"
+Reason: labeled as 'G6P' in display names, glycolytic intermediate.
+
+species_3: "ATP", "adenosine triphosphate", "energy currency"
+Reason: labeled as 'ATP' in display names, energy molecule.
+
+species_4: "glucose", "glucose", "blood sugar"
+Reason: labeled as 'GLC' in display names, glucose.
+
+species_5: "ATP", "adenosine triphosphate", "energy currency"
+Reason: labeled as 'ATP' in display names, energy molecule.
+
+species_6: "glucose-6-phosphate", "G6P", "glucose-6-phosphate"
+Reason: labeled as 'G6P' in display names, glycolytic intermediate.
+
+species_7: "fructose-6-phosphate", "F6P", "F6P"
+Reason: labeled as 'F6P' in display names, glycolytic intermediate.
+
+species_8: "fructose-1,6-bisphosphate", "F1,6BP", "FDP"
+Reason: labeled as 'F6P' in display names, but context suggests F6P; likely F1,6BP is intended, but based on display name, F6P is primary.
+
+species_9: "glyceraldehyde-3-phosphate", "G3P", "GAP"
+Reason: labeled as 'GAP' in display names, glycolytic intermediate.
+
+species_10: "glyceraldehyde-3-phosphate", "G3P", "GAP"
+Reason: labeled as 'GAP' in display names, glycolytic intermediate.
+
+species_13: "NAD+", "nicotinamide adenine dinucleotide (oxidized)", "NAD+"
+Reason: labeled as 'NAD' in display names, oxidized form.
+
+species_14: "phosphoenolpyruvate", "PEP", "PEP"
+Reason: labeled as 'PEP' in display names, glycolytic intermediate.
+
+species_15: "pyruvate", "PYR", "pyruvic acid"
+Reason: labeled as 'PYR' in display names, glycolytic end product.
+
+species_16: "oxygen", "O2", "dioxygen"
+Reason: labeled as 'O2' in display names, molecular oxygen.
+
+species_17: "pyruvate", "PYR", "pyruvic acid"
+Reason: labeled as 'PYR' in display names, glycolytic end product.
+
+species_19: "lactate", "lactic acid", "lactate ion"
+Reason: labeled as 'LAC' in display names, lactate.
+
+species_20: "oxygen", "O2", "dioxygen"
+Reason: labeled as 'O2' in display names, molecular oxygen.
+
+species_22: "creatine phosphate", "PCr", "phosphocreatine"
+Reason: labeled as 'PCr' in display names, energy reservoir.
+
+species_26: "lactate", "lactic acid", "lactate ion"
+Reason: labeled as 'LAC' in display names, lactate.
+
+species_28: "lactate", "lactic acid", "lactate ion"
+Reason: labeled as 'LAC' in display names, lactate.

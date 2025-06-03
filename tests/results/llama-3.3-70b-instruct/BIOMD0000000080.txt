@@ -1,0 +1,13 @@
+Model: BIOMD0000000080
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:49:54
+
+Synonyms:
+DRG_GDP: ['guanosine diphosphate', 'GDP', "guanosine 5'-diphosphate"]
+G_GDP: ['GDP', 'guanosine diphosphate', "guanosine 5'-diphosphate"]
+GDP: ['guanosine diphosphate', 'GDP', "guanosine 5'-diphosphate"]
+DRG_GTP: ['guanosine triphosphate', 'GTP', "guanosine 5'-triphosphate"]
+GTP: ['guanosine triphosphate', 'GTP', "guanosine 5'-triphosphate"]
+G_GTP: ['guanosine triphosphate', 'GTP', "guanosine 5'-triphosphate"]
+
+Reason: The reaction equations and display names suggest that these species are related to guanosine nucleotides, with DRG and G likely representing protein or complex prefixes, and GDP/GTP representing the guanosine diphosphate/triphosphate molecules, which are commonly involved in biochemical reactions, particularly G-protein signaling.

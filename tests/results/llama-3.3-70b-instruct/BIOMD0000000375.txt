@@ -1,0 +1,9 @@
+Model: BIOMD0000000375
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:14:46
+
+Synonyms:
+Ca_er_Ca_equations: ['calcium', 'Ca2+', 'calcium ion']
+Ca_i: ['calcium', 'Ca2+', 'calcium ion']
+
+Reason: Both Ca_er_Ca_equations and Ca_i are likely referring to calcium, as the model is about calcium release-activated current in pancreatic beta-cells and the display names and reactions suggest calcium is being tracked in different compartments (endoplasmic reticulum and intracellular).

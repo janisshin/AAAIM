@@ -1,0 +1,12 @@
+Model: BIOMD0000000100
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:10
+
+Synonyms:
+EC: ['extracellular calcium', 'calcium ion outside cell', 'Ca2+ outside cell']
+Y: ['vesicular calcium', 'intravesicular calcium', 'calcium in vesicles']
+Z: ['cytosolic calcium', 'intracellular calcium', 'cytoplasmic calcium']
+A: ['IP3', 'inositol 1,4,5-trisphosphate', 'phosphatidylinositol trisphosphate']
+
+Reason: 
+EC, Y, Z are all calcium ions in different cellular compartments, so their synonyms are related to calcium localization. A is IP3, a well-known second messenger molecule.

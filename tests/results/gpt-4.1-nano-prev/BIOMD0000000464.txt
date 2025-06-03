@@ -1,0 +1,11 @@
+Model: BIOMD0000000464
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:48:04
+
+Synonyms:
+s1: ['extracellular calcium', 'Ca2+', 'calcium ion']
+s2: ['cytosolic calcium', 'Ca2+', 'calcium ion']
+s3: ['cytosolic calcium', 'Ca2+', 'calcium ion']
+s4: ['extracellular calcium', 'Ca2+', 'calcium ion']
+
+Reason: s1 and s4 are labeled as Ca_ex and Ca_B, indicating extracellular calcium. s2 and s3 are involved in calcium signaling pathways, likely cytosolic calcium. The reactions suggest calcium movement between compartments, supporting these annotations. s6 (IP3) is a signaling molecule, not a calcium species.

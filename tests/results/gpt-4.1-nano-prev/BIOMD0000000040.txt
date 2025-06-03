@@ -1,0 +1,9 @@
+Model: BIOMD0000000040
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:42
+
+Synonyms:
+Br: ['hydrogen bromide', 'hydrobromic acid', 'HBr']
+BrO3: ['bromate', 'bromic acid', 'bromate ion']
+
+Reason: Br is commonly known as hydrobromic acid or HBr; BrO3 is bromate, a common bromine oxyanion.

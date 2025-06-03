@@ -1,0 +1,9 @@
+Model: BIOMD0000000072
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:36:05
+
+Synonyms:
+Gd: ['GTP', 'guanosine triphosphate', 'guanosine triphosphate (GTP)']
+Ga: ['GTP', 'guanosine triphosphate', 'guanosine triphosphate (GTP)']
+
+Reason: Gd and Ga are the GDP- and GTP-bound forms of G-alpha, both are guanine nucleotides, with GTP being the active form.

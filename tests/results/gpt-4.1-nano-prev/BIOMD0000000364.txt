@@ -1,0 +1,16 @@
+Model: BIOMD0000000364
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:25
+
+Synonyms:
+M: ['methionine', 'MET', 'UNK']
+M1: ['unknown molecule', 'UNK']
+E_M1: ['unknown enzyme complex', 'UNK']
+E_M: ['unknown enzyme', 'UNK']
+T: ['thymine', 'UNK']
+P2: ['pyrimidine', 'UNK']
+P21: ['p21', 'UNK']
+E_P21: ['unknown enzyme complex', 'UNK']
+E_P2: ['unknown enzyme complex', 'UNK']
+
+Reason: The species are labeled as generic or enzyme-related entities without specific biochemical identities; only M and T are recognizable as common molecules.

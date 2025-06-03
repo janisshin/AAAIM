@@ -1,0 +1,32 @@
+Model: BIOMD0000000172
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:38:24
+
+Synonyms:
+GLCo: ['glucose', 'd-glucose', 'blood sugar']
+GLCi: ['glucose', 'd-glucose', 'blood sugar']
+ATP: ['adenosine triphosphate']
+G6P: ['glucose-6-phosphate']
+ADP: ['adenosine diphosphate']
+F6P: ['fructose-6-phosphate']
+F16bP: ['fructose-1,6-bisphosphate']
+AMP: ['adenosine monophosphate']
+F26bP: ['fructose-2,6-bisphosphate']
+DHAP: ['dihydroxyacetone phosphate']
+GAP: ['glyceraldehyde-3-phosphate']
+NAD: ['nicotinamide adenine dinucleotide']
+BPG: ['bisphosphoglycerate']
+NADH: ['reduced nicotinamide adenine dinucleotide']
+P3G: ['glyceraldehyde-3-phosphate']
+P2G: ['glycerate-2-phosphate']
+PEP: ['phosphoenolpyruvate']
+PYR: ['pyruvate']
+AcAld: ['acetaldehyde']
+CO2: ['carbon dioxide']
+EtOH: ['ethanol']
+Glycerol: ['glycerol']
+Glycogen: ['glycogen']
+Trehalose: ['trehalose']
+Succinate: ['succinate']
+
+Reason: All species are standard biochemical compounds, with common names or well-established synonyms. GLCo and GLCi are external and internal glucose, respectively, both best matched to "glucose".

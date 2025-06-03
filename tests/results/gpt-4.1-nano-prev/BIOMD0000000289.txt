@@ -1,0 +1,8 @@
+Model: BIOMD0000000289
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:17
+
+Synonyms:
+G: ['UNK']
+
+Reason: The species G is not described with any display name or associated with any known biochemical entity in the provided context, and the model references T cell regulation rather than a specific chemical compound.

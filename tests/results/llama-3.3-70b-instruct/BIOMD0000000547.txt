@@ -1,0 +1,13 @@
+Model: BIOMD0000000547
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:14:16
+
+Synonyms:
+species_6: ['arsenic(III) ion', 'arsenite', 'arsenous acid']
+species_4: ['S-(arsenic(III))glutathione', 'arsenic triglutathione', 'arsenite glutathione conjugate']
+species_3: ['S-(arsenic(III))glutathione', 'arsenic triglutathione', 'arsenite glutathione conjugate']
+species_1: ['arsenic(III) ion', 'arsenite', 'arsenous acid']
+species_2: ['protein-bound arsenic(III)', 'arsenite protein complex', 'arsenic(III) protein conjugate']
+species_7: ['glutathione', 'GSH', 'gamma-glutamylcysteinylglycine']
+
+Reason: The model describes arsenic toxicity and detoxification mechanisms in yeast, and the display names and reactions suggest that the species are related to arsenic and glutathione. species_1, species_2, and species_6 are likely related to arsenite, species_3 and species_4 are likely related to glutathione conjugates of arsenite, and species_7 is clearly glutathione. The standardized names are based on the chemical structures and common synonyms in the field of biochemistry.

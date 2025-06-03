@@ -1,0 +1,33 @@
+Model: BIOMD0000000153
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:53:46
+
+Synonyms:
+PP2B: ['calcineurin', 'protein phosphatase 2B', 'PP2B']
+D34_PP2B: ['calcineurin', 'protein phosphatase 2B', 'PP2B']
+D34_75_PP2B: ['calcineurin', 'protein phosphatase 2B', 'PP2B']
+D34_137_PP2B: ['calcineurin', 'protein phosphatase 2B', 'PP2B']
+D34_75_137_PP2B: ['calcineurin', 'protein phosphatase 2B', 'PP2B']
+Ca: ['calcium', 'Ca2+', 'calcium ion']
+PP2BinactiveCa2: ['inactive calcineurin', 'PP2B with Ca2+', 'calcineurin inactive']
+cAMP: ['cyclic AMP', 'cAMP', 'adenylyl cyclase second messenger']
+cAMP_R2C2: ['cAMP-R2C2 complex', 'cyclic AMP complex', 'cAMP bound to R2C2']
+cAMP2_R2C2: ['cAMP2-R2C2 complex', 'cyclic AMP dimer', 'cAMP2 bound to R2C2']
+cAMP3_R2C2: ['cAMP3-R2C2 complex', 'cyclic AMP trimer', 'cAMP3 bound to R2C2']
+cAMP4_R2C2: ['cAMP4-R2C2 complex', 'cyclic AMP tetramer', 'cAMP4 bound to R2C2']
+cAMP4_R2: ['cAMP4-R2 complex', 'cyclic AMP tetramer', 'cAMP4 bound to R2']
+cAMP_PDE: ['cAMP phosphodiesterase', 'cAMP-PDE', 'cyclic AMP PDE enzyme']
+AMP: ['adenosine monophosphate', 'AMP', 'nucleotide']
+cAMP_PDEP: ['cAMP-PDE', 'cyclic AMP PDE', 'cAMP phosphodiesterase']
+D34_75_PP2ACa: ['calcineurin with Ca2+', 'PP2B-Ca2+ complex', 'calcineurin-Ca']
+D34_75_137_PP2ACa: ['calcineurin with Ca2+', 'PP2B-Ca2+ complex', 'calcineurin-Ca']
+D75_PP2ACa: ['calcineurin with Ca2+', 'PP2B-Ca2+ complex', 'calcineurin-Ca']
+D75_137_PP2ACa: ['calcineurin with Ca2+', 'PP2B-Ca2+ complex', 'calcineurin-Ca']
+D34_75_PP2APCa: ['calcineurin with PCalcium', 'PP2B-PCalcium complex', 'calcineurin-P']
+PP2APCa: ['calcineurin with PCalcium', 'PP2B-PCalcium', 'calcineurin-P']
+D34_75_137_PP2APCa: ['calcineurin with PCalcium', 'PP2B-PCalcium', 'calcineurin-P']
+D75_PP2APCa: ['calcineurin with PCalcium', 'PP2B-PCalcium', 'calcineurin-P']
+D75_137_PP2APCa: ['calcineurin with PCalcium', 'PP2B-PCalcium', 'calcineurin-P']
+PP2ACa_PKA: ['PP2A with PKA', 'protein phosphatase 2A with PKA', 'PP2A-PKA complex']
+
+Reason: The species are mostly related to protein phosphatase 2B (calcineurin), calcium, cAMP, and their complexes. The names are standardized to common synonyms or canonical names used in biochemical ontologies.

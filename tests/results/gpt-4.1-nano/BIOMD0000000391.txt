@@ -1,0 +1,24 @@
+Model: BIOMD0000000391
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:59:48
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'RuBP', 'ribulose bisphosphate']
+PGA: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'PGA']
+GAP: ['glyceraldehyde-3-phosphate', 'G3P', 'GAP']
+DHAP: ['dihydroxyacetone phosphate', 'DHAP']
+FBP: ['fructose-1,6-bisphosphate', 'FBP', 'fructose bisphosphate']
+F6P: ['fructose-6-phosphate', 'F6P']
+SBP: ['sedoheptulose-1,7-bisphosphate', 'SBP']
+S7P: ['sedoheptulose-7-phosphate', 'S7P']
+X5P: ['xylulose-5-phosphate', 'X5P']
+R5P: ['ribose-5-phosphate', 'R5P']
+Ru5P: ['ribulose-5-phosphate', 'Ru5P']
+ATP: ['adenosine triphosphate', 'ATP']
+ADP: ['adenosine diphosphate', 'ADP']
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'NADPH']
+H: ['hydrogen ion', 'proton', 'H+']
+Pi: ['inorganic phosphate', 'Pi']
+Pext: ['external phosphate', 'Pi outside cell', 'extracellular phosphate']
+
+Reason: All are well-established biochemical names for key metabolites in the Calvin cycle and related pathways, with common synonyms included.

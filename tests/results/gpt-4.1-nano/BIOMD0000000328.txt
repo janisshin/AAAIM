@@ -1,0 +1,16 @@
+Model: BIOMD0000000328
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:58:45
+
+Synonyms:
+AS_m: ['atorvastatin', 'atorvastatin calcium', 'lipitor']
+ASoOH_m: ['atorvastatin hydroxy acid', 'atorvastatin hydroxy metabolite', 'atorvastatin hydroxylated form']
+ASpOH_m: ['atorvastatin p-hydroxy metabolite', 'atorvastatin p-hydroxy acid', 'atorvastatin p-hydroxy derivative']
+AS_c: ['atorvastatin', 'atorvastatin calcium', 'lipitor']
+ASoOH_c: ['atorvastatin hydroxy acid', 'atorvastatin hydroxy metabolite', 'atorvastatin hydroxylated form']
+ASpOH_c: ['atorvastatin p-hydroxy metabolite', 'atorvastatin p-hydroxy acid', 'atorvastatin p-hydroxy derivative']
+ASoOH_b: ['atorvastatin hydroxy acid', 'atorvastatin hydroxy metabolite', 'atorvastatin hydroxylated form']
+ASpOH_b: ['atorvastatin p-hydroxy metabolite', 'atorvastatin p-hydroxy acid', 'atorvastatin p-hydroxy derivative']
+AS_b: ['atorvastatin', 'atorvastatin calcium', 'lipitor']
+
+Reason: All species are related to atorvastatin and its hydroxylated metabolites, which are well-known in pharmacology. The "m" suffix indicates the main form, "c" the cellular form, and "b" the bound or metabolized form. The species are consistent with atorvastatin metabolism pathways.

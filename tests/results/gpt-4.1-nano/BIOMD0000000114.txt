@@ -1,0 +1,9 @@
+Model: BIOMD0000000114
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:53:06
+
+Synonyms:
+x: ['calcium ion', 'Ca2+', 'calcium']
+y: ['cytoplasmic calcium', 'cytosolic calcium', 'Ca2+ in cytosol']
+
+Reason: x is labeled as "Ca_ER" indicating calcium in the endoplasmic reticulum, and y as "Ca_Cyt" indicating calcium in the cytosol; both are calcium ions involved in cellular calcium signaling.

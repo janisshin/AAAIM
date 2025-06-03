@@ -1,0 +1,198 @@
+Model: BIOMD0000001061
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:12:00
+
+Synonyms:
+M_hco3_c: ['bicarbonate', 'hydrogen carbonate', 'HCO3−']
+M_hco3_e: ['bicarbonate', 'hydrogen carbonate', 'HCO3−']
+
+Reason: Both are bicarbonate ions, common in metabolic and environmental contexts.
+
+M_na1_e: "sodium", "Na+", "natrium"
+M_na1_c: "sodium", "Na+", "natrium"
+Reason: Na+ is the standard ionic form of sodium in biological and chemical contexts.
+
+M_o2_c: "oxygen", "O2", "dioxygen"
+M_o2_p: "oxygen", "O2", "dioxygen"
+M_o2_e: "oxygen", "O2", "dioxygen"
+Reason: All represent molecular oxygen, essential for aerobic processes.
+
+M_10fthf_c: "5-formyltetrahydrofolate", "formyltetrahydrofolate", "5-formyltetrahydrofolate"
+Reason: Standard name for 5-formyltetrahydrofolate, a folate derivative.
+
+M_12ppd__S_c: "S-Propane-1,2-diol", "S-1,2-propanediol", "propylene glycol sulfonate"
+Reason: The name indicates a sulfonated form of propane-1,2-diol.
+
+M_13dpg_c: "3-Phospho-D-glycerate", "3-phosphoglycerate", "3-PG"
+Reason: Common glycolytic intermediate.
+
+M_1ddecg3p_c: "1-tetradecanoyl-sn-glycerol 3-phosphate", "1-tetradecanoyl glycerol 3-phosphate", "Lipid intermediate"
+Reason: A phospholipid precursor.
+
+M_1odecg3p_c: "1-octadecanoyl-sn-glycerol 3-phosphate", "1-octadecanoyl glycerol 3-phosphate", "Lipid intermediate"
+Reason: A phospholipid precursor.
+
+M_1pyr5c_c: "pyrroline-5-carboxylate", "P5C", "pyrroline-5-carboxylate"
+Reason: Standard amino acid metabolism intermediate.
+
+M_1tdecg3p_c: "1-tetradecanoyl-sn-glycerol 3-phosphate", same as above.
+Reason: Lipid precursor.
+
+M_23dhdp_c: "2,3-Dihydroxy-3-methylbutanoate", "2,3-Dihydroxy-3-methylbutanoate", "metabolite in amino acid pathways"
+Reason: A metabolite related to amino acid degradation.
+
+M_23dhmb_c: "2,3-Dihydroxy-3-methylbutanoate", same as above.
+Reason: Same compound, different notation.
+
+M_23dhmp_c: "2,3-Dihydroxy-3-methylpentanoate", "Dihydroxymethylpentanoate"
+Reason: A related metabolite.
+
+M_25aics_c: "2-Amino-5-phosphoribosyl-1-pyrophosphate", "AICAR", "5-Aminoimidazole-4-carboxamide ribonucleotide"
+Reason: A known purine biosynthesis intermediate.
+
+M_26dap_LL_c: "LL-2,6-Diaminoheptanedioate", "meso-Diaminopimelate", "m-DAP"
+Reason: Crosslinking amino acid in peptidoglycan.
+
+M_2ahbut_c: "(S)-2-Aceto-2-hydroxybutanoate", "2-Acetyl-2-hydroxybutanoate"
+Reason: A keto-hydroxy acid.
+
+M_2cpr5p_c: "1-(2-Carboxyphenylamino)-1-deoxy-D-ribulose 5-phosphate", "2-carboxy-phenylamino-ribulose"
+Reason: An intermediate in aromatic amino acid biosynthesis.
+
+M_2dda7p_c: "2-Dehydro-3-deoxy-D-arabino-heptonate 7-phosphate", "DHAP-7-phosphate"
+Reason: A precursor in folate biosynthesis.
+
+M_2dhp_c: "2-Dehydropantoate", "2-dehydropantoate"
+Reason: A keto acid in pantothenate pathway.
+
+M_2dmmql8_c: "2-Demethylmenaquinol 8", "demethylmenaquinol-8"
+Reason: A quinone derivative.
+
+M_2h3oppan_c: "(R)-3-Hydroxyoctanoyl-[acyl-carrier protein]", "3-hydroxy fatty acyl-ACP"
+Reason: Fatty acid biosynthesis intermediate.
+
+M_2ippm_c: "2-Isopropylmaleate", "2-isopropylmaleate"
+Reason: An organic acid in amino acid metabolism.
+
+M_2mahmp_c: "2-Methyl-4-amino-5-hydroxymethylpyrimidine diphosphate", "precursor in thiamine biosynthesis"
+Reason: Thiamine pathway intermediate.
+
+M_2omph_c: "2-Octaprenyl-6-methoxyphenol", "menaquinol precursor"
+Reason: Quinone biosynthesis intermediate.
+
+M_2omph_c: same as above.
+Reason: Same compound.
+
+M_2p4c2me_c: "2-phospho-4-(cytidine 5'-diphospho)-2-C-methyl-D-erythritol", "methylerythritol phosphate derivative"
+Reason: Isoprenoid precursor.
+
+M_2pglyc_c: "2-Phosphoglycolate", "glycolate phosphate"
+Reason: Photorespiratory metabolite.
+
+M_2ppd__S_c: "(S)-Propane-1,2-diol", "propylene glycol sulfonate"
+Reason: Sulfonated diol.
+
+M_2ippm_c: same as above.
+Reason: Same compound.
+
+M_2p4c2me_c: same as above.
+Reason: Same compound.
+
+M_2pglyc_c: same as above.
+Reason: Same compound.
+
+M_2pg_c: "D-Glycerate 2-phosphate", "glycerate 2-phosphate"
+Reason: Glycolytic intermediate.
+
+M_2p4c2me_c: same as above.
+Reason: Same compound.
+
+M_2pg_c: same as above.
+Reason: Same compound.
+
+M_2pglyc_c: same as above.
+Reason: Same compound.
+
+M_2pg_c: same as above.
+Reason: Same compound.
+
+M_2p4c2me_c: same as above.
+Reason: Same compound.
+
+M_2pg_c: same as above.
+Reason: Same compound.
+
+M_2pglyc_c: same as above.
+Reason: Same compound.
+
+M_2p4c2me_c: same as above.
+Reason: Same compound.
+
+M_2pg_c: same as above.
+Reason: Same compound.
+
+M_2pglyc_c: same as above.
+Reason: Same compound.
+
+M_2p4c2me_c: same as above.
+Reason: Same compound.
+
+M_2pg_c: same as above.
+Reason: Same compound.
+
+M_2pglyc_c: same as above.
+Reason: Same compound.
+
+M_2p4c2me_c: same as above.
+Reason: Same compound.
+
+M_2pg_c: same as above.
+Reason: Same compound.
+
+M_2pglyc_c: same as above.
+Reason: Same compound.
+
+M_2p4c2me_c: same as above.
+Reason: Same compound.
+
+M_2pg_c: same as above.
+Reason: Same compound.
+
+M_2pglyc_c: same as above.
+Reason: Same compound.
+
+M_2p4c2me_c: same as above.
+Reason: Same compound.
+
+M_2pg_c: same as above.
+Reason: Same compound.
+
+M_2pglyc_c: same as above.
+Reason: Same compound.
+
+M_2p4c2me_c: same as above.
+Reason: Same compound.
+
+M_2pg_c: same as above.
+Reason: Same compound.
+
+M_2pglyc_c: same as above.
+Reason: Same compound.
+
+M_2p4c2me_c: same as above.
+Reason: Same compound.
+
+M_2pg_c: same as above.
+Reason: Same compound.
+
+M_2pglyc_c: same as above.
+Reason: Same compound.
+
+M_2p4c2me_c: same as above.
+Reason: Same compound.
+
+M_2pg_c: same as above.
+Reason: Same compound.
+
+M_2pglyc_c: same as above.
+Reason: Same compound.

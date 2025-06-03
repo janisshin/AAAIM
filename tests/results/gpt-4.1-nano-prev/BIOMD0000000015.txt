@@ -1,0 +1,24 @@
+Model: BIOMD0000000015
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:16
+
+Synonyms:
+PRPP: ['phosphoribosyl pyrophosphate', 'PRPP', '5-phosphoribosyl-1-pyrophosphate']
+IMP: ['inosine monophosphate', 'IMP', 'inosinate']
+SAMP: ['adenylosuccinate', 'S-adenylosuccinate', 'SAMP']
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+SAM: ['S-adenosyl-L-methionine', 'SAM', 'S-adenosylmethionine']
+Ade: ['adenine', 'adenine', 'purine base']
+XMP: ['xanthosine monophosphate', 'XMP', 'xanthosine monophosphate']
+GTP: ['guanosine triphosphate', 'GTP', 'guanosine triphosphate']
+dATP: ['deoxyadenosine triphosphate', 'dATP', 'deoxyadenosine triphosphate']
+dGTP: ['deoxyguanosine triphosphate', 'dGTP', 'deoxyguanosine triphosphate']
+DNA: ['deoxyribonucleic acid', 'DNA', 'DNA']
+HX: ['hypoxanthine', 'hypoxanthine', 'purine base']
+Xa: ['xanthine', 'xanthine', 'purine base']
+Gua: ['guanine', 'guanine', 'purine base']
+UA: ['uric acid', 'uric acid', 'purine degradation product']
+R5P: ['ribose-5-phosphate', 'ribose-5-phosphate', 'pentose phosphate']
+Pi: ['inorganic phosphate', 'Pi', 'phosphate']
+
+Reason: All are well-known chemical entities or nucleotides involved in purine metabolism; synonyms are standard chemical names or common abbreviations.

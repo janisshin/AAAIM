@@ -1,0 +1,21 @@
+Model: BIOMD0000000106
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:53:01
+
+Synonyms:
+x1: ['arachidonic acid', 'arachidonic acid', '20:4(n-6)']
+x2: ['15-hydroperoxy-eicosatetraenoic acid', '15-HPETE', '15-HETE']
+x3: ['15-hydroxy-eicosatetraenoic acid', '15-HETE', '15-HETE']
+x4: ['12-hydroperoxy-eicosatetraenoic acid', '12-HPETE', '12-HETE']
+x5: ['12-hydroxy-eicosatetraenoic acid', '12-HETE', '12-HETE']
+x6: ['prostaglandin H2', 'PGH2', 'Prostaglandin H2']
+x7: ['prostaglandin E2', 'PGE2', 'Prostaglandin E2']
+x8: ['thromboxane A2', 'TXA2', 'Thromboxane A2']
+x9: ['thromboxane B2', 'TXB2', 'Thromboxane B2']
+x10: ['5-hydroperoxy-eicosatetraenoic acid', '5-HPETE', '5-HETE']
+x11: ['5-hydroxy-eicosatetraenoic acid', '5-HETE', '5-HETE']
+x12: ['leukotriene A4', 'LTA4', 'Leukotriene A4']
+x13: ['leukotriene B4', 'LTB4', 'Leukotriene B4']
+x14: ['w-LTB4', 'w-LTB4', 'Unknown or less common synonym']
+
+Reason: The species are known eicosanoids derived from arachidonic acid, with standard names and common synonyms. "w-LTB4" is less common, so labeled as "Unknown or less common synonym".

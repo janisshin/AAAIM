@@ -1,0 +1,8 @@
+Model: BIOMD0000000352
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:13
+
+Synonyms:
+R: ['mRNA', 'messenger RNA', 'RNA']
+
+Reason: The species is labeled as "R" and explicitly identified as "mRNA" in display names, indicating it is messenger RNA, a nucleic acid involved in gene expression.

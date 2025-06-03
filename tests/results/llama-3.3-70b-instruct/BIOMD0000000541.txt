@@ -1,0 +1,16 @@
+Model: BIOMD0000000541
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:13:59
+
+Synonyms:
+s3: ['fructose 6-phosphate', 'D-fructose 6-phosphate', 'hexose phosphate']
+s4: ['fructose-1,6-bisphosphate', 'D-fructose-1,6-bisphosphate', 'FBP']
+s5: ['phosphoenolpyruvate', 'PEP', '2-phosphoenolpyruvate']
+s6: ['isocitric acid', 'isocitrate', 'three-Ds-isocitrate']
+s7: ['2-oxoglutaric acid', '2-oxoglutarate', 'alpha-ketoglutarate']
+s8: ['malic acid', 'malate', 'L-malate']
+s9: ['fructose-2,6-bisphosphate', 'D-fructose-2,6-bisphosphate', 'FBP-2']
+s10: ['citric acid', 'citrate', 'citrate(4-)']
+s22: ['fructose 6-phosphate', 'D-fructose 6-phosphate', 'hexose phosphate']
+
+Reason: The display names and reactions in the model provide strong hints for the identification of the species. s3, s4, s5, s6, s7, s8, s9, s10, and s22 can be matched to known biochemical compounds based on their display names and roles in the reactions. s22 is likely a proxy for fructose 6-phosphate, given its reaction with s4 (fructose-1,6-bisphosphate). The other species (s11, s14, s15, s16, s17, s18, s19, s21) are not annotated as they are marked as "degraded" and their exact chemical nature is unclear.

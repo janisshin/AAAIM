@@ -1,0 +1,11 @@
+Model: BIOMD0000000458
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:02:15
+
+Synonyms:
+p3g: ['3-phosphoglycerate', 'glycerate-3-phosphate', '3-phosphoglyceric acid']
+php: ['phosphohydroxypyruvate', 'hydroxy-pyruvate phosphate', 'phospho-hydroxypyruvate']
+pser: ['phosphoserine', 'O-phospho-L-serine', 'L-serine phosphate']
+ser: ['serine', 'L-serine', '2-amino-3-hydroxypropanoic acid']
+
+Reason: The species are explicitly named in the model with their common biochemical synonyms, all related to amino acids or intermediates in serine biosynthesis.

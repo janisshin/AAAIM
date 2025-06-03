@@ -1,0 +1,24 @@
+Model: BIOMD0000000734
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:23:00
+
+Synonyms:
+FeDuo: ['ferrous duodenal iron', 'duodenal iron', 'Fe(II) complex']
+FeDuo_0: ['ferrous duodenal iron', 'duodenal iron', 'Fe(II) complex']
+FeRBC: ['hemoglobin iron', 'red blood cell iron', 'erythrocyte iron']
+FeRBC_0: ['hemoglobin iron', 'red blood cell iron', 'erythrocyte iron']
+FeSpleen: ['spleen iron', 'splenic iron', 'iron in spleen']
+FeSpleen_0: ['spleen iron', 'splenic iron', 'iron in spleen']
+FeLiver: ['liver iron', 'hepatic iron', 'iron in liver']
+FeLiver_0: ['liver iron', 'hepatic iron', 'iron in liver']
+Fe2Tf: ['transferrin-bound iron', 'Fe(II)-transferrin', 'ferrous transferrin']
+NTBI: ['non-transferrin bound iron', 'labile plasma iron', 'free iron']
+Fe1Tf: ['monoferric transferrin', 'Fe(III)-transferrin', 'single iron transferrin']
+Fe2Tf_0: ['transferrin-bound iron', 'Fe(II)-transferrin', 'ferrous transferrin']
+NTBI_0: ['non-transferrin bound iron', 'labile plasma iron', 'free iron']
+FeRest: ['rest of iron', 'stored iron', 'tissue iron']
+FeOutside: ['extracellular iron', 'outside cell iron', 'plasma iron']
+FeBM: ['bone marrow iron', 'marrow iron', 'erythropoietic tissue iron']
+FeBM_0: ['bone marrow iron', 'marrow iron', 'erythropoietic tissue iron']
+
+Reason: The species are related to iron transport, storage, or tissue-specific iron pools in mice, with some representing transferrin-bound or labile iron, and others representing tissue or cellular iron stores. The naming conventions suggest their roles in iron distribution and metabolism.

@@ -1,0 +1,20 @@
+Model: BIOMD0000000603
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:21:35
+
+Synonyms:
+glycerol_i: ['glycerol', 'glycerin', 'propane-1,2,3-triol']
+glucose_i: ['glucose', 'D-glucose', 'dextrose']
+G6P: ['glucose-6-phosphate', 'D-glucose-6-phosphate', 'G6P']
+trehalose: ['trehalose', 'mycose', 'trehalose, alpha-D-glucopyranosyl']
+F16DP: ['fructose-1,6-bisphosphate', 'D-fructose-1,6-bisphosphate', 'F1,6BP']
+pyruvate: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+acetate_i: ['acetic acid', 'acetate', 'ethanoic acid']
+ethanol_i: ['ethanol', 'ethyl alcohol', 'alcohol']
+glycerol_e: ['glycerol', 'glycerin', 'propane-1,2,3-triol']
+glucose_e: ['glucose', 'D-glucose', 'dextrose']
+acetate_e: ['acetic acid', 'acetate', 'ethanoic acid']
+ethanol_e: ['ethanol', 'ethyl alcohol', 'alcohol']
+trehalose_e: ['trehalose', 'mycose', 'trehalose, alpha-D-glucopyranosyl']
+
+Reason: The species names were matched to their corresponding chemical entities based on the display names and reaction equations provided in the model. The suffixes "_i" and "_e" were assumed to denote intracellular and extracellular compartments, respectively, and did not affect the chemical identity of the species. The names were then standardized to common chemical names or synonyms, with the most likely names listed first.

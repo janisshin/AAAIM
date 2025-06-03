@@ -1,0 +1,11 @@
+Model: BIOMD0000000144
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:37
+
+Synonyms:
+Stgm: ['stathmin', 'OP18', 'protein phosphatase regulator']
+
+Reason: Stgm is likely shorthand for Stathmin, a known microtubule destabilizing protein involved in cell cycle regulation, especially during embryogenesis.
+
+Xm: "unknown", "UNK", "nuclear marker"
+Reason: Xm is not a standard abbreviation for a known chemical or biological entity; given the context and lack of specific information, it is safest to classify as unknown.

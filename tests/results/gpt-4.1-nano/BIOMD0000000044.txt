@@ -1,0 +1,11 @@
+Model: BIOMD0000000044
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:50:37
+
+Synonyms:
+EC: ['endoplasmic calcium', 'calcium ion', 'Ca2+']
+Z: ['calcium release channel', 'ryanodine receptor', 'IP3 receptor']
+A: ['inositol 1,4,5-trisphosphate', 'IP3', 'inositol trisphosphate']
+Y: ['UNK']
+
+Reason: EC and Z are involved in calcium signaling, with EC likely representing calcium ions and Z representing calcium release channels. A is identified as IP3, a well-known signaling molecule. Y is unspecified and no display name provided; thus, "UNK".

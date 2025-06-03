@@ -1,0 +1,22 @@
+Model: BIOMD0000000143
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:36
+
+Synonyms:
+H2O2_p: ['hydrogen peroxide', 'H2O2', 'peroxide']
+MLTH_p: ['melatonin', 'N-acetyl-5-methoxytryptamine', 'melatonin free radical']
+MLT_p: ['melatonin', 'N-acetyl-5-methoxytryptamine', 'melatonin free radical']
+O2minus_p: ['superoxide', 'O2−', 'superoxide anion']
+H_p: ['hydrogen ion', 'proton', 'H+']
+O2_p: ['oxygen', 'O2', 'dioxygen']
+NADPH_c: ['NADPH', 'nicotinamide adenine dinucleotide phosphate (reduced)', 'reduced NADP']
+O2minus_c: ['superoxide', 'O2−', 'superoxide anion']
+NADPplus_c: ['NADP+', 'nicotinamide adenine dinucleotide phosphate (oxidized)', 'oxidized NADP']
+H2O2_c: ['hydrogen peroxide', 'H2O2', 'peroxide']
+NADP_c: ['NADP+', 'nicotinamide adenine dinucleotide phosphate', 'oxidized NADP']
+H_c: ['hydrogen', 'H+', 'proton']
+MLT_c: ['melatonin', 'N-acetyl-5-methoxytryptamine', 'melatonin free radical']
+MLTH_c: ['melatonin', 'N-acetyl-5-methoxytryptamine', 'melatonin free radical']
+NADP2_c: ['NADP2', 'NADP', 'oxidized dinucleotide']
+
+Reason: All species are chemical entities involved in oxidative metabolism, reactive oxygen species, or cofactors; synonyms are based on standard chemical nomenclature or common abbreviations.

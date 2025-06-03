@@ -1,0 +1,8 @@
+Model: BIOMD0000000351
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:12
+
+Synonyms:
+R: ['mRNA', 'messenger RNA', 'RNA']
+
+Reason: The species is labeled as "mRNA," which refers to messenger RNA, a nucleic acid involved in gene expression, not a chemical compound. Therefore, it is not a chemical entity suitable for ChEBI annotation.

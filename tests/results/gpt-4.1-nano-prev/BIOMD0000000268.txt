@@ -1,0 +1,130 @@
+Model: BIOMD0000000268
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:41:57
+
+Synonyms:
+b_met: ['S-adenosylmethionine', 'SAM', 'S-adenosylmethionine']
+
+Reason: b_met likely refers to S-adenosylmethionine, a common methyl donor in metabolism.
+
+b_ser: "Serine", "L-Serine", "Ser"
+Reason: b_ser is a standard abbreviation for serine, a common amino acid.
+
+GAR: "Glycinamide ribonucleotide", "GAR", "Glycinamide ribonucleotide"
+Reason: GAR is a known intermediate in purine biosynthesis.
+
+NADPH: "Nicotinamide adenine dinucleotide phosphate (reduced)", "NADPH", "reduced NADP"
+Reason: NADPH is a well-known cofactor involved in reductive biosynthesis.
+
+BET: "Betaine", "Trimethylglycine", "BET"
+Reason: BET is a common abbreviation for betaine, involved in methylation.
+
+DUMP: "Deoxyuridine monophosphate", "dUMP", "Deoxyuridine monophosphate"
+Reason: DUMP is a standard abbreviation for dUMP, a nucleotide precursor.
+
+Fol: "Folate", "Folic acid", "Vitamin B9"
+Reason: Fol is a common abbreviation for folate, essential in one-carbon metabolism.
+
+H2O2: "Hydrogen peroxide", "H2O2", "Peroxide"
+Reason: H2O2 is hydrogen peroxide, a reactive oxygen species.
+
+CO: "Carbon monoxide", "CO", "Carbon monoxide"
+Reason: CO is a standard abbreviation for carbon monoxide.
+
+HCHO: "Formaldehyde", "HCHO", "Methanal"
+Reason: HCHO is formaldehyde, a simple aldehyde.
+
+c_thf: "Tetrahydrofolate", "THF", "c_Tetrahydrofolate"
+Reason: c_thf refers to cytosolic tetrahydrofolate, a key cofactor.
+
+m_thf: "Mitochondrial tetrahydrofolate", "mTHF", "m_Tetrahydrofolate"
+Reason: m_thf is mitochondrial tetrahydrofolate.
+
+c_5mf: "5-Methyl-tetrahydrofolate", "5-methyl-THF", "c_5-methyl-THF"
+Reason: c_5mf is 5-methyl-THF, a methyl donor form.
+
+c_2cf: "5,10-Methylenetetrahydrofolate", "5,10-methylene-THF", "c_5,10-methylene-THF"
+Reason: c_2cf is 5,10-methylene-THF, involved in nucleotide synthesis.
+
+c_10f: "10-Formyltetrahydrofolate", "10-formyl-THF", "c_10-formyl-THF"
+Reason: c_10f is 10-formyl-THF, involved in purine synthesis.
+
+c_dhf: "Dihydrofolate", "DHF", "c_Dihydrofolate"
+Reason: c_dhf is dihydrofolate, a folate derivative.
+
+m_2cf: "5,10-Methylenetetrahydrofolate (mitochondrial)", "m_5,10-methylene-THF", "m_2cf"
+Reason: m_2cf is mitochondrial 5,10-methylene-THF.
+
+m_10f: "10-Formyltetrahydrofolate (mitochondrial)", "m_10-formyl-THF", "m_10f"
+Reason: m_10f is mitochondrial 10-formyl-THF.
+
+b_gly: "Glycine", "Gly", "b_Glycine"
+Reason: b_gly is glycine, a simple amino acid.
+
+b_glu: "Glutamate", "L-Glutamate", "b_Glutamate"
+Reason: b_glu is glutamate, a key amino acid.
+
+b_cys: "Cysteine", "Cys", "b_Cysteine"
+Reason: b_cys is cysteine, a sulfur amino acid.
+
+b_gsg: "GSSG", "Oxidized glutathione", "b_GSSG"
+Reason: b_gsg is oxidized glutathione (GSSG).
+
+b_gsh: "GSH", "Reduced glutathione", "b_GSH"
+Reason: b_gsh is reduced glutathione (GSH).
+
+aic: "AICAR", "5-Aminoimidazole-4-carboxamide ribonucleotide", "AICAR"
+Reason: aic is AICAR, an intermediate in purine biosynthesis.
+
+c_glu: "Glutamate", "L-Glutamate", "c_Glutamate"
+Reason: c_glu is cytosolic glutamate.
+
+c_cys: "Cysteine", "Cys", "c_Cysteine"
+Reason: c_cys is cytosolic cysteine.
+
+glc: "Glucose", "D-Glucose", "Glc"
+Reason: glc is glucose, a primary energy source.
+
+c_gly: "Glycine", "Gly", "c_Glycine"
+Reason: c_gly is cytosolic glycine.
+
+c_gsg: "GSSG", "Oxidized glutathione", "c_GSSG"
+Reason: c_gsg is cytosolic GSSG.
+
+c_gsh: "GSH", "Reduced glutathione", "c_GSH"
+Reason: c_gsh is cytosolic GSH.
+
+hcy: "Homocysteine", "Hcy", "Homocysteine"
+Reason: hcy is homocysteine, a sulfur amino acid.
+
+c_ser: "Serine", "L-Serine", "c_Serine"
+Reason: c_ser is cytosolic serine.
+
+sah: "S-Adenosylhomocysteine", "SAH", "S-adenosylhomocysteine"
+Reason: sah is S-adenosylhomocysteine, a methylation byproduct.
+
+sam: "S-Adenosylmethionine", "SAM", "S-adenosylmethionine"
+Reason: sam is S-adenosylmethionine, a methyl donor.
+
+met: "Methionine", "Met", "L-Methionine"
+Reason: met is methionine, an essential amino acid.
+
+c_coo: "Formate", "Cofactor", "c_formate"
+Reason: c_coo is formate, a one-carbon donor.
+
+m_ser: "Serine", "L-Serine", "m_Serine"
+Reason: m_ser is mitochondrial serine.
+
+m_gly: "Glycine", "Gly", "m_Glycine"
+Reason: m_gly is mitochondrial glycine.
+
+m_coo: "Formate", "Cofactor", "m_formate"
+Reason: m_coo is mitochondrial formate.
+
+src: "Serine hydroxymethyltransferase", "SHMT", "Serine hydroxymethyltransferase"
+Reason: src is likely shorthand for SHMT enzyme involved in serine/glycine interconversion.
+
+dmg: "Dimethylglycine", "DMG", "Dimethylglycine"
+Reason: dmg is dimethylglycine, involved in methylation pathways.
+
+Reason: All species are recognized as chemical entities or amino acids, with standard synonyms or common names. Species with empty display names are annotated based on their abbreviations and known biochemical roles.

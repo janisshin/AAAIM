@@ -1,0 +1,8 @@
+Model: BIOMD0000000642
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:05:49
+
+Synonyms:
+E: ['estradiol', 'estrogen', '17β-estradiol']
+
+Reason: The species E is explicitly labeled as "estrogen" in the display names and contextually refers to estrogen's role in breast cancer dynamics, which is commonly represented by estradiol in biochemical models.

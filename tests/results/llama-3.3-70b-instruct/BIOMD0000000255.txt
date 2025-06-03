@@ -1,0 +1,16 @@
+Model: BIOMD0000000255
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:06:59
+
+Synonyms:
+c2: ['Adenosine triphosphate', 'ATP', 'Triphosphoric acid']
+c3: ['Epidermal growth factor', 'EGF', 'Urogastrone']
+c500: ['UNK']
+c4: ['Epidermal growth factor receptor', 'ErbB1', 'HER1']
+c10: ['Epidermal growth factor', 'EGF', 'Urogastrone']
+c11: ['Epidermal growth factor', 'EGF', 'Urogastrone']
+c106: ['Phosphatidylinositol 3,4,5-trisphosphate', 'PIP3', 'Phosphoinositide']
+c285: ['Inhibitor', 'UNK', 'UNK']
+c462: ['Phosphatidylinositol 3,4,5-trisphosphate', 'PIP3', 'Phosphoinositide']
+
+Reason: The display names provide direct information about the species, allowing for straightforward mapping to standardized names. c500 is unknown due to its complex display name, which does not provide a clear indication of its chemical identity. c285 is also unknown as "Inh" is a common abbreviation for inhibitor, but without further context, it is difficult to determine the specific inhibitor being referred to.

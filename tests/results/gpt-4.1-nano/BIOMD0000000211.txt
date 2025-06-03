@@ -1,0 +1,34 @@
+Model: BIOMD0000000211
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:55:45
+
+Synonyms:
+species_20: ['NADH', 'nicotinamide adenine dinucleotide, reduced', 'reduced NAD']
+species_3: ['ATP', 'adenosine triphosphate', 'ATP']
+species_21: ['bisphosphoglycerate', '1,3-bisphosphoglycerate', '1,3-BPG']
+species_4: ['phosphoenolpyruvate', 'PEP', 'phosphoenolpyruvic acid']
+species_14: ['glucose-6-phosphate', 'G6P', 'glucose-6-phosphate']
+species_6: ['AMP', 'adenosine monophosphate', 'AMP']
+species_7: ['3-phosphoglycerate', '3PG', '3-phosphoglyceric acid']
+species_18: ['glyceraldehyde-3-phosphate', 'G3P', '"glyceraldehyde phosphate']
+species_2: ['ADP', 'adenosine diphosphate', 'ADP']
+species_1: ['pyruvate', 'pyruvic acid', 'pyruvate']
+species_13: ['AMP', 'adenosine monophosphate', 'AMP']
+species_11: ['ATP', 'adenosine triphosphate', 'ATP']
+species_9: ['glycerol-3-phosphate', 'G3P', 'glycerol phosphate']
+species_17: ['dihydroxyacetone phosphate', 'DHAP', 'dihydroxyacetone phosphate']
+species_12: ['ADP', 'adenosine diphosphate', 'ADP']
+species_22: ['glycerol-3-phosphate', 'G3P', 'glycerol phosphate']
+species_15: ['fructose-6-phosphate', 'F6P', 'fructose-6-phosphate']
+species_16: ['fructose-1,6-bisphosphate', 'F1,6BP', 'fructose-1,6-bisphosphate']
+species_24: ['glycerol', 'glycerol', 'propane-1,2,3-triol']
+species_8: ['dihydroxyacetone phosphate', 'DHAP', 'dihydroxyacetone phosphate']
+species_10: ['glucose', 'dextrose', 'blood sugar']
+species_27: ['glycerol', 'glycerin', 'propane-1,2,3-triol']
+species_5: ['2-phosphoglycerate', '2PG', '2-phosphoglyceric acid']
+species_19: ['NAD+', 'nicotinamide adenine dinucleotide, oxidized', 'oxidized NAD']
+species_23: ['3-phosphoglycerate', '3PG', '3-phosphoglyceric acid']
+species_26: ['pyruvate', 'pyruvic acid', 'pyruvate']
+species_25: ['glucose', 'dextrose', 'blood sugar']
+
+Reason: The species names correspond to well-known glycolytic intermediates and cofactors. NADH and NAD+ are redox cofactors, ATP and ADP are energy molecules, and the others are standard glycolytic metabolites. External species are labeled as "external" to distinguish from intracellular counterparts.

@@ -1,0 +1,20 @@
+Model: BIOMD0000000023
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:50:18
+
+Synonyms:
+Fru: ['fructose', 'fruit sugar', 'levulose']
+Glc: ['glucose', 'dextrose', 'blood sugar']
+HexP: ['hexose phosphate', 'glucose-6-phosphate', 'fructose-6-phosphate']
+Suc6P: ['sucrose-6-phosphate', 'sucrose-6-phosphate', 'sucrose phosphate']
+Suc: ['sucrose', 'table sugar', 'disaccharide']
+Sucvac: ['sucrose vacuole', 'sucrose storage', 'sucrose compartment']
+glycolysis: ['glycolytic pathway', 'embden-meyerhof pathway', 'glycolysis pathway']
+phos: ['phosphate', 'Pi', 'inorganic phosphate']
+UDP: ['uridine diphosphate', 'UDP sugar', 'uridine diphosphate']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+ATP: ['adenosine triphosphate', 'ATP', 'energy currency']
+Glcex: ['glucose export', 'glucose efflux', 'glucose transporter']
+Fruex: ['fructose export', 'fructose efflux', 'fructose transporter']
+
+Reason: The species are common metabolites and molecules involved in carbohydrate metabolism; names are based on standard biochemical terminology.

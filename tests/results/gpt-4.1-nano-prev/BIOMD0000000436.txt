@@ -1,0 +1,18 @@
+Model: BIOMD0000000436
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:46:31
+
+Synonyms:
+FA: ['fatty acid', 'free fatty acid', 'lipid']
+PGH2: ['prostaglandin H2', 'prostaglandin H2', 'PGH2']
+PGF2a: ['prostaglandin F2 alpha', 'PGF2α', 'prostaglandin F2']
+PGD2: ['prostaglandin D2', 'PGD2', 'dihomo-prostaglandin D2']
+PGJ2: ['prostaglandin J2', 'PGJ2', 'prostaglandin J2']
+dPGJ2: ['delta prostaglandin J2', 'dPGJ2', 'prostaglandin J2 derivative']
+AA: ['arachidonic acid', 'arachidonic acid', '20:4 n-6']
+LPS: ['lipopolysaccharide', 'LPS', 'endotoxin']
+DG: ['diacylglycerol', 'diacylglycerol', 'glyceride']
+GPCho: ['glycerophosphocholine', 'GPC', 'lecithin']
+
+Reason: 
+FA is a general term for fatty acids; PGH2, PGF2a, PGD2, PGJ2, dPGJ2 are specific prostaglandins; AA is arachidonic acid, a key precursor; LPS is lipopolysaccharide, an endotoxin; DG is diacylglycerol, a lipid second messenger; GPCho is glycerophosphocholine, a phospholipid component.

@@ -1,0 +1,23 @@
+Model: BIOMD0000000635
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:05:03
+
+Synonyms:
+mwa2c44a01_28c9_4dbd_b034_364f9b5b6cc3: ['GTP', 'guanosine triphosphate', 'GTP molecule']
+mwfed0682b_39f1_4b09_94e8_c45a51744092: ['GDP', 'guanosine diphosphate', 'GDP molecule']
+mw8e34c23f_1891_4dc9_8f97_dc2f12a1706c: ['Ca', 'calcium ion', 'calcium']
+mw6b2f1c44_e0be_4406_bcef_ad5061d519e4: ['D1 receptor', 'dopamine receptor D1', 'DRD1']
+mwdb9dc389_2bf0_4039_9f09_282f5511958b: ['D2 receptor', 'dopamine receptor D2', 'DRD2']
+mw1c97b02d_169a_4eb8_bc84_1be57c51a255: ['cAMP', 'cyclic adenosine monophosphate', 'cAMP']
+mwccd3a17c_e207_4663_9b16_327b78882497: ['Ca', 'calcium ion', 'calcium']
+mwfe9ed415_d5af_469c_a549_d8981f1eb01f: ['GTP', 'guanosine triphosphate', 'GTP molecule']
+mw65a14789_ffcf_4bfd_9d53_d2eb2f4d0896: ['Ca', 'calcium ion', 'calcium']
+mw8a4a0733_64dd_4474_9aaf_7d750b27ae5b: ['Ca', 'calcium ion', 'calcium']
+mw74e54eed_0d25_4fb0_b677_1192f238c03b: ['ATP', 'adenosine triphosphate', 'ATP']
+mwffd5a553_8e03_443d_a67e_0cf39d03f89f: ['AMP', 'adenosine monophosphate', 'AMP']
+mwd1171b65_ed6c_4413_bf47_5ed80038a7bd: ['GTP', 'guanosine triphosphate', 'GTP']
+mw3fcd1ec2_a459_49d4_89f7_361e276096d6: ['PDE', 'phosphodiesterase', 'PDE']
+mw9bfd7713_4c48_492c_8583_006bf1b54a1b: ['D1 receptor', 'dopamine receptor D1', 'DRD1']
+mwbe974953_e869_4622_b4a8_745555c8d7fd: ['Dopamine', 'DA', 'dopamine']
+
+Reason: The species are mostly molecules involved in G-protein signaling pathways, such as GTP, GDP, cAMP, ATP, AMP, calcium, and dopamine receptors, which are well-known biochemical entities.

@@ -1,0 +1,19 @@
+Model: BIOMD0000000434
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:46:27
+
+Synonyms:
+species_1: ['dicholesterol', 'LDL cholesterol', 'low-density lipoprotein']
+species_2: ['IDLC', 'intermediate-density lipoprotein', 'IDL']
+species_4: ['HDL cholesterol', 'high-density lipoprotein', 'HDL']
+species_5: ['VLDL', 'very low-density lipoprotein', 'VLDL cholesterol']
+species_6: ['EBS', 'endogenous bile salts', 'bile salts']
+species_7: ['HFC', 'high-density lipoprotein', 'HDL']
+species_8: ['EC', 'extracellular cholesterol', 'cell membrane cholesterol']
+species_11: ['LDL', 'low-density lipoprotein', 'bad cholesterol']
+species_13: ['HCE', 'hepatic cholesterol ester', 'liver cholesterol']
+species_14: ['ACAT', 'acyl-CoA cholesterol acyltransferase', 'cholesterol esterification enzyme']
+species_28: ['PCE', 'plasma cholesteryl ester', 'cholesteryl ester']
+species_31: ['LCAT', 'lecithin-cholesterol acyltransferase', 'enzyme for cholesterol esterification']
+
+Reason: 

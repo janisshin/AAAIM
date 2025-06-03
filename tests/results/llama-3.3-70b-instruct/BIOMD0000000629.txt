@@ -1,0 +1,11 @@
+Model: BIOMD0000000629
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:25:46
+
+Synonyms:
+L: ['retinoic acid', 'all-trans-retinoic acid', 'ATRA']
+LR: ['retinoic acid receptor', 'RAR', 'nuclear receptor']
+CA: ['coactivator protein', 'transcriptional coactivator', 'nuclear coactivator']
+LRCA: ['ligand-receptor-coactivator complex', 'RAR-coactivator complex', 'retinoic acid receptor-coactivator complex']
+
+Reason: The species L is likely retinoic acid or its analogues based on the model description and the mention of ATRA in the notes. LR is likely the retinoic acid receptor, a nuclear receptor, given its interaction with L. CA is a coactivator protein, which is recruited by the ligand-receptor complex. LRCA is likely the complex formed by the ligand, receptor, and coactivator, based on the display name and the context of the model.

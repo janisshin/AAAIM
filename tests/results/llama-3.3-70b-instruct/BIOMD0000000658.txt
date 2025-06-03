@@ -1,0 +1,9 @@
+Model: BIOMD0000000658
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:28:40
+
+Synonyms:
+TCF: ['transcription factor', 'transcription factor 7', 'T-cell factor']
+B_catenin_TCF: ['beta-catenin/TCF complex', 'beta-catenin-T-cell factor complex', 'CTNNB1-TCF complex']
+
+Reason: TCF is likely referring to the transcription factor TCF, which is a common abbreviation in the context of the Wnt signaling pathway. B_catenin_TCF is likely referring to the complex formed between beta-catenin and TCF, which is a key component of the Wnt signaling pathway. The model description and notes provide context for the Wnt pathway, supporting these annotations.

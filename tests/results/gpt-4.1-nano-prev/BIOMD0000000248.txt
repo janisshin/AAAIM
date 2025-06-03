@@ -1,0 +1,32 @@
+Model: BIOMD0000000248
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:41:08
+
+Synonyms:
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+
+Reason: The abbreviation ATP is universally recognized as adenosine triphosphate, the primary energy carrier in cells.
+
+PCr: "phosphocreatine", "creatine phosphate", "PCr"
+Reason: PCr is a common abbreviation for phosphocreatine, involved in rapid energy buffering in muscle.
+
+ADP: "adenosine diphosphate", "ADP", "adenosine diphosphate"
+Reason: ADP is a standard abbreviation for adenosine diphosphate, a product of ATP dephosphorylation.
+
+Cr: "creatine", "Cr", "creatine"
+Reason: Cr is a common abbreviation for creatine, a molecule involved in energy storage.
+
+Pi: "inorganic phosphate", "Pi", "phosphate"
+Reason: Pi is a standard abbreviation for inorganic phosphate, a product of ATP hydrolysis.
+
+CTcap: "total capillary oxygen content", "capillary tissue oxygen", "CTcap"
+Reason: Likely refers to total oxygen content in capillaries; specific standard name is context-dependent but related to oxygen content.
+
+CTtis: "total tissue oxygen content", "tissue oxygen", "CTtis"
+Reason: Represents total oxygen content in tissue; standardization depends on context but relates to tissue oxygen levels.
+
+CFcap: "free capillary oxygen", "capillary free oxygen", "CFcap"
+Reason: Likely refers to free oxygen in capillaries; specific standard name is context-dependent.
+
+CFtis: "free tissue oxygen", "tissue free oxygen", "CFtis"
+Reason: Represents free oxygen in tissue; standard name depends on context but relates to free oxygen levels in tissue.

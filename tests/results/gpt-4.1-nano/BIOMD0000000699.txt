@@ -1,0 +1,23 @@
+Model: BIOMD0000000699
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:22:34
+
+Synonyms:
+Tem1GTP: ['Tem1 GTPase', 'Tem1 GTP', 'Tem1', 'Ras-related GTPase']
+Tem1GDP: ['Tem1 GDP', 'Tem1 GTPase', 'Tem1']
+T_Tem1GTP: ['Tem1 GTP', 'Tem1 GTPase', 'Tem1']
+T_Tem1GDP: ['Tem1 GDP', 'Tem1 GTPase', 'Tem1']
+B_Bfa1_Tem1GTP: ['Bfa1-Tem1 GTP complex', 'Bfa1-Tem1 GTP', 'Bfa1-Tem1']
+B_Bfa1P4_Tem1GTP: ['Bfa1P4-Tem1 GTP complex', 'Bfa1P4-Tem1 GTP', 'Bfa1P4-Tem1']
+B_Bfa1P5_Tem1GTP: ['Bfa1P5-Tem1 GTP complex', 'Bfa1P5-Tem1 GTP', 'Bfa1P5-Tem1']
+B_Bfa1_Tem1GDP: ['Bfa1-Tem1 GDP complex', 'Bfa1-Tem1 GDP', 'Bfa1-Tem1']
+B_Bfa1P4_Tem1GDP: ['Bfa1P4-Tem1 GDP complex', 'Bfa1P4-Tem1 GDP', 'Bfa1P4-Tem1']
+B_Bfa1P5_Tem1GDP: ['Bfa1P5-Tem1 GDP complex', 'Bfa1P5-Tem1 GDP', 'Bfa1P5-Tem1']
+Bfa1_Tem1GTP: ['Bfa1-Tem1 GTP complex', 'Bfa1-Tem1 GTP', 'Bfa1-Tem1']
+Bfa1P4_Tem1GTP: ['Bfa1P4-Tem1 GTP complex', 'Bfa1P4-Tem1 GTP', 'Bfa1P4-Tem1']
+Bfa1P5_Tem1GTP: ['Bfa1P5-Tem1 GTP complex', 'Bfa1P5-Tem1 GTP', 'Bfa1P5-Tem1']
+Bfa1_Tem1GDP: ['Bfa1-Tem1 GDP complex', 'Bfa1-Tem1 GDP', 'Bfa1-Tem1']
+Bfa1P4_Tem1GDP: ['Bfa1P4-Tem1 GDP complex', 'Bfa1P4-Tem1 GDP', 'Bfa1P4-Tem1']
+Bfa1P5_Tem1GDP: ['Bfa1P5-Tem1 GDP complex', 'Bfa1P5-Tem1 GDP', 'Bfa1P5-Tem1']
+
+Reason: The species are likely complexes or forms of the yeast GTPase Tem1 and its regulators Bfa1, with phosphorylation states indicated by P4 and P5. The GTP and GDP suffixes denote active/inactive states. The model discusses regulation of Tem1 by Bfa1, so these are standard names for these proteins and complexes.

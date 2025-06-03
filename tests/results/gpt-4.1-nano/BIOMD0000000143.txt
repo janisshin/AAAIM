@@ -1,0 +1,22 @@
+Model: BIOMD0000000143
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:53:24
+
+Synonyms:
+H2O2_p: ['hydrogen peroxide', 'H2O2', 'peroxide']
+MLTH_p: ['melatonin', 'N-acetyl-5-methoxytryptamine', 'melatonin free radical']
+MLT_p: ['melatonin', 'N-acetyl-5-methoxytryptamine']
+O2minus_p: ['superoxide', 'O2−', 'superoxide anion']
+H_p: ['hydrogen ion', 'proton', 'H+']
+O2_p: ['oxygen', 'O2', 'dioxygen']
+NADPH_c: ['NADPH', 'nicotinamide adenine dinucleotide phosphate (reduced)', 'reduced NADP']
+O2minus_c: ['superoxide', 'O2−', 'superoxide anion']
+NADPplus_c: ['NADP+', 'nicotinamide adenine dinucleotide phosphate (oxidized)', 'oxidized NADP']
+H2O2_c: ['hydrogen peroxide', 'H2O2', 'peroxide']
+NADP_c: ['NADP+', 'nicotinamide adenine dinucleotide phosphate (oxidized)']
+O2_c: ['oxygen', 'O2', 'dioxygen']
+NADP2_c: ['NADP+', 'oxidized NADP']
+MLT_c: ['melatonin', 'N-acetyl-5-methoxytryptamine']
+MLTH_c: ['melatonin', 'N-acetyl-5-methoxytryptamine']
+
+Reason: The species are mostly standard biochemical molecules involved in oxidative stress and mitochondrial pathways, with common synonyms. "MLT" and "MLTH" are both melatonin derivatives, and "NADP" species are NADP+/NADPH forms. The radicals and reactive oxygen species are well-known entities.

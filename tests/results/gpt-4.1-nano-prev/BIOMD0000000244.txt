@@ -1,0 +1,55 @@
+Model: BIOMD0000000244
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:40:50
+
+Synonyms:
+ACT: ['acetyl-CoA', 'acetyl coenzyme A', '"CoA']
+
+Reason: ACoA is a common abbreviation for acetyl-CoA, a central metabolite in energy and biosynthesis pathways.
+
+GLC: "glucose", "d-glucose", "blood sugar"
+Reason: GLC is a standard abbreviation for glucose, the primary sugar in central metabolism.
+
+ACoA: "acetyl-CoA", "acetyl coenzyme A", "CoA"
+Reason: Same as ACT, ACoA is a common form of acetyl-CoA.
+
+AKG: "alpha-ketoglutarate", "2-oxoglutarate", "α-ketoglutaric acid"
+Reason: AKG is a standard abbreviation for alpha-ketoglutarate, a key TCA cycle intermediate.
+
+cAMP: "cyclic AMP", "cyclic adenosine monophosphate", "cAMP"
+Reason: cAMP is a well-known second messenger molecule.
+
+FBP: "fructose-1,6-bisphosphate", "FBP", "F-1,6-BP"
+Reason: FBP is a common abbreviation for fructose-1,6-bisphosphate, a glycolytic intermediate.
+
+G6P: "glucose-6-phosphate", "G6P", "glucose-6-phosphoric acid"
+Reason: G6P is a standard abbreviation for glucose-6-phosphate, a key glycolytic and gluconeogenic metabolite.
+
+GLX: "glyoxylate", "glyoxylic acid", "oxalylglycine"
+Reason: GLX is a common abbreviation for glyoxylate, involved in the glyoxylate cycle.
+
+ICT: "isocitrate", "isocitric acid", "2-hydroxy-1,2,3-propanetricarboxylic acid"
+Reason: ICT is a standard abbreviation for isocitrate, a TCA cycle intermediate.
+
+MAL: "malate", "malic acid", "2-hydroxybutanedioic acid"
+Reason: MAL is a common abbreviation for malate, a TCA cycle component.
+
+OAA: "oxaloacetate", "oxaloacetic acid", "oxalacetic acid"
+Reason: OAA is a standard abbreviation for oxaloacetate, a key TCA cycle intermediate.
+
+PEP: "phosphoenolpyruvate", "PEP", "phosphoenolpyruvic acid"
+Reason: PEP is a common abbreviation for phosphoenolpyruvate, a glycolytic and gluconeogenic metabolite.
+
+PYR: "pyruvate", "pyruvic acid", "2-oxopropanoic acid"
+Reason: PYR is a standard abbreviation for pyruvate, a central metabolic intermediate.
+
+CraFBP: "fructose-1,6-bisphosphate", "FBP", "F-1,6-BP"
+Reason: Same as FBP; CraFBP likely refers to FBP involved in regulation.
+
+CrpcAMP: "cyclic AMP", "cAMP", "cyclic adenosine monophosphate"
+Reason: cAMP is a common signaling molecule; CrpcAMP indicates its role in regulation.
+
+PdhRPYR: "pyruvate dehydrogenase complex", "Pdh", "pyruvate oxidation enzyme"
+Reason: PdhRPYR likely refers to the pyruvate dehydrogenase complex or its regulation, linking PYR to ACoA.
+
+Reason: All species are central metabolites or signaling molecules in bacterial metabolism; abbreviations are standard, and synonyms are provided accordingly.

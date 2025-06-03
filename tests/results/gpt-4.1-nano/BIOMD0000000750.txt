@@ -1,0 +1,9 @@
+Model: BIOMD0000000750
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:23:22
+
+Synonyms:
+Na: ['sodium ion', 'Na+', 'sodium']
+Nn: ['noradrenaline', 'norepinephrine', 'NE']
+
+Reason: Na is a common sodium ion; Nn likely refers to norepinephrine, a neurotransmitter involved in stress responses and tumor-neuro interactions.

@@ -1,0 +1,15 @@
+Model: BIOMD0000000255
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:57:19
+
+Synonyms:
+c2: ['EGFR', 'ErbB1', 'Epidermal growth factor receptor']
+c3: ['EGF', 'Epidermal growth factor', 'EGF ligand']
+c4: ['EGFR', 'ErbB1', 'Epidermal growth factor receptor']
+c10: ['EGFR', 'ErbB1', 'Epidermal growth factor receptor']
+c11: ['EGF:ErbB1:ATP', 'EGF-ErbB1 complex', 'EGF bound to ErbB1']
+c285: ['Inhibitor', 'Inh', 'Receptor inhibitor']
+c462: ['PIP3', 'Phosphatidylinositol (3,4,5)-trisphosphate', 'PIP3 lipid']
+c500: ['EGF:ErbB1:ATP::EGF:ErbB1:Inh', 'Ligand-inhibitor complex', 'EGF-ErbB1-ATP with inhibitor']
+
+Reason: The species are components of the ErbB signaling pathway, with c2, c3, c4, c10 representing EGF and its receptor, c11 as ligand-receptor complex, c462 as PIP3, c285 as an inhibitor, and c500 as a complex involving ligand, receptor, ATP, and inhibitor.

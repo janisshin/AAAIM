@@ -1,0 +1,21 @@
+Model: BIOMD0000000610
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:04:08
+
+Synonyms:
+glycerol_i: ['glycerol', 'glycerin', '1,2,3-propanetriol']
+cin: ['unknown', 'UNK']
+glucose_i: ['glucose', 'd-glucose', 'blood sugar']
+G6P: ['glucose-6-phosphate', 'G6P', 'D-glucose-6-phosphate']
+trehalose: ['trehalose', 'maltose', 'mycose', '(less common)', '(rare)']
+F16DP: ['fructose-1,6-bisphosphate', 'F16BP', 'FDP']
+pyruvate: ['pyruvate', 'pyruvic acid', 'pyruvate ion']
+acetate_i: ['acetate', 'acetic acid', 'ethyl acetate', '(less common)']
+ethanol_i: ['ethanol', 'ethyl alcohol', 'alcohol']
+glycerol_e: ['glycerol', 'glycerin', '1,2,3-propanetriol']
+glucose_e: ['glucose', 'd-glucose', 'blood sugar']
+acetate_e: ['acetate', 'acetic acid', 'vinegar component']
+ethanol_e: ['ethanol', 'ethyl alcohol', 'alcohol']
+trehalose_e: ['trehalose', 'maltose', 'mycose', '(less common)', '(rare)']
+
+Reason: The species are mostly standard metabolites involved in glycolysis, osmoadaptation, or common alcohols and acids. "cin" is undefined or not a chemical entity, hence "UNK".

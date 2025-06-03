@@ -1,0 +1,9 @@
+Model: BIOMD0000000166
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:54:10
+
+Synonyms:
+Y: ['calcium in store', 'endoplasmic reticulum calcium', 'intracellular calcium store']
+Z: ['cytoplasmic calcium', 'cytoplasmic Ca2+', 'free calcium in cytoplasm']
+
+Reason: Y represents calcium stored in internal reservoirs like the ER, while Z refers to free calcium ions in the cytoplasm, both key in calcium signaling pathways.

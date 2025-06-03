@@ -1,0 +1,11 @@
+Model: BIOMD0000000304
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:43
+
+Synonyms:
+h1: ['hyperpolarization-activated cyclic nucleotide-gated channel', 'h-current', 'h-gated channel']
+x1: ['voltage-gated ion channel', 'x-channel', 'unknown gating variable']
+n1: ['potassium channel', 'delayed rectifier', 'voltage-gated potassium channel']
+c: ['calcium ion', 'Ca2+', 'calcium concentration']
+
+Reason: The species are variables representing ion channel gating states or ion concentrations in a nerve cell model. "h1" likely refers to the hyperpolarization-activated current, "x1" and "n1" are gating variables for ion channels, and "c" is a calcium ion. Since they are not standard chemical species but model variables, the most appropriate annotation is to label "c" as calcium ion, and the others as ion channel related variables.

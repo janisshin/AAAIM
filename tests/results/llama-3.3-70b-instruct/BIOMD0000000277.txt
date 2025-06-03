@@ -1,0 +1,8 @@
+Model: BIOMD0000000277
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:08:44
+
+Synonyms:
+Ca: ['calcium', 'ionized calcium', 'Ca(2+)']
+
+Reason: The model is about calcium homeostasis and the species Ca is referred to as "Ca_in_Plasma" and "plasma ionized calcium (Ca(2+))" in the display names and notes, indicating that it represents calcium ions in the blood.

@@ -1,0 +1,58 @@
+Model: BIOMD0000000393
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:00:02
+
+Synonyms:
+SBP: ['sedoheptulose-1,7-bisphosphate', 'sedoheptulose bisphosphate', 'S7P']
+
+Reason: S7P is sedoheptulose-7-phosphate, a common Calvin cycle intermediate; SBP is sedoheptulose-1,7-bisphosphate, a related sugar phosphate.
+
+S7P: "sedoheptulose-7-phosphate", "S7P", "sedoheptulose phosphate"
+Reason: S7P is a well-known Calvin cycle metabolite.
+
+ATP: "adenosine triphosphate", "ATP", "adenosine triphosphate"
+Reason: Standard energy currency molecule.
+
+ADP: "adenosine diphosphate", "ADP", "adenosine diphosphate"
+Reason: Standard nucleotide involved in energy transfer.
+
+NADPH: "nicotinamide adenine dinucleotide phosphate (reduced)", "NADPH", "reduced NADP"
+Reason: Electron donor in Calvin cycle and biosynthesis.
+
+Pi: "inorganic phosphate", "Pi", "phosphate"
+Reason: Common inorganic phosphate.
+
+CO2: "carbon dioxide", "CO2", "carbon dioxide"
+Reason: Main substrate for Calvin cycle fixation.
+
+GLYc: "glycolate", "glycolic acid", "UNK"
+Reason: Likely a typo or shorthand for glycolate, involved in photorespiration.
+
+SERc: "serine", "serine", "UNK"
+Reason: Standard amino acid, involved in photorespiration.
+
+SucPc: "sucrose phosphate", "sucrose-6-phosphate", "SucP"
+Reason: Likely sucrose-6-phosphate, a precursor in sucrose biosynthesis.
+
+NADH: "nicotinamide adenine dinucleotide (reduced)", "NADH", "reduced NAD"
+Reason: Electron carrier in metabolic pathways.
+
+GLUc: "glucose", "glucose", "UNK"
+Reason: Likely glucose, a primary carbohydrate.
+
+Pic: "phosphatidylinositol", "PI", "phosphatidylinositol"
+Reason: Commonly abbreviated as Pic, but context suggests phosphatidylinositol.
+
+PiTc: "inorganic phosphate (cytoplasm)", "Pi", "cytoplasmic phosphate"
+Reason: Phosphate in cytoplasm.
+
+ATPc: "adenosine triphosphate (cytoplasm)", "ATP", "cytoplasmic ATP"
+Reason: ATP in cytoplasm.
+
+ADPc: "adenosine diphosphate (cytoplasm)", "ADP", "cytoplasmic ADP"
+Reason: ADP in cytoplasm.
+
+PiPic: "inorganic phosphate (plastid)", "Pi", "plastid phosphate"
+Reason: Phosphate in plastids.
+
+Reason: The species are mostly well-known metabolites involved in photosynthesis, Calvin cycle, and related pathways. Some abbreviations are inferred based on context and common biochemical nomenclature.

@@ -1,0 +1,16 @@
+Model: BIOMD0000000063
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:35:26
+
+Synonyms:
+Glci: ['glucose', 'glucose (intracellular)', 'd-glucose']
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+G6P: ['glucose 6-phosphate', 'glucose-6-phosphate', 'G6P']
+FDP: ['fructose 1,6-bisphosphate', 'fructose 1,6-phosphate', 'FDP']
+PEP: ['phosphoenolpyruvate', 'phosphoenolpyruvic acid', 'PEP']
+Gly: ['glycerol', 'glycerin', 'glyceride']
+EtOH: ['ethanol', 'ethyl alcohol', 'alcohol']
+Carbo: ['glycogen', 'glycogen (animal)', 'glycogen and trehalose']
+Glco: ['glucose outside the cell', 'extracellular glucose', 'glucose (extracellular)']
+
+Reason: All are key metabolites or substrates involved in yeast fermentation pathways; the intracellular and extracellular glucose are distinguished by context.

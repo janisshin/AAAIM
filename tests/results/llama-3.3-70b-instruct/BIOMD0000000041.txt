@@ -1,0 +1,17 @@
+Model: BIOMD0000000041
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:44:07
+
+Synonyms:
+ADPi: ['ADP', 'adenosine diphosphate', 'ADP ion']
+ATPi: ['ATP', 'adenosine triphosphate', 'ATP ion']
+Cri: ['creatine', 'creatinine', 'methylguanidine']
+PCri: ['phosphocreatine', 'creatine phosphate', 'phosphocreatine ion']
+PCr: ['phosphocreatine', 'creatine phosphate', 'phosphocreatine ion']
+ADP: ['ADP', 'adenosine diphosphate', 'ADP ion']
+ATP: ['ATP', 'adenosine triphosphate', 'ATP ion']
+Cr: ['creatine', 'creatinine', 'methylguanidine']
+Pi: ['phosphate', 'inorganic phosphate', 'phosphoric acid']
+P: ['phosphate', 'inorganic phosphate', 'phosphoric acid']
+
+Reason: The model is related to energy metabolism and the creatine kinase system, which involves the transfer of phosphate groups between ATP, ADP, phosphocreatine, and creatine. The display names and reactions in the model suggest that ADPi, ATPi, Cri, PCri, PCr, ADP, ATP, Cr, Pi, and P are related to these biochemical compounds. The standardized names are based on common synonyms and chemical names for these compounds, with the most likely names listed first.

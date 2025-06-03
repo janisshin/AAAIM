@@ -1,0 +1,14 @@
+Model: BIOMD0000000049
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:44:56
+
+Synonyms:
+Rap1_GDP: ['RAP1 GTP-binding protein', 'Ras-related protein Rap1A', 'GDP-bound Rap1']
+B_Raf_Rap1_GTP: ['B-Raf protein', 'RAP1 GTP-binding protein', 'B-Raf-Rap1 complex']
+Ras_GDP: ['Ras protein', 'GDP-bound Ras', 'Ras GTPase']
+B_Raf_Rap1_GTP_MEK: ['B-Raf-Rap1-MEK complex', 'Mitogen-activated protein kinase kinase', 'B-Raf-Rap1-MEK signaling complex']
+B_Raf_Rap1_GTP_pMEK: ['Phosphorylated MEK', 'B-Raf-Rap1-pMEK complex', 'Mitogen-activated protein kinase kinase 1']
+B_Raf_Rap1_GTP_MEK_ERK: ['B-Raf-Rap1-MEK-ERK complex', 'Mitogen-activated protein kinase signaling complex', 'B-Raf-Rap1-MEK-ERK cascade']
+B_Raf_Rap1_GTP_pMEK_ERK: ['Phosphorylated ERK', 'B-Raf-Rap1-pMEK-ERK complex', 'Mitogen-activated protein kinase 1']
+
+Reason: The species names are annotated based on the context of the Sasagawa2005_MAPK model, which describes the dynamics of ERK signaling networks. The names are derived from the display names and reactions provided, as well as general knowledge of the proteins and complexes involved in the MAPK signaling pathway. The likelihood of each name is ranked based on the specificity and relevance of the name to the species in question. For example, "Rap1_GDP" is most likely to refer to the "RAP1 GTP-binding protein" in its GDP-bound state, while "B_Raf_Rap1_GTP_MEK" is likely to refer to a complex involving B-Raf, Rap1, and MEK. The "UNK" response is not required for any species as all species can be annotated with reasonable confidence based on the provided context.

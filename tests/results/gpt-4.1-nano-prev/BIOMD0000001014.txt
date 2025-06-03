@@ -1,0 +1,8 @@
+Model: BIOMD0000001014
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:09:51
+
+Synonyms:
+Tumour_cells: ['tumor cells', 'neoplastic cells', 'cancer cells']
+
+Reason: The species refers to malignant or proliferating cells within a tumor mass, commonly called tumor or cancer cells in biomedical contexts.

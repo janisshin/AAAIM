@@ -1,0 +1,15 @@
+Model: BIOMD0000000327
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:43:16
+
+Synonyms:
+bb: ['bicarbonate ion', 'HCO3−', 'hydrogen carbonate']
+cb: ['chloride ion', 'Cl−', 'chloride']
+nb: ['sodium ion', 'Na+', 'sodium']
+bi: ['bicarbonate ion', 'HCO3−', 'hydrogen carbonate']
+ci: ['chloride ion', 'Cl−', 'chloride']
+ni: ['sodium ion', 'Na+', 'sodium']
+bl: ['bicarbonate ion', 'HCO3−', 'hydrogen carbonate']
+cl: ['chloride ion', 'Cl−', 'chloride']
+
+Reason: all species are ions involved in bicarbonate and chloride transport; bicarbonate and chloride ions are most relevant for pancreatic duct secretion.

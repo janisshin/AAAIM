@@ -1,0 +1,23 @@
+Model: BIOMD0000000701
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:22:43
+
+Synonyms:
+Tem1GTP: ['Tem1 GTPase', 'Tem1 GTP', 'Tem1', 'GTP-bound Tem1']
+Tem1GDP: ['Tem1 GDP', 'Tem1 GDP-bound', 'GDP-bound Tem1']
+T_Tem1GTP: ['T-Tem1 GTP', 'Tem1 GTP', 'Tem1']
+T_Tem1GDP: ['T-Tem1 GDP', 'Tem1 GDP', 'Tem1']
+B_Bfa1_Tem1GTP: ['Bfa1-Tem1 GTP complex', 'Bfa1-Tem1 GTP', 'Tem1 GTP bound to Bfa1']
+B_Bfa1P4_Tem1GTP: ['Bfa1P4-Tem1 GTP complex', 'Bfa1P4-Tem1 GTP', 'Tem1 GTP bound to phosphorylated Bfa1P4']
+B_Bfa1P5_Tem1GTP: ['Bfa1P5-Tem1 GTP complex', 'Bfa1P5-Tem1 GTP', 'Tem1 GTP bound to phosphorylated Bfa1P5']
+B_Bfa1_Tem1GDP: ['Bfa1-Tem1 GDP complex', 'Bfa1-Tem1 GDP', 'Tem1 GDP bound to Bfa1']
+B_Bfa1P4_Tem1GDP: ['Bfa1P4-Tem1 GDP complex', 'Bfa1P4-Tem1 GDP', 'Tem1 GDP bound to phosphorylated Bfa1P4']
+B_Bfa1P5_Tem1GDP: ['Bfa1P5-Tem1 GDP complex', 'Bfa1P5-Tem1 GDP', 'Tem1 GDP bound to phosphorylated Bfa1P5']
+Bfa1_Tem1GTP: ['Bfa1-Tem1 GTP complex', 'Bfa1-Tem1 GTP', 'Tem1 GTP bound to Bfa1']
+Bfa1P4_Tem1GTP: ['Bfa1P4-Tem1 GTP complex', 'Bfa1P4-Tem1 GTP', 'Tem1 GTP bound to phosphorylated Bfa1P4']
+Bfa1P5_Tem1GTP: ['Bfa1P5-Tem1 GTP complex', 'Bfa1P5-Tem1 GTP', 'Tem1 GTP bound to phosphorylated Bfa1P5']
+Bfa1_Tem1GDP: ['Bfa1-Tem1 GDP complex', 'Bfa1-Tem1 GDP', 'Tem1 GDP bound to Bfa1']
+Bfa1P4_Tem1GDP: ['Bfa1P4-Tem1 GDP complex', 'Bfa1P4-Tem1 GDP', 'Tem1 GDP bound to phosphorylated Bfa1P4']
+Bfa1P5_Tem1GDP: ['Bfa1P5-Tem1 GDP complex', 'Bfa1P5-Tem1 GDP', 'Tem1 GDP bound to phosphorylated Bfa1P5']
+
+Reason: These species are complexes or forms of the yeast GTPase Tem1 and its regulators Bfa1, with phosphorylation states indicated; they are standardly named based on their protein components and nucleotide states.

@@ -1,0 +1,10 @@
+Model: BIOMD0000000509
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:16:21
+
+Synonyms:
+ip3: ['inositol 1,4,5-trisphosphate', 'IP3', 'InsP3']
+atp: ['adenosine triphosphate', 'ATP']
+ca: ['calcium ion', 'Ca2+', 'calcium']
+
+Reason: ip3 is a well-known second messenger involved in calcium release; atp is a primary energy currency; ca refers to calcium ions, key in signaling pathways.

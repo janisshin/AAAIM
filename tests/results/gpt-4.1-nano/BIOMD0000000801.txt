@@ -1,0 +1,9 @@
+Model: BIOMD0000000801
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:23:25
+
+Synonyms:
+B: ['glucose', 'blood sugar', 'D-glucose']
+S: ['glioma', 'brain tumor', 'malignant glioma']
+
+Reason: B is identified as glucose based on the reaction "glucose_b_s: B => S" indicating B is a glucose form. S is labeled as glioma in the context of the model, representing tumor tissue.

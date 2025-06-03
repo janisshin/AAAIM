@@ -1,0 +1,18 @@
+Model: BIOMD0000000066
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:51:24
+
+Synonyms:
+aspp: ['Aspartyl phosphate', 'L-aspartyl phosphate', 'UNK']
+asa: ['Aspartate', 'L-aspartate', 'UNK']
+hs: ['Homoserine', 'L-homoserine', 'UNK']
+hsp: ['O-Phospho-homoserine', 'L-O-phospho-homoserine', 'UNK']
+phos: ['Phosphate', 'Pi', 'Inorganic phosphate']
+thr: ['Threonine', 'L-threonine', 'UNK']
+asp: ['Aspartate', 'L-aspartate', 'UNK']
+nadp: ['NADP+', 'Nicotinamide adenine dinucleotide phosphate', 'UNK']
+nadph: ['NADPH', 'Nicotinamide adenine dinucleotide phosphate, reduced', 'UNK']
+adp: ['ADP', 'Adenosine diphosphate', 'UNK']
+atp: ['ATP', 'Adenosine triphosphate', 'UNK']
+
+Reason: The species are biochemical compounds involved in amino acid and nucleotide metabolism; most are well-known metabolites with standard names. "asp" and "asa" are both related to aspartate derivatives, "hs" and "hsp" are homoserine-related compounds, and the nucleotides are standard. "phos" is a generic phosphate group. All are chemical entities, so synonyms are provided accordingly.

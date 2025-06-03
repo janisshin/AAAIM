@@ -1,0 +1,10 @@
+Model: BIOMD0000000406
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:45:37
+
+Synonyms:
+s91: ['deoxyribonucleic acid', 'DNA', 'DNA molecule']
+s92: ['deoxyribonucleic acid', 'DNA', 'DNA molecule']
+s157: ['unknown', 'UNK', 'unspecified']
+
+Reason: s91 and s92 are labeled as 'repldna' and 'irepldna', indicating DNA or DNA-related molecules involved in replication. s157 is labeled as 'UDNA', which is ambiguous and likely refers to an unspecified or unknown DNA species.

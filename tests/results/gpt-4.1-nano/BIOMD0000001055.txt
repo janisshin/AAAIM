@@ -1,0 +1,11 @@
+Model: BIOMD0000001055
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:24:35
+
+Synonyms:
+Glucose: ['glucose', 'D-glucose', 'blood sugar']
+Phosphoenolpyruvate: ['phosphoenolpyruvate', 'PEP', '2-phosphoenolpyruvate']
+Pyruvate: ['pyruvate', 'pyruvic acid', 'pyruvate ion']
+Oxaloacetate: ['oxaloacetate', 'oxaloacetate ion', '2-oxobutanoate']
+
+Reason: The species are key metabolites in glycolysis and gluconeogenesis pathways. Glucose is a common sugar, PEP and pyruvate are well-known glycolytic intermediates, and oxaloacetate is a TCA cycle intermediate. The reactions confirm their identities as standard biochemical compounds.

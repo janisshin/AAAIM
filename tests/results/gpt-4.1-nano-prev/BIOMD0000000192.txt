@@ -1,0 +1,11 @@
+Model: BIOMD0000000192
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:39:13
+
+Synonyms:
+RCC1_RanGTP: ['Ran GTP', 'Ran GTPase', 'Ran GTP complex']
+RCC1_RanGDP: ['Ran GDP', 'Ran GDP complex', 'Ran GTPase']
+GDP: ['guanosine diphosphate', 'GDP', "guanosine 5'-diphosphate"]
+GTP: ['guanosine triphosphate', 'GTP', "guanosine 5'-triphosphate"]
+
+Reason: All are well-known nucleotide forms involved in Ran GTPase cycling; "Ran GTP" and "Ran GDP" are common synonyms for the active/inactive forms, and "GDP"/"GTP" are standard nucleotide names.

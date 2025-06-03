@@ -1,0 +1,13 @@
+Model: BIOMD0000000348
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:13:27
+
+Synonyms:
+G3P: ['glyceraldehyde 3-phosphate', 'G3P', '3-phosphoglyceraldehyde']
+PYR: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+ATP: ["adenosine 5'-triphosphate", 'ATP', 'adenosine triphosphate']
+NADHm: ['NADH', 'nicotinamide adenine dinucleotide', 'reduced nicotinamide adenine dinucleotide']
+NADHc: ['NADH', 'nicotinamide adenine dinucleotide', 'reduced nicotinamide adenine dinucleotide']
+Cam: ['calcium', 'Ca2+', 'calcium ion']
+
+Reason: The model is a biochemical model of glucose sensitivity in pancreatic beta cells, and the species names are likely to be related to the biochemical processes involved. G3P is likely glyceraldehyde 3-phosphate, a intermediate in glycolysis. PYR is likely pyruvic acid, the end product of glycolysis. ATP is likely adenosine 5'-triphosphate, the energy currency of the cell. NADHm and NADHc are likely nicotinamide adenine dinucleotide, a electron carrier involved in energy metabolism, with the 'm' and 'c' suffixes possibly indicating mitochondrial and cytosolic compartments. Cam is likely calcium, an important ion in cellular signaling and metabolism.

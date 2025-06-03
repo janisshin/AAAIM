@@ -1,0 +1,16 @@
+Model: BIOMD0000000206
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:39:44
+
+Synonyms:
+at: ['ATP', 'adenosine triphosphate', 'ATP']
+s1: ['glucose', 'D-glucose', 'blood sugar']
+s2: ['fructose-1,6-bisphosphate', 'F16P', 'F-16-P']
+s3: ['glyceraldehyde-3-phosphate', 'G3P', 'triose phosphate']
+s4: ['3-phosphoglycerate', '3PG', '3-phosphoglyceric acid']
+s5: ['pyruvate', 'pyruvic acid', 'pyruvate']
+s6: ['acetaldehyde', 'ethanal', 'acetaldehyde']
+s6o: ['extracellular acetaldehyde', 'acetaldehyde outside cell', 'extracellular ethanal']
+na: ['NAD', 'nicotinamide adenine dinucleotide', 'NAD+']
+
+Reason: The species are standard metabolites involved in glycolysis and energy metabolism; synonyms are common biochemical names or abbreviations.

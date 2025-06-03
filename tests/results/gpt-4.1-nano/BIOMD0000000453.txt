@@ -1,0 +1,14 @@
+Model: BIOMD0000000453
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:01:27
+
+Synonyms:
+mw8f5a7b5c_ca4c_4a4c_85b1_e5d640c426bf: ['Ras-GDP', 'Ras inactive', 'Ras (GDP-bound)']
+mwf40d6176_abfc_4a30_886f_83a19fcffc48: ['EGFR', 'Epidermal growth factor receptor', 'EGFR receptor']
+mwa54a9c38_c98b_45e5_8432_4119fb777e44: ['Ras-GTP', 'Active Ras', 'Ras (GTP-bound)']
+mw28464aad_8013_4a23_ae09_a406954859a6: ['Ras-GTP', 'Active Ras', 'Ras (GTP-bound)']
+mwdf82303e_323f_4c51_a858_56a59233cd98: ['Ras-GTP', 'Active Ras', 'Ras (GTP-bound)']
+mwd7bf31ba_b05c_4c45_bb2f_6a2468a2a507: ['Ras-GTP', 'Active Ras', 'Ras (GTP-bound)']
+mw83de7813_4941_45a6_a320_a551165bf22a: ['Ras-GTP', 'Active Ras', 'Ras (GTP-bound)']
+
+Reason: The model describes EGFR signaling and Ras activation states; "Ras-GDP" and "Ras-GTP" are standard forms of Ras involved in signaling pathways.

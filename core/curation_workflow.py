@@ -14,13 +14,14 @@ import logging
 
 from .model_info import find_species_with_chebi_annotations, extract_model_info, format_prompt
 from .llm_interface import SYSTEM_PROMPT, query_llm, parse_llm_response
-from .database_search import get_species_recommendations_direct, Recommendation
+from .database_search import Recommendation, get_species_recommendations_direct, get_species_recommendations_rag
 
 logger = logging.getLogger(__name__)
 
 def curate_single_model(model_file: str, 
                   llm_model: str = "gpt-4o-mini",
-                  max_entities: int = 100,
+                  method: str = "direct",
+                  max_entities: int = None,
                   entity_type: str = "chemical",
                   database: str = "chebi") -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """
@@ -30,7 +31,8 @@ def curate_single_model(model_file: str,
     Args:
         model_file: Path to SBML model file
         llm_model: LLM model to use ("gpt-4o-mini", "meta-llama/llama-3.3-70b-instruct:free")
-        max_entities: Maximum number of entities to annotate
+        method: Method to use for database search ("direct", "rag")
+        max_entities: Maximum number of entities to annotate (None for all)
         entity_type: Type of entities to annotate ("chemical", "gene", "protein")
         database: Target database ("chebi", "ncbigene", "uniprot")
         
@@ -43,6 +45,7 @@ def curate_single_model(model_file: str,
     
     logger.info(f"Starting curation for model: {model_file}")
     logger.info(f"Using LLM model: {llm_model}")
+    logger.info(f"Using method: {method} for database search")
     logger.info(f"Entity type: {entity_type}, Database: {database}")
     
     # Step 1: Find existing annotations
@@ -61,8 +64,12 @@ def curate_single_model(model_file: str,
         return pd.DataFrame(), {"error": "No existing annotations found"}
     
     # Step 2: Select entities to evaluate
-    specs_to_evaluate = list(existing_annotations.keys())[:max_entities]
-    logger.info(f"Selected {len(specs_to_evaluate)} entities for evaluation")
+    if max_entities:
+        specs_to_evaluate = list(existing_annotations.keys())[:max_entities]
+        logger.info(f"Selected {len(specs_to_evaluate)} entities for curation")
+    else:
+        specs_to_evaluate = list(existing_annotations.keys())
+        logger.info(f"Curation all {len(specs_to_evaluate)} entities")
     
     # Step 3: Extract model context
     logger.info("Step 3: Extracting model context...")
@@ -115,7 +122,13 @@ def curate_single_model(model_file: str,
     search_start = time.time()
     
     if database == "chebi":
-        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict)
+        if method == "direct":
+            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict)
+        elif method == "rag":
+            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict)
+        else:
+            logger.error(f"Invalid method: {method}")
+            return pd.DataFrame(), {"error": f"Invalid method: {method}"}
     else:
         # Future: support other databases
         logger.error(f"Database {database} not yet supported")
@@ -182,8 +195,8 @@ def _generate_recommendation_table(model_file: str,
             # Determine if this is an existing annotation
             existing = 1 if candidate in existing_annotations.get(rec.id, []) else 0
             
-            # Calculate match score (hits / total synonyms)
-            match_score = rec.hit_count[i] / len(rec.synonyms) if rec.synonyms else 0
+            # match score
+            match_score = rec.match_score[i]
             
             # Determine update action
             if existing:

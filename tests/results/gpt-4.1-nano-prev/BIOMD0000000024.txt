@@ -1,0 +1,9 @@
+Model: BIOMD0000000024
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:34
+
+Synonyms:
+M: ['messenger RNA', 'mRNA', 'transcript']
+P: ['protein', 'polypeptide', 'peptide']
+
+Reason: M is annotated as mRNA involved in transcription; P is annotated as protein, the product of translation. Both are biological macromolecules, not small molecules.

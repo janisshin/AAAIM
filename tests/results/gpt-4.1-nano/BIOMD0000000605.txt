@@ -1,0 +1,20 @@
+Model: BIOMD0000000605
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:20:14
+
+Synonyms:
+glycerol_i: ['glycerol', 'glycerol-3-phosphate', 'glycerolipid']
+glucose_i: ['glucose', 'd-glucose', 'blood sugar']
+G6P: ['glucose-6-phosphate', 'G6P', 'gluc-6-P']
+trehalose: ['trehalose', 'maltose', 'mycose']
+F16DP: ['fructose-1,6-bisphosphate', 'F16DP', 'FDP']
+pyruvate: ['pyruvate', 'pyruvic acid', '2-oxopropanoate']
+acetate_i: ['acetate', 'acetic acid', 'acetate ion']
+ethanol_i: ['ethanol', 'ethyl alcohol', 'alcohol']
+glycerol_e: ['glycerol', 'glycerol-3-phosphate', 'glycerolipid']
+glucose_e: ['glucose', 'd-glucose', 'blood sugar']
+acetate_e: ['acetate', 'acetic acid', 'acetate ion']
+ethanol_e: ['ethanol', 'ethyl alcohol', 'alcohol']
+trehalose_e: ['trehalose', 'maltose', 'mycose']
+
+Reason: The species are mostly common metabolites involved in central carbon metabolism and osmoadaptation. Glycerol, glucose, and their phosphorylated forms are well-known. Acetate and ethanol are common fermentation products. Trehalose is a disaccharide involved in stress response. The synonyms reflect their standard biochemical names or common equivalents.

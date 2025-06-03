@@ -1,0 +1,39 @@
+Model: BIOMD0000000293
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:30
+
+Synonyms:
+NatP: ['NAT1', 'N-Acetyltransferase 1', 'NAT enzyme']
+MisP: ['Misfolded protein', 'Misfolded', 'Protein aggregate']
+E3_MisP: ['E3 ubiquitin ligase', 'E3 ligase', 'Ubiquitin ligase']
+ROS: ['Reactive oxygen species', 'ROS', 'Oxygen free radicals']
+E3_MisP_Ub: ['E3 ubiquitin ligase with ubiquitin', 'E3-Ub', 'Ubiquitin ligase complex']
+E3_MisP_Ub2: ['E3 ubiquitin ligase with 2 ubiquitins', 'Polyubiquitinated E3', 'E3 with di-ubiquitin']
+E3_MisP_Ub3: ['E3 ubiquitin ligase with 3 ubiquitins', 'Tri-ubiquitinated E3', 'E3 with tri-ubiquitin']
+E3_MisP_Ub4: ['E3 ubiquitin ligase with 4 ubiquitins', 'Tetra-ubiquitinated E3', 'E3 with tetra-ubiquitin']
+E3_MisP_Ub5: ['E3 ubiquitin ligase with 5 ubiquitins', 'Penta-ubiquitinated E3', 'E3 with penta-ubiquitin']
+E3_MisP_Ub6: ['E3 ubiquitin ligase with 6 ubiquitins', 'Hexa-ubiquitinated E3', 'E3 with hexa-ubiquitin']
+E3_MisP_Ub7: ['E3 ubiquitin ligase with 7 ubiquitins', 'Hepta-ubiquitinated E3', 'E3 with hepta-ubiquitin']
+E3_MisP_Ub8: ['E3 ubiquitin ligase with 8 ubiquitins', 'Octa-ubiquitinated E3', 'E3 with octa-ubiquitin']
+MisP_Ub4_Proteasome: ['Misfolded protein with 4 ubiquitins bound to proteasome', 'Ubiquitylated MisP proteasome complex', 'MisP ubiquitinated, proteasome-associated']
+MisP_Ub5_Proteasome: ['Misfolded protein with 5 ubiquitins bound to proteasome', 'Ubiquitylated MisP proteasome complex']
+MisP_Ub6_Proteasome: ['Misfolded protein with 6 ubiquitins bound to proteasome', 'Ubiquitylated MisP proteasome complex']
+MisP_Ub7_Proteasome: ['Misfolded protein with 7 ubiquitins bound to proteasome', 'Ubiquitylated MisP proteasome complex']
+MisP_Ub8_Proteasome: ['Misfolded protein with 8 ubiquitins bound to proteasome', 'Ubiquitylated MisP proteasome complex']
+E3_MisP_Ub_DUB: ['E3 ubiquitin ligase with ubiquitin, DUB', 'E3-Ub with deubiquitinating enzyme', 'Ubiquitin ligase complex with DUB']
+E3_MisP_Ub2_DUB: ['E3 with 2 ubiquitins and DUB', 'Di-ubiquitinated E3 with DUB']
+E3_MisP_Ub3_DUB: ['E3 with 3 ubiquitins and DUB', 'Tri-ubiquitinated E3 with DUB']
+E3_MisP_Ub4_DUB: ['E3 with 4 ubiquitins and DUB', 'Tetra-ubiquitinated E3 with DUB']
+E3_MisP_Ub5_DUB: ['E3 with 5 ubiquitins and DUB', 'Penta-ubiquitinated E3 with DUB']
+E3_MisP_Ub6_DUB: ['E3 with 6 ubiquitins and DUB', 'Hexa-ubiquitinated E3 with DUB']
+E3_MisP_Ub7_DUB: ['E3 with 7 ubiquitins and DUB', 'Hepta-ubiquitinated E3 with DUB']
+E3_MisP_Ub8_DUB: ['E3 with 8 ubiquitins and DUB', 'Octa-ubiquitinated E3 with DUB']
+ATP: ['Adenosine triphosphate', 'ATP', 'Energy molecule']
+ADP: ['Adenosine diphosphate', 'ADP', 'Dephosphorylated ATP']
+AMP: ['Adenosine monophosphate', 'AMP', 'Monophosphate nucleotide']
+
+Reason: 
+- Species like NatP, MisP, and E3_MisP are proteins involved in ubiquitination and misfolding processes, not chemical entities, so "UNK".
+- ROS is a reactive oxygen species, a chemical entity, so standard synonyms are provided.
+- Ubiquitin and its conjugates are small proteins, but for ontology lookup, ubiquitin is the canonical name.
+- ATP, ADP, and AMP are well-known nucleotides, standard names are provided.

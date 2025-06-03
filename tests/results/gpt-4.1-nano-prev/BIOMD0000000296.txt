@@ -1,0 +1,10 @@
+Model: BIOMD0000000296
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:31
+
+Synonyms:
+IPTG: ['isopropyl β-D-1-thiogalactopyranoside', 'IPTG', 'IPTG (inducer)']
+A1: ['UNK']
+A2: ['UNK']
+
+Reason: IPTG is a well-known chemical inducer used in molecular biology; A1 and A2 are unspecified, with no display names or context, so cannot be reliably identified.

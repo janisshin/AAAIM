@@ -1,0 +1,11 @@
+Model: BIOMD0000000523
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:01:01
+
+Synonyms:
+PrNES_mCherry: ['PrNES', 'nuclear export signal', 'UNK']
+PrER_mGFP: ['PrER', 'endoplasmic reticulum', 'UNK']
+PrNES: ['PrNES', 'nuclear export signal', 'UNK']
+PrER: ['PrER', 'endoplasmic reticulum', 'UNK']
+
+Reason: All species are fusion constructs with promoter or localization signals (PrNES, PrER) and fluorescent proteins (mCherry, mGFP). They are not standard chemical entities, so only the localization signals are normalized.

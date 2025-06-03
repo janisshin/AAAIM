@@ -1,0 +1,16 @@
+Model: BIOMD0000000400
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:45:32
+
+Synonyms:
+Gd: ['gadolinium', 'Gd(III)', 'gadolinium ion']
+Gt: ['glutamate', 'glutamic acid', 'L-glutamate']
+Rg: ['ruthenium', 'ruthenium ion', 'Ru']
+Rlg: ['ruthenium complex', 'ruthenium ligand', 'Ru-ligand']
+Rlgp: ['ruthenium phosphine complex', 'ruthenium phosphine ligand', 'Ru-phosphine']
+Pc: ['phosphatidylcholine', 'PC', 'lecithin']
+Pcg: ['phosphatidylcholine glycerol', 'PC glycerol', 'phosphatidylcholine backbone']
+Pg: ['phosphatidylglycerol', 'PG', 'glycerophosphoglycerol']
+Ca: ['calcium', 'Ca2+', 'calcium ion']
+
+Reason: All are common chemical or biological species; Gd is a lanthanide ion, Gt is a neurotransmitter, Rg and Rlg are ruthenium complexes, P species are phospholipids, and Ca is a well-known ion.

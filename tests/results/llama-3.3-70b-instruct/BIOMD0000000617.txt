@@ -1,0 +1,8 @@
+Model: BIOMD0000000617
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:23:14
+
+Synonyms:
+v: ['DAPT', 'N-[N-(3,5-difluorophenyl)acetyl]alanyl-2-phenyl]glycine', 'GSI-IX']
+
+Reason: The model notes mention "DAPT" as a compound that both activates and inhibits ?-secretase, and DAPT is a known gamma-secretase inhibitor, also referred to as "N-[N-(3,5-difluorophenyl)acetyl]alanyl-2-phenyl]glycine" or "GSI-IX".

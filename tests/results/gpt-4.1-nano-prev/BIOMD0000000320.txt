@@ -1,0 +1,17 @@
+Model: BIOMD0000000320
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:43:04
+
+Synonyms:
+A_dopa: ['L-dopa', 'levodopa', '3,4-dihydroxy-L-phenylalanine']
+A_M: ['benserazide', 'benzoic acid derivative', 'AADC inhibitor']
+C_dopa: ['3-O-methyldopa', '3-O-methyl-L-dopa', '3-O-methyldihydroxyphenylalanine']
+C_OMD: ['3-O-methyldopa', '3-O-methyl-L-dopa', '3-O-methyldihydroxyphenylalanine']
+C1_M: ['unknown', 'UNK', 'not specified']
+C2_M: ['unknown', 'UNK', 'not specified']
+
+Reason: 
+A_dopa is the primary substrate L-dopa (levodopa).
+A_M is benserazide, a known decarboxylase inhibitor.
+C_dopa and C_OMD are both 3-O-methyldopa, a known metabolite of L-dopa methylation.
+C1_M and C2_M lack specific names or context, so labeled as unknown.

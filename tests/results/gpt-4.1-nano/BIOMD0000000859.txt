@@ -1,0 +1,13 @@
+Model: BIOMD0000000859
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:23:47
+
+Synonyms:
+sucr: ['sucrose', 'table sugar', 'disaccharide']
+Ephe: ['ephedrine', 'ephedra alkaloid', 'UNK']
+N: ['nitrogen', 'ammonia', 'UNK']
+Next: ['UNK']
+Enitrate: ['nitrate', 'NO3−', 'salpeter']
+ECO2: ['carbon dioxide', 'CO2', 'dioxide']
+
+Reason: sucr is sucrose; Ephe is likely ephedrine but not explicitly specified; N is nitrogen; Next is unknown; Enitrate is nitrate; ECO2 is carbon dioxide.

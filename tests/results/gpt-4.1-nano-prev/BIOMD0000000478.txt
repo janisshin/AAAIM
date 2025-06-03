@@ -1,0 +1,27 @@
+Model: BIOMD0000000478
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:55:42
+
+Synonyms:
+Ras2_GDP: ['Ras GTPase, Ras protein, Ras']
+Ras2_GDP_Cdc25: ['Ras GTPase with Cdc25, Ras-Cdc25 complex, Ras']
+GDP: ['guanosine diphosphate, GDP']
+GTP: ['guanosine triphosphate, GTP']
+Ras2_GTP_Cdc25: ['Ras GTPase GTP-bound, Ras-GTP, Ras']
+Ras2_GTP: ['Ras GTPase, Ras protein, Ras']
+Ras2_GTP_Ira2: ['Ras GTPase with Ira2, Ras-Ira2 complex, Ras']
+Ras2_GTP_CYR1: ['Ras GTPase with Cyr1, Ras-Cyr1 complex, Ras']
+ATP: ['adenosine triphosphate, ATP']
+cAMP: ['cyclic AMP, cAMP']
+cAMP_PKA: ['cAMP-dependent protein kinase, PKA']
+IIcAMP_PKA: ['PKA with second cAMP, PKA']
+IIIcAMP_PKA: ['PKA with third cAMP, PKA']
+IVcAMP_PKA: ['PKA with fourth cAMP, PKA']
+R_2cAMP: ['dimeric cAMP, cAMP dimer']
+cAMP_Pde1f: ['cAMP phosphodiesterase Pde1f, cAMP Pde1f']
+AMP: ['adenosine monophosphate, AMP']
+cAMP_Pde2: ['cAMP phosphodiesterase Pde2, cAMP Pde2']
+Ras2_GTP_Ira2P: ['Ras GTPase with Ira2P, Ras-Ira2P complex, Ras']
+
+Reason: 
+Species like Ras2_GDP, Ras2_GDP_Cdc25, Ras2_GTP, Ras2_GTP_Ira2, Ras2_GTP_CYR1, Ras2_GTP_Ira2P are all variants or complexes involving Ras GTPase, which is a well-known signaling protein. GDP and GTP are standard nucleotides. cAMP and derivatives are common second messengers. PKA and phosphodiesterases are well-characterized enzymes. "Ras" and related complexes are standard names for these signaling entities. "UNK" is not appropriate here because all species are identifiable as known signaling molecules or complexes.

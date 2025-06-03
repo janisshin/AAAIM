@@ -1,0 +1,25 @@
+Model: BIOMD0000000391
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:17:19
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'RuBP', 'ribulose 1,5-bisphosphate']
+PGA: ['3-phosphoglyceric acid', '3-phosphoglycerate', 'phosphoglyceric acid']
+GAP: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde 3-phosphate']
+DHAP: ['dihydroxyacetone phosphate', 'DHAP', 'glycerone phosphate']
+FBP: ['fructose-1,6-bisphosphate', 'fructose 1,6-bisphosphate', 'FBP']
+F6P: ['fructose-6-phosphate', 'fructose 6-phosphate', 'F6P']
+SBP: ['sedoheptulose-1,7-bisphosphate', 'sedoheptulose 1,7-bisphosphate', 'SBP']
+S7P: ['sedoheptulose-7-phosphate', 'sedoheptulose 7-phosphate', 'S7P']
+X5P: ['xylulose-5-phosphate', 'xylulose 5-phosphate', 'X5P']
+R5P: ['ribose-5-phosphate', 'ribulose 5-phosphate', 'R5P']
+Ru5P: ['ribulose-5-phosphate', 'ribulose 5-phosphate', 'Ru5P']
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'NADPH', 'reduced nicotinamide adenine dinucleotide phosphate']
+H: ['hydrogen', 'H+', 'proton']
+Pi: ['inorganic phosphate', 'phosphate', 'orthophosphate']
+Pext: ['UNK']
+G1P: ['glucose-1-phosphate', 'glucose 1-phosphate', 'G1P']
+
+Reason: The model is of the Calvin cycle, which is a series of light-independent reactions in photosynthesis. The species are identified based on their roles in the reactions and the display names provided. Pext is unknown as it is not clear what "Pext" refers to in the context of the model, and there is no display name or reaction information provided to clarify its identity.

@@ -1,0 +1,18 @@
+Model: BIOMD0000000467
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:28:25
+
+Synonyms:
+s3: ['calcium ion', 'calcium', 'Ca2+']
+s45: ['eNOS-CaM-Ca4 complex', 'endothelial nitric oxide synthase-calmodulin-calcium complex', 'eNOS-calmodulin complex']
+s47: ['calmodulin-Ca4 complex', 'calmodulin-calcium complex', 'CaM-Ca4']
+s48: ['calmodulin-Ca2 complex', 'calmodulin-calcium complex', 'CaM-Ca2']
+s50: ['eNOS-CaM-Ca2 complex', 'endothelial nitric oxide synthase-calmodulin-calcium complex', 'eNOS-calmodulin complex']
+s58: ['Hsp90-eNOS-CaM-Ca4 complex', 'heat shock protein 90-endothelial nitric oxide synthase-calmodulin-calcium complex', 'Hsp90-eNOS-calmodulin complex']
+s60: ['Hsp90-p-eNOS-CaM-Ca4 complex', 'heat shock protein 90-phosphorylated endothelial nitric oxide synthase-calmodulin-calcium complex', 'Hsp90-p-eNOS-calmodulin complex']
+s61: ['Hsp90-eNOS-CaM-Ca2 complex', 'heat shock protein 90-endothelial nitric oxide synthase-calmodulin-calcium complex', 'Hsp90-eNOS-calmodulin complex']
+s62: ['Hsp90-p-eNOS-CaM-Ca2 complex', 'heat shock protein 90-phosphorylated endothelial nitric oxide synthase-calmodulin-calcium complex', 'Hsp90-p-eNOS-calmodulin complex']
+s63: ['L-arginine', 'arginine', 'L-Arg']
+s64: ['nitric oxide', 'nitrogen oxide', 'NO']
+
+Reason: The species were annotated based on their display names and reaction equations. s3 is likely calcium ion due to its display name "Ca_c". s45, s47, s48, s50, s58, s60, s61, and s62 were annotated based on their complex compositions. s63 is L-arginine due to its display name "L-Arg". s64 is nitric oxide due to its display name "NO".

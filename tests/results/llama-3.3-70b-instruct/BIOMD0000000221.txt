@@ -1,0 +1,18 @@
+Model: BIOMD0000000221
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:02:45
+
+Synonyms:
+aca: ['acetyl-CoA', 'acetyl coenzyme A', 'acetic acid']
+oaa: ['oxaloacetate', 'oxaloacetic acid', '2-oxosuccinate']
+coa: ['coenzyme A', 'CoA', 'coenzyme A (non-acetylated)']
+cit: ['citric acid', 'citrate', 'sodium citrate']
+icit: ['isocitric acid', 'isocitrate', 'D-isocitrate']
+akg: ['alpha-ketoglutaric acid', 'alpha-ketoglutarate', '2-oxoglutarate']
+sca: ['succinyl-CoA', 'succinyl coenzyme A', 'succinyl-CoA (non-acetylated)']
+suc: ['succinic acid', 'succinate', 'butanedioic acid']
+fa: ['fumaric acid', 'fumarate', 'trans-butenedioic acid']
+mal: ['malic acid', 'malate', 'hydroxybutanedioic acid']
+gly: ['glyoxylate', 'glyoxylic acid', 'hydroxyacetic acid']
+
+Reason: The species names are annotated based on their common usage in the context of the tricarboxylic acid (TCA) cycle and glyoxylate bypass, as described in the provided model and article. The annotations are ranked by likelihood based on their frequency of usage and relevance to the biochemical pathways mentioned.

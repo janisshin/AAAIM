@@ -1,0 +1,10 @@
+Model: BIOMD0000000022
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:29
+
+Synonyms:
+Clkm: ['CLK mRNA', 'Clock gene mRNA', 'Circadian clock mRNA']
+Perm: ['PER mRNA', 'Period gene mRNA', 'PER protein']
+Timm: ['TIM mRNA', 'Timeless gene mRNA', 'Timeless protein']
+
+Reason: All three are labeled as mRNA species related to circadian clock genes, corresponding to core clock components in Drosophila; their names suggest mRNA transcripts of clock genes.

@@ -1,0 +1,17 @@
+Model: BIOMD0000000737
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:07:29
+
+Synonyms:
+FeDuo: ['ferrous duodenal iron', 'duodenal iron', 'Fe(II) in duodenum']
+FeRBC: ['red blood cell iron', 'hemoglobin iron', 'erythrocyte iron']
+FeSpleen: ['spleen iron', 'splenic iron', 'iron in spleen']
+FeLiver: ['liver iron', 'hepatic iron', 'iron in liver']
+Fe2Tf: ['ferrous transferrin', 'Fe(II)-transferrin', 'reduced transferrin']
+Fe1Tf: ['ferric transferrin', 'Fe(III)-transferrin', 'oxidized transferrin']
+NTBI: ['non-transferrin bound iron', 'labile plasma iron', 'free iron']
+FeRest: ['rest of iron', 'residual iron', 'unbound iron']
+FeOutside: ['extracellular iron', 'outside cell iron', 'plasma iron']
+FeBM: ['bone marrow iron', 'marrow iron', 'iron in bone marrow']
+
+Reason: All species are related to iron compartments or forms; the synonyms reflect their biological context or chemical form.

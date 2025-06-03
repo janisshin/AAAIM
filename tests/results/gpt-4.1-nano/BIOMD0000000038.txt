@@ -1,0 +1,13 @@
+Model: BIOMD0000000038
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:50:22
+
+Synonyms:
+PyrPI: ['pyridoxal phosphate', 'PLP', 'pyridoxal phosphate']
+EIICBPGlc: ['glucose-specific phosphotransferase system enzyme IIBC component', 'EIICB', 'glucose transporter']
+PEP: ['phosphoenolpyruvate', 'PEP', 'enolpyruvate']
+Pyr: ['pyruvate', 'pyruvic acid', 'pyruvate anion']
+GlcP: ['glucose-6-phosphate', 'G6P', 'glucose-6-phosphate']
+Glc: ['glucose', 'd-glucose', 'blood sugar']
+
+Reason: The species are likely involved in a bacterial phosphotransferase system and central metabolism; PEP and Pyr are key metabolic intermediates, while Glc and GlcP are related to glucose uptake and phosphorylation. EIICBPGlc is a component of the glucose transport system.

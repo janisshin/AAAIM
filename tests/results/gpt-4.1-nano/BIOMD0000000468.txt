@@ -1,0 +1,25 @@
+Model: BIOMD0000000468
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:02:34
+
+Synonyms:
+s1: ['calcium ion', 'Ca2+', 'calcium']
+s2: ['calcium ion', 'Ca2+', 'calcium']
+s3: ['calcium ion', 'Ca2+', 'calcium']
+s4: ['calcium ion', 'Ca2+', 'calcium']
+s6: ['IP3', 'inositol 1,4,5-trisphosphate', 'inositol triphosphate']
+s19: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'phosphatidylinositol 4,5-bisphosphate']
+s45: ['endothelial nitric oxide synthase', 'eNOS', 'NOS3']
+s47: ['calmodulin', 'CaM', 'calcium-binding messenger protein']
+s48: ['calcium ion', 'Ca2+', 'calcium']
+s50: ['endothelial nitric oxide synthase', 'eNOS', 'NOS3']
+s58: ['Hsp90-eNOS-calmodulin complex', 'Hsp90-eNOS-CaM', 'Hsp90-eNOS-CaM complex']
+s60: ['Hsp90-eNOS-calmodulin complex', 'Hsp90-eNOS-CaM', 'Hsp90-eNOS-CaM complex']
+s61: ['Hsp90-eNOS-calmodulin complex', 'Hsp90-eNOS-CaM', 'Hsp90-eNOS-CaM complex']
+s62: ['Hsp90-eNOS-calmodulin complex', 'Hsp90-eNOS-CaM', 'Hsp90-eNOS-CaM complex']
+s63: ['L-arginine', 'L-Arg', 'arginine']
+s64: ['nitric oxide', 'NO', 'nitrogen monoxide']
+s102: ['Ras GTP', 'Ras:GTP', 'Ras active form']
+s103: ['Ras GDP', 'Ras:GDP', 'Ras inactive form']
+
+Reason: The species are mostly ions (Ca2+), signaling molecules (IP3, PIP2, NO), proteins (eNOS, Hsp90, calmodulin), and small molecules (arginine). The names are standardized to common biochemical synonyms for these entities.

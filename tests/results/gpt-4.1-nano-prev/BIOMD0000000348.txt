@@ -1,0 +1,13 @@
+Model: BIOMD0000000348
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:07
+
+Synonyms:
+G3P: ['glyceraldehyde-3-phosphate', 'glyceraldehyde 3-phosphate', 'G3P']
+PYR: ['pyruvate', 'pyruvic acid', 'PYR']
+ATP: ['adenosine triphosphate', 'ATP']
+NADHm: ['NADH', 'nicotinamide adenine dinucleotide (reduced)', 'NADH']
+NADHc: ['NADH', 'nicotinamide adenine dinucleotide (reduced)', 'NADH']
+Cam: ['calmodulin', 'calcium-modulated protein', 'Cam']
+
+Reason: G3P and PYR are well-known metabolic intermediates; ATP is a primary energy currency; NADHm and NADHc are cytoplasmic and mitochondrial forms of NADH, respectively; Cam is likely calmodulin, a common calcium-binding protein involved in signaling.

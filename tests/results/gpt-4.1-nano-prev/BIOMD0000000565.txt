@@ -1,0 +1,27 @@
+Model: BIOMD0000000565
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:02:07
+
+Synonyms:
+cpep: ['phosphoenolpyruvate', 'PEP', 'phosphoenolpyruvic acid']
+cglcex: ['extracellular glucose', 'glucose outside cell']
+cg6p: ['glucose-6-phosphate', 'G6P']
+cpyr: ['pyruvate', 'pyruvic acid']
+cf6p: ['fructose-6-phosphate', 'F6P']
+cg1p: ['glucose-1-phosphate', 'G1P']
+cpg: ['6-phosphogluconate', '6PG']
+cfdp: ['fructose-1,6-bisphosphate', 'FBP']
+csed7p: ['sedoheptulose-7-phosphate']
+cribu5p: ['ribulose-5-phosphate']
+cpg2: ['2-phosphoglycerate', '2PG']
+cpg3: ['3-phosphoglycerate', '3PG']
+accoa: ['acetyl-CoA', 'acetyl coenzyme A']
+malcoa: ['malonyl-CoA', 'malonyl coenzyme A']
+fer: ['ferrous iron', 'iron(II)']
+fer_ext: ['extracellular ferrous iron']
+fercoa: ['ferrous iron-coenzyme A complex']
+ferdicoa: ['ferric-dihydroxycoumarin-CoA', '(uncertain', 'likely a complex)']
+cur: ['curcumin']
+cur_ext: ['extracellular curcumin']
+
+Reason: The species are mostly well-known metabolic intermediates or cofactors; "fer" and derivatives are related to iron, and "cur" is a known natural compound. "accCoA" and "malcoa" are standard CoA derivatives.

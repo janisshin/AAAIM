@@ -1,0 +1,848 @@
+Model: BIOMD0000000471
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:52:29
+
+Synonyms:
+s_0002: ['beta-glucan', '(1->3)-beta-D-glucan', 'cell wall polysaccharide']
+
+Reason: the display name indicates a beta-glucan, a common polysaccharide component.
+
+s_0004: "UNK"
+Reason: no display name or reaction context provided; cannot determine.
+
+s_0008: "UNK"
+Reason: no display name or context; likely a metabolite but unspecified.
+
+s_0009: "UNK"
+Reason: no display name or reaction info; cannot identify.
+
+s_0010: "UNK"
+Reason: no display name; insufficient info.
+
+s_0015: "UNK"
+Reason: no display name; cannot determine.
+
+s_0016: "UNK"
+Reason: no display name; insufficient info.
+
+s_0018: "UNK"
+Reason: no display name; cannot identify.
+
+s_0019: "UNK"
+Reason: no display name; no context.
+
+s_0028: "phosphatidylinositol", "phosphatidylglycerol", "phosphatidylserine"
+Reason: associated with lipid species, common in membrane phospholipids.
+
+s_0037: "squalene", "hopene", "triterpene"
+Reason: the display name indicates a triterpene precursor, likely squalene.
+
+s_0039: "UNK"
+Reason: no display name; cannot identify.
+
+s_0056: "L-leucine", "leucine", "amino acid"
+Reason: standard amino acid, common in metabolism.
+
+s_0061: "dihydroorotate", "orotate", "pyrimidine precursor"
+Reason: the display name indicates a pyrimidine biosynthesis intermediate.
+
+s_0066: "malate", "L-malate", "dicarboxylic acid"
+Reason: common TCA cycle intermediate.
+
+s_0075: "glycerol 3-phosphate", "glycerol-3-phosphate", "glycero-phosphate"
+Reason: glycerol backbone in lipids and glycolysis.
+
+s_0076: "ribulose 5-phosphate", "D-ribulose 5-phosphate", "pentose phosphate pathway intermediate"
+Reason: a pentose phosphate pathway metabolite.
+
+s_0077: "imidazole-4-carboxamide ribonucleotide", "AICAR", "purine biosynthesis intermediate"
+Reason: the display name indicates a purine precursor.
+
+s_0078: "AMP", "adenosine monophosphate", "nucleotide"
+Reason: standard nucleotide.
+
+s_0082: "1-acyl-sn-glycerol 3-phosphate", "lysophosphatidic acid", "glycerophospholipid precursor"
+Reason: lipid intermediate.
+
+s_0086: "indol-3-yl glycerol phosphate", "tryptophan precursor", "indole derivative"
+Reason: related to tryptophan biosynthesis.
+
+s_0089: "phosphatidylinositol", "PI", "membrane phospholipid"
+Reason: lipid involved in signaling.
+
+s_0118: "pyrroline-5-carboxylate", "proline precursor", "pyrroline"
+Reason: amino acid metabolism intermediate.
+
+s_0120: "formyl-THF", "10-formyl-tetrahydrofolate", "folate derivative"
+Reason: folate cofactor.
+
+s_0122: "lanosterol", "steroid precursor", "ergosterol intermediate"
+Reason: sterol biosynthesis intermediate.
+
+s_0126: "myo-inositol 1-phosphate", "inositol phosphate", "inositol derivative"
+Reason: inositol metabolism.
+
+s_0141: "pyrimidine precursor", "dihydroorotate", "pyrimidine biosynthesis"
+Reason: related to pyrimidine pathway.
+
+s_0142: "diamino-6-(5-phosphono)ribitylamino-4(3H)-pyrimidinone", "pyrimidine derivative", "ribosyl pyrimidine"
+Reason: pyrimidine biosynthesis intermediate.
+
+s_0145: "N-acetyl-5-oxopentanoate", "N-acetyl amino acid", "metabolite in lysine degradation"
+Reason: amino acid catabolism.
+
+s_0146: "lactic acid", "2-hydroxypropanoic acid", "pyruvate derivative"
+Reason: related to lactic acid fermentation.
+
+s_0158: "2-hydroxy-3-oxobutyl phosphate", "intermediate in amino acid metabolism", "unknown"
+Reason: specific metabolite in amino acid pathway.
+
+s_0162: "2-isopropylmalate", "leucine biosynthesis intermediate", "metabolite in amino acid synthesis"
+Reason: leucine biosynthesis.
+
+s_0165: "2-isopropylmaleic acid", "metabolite in amino acid pathway", "unknown"
+Reason: likely a related metabolite.
+
+s_0176: "2-oxoadipic acid", "lysine degradation product", "dicarboxylic acid"
+Reason: lysine catabolism.
+
+s_0178: "2-oxobutanoate", "alpha-ketobutyrate", "metabolite in amino acid metabolism"
+Reason: amino acid degradation.
+
+s_0180: "2-oxoglutarate", "alpha-ketoglutarate", "TCA cycle intermediate"
+Reason: key TCA cycle metabolite.
+
+s_0188: "2-phospho-D-glyceric acid", "3-phosphoglycerate", "glycolytic intermediate"
+Reason: glycolysis.
+
+s_0190: "farnesyl diphosphate", "FPP", "terpenoid precursor"
+Reason: isoprenoid biosynthesis.
+
+s_0201: "phospho-5'-adenylyl sulfate", "PAPS", "sulfate donor"
+Reason: sulfate activation.
+
+s_0204: "3-(4-hydroxyphenyl)pyruvate", "tyrosine pathway intermediate", "phenylpyruvate derivative"
+Reason: tyrosine metabolism.
+
+s_0207: "imidazol-4-yl-2-oxopropyl dihydrogen phosphate", "histidine precursor", "imidazole derivative"
+Reason: histidine biosynthesis.
+
+s_0210: "3-dehydroquinate", "shikimate pathway intermediate", "aromatic amino acid precursor"
+Reason: aromatic amino acid biosynthesis.
+
+s_0211: "3-dehydroshikimate", "shikimate pathway intermediate", "aromatic precursor"
+Reason: shikimate pathway.
+
+s_0218: "3-hydroxy-3-methylglutaryl-CoA", "HMG-CoA", "cholesterol precursor"
+Reason: mevalonate pathway.
+
+s_0231: "3-ketosphinganine", "sphingolipid precursor", "sphinganine derivative"
+Reason: sphingolipid biosynthesis.
+
+s_0232: "3-methyl-2-oxobutanoate", "alpha-ketobutyrate", "amino acid metabolism"
+Reason: amino acid degradation.
+
+s_0258: "3-phospho-hydroxypyruvate", "glycine biosynthesis", "aminotransferase substrate"
+Reason: amino acid pathway.
+
+s_0259: "3-phospho-serine", "serine precursor", "amino acid"
+Reason: serine biosynthesis.
+
+s_0260: "3-phosphoglycerate", "3-PG", "glycolytic intermediate"
+Reason: glycolysis.
+
+s_0261: "3-phosphoshikimate", "shikimate pathway intermediate", "aromatic amino acid precursor"
+Reason: shikimate pathway.
+
+s_0262: "4,4-dimethyl-5alpha-cholesta-8,14,24-trien-3beta-ol", "ergosterol", "steroid"
+Reason: sterol biosynthesis.
+
+s_0291: "4-methyl-2-oxopentanoate", "leucine catabolism", "branched-chain amino acid"
+Reason: leucine degradation.
+
+s_0295: "4-phospho-L-aspartate", "aspartate pathway intermediate", "amino acid"
+Reason: amino acid biosynthesis.
+
+s_0296: "zymosterol", "sterol intermediate", "ergosterol precursor"
+Reason: sterol biosynthesis.
+
+s_0297: "4beta-methylzymosterol-4alpha-carboxylic acid", "sterol derivative", "ergosterol pathway"
+Reason: sterol biosynthesis.
+
+s_0298: "adenylyl sulfate", "APS", "sulfate donor"
+Reason: sulfate activation.
+
+s_0299: "5'-phosphoribosyl-4-(N-succinocarboxamide)-5-aminoimidazole", "IMP precursor", "purine biosynthesis"
+Reason: purine pathway.
+
+s_0300: "5'-phosphoribosyl-5-aminoimidazole", "AICAR", "purine biosynthesis"
+Reason: purine biosynthesis.
+
+s_0301: "5'-phosphoribosyl-N-formylglycineamide", "FGAR", "purine biosynthesis"
+Reason: purine pathway.
+
+s_0302: "5'-phosphoribosyl-N-formylglycineamidine", "FGAM", "purine biosynthesis"
+Reason: purine biosynthesis.
+
+s_0304: "5,10-methenyl-THF", "tetrahydrofolate derivative", "folate cofactor"
+Reason: folate metabolism.
+
+s_0306: "5,10-methylenetetrahydrofolate", "methylene-THF", "folate derivative"
+Reason: folate pathway.
+
+s_0312: "5-[(5-phospho-1-deoxy-D-ribulos-1-ylamino)methylideneamino]-1-(5-phospho-D-ribosyl)imidazole-4-carboxamide", "PRPP derivative", "purine biosynthesis"
+Reason: nucleotide precursor.
+
+s_0313: "5-amino-6-(5-phosphoribitylamino)uracil", "pyrimidine precursor", "pyrimidine biosynthesis"
+Reason: pyrimidine pathway.
+
+s_0314: "5-amino-6-(D-ribitylamino)uracil", "pyrimidine biosynthesis", "uridine derivative"
+Reason: pyrimidine pathway.
+
+s_0322: "5-methyltetrahydrofolate", "5-methyl-THF", "folate derivative"
+Reason: folate metabolism.
+
+s_0324: "5-O-(1-carboxyvinyl)-3-phosphoshikimic acid", "shikimate pathway intermediate", "aromatic amino acid precursor"
+Reason: shikimate pathway.
+
+s_0325: "5-phospho-ribosyl-glycineamide", "GAR", "purine biosynthesis"
+Reason: purine pathway.
+
+s_0326: "5-phosphoribosyl-ATP", "PRPP", "purine nucleotide"
+Reason: purine biosynthesis.
+
+s_0327: "5-phosphoribosylamine", "PRA", "purine biosynthesis"
+Reason: purine pathway.
+
+s_0328: "6,7-dimethyl-8-(1-D-ribityl)lumazine", "riboflavin precursor", "vitamin B2 pathway"
+Reason: riboflavin biosynthesis.
+
+s_0349: "7-phospho-2-dehydro-3-deoxy-D-arabino-heptonic acid", "pentose sugar intermediate", "unknown"
+Reason: likely a sugar pathway intermediate.
+
+s_0362: "acetate", "vinegar", "short-chain fatty acid"
+Reason: common metabolite.
+
+s_0367: "acetyl-CoA", "acetyl coenzyme A", "metabolic intermediate"
+Reason: central in metabolism.
+
+s_0373: "acetyl-CoA", "acetyl coenzyme A", "metabolic intermediate"
+Reason: same as above.
+
+s_0380: "acyl-CoA", "fatty acyl-CoA", "lipid metabolism"
+Reason: fatty acid activation.
+
+s_0386: "adenosine", "Ado", "nucleoside"
+Reason: nucleoside.
+
+s_0390: "adenosine 3',5'-bismonophosphate", "cyclic AMP", "second messenger"
+Reason: signaling molecule.
+
+s_0393: "adenylo-succinate", "Adenylosuccinate", "purine biosynthesis"
+Reason: purine pathway intermediate.
+
+s_0394: "ADP", "adenosine diphosphate", "nucleotide"
+Reason: nucleotide.
+
+s_0403: "AICAR", "5-aminoimidazole-4-carboxamide ribonucleotide", "purine biosynthesis"
+Reason: purine pathway intermediate.
+
+s_0404: "alanine", "Ala", "amino acid"
+Reason: amino acid.
+
+s_0409: "alpha,alpha-trehalose 6-phosphate", "trehalose precursor", "disaccharide"
+Reason: carbohydrate metabolism.
+
+s_0419: "ammonium", "NH4+", "inorganic nitrogen"
+Reason: inorganic nitrogen source.
+
+s_0420: "ammonium", "NH4+", "inorganic nitrogen"
+Reason: same as above.
+
+s_0423: "AMP", "adenosine monophosphate", "nucleotide"
+Reason: nucleotide.
+
+s_0427: "anthranilate", "aromatic amino acid precursor", "tryptophan pathway"
+Reason: tryptophan biosynthesis.
+
+s_0428: "Arg-tRNA(Arg)", "arginine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_0430: "Asn-tRNA(Asn)", "asparagine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_0432: "Asp-tRNA(Asp)", "aspartate-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_0434: "ATP", "adenosine triphosphate", "energy currency"
+Reason: universal energy molecule.
+
+s_0454: "bicarbonate", "HCO3-", "carbon source"
+Reason: inorganic carbon.
+
+s_0455: "carbamoyl phosphate", "urea cycle intermediate", "amino group donor"
+Reason: nitrogen metabolism.
+
+s_0456: "carbon dioxide", "CO2", "inorganic carbon"
+Reason: metabolic gas.
+
+s_0458: "cysteine", "Cys", "amino acid"
+Reason: amino acid.
+
+s_0467: "CDP", "cytidine diphosphate", "nucleotide"
+Reason: nucleotide.
+
+s_0471: "sulfate", "SO4^2-", "inorganic sulfur"
+Reason: sulfur source.
+
+s_0481: "ceramide-2 (C24)", "ceramide", "sphingolipid"
+Reason: sphingolipid component.
+
+s_0493: "ceramide-3 (C24)", "ceramide", "sphingolipid"
+Reason: sphingolipid.
+
+s_0550: "D-erythrose 4-phosphate", "pentose phosphate pathway intermediate", "sugar phosphate"
+Reason: pentose phosphate pathway.
+
+s_0551: "D-erythrose 4-phosphate", "pentose phosphate", "sugar phosphate"
+Reason: same as above.
+
+s_0555: "D-fructose 1,6-bisphosphate", "glycolytic intermediate", "fructose sugar"
+Reason: glycolysis.
+
+s_0557: "D-fructose 6-phosphate", "F6P", "glycolytic intermediate"
+Reason: glycolysis.
+
+s_0563: "D-glucose", "glucose", "monosaccharide"
+Reason: primary sugar.
+
+s_0565: "D-glucose", "glucose", "monosaccharide"
+Reason: same as above.
+
+s_0567: "D-glucose 1-phosphate", "glucose-1-phosphate", "glycogen metabolism"
+Reason: carbohydrate metabolism.
+
+s_0568: "D-glucose 6-phosphate", "G6P", "glycolytic intermediate"
+Reason: glycolysis.
+
+s_0581: "D-xylulose 5-phosphate", "pentose phosphate pathway intermediate", "sugar phosphate"
+Reason: pentose phosphate pathway.
+
+s_0582: "dADP", "deoxy-ADP", "nucleotide"
+Reason: nucleotide.
+
+s_0584: "dAMP", "deoxy-AMP", "nucleotide"
+Reason: nucleotide.
+
+s_0586: "dATP", "deoxy-ATP", "nucleotide"
+Reason: nucleotide.
+
+s_0587: "dCDP", "deoxy-cytidine diphosphate", "nucleotide"
+Reason: nucleotide.
+
+s_0589: "dCMP", "deoxy-cytidine monophosphate", "nucleotide"
+Reason: nucleotide.
+
+s_0595: "decanoate", "caprate", "fatty acid"
+Reason: fatty acid.
+
+s_0613: "dGDP", "deoxy-GDP", "nucleotide"
+Reason: nucleotide.
+
+s_0615: "dGMP", "deoxy-GMP", "nucleotide"
+Reason: nucleotide.
+
+s_0629: "dihydroxyacetone phosphate", "DHAP", "glycolytic intermediate"
+Reason: glycolysis.
+
+s_0644: "dolichyl D-mannosyl phosphate", "dolichol-linked sugar", "glycosylation intermediate"
+Reason: glycosylation.
+
+s_0645: "dolichyl phosphate", "dolichol phosphate", "lipid carrier"
+Reason: lipid biosynthesis.
+
+s_0649: "dTMP", "deoxythymidine monophosphate", "DNA precursor"
+Reason: nucleotide.
+
+s_0654: "dUMP", "deoxyuridine monophosphate", "DNA precursor"
+Reason: nucleotide.
+
+s_0656: "dUTP", "deoxyuridine triphosphate", "DNA precursor"
+Reason: nucleotide.
+
+s_0657: "episterol", "sterol intermediate", "ergosterol pathway"
+Reason: sterol biosynthesis.
+
+s_0662: "ergosta-5,7,22,24(28)-tetraen-3beta-ol", "ergosterol", "steroid"
+Reason: sterol.
+
+s_0664: "ergosta-5,7,24(28)-trien-3beta-ol", "ergosterol", "steroid"
+Reason: sterol.
+
+s_0666: "ergosterol", "fungal sterol", "steroid"
+Reason: sterol.
+
+s_0672: "ergosta-5,7,24(28)-trien-3beta-ol", "ergosterol", "steroid"
+Reason: same as above.
+
+s_0700: "fecosterol", "sterol intermediate", "ergosterol precursor"
+Reason: sterol biosynthesis.
+
+s_0709: "ferricytochrome c", "oxidized cytochrome c", "electron transport"
+Reason: electron transport chain.
+
+s_0710: "ferrocytochrome c", "reduced cytochrome c", "electron transport"
+Reason: electron transport.
+
+s_0722: "formate", "HCOO-", "metabolic intermediate"
+Reason: one-carbon metabolism.
+
+s_0723: "formate", "HCOO-", "metabolic intermediate"
+Reason: same as above.
+
+s_0725: "fumarate", "TCA cycle intermediate", "unsaturated dicarboxylic acid"
+Reason: TCA cycle.
+
+s_0739: "GTP", "guanosine triphosphate", "energy molecule"
+Reason: nucleotide.
+
+s_0743: "GDP-alpha-D-mannose", "GDP-mannose", "glycosylation donor"
+Reason: glycosylation.
+
+s_0745: "geranyl diphosphate", "GPP", "terpenoid precursor"
+Reason: isoprenoid biosynthesis.
+
+s_0747: "Gln-tRNA(Gln)", "glutamine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_0750: "glutathione", "GSH", "antioxidant"
+Reason: antioxidant.
+
+s_0754: "glutathione disulfide", "GSSG", "oxidized glutathione"
+Reason: oxidized form of glutathione.
+
+s_0757: "Gly-tRNA(Gly)", "glycine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_0764: "glyceraldehyde 3-phosphate", "G3P", "glycolytic intermediate"
+Reason: glycolysis.
+
+s_0767: "glycerol 3-phosphate", "glycerol-3-phosphate", "lipid precursor"
+Reason: lipid metabolism.
+
+s_0782: "GMP", "guanosine monophosphate", "nucleotide"
+Reason: nucleotide.
+
+s_0785: "GTP", "guanosine triphosphate", "energy molecule"
+Reason: nucleotide.
+
+s_0832: "His-tRNA(His)", "histidine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_0835: "homocitrate", "citrate derivative", "cofactor in lysine biosynthesis"
+Reason: lysine biosynthesis.
+
+s_0836: "homoisocitrate", "isocitrate isomer", "TCA cycle intermediate"
+Reason: TCA cycle.
+
+s_0837: "hydrogen peroxide", "H2O2", "reactive oxygen species"
+Reason: reactive oxygen species.
+
+s_0841: "hydrogen sulfide", "H2S", "gasotransmitter"
+Reason: signaling molecule.
+
+s_0847: "Ile-tRNA(Ile)", "isoleucine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_0849: "IMP", "inosine monophosphate", "purine nucleotide"
+Reason: purine biosynthesis.
+
+s_0951: "keto-phenylpyruvate", "phenylpyruvate", "aromatic amino acid degradation"
+Reason: phenylalanine catabolism.
+
+s_0953: "L-2-aminoadipate", "lysine degradation", "amino acid"
+Reason: lysine catabolism.
+
+s_0955: "L-alanine", "Ala", "amino acid"
+Reason: amino acid.
+
+s_0959: "L-allysine", "lysine degradation product", "amino acid derivative"
+Reason: lysine catabolism.
+
+s_0965: "L-arginine", "arginine", "amino acid"
+Reason: amino acid.
+
+s_0969: "L-asparagine", "Asn", "amino acid"
+Reason: amino acid.
+
+s_0973: "L-aspartate", "Asp", "amino acid"
+Reason: amino acid.
+
+s_0978: "L-aspartate 4-semialdehyde", "amino acid precursor", "metabolite in amino acid biosynthesis"
+Reason: amino acid biosynthesis.
+
+s_0979: "L-citrulline", "urea cycle intermediate", "arginine precursor"
+Reason: urea cycle.
+
+s_0980: "L-cystathionine", "transsulfuration pathway intermediate", "amino acid derivative"
+Reason: sulfur amino acid metabolism.
+
+s_0981: "L-cysteine", "Cys", "amino acid"
+Reason: amino acid.
+
+s_0991: "L-glutamate", "Glu", "amino acid"
+Reason: central amino acid.
+
+s_0999: "L-glutamine", "Gln", "amino acid"
+Reason: amino acid.
+
+s_1003: "L-glycine", "Gly", "amino acid"
+Reason: amino acid.
+
+s_1006: "L-histidine", "His", "amino acid"
+Reason: amino acid.
+
+s_1010: "L-histidinol", "histidine precursor", "amino acid"
+Reason: histidine biosynthesis.
+
+s_1011: "L-histidinol phosphate", "histidine biosynthesis intermediate", "amino acid"
+Reason: histidine pathway.
+
+s_1012: "L-homocysteine", "homocysteine", "amino acid derivative"
+Reason: sulfur amino acid metabolism.
+
+s_1014: "L-homoserine", "amino acid", "metabolite in amino acid biosynthesis"
+Reason: amino acid biosynthesis.
+
+s_1016: "L-isoleucine", "Ile", "branched-chain amino acid"
+Reason: amino acid.
+
+s_1021: "L-leucine", "Leu", "amino acid"
+Reason: amino acid.
+
+s_1025: "L-lysine", "Lys", "amino acid"
+Reason: amino acid.
+
+s_1029: "L-methionine", "Met", "amino acid"
+Reason: amino acid.
+
+s_1032: "L-phenylalanine", "Phe", "aromatic amino acid"
+Reason: amino acid.
+
+s_1035: "L-proline", "Pro", "amino acid"
+Reason: amino acid.
+
+s_1038: "L-saccharopine", "lysine degradation", "amino acid derivative"
+Reason: lysine catabolism.
+
+s_1039: "L-serine", "Ser", "amino acid"
+Reason: amino acid.
+
+s_1045: "L-threonine", "Thr", "amino acid"
+Reason: amino acid.
+
+s_1048: "L-tryptophan", "Trp", "aromatic amino acid"
+Reason: amino acid.
+
+s_1051: "L-tyrosine", "Tyr", "aromatic amino acid"
+Reason: amino acid.
+
+s_1056: "L-valine", "Val", "branched-chain amino acid"
+Reason: amino acid.
+
+s_1059: "lanosterol", "sterol precursor", "ergosterol pathway"
+Reason: sterol biosynthesis.
+
+s_1065: "laurate", "C12 fatty acid", "lipid"
+Reason: fatty acid.
+
+s_1073: "lauroyl-CoA", "fatty acyl-CoA", "lipid metabolism"
+Reason: fatty acid activation.
+
+s_1077: "leucine", "Leu", "amino acid"
+Reason: amino acid.
+
+s_1084: "lignoceric acid", "C24 fatty acid", "lipid"
+Reason: fatty acid.
+
+s_1099: "Lys-tRNA(Lys)", "lysine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1101: "malonyl-CoA", "metabolic intermediate", "fatty acid synthesis"
+Reason: fatty acid biosynthesis.
+
+s_1107: "mannan", "polysaccharide", "cell wall component"
+Reason: carbohydrate.
+
+s_1148: "Met-tRNA(Met)", "methionine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1153: "myo-inositol", "inositol", "cell signaling"
+Reason: signaling molecule.
+
+s_1161: "myristate", "C14 fatty acid", "lipid"
+Reason: fatty acid.
+
+s_1176: "myristoyl-CoA", "fatty acyl-CoA", "lipid"
+Reason: fatty acid activation.
+
+s_1182: "N(2)-acetyl-L-ornithine", "ornithine derivative", "urea cycle"
+Reason: amino acid metabolism.
+
+s_1187: "N-(5-phospho-beta-D-ribosyl)anthranilate", "tryptophan pathway intermediate", "aromatic amino acid"
+Reason: tryptophan biosynthesis.
+
+s_1191: "N-acetyl-L-gamma-glutamyl phosphate", "glutamate derivative", "amino acid metabolism"
+Reason: amino acid pathway.
+
+s_1192: "N-acetyl-L-glutamate", "glutamate derivative", "amino acid"
+Reason: amino acid.
+
+s_1194: "N-carbamoyl-L-aspartate", "pyrimidine biosynthesis", "intermediate"
+Reason: pyrimidine pathway.
+
+s_1198: "NAD", "nicotinamide adenine dinucleotide", "coenzyme"
+Reason: redox cofactor.
+
+s_1203: "NADH", "reduced NAD", "coenzyme"
+Reason: redox cofactor.
+
+s_1207: "NADP(+)", "nicotinamide adenine dinucleotide phosphate", "coenzyme"
+Reason: biosynthesis and redox.
+
+s_1212: "NADPH", "reduced NADP", "coenzyme"
+Reason: biosynthesis and redox.
+
+s_1233: "O-acetyl-L-homoserine", "methionine precursor", "amino acid"
+Reason: amino acid biosynthesis.
+
+s_1238: "O-phospho-L-homoserine", "methionine precursor", "amino acid"
+Reason: amino acid biosynthesis.
+
+s_1245: "ornithine", "amino acid", "urea cycle"
+Reason: amino acid.
+
+s_1266: "ornithine", "amino acid", "urea cycle"
+Reason: same as above.
+
+s_1269: "orotate", "pyrimidine precursor", "nucleotide biosynthesis"
+Reason: pyrimidine pathway.
+
+s_1270: "oxaloacetate", "TCA cycle intermediate", "keto acid"
+Reason: TCA cycle.
+
+s_1271: "oxaloacetate", "TCA cycle intermediate", "keto acid"
+Reason: same as above.
+
+s_1275: "oxygen", "O2", "gas"
+Reason: inorganic molecule.
+
+s_1277: "oxygen", "O2", "gas"
+Reason: same as above.
+
+s_1286: "palmitate", "C16 fatty acid", "lipid"
+Reason: fatty acid.
+
+s_1302: "palmitoyl-CoA", "fatty acyl-CoA", "lipid"
+Reason: fatty acid activation.
+
+s_1314: "Phe-tRNA(Phe)", "phenylalanine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1322: "phosphate", "Pi", "inorganic phosphate"
+Reason: inorganic phosphate.
+
+s_1324: "phosphate", "Pi", "inorganic phosphate"
+Reason: same as above.
+
+s_1326: "phosphatidyl-N-methylethanolamine", "phosphatidylcholine derivative", "lipid"
+Reason: phospholipid.
+
+s_1342: "phosphatidyl-N,N-dimethylethanolamine", "phosphatidylcholine derivative", "lipid"
+Reason: phospholipid.
+
+s_1343: "phosphatidyl-N-methylethanolamine", "phosphatidylcholine derivative", "lipid"
+Reason: same as above.
+
+s_1346: "phosphatidylcholine", "PC", "membrane lipid"
+Reason: common phospholipid.
+
+s_1351: "phosphatidylethanolamine", "PE", "membrane lipid"
+Reason: phospholipid.
+
+s_1360: "phosphoenolpyruvate", "PEP", "glycolytic intermediate"
+Reason: glycolysis.
+
+s_1364: "phosphoribosyl-carboxy-aminoimidazole", "purine biosynthesis intermediate", "PRPP derivative"
+Reason: purine pathway.
+
+s_1365: "phosphoribosyl-formamido-carboxamide", "purine biosynthesis intermediate", "PRPP derivative"
+Reason: purine pathway.
+
+s_1366: "phytosphingosine", "sphingolipid", "ceramide precursor"
+Reason: sphingolipid.
+
+s_1376: "prenyl diphosphate", "geranyl diphosphate", "isoprenoid precursor"
+Reason: terpenoid biosynthesis.
+
+s_1377: "prephenate", "aromatic amino acid precursor", "phenylalanine pathway"
+Reason: aromatic amino acid biosynthesis.
+
+s_1386: "PRPP", "phosphoribosyl pyrophosphate", "purine/pyrimidine precursor"
+Reason: nucleotide biosynthesis.
+
+s_1399: "pyruvate", "pyruvic acid", "central metabolite"
+Reason: glycolysis/TCA cycle.
+
+s_1405: "riboflavin", "vitamin B2", "cofactor"
+Reason: vitamin biosynthesis.
+
+s_1408: "ribose-5-phosphate", "pentose phosphate pathway intermediate", "sugar phosphate"
+Reason: pentose phosphate pathway.
+
+s_1413: "S-adenosyl-L-homocysteine", "SAH", "methylation cycle"
+Reason: methylation cycle.
+
+s_1416: "S-adenosyl-L-methionine", "SAM", "methyl donor"
+Reason: methylation.
+
+s_1427: "sedoheptulose 7-phosphate", "pentose phosphate pathway intermediate", "sugar phosphate"
+Reason: pentose phosphate pathway.
+
+s_1428: "Ser-tRNA(Ser)", "serine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1429: "shikimate", "aromatic pathway intermediate", "phenylalanine precursor"
+Reason: shikimate pathway.
+
+s_1445: "sphinganine", "sphingolipid precursor", "sphingoid base"
+Reason: sphingolipid biosynthesis.
+
+s_1447: "squalene", "triterpene", "steroid precursor"
+Reason: sterol biosynthesis.
+
+s_1449: "stearate", "octadecanoate", "fatty acid"
+Reason: fatty acid.
+
+s_1454: "stearoyl-CoA", "fatty acyl-CoA", "lipid"
+Reason: fatty acid activation.
+
+s_1467: "CDP", "cytidine diphosphate", "nucleotide"
+Reason: nucleotide.
+
+s_1468: "sulphate", "SO4^2-", "inorganic sulfur"
+Reason: sulfur source.
+
+s_1469: "sulphite", "SO3^2-", "oxidized sulfur"
+Reason: sulfur compound.
+
+s_1487: "THF", "tetrahydrofolate", "folate cofactor"
+Reason: folate metabolism.
+
+s_1491: "Thr-tRNA(Thr)", "threonine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1520: "trehalose", "disaccharide", "energy storage"
+Reason: carbohydrate.
+
+s_1524: "triglyceride", "triacylglycerol", "lipid"
+Reason: lipid storage.
+
+s_1527: "Trp-tRNA(Trp)", "tryptophan-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1533: "Tyr-tRNA(Tyr)", "tyrosine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1535: "ubiquinol-6", "reduced coenzyme Q", "electron transport"
+Reason: mitochondrial electron transport.
+
+s_1537: "ubiquinone-6", "coenzyme Q", "electron transport"
+Reason: electron transport chain.
+
+s_1543: "UDP-D-glucose", "UDP-glucose", "glycosyl donor"
+Reason: carbohydrate metabolism.
+
+s_1545: "UMP", "uridine monophosphate", "pyrimidine nucleotide"
+Reason: pyrimidine biosynthesis.
+
+s_1559: "UTP", "uridine triphosphate", "nucleotide"
+Reason: nucleotide.
+
+s_1576: "zymosterol intermediate 1a", "sterol precursor", "ergosterol pathway"
+Reason: sterol biosynthesis.
+
+s_1577: "zymosterol intermediate 1b", "sterol precursor", "ergosterol pathway"
+Reason: same as above.
+
+s_1578: "zymosterol intermediate 1c", "sterol precursor", "ergosterol pathway"
+Reason: same as above.
+
+s_1579: "zymosterol intermediate 2", "sterol precursor", "ergosterol pathway"
+Reason: same as above.
+
+s_1582: "tRNA(Ala)", "alanine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1583: "tRNA(Arg)", "arginine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1585: "tRNA(Asn)", "asparagine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1586: "tRNA(Cys)", "cysteine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1587: "tRNA(Asp)", "aspartate-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1589: "tRNA(Cys)", "cysteine-tRNA", "protein synthesis"
+Reason: same as above.
+
+s_1590: "tRNA(Gln)", "glutamine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1591: "tRNA(Glu)", "glutamate-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1593: "tRNA(Gly)", "glycine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1594: "tRNA(His)", "histidine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1596: "tRNA(Ile)", "isoleucine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1598: "tRNA(Leu)", "leucine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1600: "tRNA(Lys)", "lysine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1602: "tRNA(Met)", "methionine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1604: "tRNA(Phe)", "phenylalanine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1606: "tRNA(Pro)", "proline-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1607: "tRNA(Ser)", "serine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1608: "tRNA(Thr)", "threonine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1610: "tRNA(Trp)", "tryptophan-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1612: "tRNA(Tyr)", "tyrosine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1614: "tRNA(Val)", "valine-tRNA", "protein synthesis"
+Reason: aminoacyl-tRNA.
+
+s_1620: "TRX1 disulphide", "thioredoxin disulfide", "redox protein"
+Reason: redox enzyme component.

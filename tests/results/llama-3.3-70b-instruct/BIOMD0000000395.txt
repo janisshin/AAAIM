@@ -1,0 +1,9 @@
+Model: BIOMD0000000395
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:18:06
+
+Synonyms:
+s9: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+s10: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+
+Reason: The display names for s9 and s10 are 'ATP' and 'ADP' respectively, which are standard abbreviations for adenosine triphosphate and adenosine diphosphate, common energy transfer molecules in cellular processes.

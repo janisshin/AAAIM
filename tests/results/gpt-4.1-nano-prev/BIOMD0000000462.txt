@@ -1,0 +1,10 @@
+Model: BIOMD0000000462
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:48:01
+
+Synonyms:
+Abeta: ['amyloid-beta', 'Aβ', 'beta-amyloid']
+AbDim: ['Abeta dimer', 'amyloid-beta dimer', 'Aβ dimer']
+AbP: ['amyloid plaque', 'Aβ plaque', 'beta-amyloid plaque']
+
+Reason: The species are related to amyloid-beta aggregation in Alzheimer's disease; Abeta refers to the monomer, AbDim to the dimer form, and AbP to plaques.

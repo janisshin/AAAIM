@@ -1,0 +1,16 @@
+Model: BIOMD0000000947
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:34:58
+
+Synonyms:
+C_para_Apical: ['paracetamol', 'acetaminophen', 'p-acetamidophenol']
+C_para_Caco_2: ['paracetamol', 'acetaminophen', 'p-acetamidophenol']
+C_para__Basolateral___HepG2_: ['paracetamol', 'acetaminophen', 'p-acetamidophenol']
+C_sulf_Apical: ['paracetamol sulfate', 'acetaminophen sulfate', 'p-acetamidophenol sulfate']
+C_sulf_Caco_2: ['paracetamol sulfate', 'acetaminophen sulfate', 'p-acetamidophenol sulfate']
+C_sulf__Basolateral___HepG2_: ['paracetamol sulfate', 'acetaminophen sulfate', 'p-acetamidophenol sulfate']
+C_glu_Apical: ['paracetamol glucuronide', 'acetaminophen glucuronide', 'p-acetamidophenol glucuronide']
+C_glu_Caco_2: ['paracetamol glucuronide', 'acetaminophen glucuronide', 'p-acetamidophenol glucuronide']
+C_glu__Basolateral___HepG2_: ['paracetamol glucuronide', 'acetaminophen glucuronide', 'p-acetamidophenol glucuronide']
+
+Reason: The model is a pharmacokinetic model for paracetamol first-pass metabolism, and the species names suggest different locations (apical, Caco-2, basolateral, HepG2) and metabolites (sulfate, glucuronide) of paracetamol, so the standardized names are based on the likely chemical entities involved in the model.

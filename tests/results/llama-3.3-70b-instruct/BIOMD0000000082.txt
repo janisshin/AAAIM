@@ -1,0 +1,13 @@
+Model: BIOMD0000000082
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:50:13
+
+Synonyms:
+DRG_GDP: ['GDP-bound protein', 'GDP-protein complex', 'guanosine diphosphate bound protein']
+GDP: ['guanosine diphosphate', 'GDP', "guanosine 5'-diphosphate"]
+DRG_GTP: ['GTP-bound protein', 'GTP-protein complex', 'guanosine triphosphate bound protein']
+GTP: ['guanosine triphosphate', 'GTP', "guanosine 5'-triphosphate"]
+G_GDP: ['GDP-bound G protein', 'GDP-G protein complex', 'guanosine diphosphate bound G protein']
+G_GTP: ['GTP-bound G protein', 'GTP-G protein complex', 'guanosine triphosphate bound G protein']
+
+Reason: The model appears to be related to G protein signaling, with DRG_GDP and DRG_GTP likely representing a G protein in its GDP- and GTP-bound states, respectively. GDP and GTP are standardized names for guanosine diphosphate and triphosphate. G_GDP and G_GTP are likely G proteins bound to GDP and GTP, respectively. The reactions and display names support this interpretation, with the reactions showing the conversion between GTP and GDP states.

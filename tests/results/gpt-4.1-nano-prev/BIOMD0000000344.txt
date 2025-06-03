@@ -1,0 +1,22 @@
+Model: BIOMD0000000344
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:02
+
+Synonyms:
+NatP: ['N-terminal phosphoprotein', 'N-terminal protein', 'UNK']
+MisP: ['misfolded protein', 'protein misfolding', 'UNK']
+Hsp70Client: ['Hsp70 substrate', 'Hsp70 client protein', 'UNK']
+Hsp90Client: ['Hsp90 substrate', 'Hsp90 client protein', 'UNK']
+Hsp70_Hsp70Client: ['Hsp70 complex', 'Hsp70 bound protein', 'UNK']
+Hsp90_Hsp90Client: ['Hsp90 complex', 'Hsp90 bound protein', 'UNK']
+Hsp90_MisP: ['Hsp90 misfolded protein complex', 'Hsp90 misfolded substrate', 'UNK']
+Hsp70_MisP: ['Hsp70 misfolded protein complex', 'Hsp70 misfolded substrate', 'UNK']
+MisP_Proteasome: ['misfolded protein proteasome substrate', 'damaged protein', 'UNK']
+AggP: ['protein aggregate', 'aggregated protein', 'UNK']
+SeqAggP: ['sequestered protein aggregate', 'sequestered aggregated protein', 'UNK']
+AggP_Proteasome: ['protein aggregate proteasome substrate', 'aggregated protein degraded by proteasome', 'UNK']
+ROS: ['reactive oxygen species', 'oxidative stress molecules', 'UNK']
+ATP: ['adenosine triphosphate', 'energy molecule', 'UNK']
+ADP: ['adenosine diphosphate', 'energy-depleted molecule', 'UNK']
+
+Reason: All species are related to proteins, stress molecules, or energy compounds; many are generic or context-specific, so "UNK" is used when no standard synonym is clear.

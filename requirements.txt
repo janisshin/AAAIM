@@ -2,6 +2,7 @@
 python-libsbml==5.20.5
 pandas==2.2.3
 numpy==2.2.2
+dotenv==0.9.9
 
 # Model parsing and context extraction
 antimony==2.15.0
@@ -11,6 +12,14 @@ openai==1.78.1
 
 # Caching and storage
 compress-pickle==2.1.0
+
+# RAG
+chromadb==1.0.11
+tqdm
+
+## for creating embeddings
+sentence-transformers
+
 
 # UI (for later phases)
 # dash>=2.14.0

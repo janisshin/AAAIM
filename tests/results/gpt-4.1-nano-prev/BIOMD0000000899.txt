@@ -1,0 +1,9 @@
+Model: BIOMD0000000899
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:08:55
+
+Synonyms:
+s9: ['UNK']
+s16: ['GTP', 'guanosine triphosphate', 'GTP (guanosine triphosphate)']
+
+Reason: s16 is labeled as "Effector·GTP-Rho," indicating it is a GTP-bound form of Rho, a small GTPase. s9 is simply "Effector" with no specific chemical name provided, so it cannot be confidently annotated.

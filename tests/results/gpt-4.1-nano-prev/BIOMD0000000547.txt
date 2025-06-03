@@ -1,0 +1,13 @@
+Model: BIOMD0000000547
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:01:26
+
+Synonyms:
+species_6: ['arsenic(III) sequestered', 'vacuolar arsenic', 'vAsGS3']
+species_4: ['glutathione conjugated arsenic', 'arsenic-glutathione complex', 'AsGS3']
+species_3: ['protein-bound arsenic', 'arsenic-protein complex', 'AsIIIProt']
+species_1: ['arsenic(III) in cell', 'intracellular arsenic', 'AsIIIin']
+species_2: ['arsenic(III) bound to proteins', 'protein arsenic', 'AsIIIProt']
+species_7: ['glutathione', 'GSH', 'reduced glutathione']
+
+Reason: The model discusses arsenic species in different cellular pools, with specific mentions of glutathione conjugates, protein-bound arsenic, and vacuolar sequestration. GSH is a well-known antioxidant and conjugation partner for arsenic detoxification.

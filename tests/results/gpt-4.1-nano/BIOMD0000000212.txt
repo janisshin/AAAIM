@@ -1,0 +1,24 @@
+Model: BIOMD0000000212
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:55:50
+
+Synonyms:
+Asp: ['aspartate', 'L-aspartic acid', 'UNK']
+Lys: ['lysine', 'L-lysine', 'UNK']
+AdoMet: ['S-adenosylmethionine', 'SAM', 'AdoMet']
+AspP: ['aspartyl phosphate', 'L-aspartyl phosphate', 'UNK']
+Thr: ['threonine', 'L-threonine', 'UNK']
+ASA: ['aspartate semialdehyde', 'L-aspartate semialdehyde', 'UNK']
+Hser: ['homoserine', 'L-homoserine', 'UNK']
+PHser: ['phosphohomoserine', 'O-phosphohomoserine', 'UNK']
+Phosphate: ['phosphate', 'inorganic phosphate', 'PO4']
+Cys: ['cysteine', 'L-cysteine', 'UNK']
+Cysta: ['cystathionine', 'cystathione', 'UNK']
+Ile: ['isoleucine', 'L-isoleucine', 'UNK']
+Val: ['valine', 'L-valine', 'UNK']
+ThrTRNA: ['tRNA^Thr', 'threonine tRNA', 'UNK']
+IleTRNA: ['tRNA^Ile', 'isoleucine tRNA', 'UNK']
+Sacc: ['saccharopine', 'UNK', 'UNK']
+Gly: ['glycine', 'L-glycine', 'UNK']
+
+Reason: All species are amino acids or related metabolites involved in amino acid metabolism; "Sacc" is less common but refers to saccharopine, an intermediate in lysine degradation.

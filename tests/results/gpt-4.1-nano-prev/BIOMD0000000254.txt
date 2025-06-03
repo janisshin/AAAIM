@@ -1,0 +1,11 @@
+Model: BIOMD0000000254
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:41:14
+
+Synonyms:
+G1: ['glucose', 'd-glucose', 'blood sugar']
+T1: ['ATP', 'adenosine triphosphate', 'energy molecule']
+G2: ['glucose', 'd-glucose', 'blood sugar']
+T2: ['ATP', 'adenosine triphosphate', 'energy molecule']
+
+Reason: G1 and G2 are both glucose molecules involved in glycolysis; T1 and T2 are ATP molecules, the primary energy currency in cells. The model references glycolytic oscillations, which involve glucose and ATP as key metabolites.

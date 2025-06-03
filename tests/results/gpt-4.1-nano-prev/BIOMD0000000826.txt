@@ -1,0 +1,10 @@
+Model: BIOMD0000000826
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:08:16
+
+Synonyms:
+PYK2m: ['PTK2', 'FAK', 'PTK2B']
+cMETm: ['MET proto-oncogene', 'HGF receptor', 'MET']
+STAT3uStattic: ['STAT3', 'Signal transducer and activator of transcription 3', 'STAT3 (phosphorylated)']
+
+Reason: PYK2m is likely a kinase related to PTK2/FAK family; cMETm is the methylated form of the MET receptor; STAT3uStattic refers to the unphosphorylated or active form of STAT3, a transcription factor.

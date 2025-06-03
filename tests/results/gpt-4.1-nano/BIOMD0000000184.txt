@@ -1,0 +1,10 @@
+Model: BIOMD0000000184
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:55:00
+
+Synonyms:
+X: ['calcium ion', 'Ca2+', 'cytoplasmic calcium']
+Y: ['calcium in endoplasmic reticulum', 'ER calcium', 'ER Ca2+']
+Z: ['inositol 1,4,5-trisphosphate', 'IP3', 'inositol trisphosphate']
+
+Reason: The model involves calcium signaling with IP3 and ER calcium, typical in calcium oscillation models. X is cytoplasmic calcium, Y is ER calcium, and Z is IP3, a common second messenger.

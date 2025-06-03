@@ -1,0 +1,29 @@
+Model: BIOMD0000000576
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:02:50
+
+Synonyms:
+s28: ['cortisol', 'hydrocortisone', 'cortisol (hydrocortisone)']
+s36: ['pregnane X receptor', 'PXR', 'NR1I2']
+s114: ['cort', 'cortisol', 'hydrocortisone']
+s84: ['glucocorticoid receptor', 'GR', 'NR3C1']
+s165: ['CYP3A4', 'cytochrome P450 3A4', 'CYP enzyme']
+s109: ['PXR gene', 'PXR', 'NR1I2 gene']
+s87: ['GR protein', 'glucocorticoid receptor', 'NR3C1']
+s119: ['PXR protein', 'pregnane X receptor', 'NR1I2']
+s183: ['TAT gene', 'tyrosine aminotransferase', 'TAT enzyme']
+Cortisone: ['cortisone', 'hydrocortisone', 'cortisol precursor']
+DEX: ['dexamethasone', 'DEX', 'synthetic glucocorticoid']
+GRprot_DEX: ['glucocorticoid receptor with DEX', 'GR-DEX complex', 'glucocorticoid receptor']
+PXRprot_DEX: ['PXR with DEX', 'PXR-DEX complex', 'pregnane X receptor']
+CYPgene_PXRprot_DEX: ['CYP gene', 'cytochrome P450 gene', 'CYP enzyme gene']
+PXRgene_GRprot_DEX: ['PXR gene', 'PXR', 'NR1I2 gene']
+GRgene_GRprot_DEX: ['GR gene', 'NR3C1 gene', 'glucocorticoid receptor gene']
+TATgene_GRprot_DEX: ['TAT gene', 'tyrosine aminotransferase gene', 'TAT enzyme gene']
+s2: ['cortOUT', 'cortisol output', 'cortisol measurement']
+DEXout: ['DEX output', 'dexamethasone level', 'DEX measurement']
+CBG_CortOUT: ['cortisol-binding globulin', 'CBG', 'cortisol carrier']
+Alb_CortOUT: ['albumin-bound cortisol', 'albumin-cortisol complex', 'cortisol bound to albumin']
+CortAdded: ['exogenous cortisol', 'added cortisol', 'cortisol supplement']
+
+Reason: The species are mostly related to cortisol, its receptors, and related enzymes or genes involved in steroid metabolism and receptor binding. The model focuses on cortisol signaling pathways and receptor interactions, so the synonyms reflect their biological counterparts.

@@ -1,0 +1,21 @@
+Model: BIOMD0000000042
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:49
+
+Synonyms:
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+AMP: ['adenosine monophosphate', 'AMP', 'adenosine monophosphate']
+GLC: ['glucose', 'D-glucose', 'glucose']
+F6P: ['fructose-6-phosphate', 'F6P', 'glucose-6-phosphate']
+FBP: ['fructose-1,6-bisphosphate', 'FBP', 'fructose-1,6-bisphosphate']
+GAP: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde-3-phosphate']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+', 'NAD']
+NADH: ['reduced nicotinamide adenine dinucleotide', 'NADH', 'NADH']
+DPG: ['1,3-bisphosphoglycerate', '1,3-BPG', 'bisphosphoglycerate']
+PEP: ['phosphoenolpyruvate', 'PEP', 'enolpyruvate']
+PYR: ['pyruvate', 'pyruvic acid', 'pyruvate']
+ACA: ['acetyl-CoA', 'acetyl coenzyme A', 'acetyl-CoA']
+EtOH: ['ethanol', 'ethyl alcohol', 'ethanol']
+
+Reason: The species are standard biochemical abbreviations for common metabolites involved in glycolysis and related pathways. The display names are mostly empty, but based on the model and reactions, these are the most likely canonical or common synonyms.

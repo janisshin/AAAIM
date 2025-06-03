@@ -1,0 +1,10 @@
+Model: BIOMD0000000076
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:49:35
+
+Synonyms:
+G3P: ['glycerol 3-phosphate', 'D-glycerol 3-phosphate', 'sn-glycerol 3-phosphate']
+Gly: ['glycerol', 'glycerin', 'propane-1,2,3-triol']
+DHAP: ['dihydroxyacetone phosphate', 'DHAP', '3-hydroxy-2-oxopropyl phosphate']
+
+Reason: The display names provided in the model directly map to standardized names for G3P and Gly, while DHAP is a common abbreviation for dihydroxyacetone phosphate, a metabolite involved in glycerol synthesis, which is consistent with the model's context.

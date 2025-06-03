@@ -1,0 +1,8 @@
+Model: BIOMD0000000016
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:17
+
+Synonyms:
+M: ['mRNA', 'messenger RNA', 'mRNA molecule']
+
+Reason: The species is labeled as "PER mRNA," indicating it is a messenger RNA involved in the PER gene expression.

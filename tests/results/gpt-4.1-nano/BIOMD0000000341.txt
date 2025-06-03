@@ -1,0 +1,8 @@
+Model: BIOMD0000000341
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:58:54
+
+Synonyms:
+G: ['glucose', 'blood sugar', 'dextrose']
+
+Reason: The species G is explicitly labeled as "glucose" in the display names and is the primary variable in the model related to blood sugar regulation.

@@ -1,0 +1,10 @@
+Model: BIOMD0000000137
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:53:18
+
+Synonyms:
+x13: ['phosphatidylinositol (3,4,5)-trisphosphate', 'PIP3', 'PI(3,4,5)P3']
+x14: ['phosphatidylinositol (4,5)-bisphosphate', 'PIP2', 'PI(4,5)P2']
+x15: ['phosphatidylinositol (3,4)-bisphosphate', 'PI(3,4)P2', 'PIP2']
+
+Reason: These species are phosphoinositides involved in insulin signaling pathways, with the given abbreviations matching common names for these phospholipids.

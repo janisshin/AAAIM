@@ -1,0 +1,13 @@
+Model: BIOMD0000000286
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:15
+
+Synonyms:
+ROS: ['reactive oxygen species', 'ROS', 'oxygen free radicals']
+basalROS: ['reactive oxygen species', 'basal ROS', 'resting ROS']
+damDNA: ['damaged DNA', 'DNA damage', 'oxidatively damaged DNA']
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+AMP: ['adenosine monophosphate', 'AMP', 'adenosine monophosphate']
+
+Reason: ROS and basalROS are reactive oxygen species; damDNA refers to damaged DNA; ATP, ADP, and AMP are standard nucleotides involved in energy metabolism.

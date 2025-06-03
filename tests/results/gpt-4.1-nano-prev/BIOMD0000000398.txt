@@ -1,0 +1,11 @@
+Model: BIOMD0000000398
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:45:25
+
+Synonyms:
+s58: ['Notch receptor', 'Notch TM', 'Notch transmembrane domain']
+s61: ['DAPT', 'N-[N-(3,5-difluorophenacetyl)-L-alanyl]-S-phenylglycine t-butyl ester']
+s101: ['Erlotinib', 'Tarceva', 'EGFR inhibitor']
+s147: ["6-bromoindirubin-3'-oxime", 'BIO', 'indirubin derivative']
+
+Reason: s58 is the Notch transmembrane domain, s61 is DAPT, a gamma-secretase inhibitor targeting Notch signaling, s101 is Erlotinib, an EGFR inhibitor, and s147 is 6-bromoindirubin-3'-oxime, a Wnt pathway modulator.

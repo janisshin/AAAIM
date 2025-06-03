@@ -1,0 +1,10 @@
+Model: BIOMD0000000394
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:00:04
+
+Synonyms:
+s125: ['GDP', 'guanosine diphosphate', "guanosine 5'-diphosphate"]
+s126: ['GTP', 'guanosine triphosphate', "guanosine 5'-triphosphate"]
+s142: ['erlotinib', 'Tarceva', 'Erlotinib hydrochloride']
+
+Reason: s125 and s126 are nucleotide triphosphates and diphosphates involved in GTPase signaling; s142 is a known tyrosine kinase inhibitor drug.

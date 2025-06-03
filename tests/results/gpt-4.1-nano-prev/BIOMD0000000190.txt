@@ -1,0 +1,18 @@
+Model: BIOMD0000000190
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:39:10
+
+Synonyms:
+SAM: ['S-adenosyl-L-methionine', 'SAM', 'adenosylmethionine']
+A: ['spermine', 'spermine', 'polyamine']
+P: ['putrescine', 'putrescine', '1,4-diaminobutane']
+S: ['spermidine', 'spermidine', 'polyamine']
+D: ['spermidine', 'spermidine', 'polyamine']
+aS: ['N1-acetylspermine', 'N1-acetylspermine', 'acetylspermine']
+aD: ['N1-acetylspermidine', 'N1-acetylspermidine', 'acetylspermidine']
+Met: ['methionine', 'methionine', 'MET']
+ORN: ['L-ornithine', 'ornithine', 'L-orn']
+AcCoA: ['acetyl-CoA', 'acetyl coenzyme A', 'acetyl-CoA']
+CoA: ['coenzyme A', 'CoA', 'pantetheine arm of CoA']
+
+Reason: All are known biochemical compounds, mostly polyamines, amino acids, or coenzymes. "SAM" and "AcCoA" are well-established, and the polyamines are common metabolites in polyamine metabolism.

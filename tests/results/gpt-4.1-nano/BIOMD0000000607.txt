@@ -1,0 +1,20 @@
+Model: BIOMD0000000607
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:20:22
+
+Synonyms:
+glycerol_i: ['glycerol', 'glycerol-3-phosphate', 'glycerol backbone']
+glucose_i: ['glucose', 'blood sugar', 'D-glucose']
+G6P: ['glucose-6-phosphate', 'G6P', 'hexose phosphate']
+trehalose: ['trehalose', 'maltose', 'trehalose dihydrate', '(less specific)']
+F16DP: ['fructose-1,6-bisphosphate', 'F16DP', 'FDP']
+pyruvate: ['pyruvate', 'pyruvic acid', 'pyruvate ion']
+acetate_i: ['acetate', 'acetic acid', 'acetate ion']
+ethanol_i: ['ethanol', 'ethyl alcohol', 'alcohol']
+glycerol_e: ['glycerol', 'glycerol', 'glycerol']
+glucose_e: ['glucose', 'glucose', 'glucose']
+acetate_e: ['acetate', 'acetic acid', 'acetate']
+ethanol_e: ['ethanol', 'ethyl alcohol', 'alcohol']
+trehalose_e: ['trehalose', 'trehalose', 'trehalose']
+
+Reason: The species are mostly standard metabolites involved in central carbon metabolism, with some representing extracellular (e) and intracellular (i) pools. Synonyms are based on common biochemical nomenclature.

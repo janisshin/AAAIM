@@ -1,0 +1,10 @@
+Model: BIOMD0000000822
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:33:29
+
+Synonyms:
+Cytosolic_Rapamycin: ['sirolimus', 'rapamycin', 'Rapamune']
+mTOR_Rapamycin: ['UNK']
+mTORC1_Rapamycin: ['UNK']
+
+Reason: Cytosolic_Rapamycin is likely referring to the drug rapamycin in its cytosolic form, hence the standardized names are sirolimus, rapamycin, and Rapamune. mTOR_Rapamycin and mTORC1_Rapamycin are complexes and not chemical entities, therefore they are unknown (UNK).

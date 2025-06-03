@@ -1,0 +1,9 @@
+Model: BIOMD0000000115
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:53:08
+
+Synonyms:
+x: ['calcium ion', 'Ca2+', 'calcium']
+y: ['cytoplasmic calcium', 'cytosolic calcium', 'Ca2+ in cytoplasm']
+
+Reason: x appears to be an ER calcium store, and y a cytosolic calcium pool, based on their labels. The reactions suggest calcium movement between these compartments.

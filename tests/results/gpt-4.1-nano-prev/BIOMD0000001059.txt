@@ -1,0 +1,10 @@
+Model: BIOMD0000001059
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:11:27
+
+Synonyms:
+iap: ['Inhibitor of Apoptosis Protein', 'XIAP', 'X-linked inhibitor of apoptosis']
+iapc3: ['XIAP', 'Inhibitor of Apoptosis Protein 3', 'X-linked inhibitor of apoptosis 3']
+iapsmac: ['SMAC', 'Second mitochondria-derived activator of caspases', 'Diablo']
+
+Reason: The species are components involved in apoptosis regulation; iap and iapc3 are inhibitors of apoptosis proteins, while iapsmac is SMAC/Diablo, a pro-apoptotic factor.

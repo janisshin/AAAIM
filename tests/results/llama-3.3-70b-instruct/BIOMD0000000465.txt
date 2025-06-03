@@ -1,0 +1,8 @@
+Model: BIOMD0000000465
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:27:56
+
+Synonyms:
+s19: ['phosphatidylinositol 4,5-bisphosphate', 'phosphatidylinositol(4,5)bisphosphate', 'PIP2']
+
+Reason: s19 is annotated as 'PIP2', which is a common synonym for phosphatidylinositol 4,5-bisphosphate, a phospholipid component of cell membranes, based on the display name provided in the model.

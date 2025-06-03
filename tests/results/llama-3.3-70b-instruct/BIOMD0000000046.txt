@@ -1,0 +1,18 @@
+Model: BIOMD0000000046
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:44:39
+
+Synonyms:
+NADH: ['nicotinamide adenine dinucleotide', 'NADH', 'reduced nicotinamide adenine dinucleotide']
+O2: ['oxygen', 'dioxygen', 'molecular oxygen']
+H2O2: ['hydrogen peroxide', 'peroxide', 'dihydrogen dioxide']
+ArH: ['UNK']
+Ar: ['UNK']
+NADrad: ['UNK']
+super: ['superoxide', 'superoxide anion', 'oxide(1-)']
+NAD2: ['UNK']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+', 'oxidized nicotinamide adenine dinucleotide']
+O2g: ['oxygen gas', 'dioxygen gas', 'gaseous oxygen']
+NADHres: ['reduced nicotinamide adenine dinucleotide', 'NADH', 'nicotinamide adenine dinucleotide']
+
+Reason: NADH, O2, H2O2, NAD, and super have well-known biochemical roles and are easily identifiable. NADHres is likely a reservoir or reserve form of NADH. ArH and Ar are unknown due to lack of context, NADrad is unclear but may be a radical form of NAD, NAD2 is unclear but may be a dimer or other form of NAD, and O2g is likely a gas-phase form of oxygen but the 'g' notation is not standard.

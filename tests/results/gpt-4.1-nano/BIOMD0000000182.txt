@@ -1,0 +1,11 @@
+Model: BIOMD0000000182
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:54:42
+
+Synonyms:
+G_GDP_cyto: ['GDP', 'guanosine diphosphate', 'guanosine diphosphate (cytoplasm)']
+ATP_cyto: ['ATP', 'adenosine triphosphate', 'ATP (cytoplasm)']
+AMP_cyto: ['AMP', 'adenosine monophosphate', 'AMP (cytoplasm)']
+cAMP_cyto: ['cAMP', 'cyclic adenosine monophosphate', 'cyclic AMP (cytoplasm)']
+
+Reason: These species are all nucleotides involved in cellular signaling pathways, specifically in cyclic AMP signaling and G-protein activity. The suffix "_cyto" indicates cytoplasmic localization, but the core molecules are well-known nucleotides.

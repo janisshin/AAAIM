@@ -1,0 +1,17 @@
+Model: BIOMD0000000498
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:06:31
+
+Synonyms:
+species_24: ['ferritin', 'iron ferritin', 'holoferritin']
+species_26: ['transferrin', 'apotransferrin', 'siderophilin']
+species_5: ['heme', 'haem', 'iron protoporphyrin']
+species_2: ['lipid', 'lipoprotein', 'low-density lipoprotein']
+species_43: ['transferrin-iron complex', 'iron-transferrin complex', 'diferric transferrin']
+species_12: ['transferrin-iron-transferrin receptor 1 complex', 'Tf-Fe-TfR1', 'iron-transferrin-transferrin receptor 1 complex']
+species_15: ['transferrin-iron-transferrin receptor 2 complex', 'Tf-Fe-TfR2', 'iron-transferrin-transferrin receptor 2 complex']
+species_16: ['diiron-transferrin-transferrin receptor 1 complex', '2(Tf-Fe)-TfR1', 'iron-transferrin-transferrin receptor 1 dimer']
+species_19: ['diiron-transferrin-transferrin receptor 2 complex', '2(Tf-Fe)-TfR2', 'iron-transferrin-transferrin receptor 2 dimer']
+species_11: ['heme', 'haem', 'iron protoporphyrin']
+
+Reason: The species are annotated based on their display names and the context of the liver iron metabolism model. species_24 is likely ferritin, a protein that stores iron, due to its reaction with species_2 (lipid) and species_25 ( likely apoferritin). species_26 is likely transferrin, a protein that binds iron, due to its reaction with species_2 and species_25. species_5 is likely heme, a molecule containing iron, due to its display name and reaction with species_11 (also likely heme). species_2 is likely a lipid or lipoprotein, due to its reaction with species_24 and species_26. The other species are annotated based on their display names and the context of the model, with species_43 being a transferrin-iron complex, and the others being various complexes of transferrin, iron, and transferrin receptors. species_11 is likely heme, due to its display name and reaction with species_5.

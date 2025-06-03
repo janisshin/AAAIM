@@ -1,0 +1,18 @@
+Model: BIOMD0000000689
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:30:00
+
+Synonyms:
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+AMP: ['adenosine monophosphate', 'AMP', "adenosine 5'-monophosphate"]
+p_ABA: ['4-amino-4-deoxypterin', 'p-ABA', 'para-aminobenzoic acid']
+H2_Pteroate: ['dihydropterote', 'H2-pterote', 'dihydropteroic acid']
+L_Glutamate: ['glutamic acid', 'L-glutamate', 'L-glutamine acid']
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+DHF: ['dihydrofolate', 'DHF', '7,8-dihydrofolate']
+L_serine: ['serine', 'L-serine', 'L-2-amino-3-hydroxypropanoic acid']
+Glycine: ['glycine', 'aminoacetic acid', '2-aminoethanoic acid']
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'NADPH', 'reduced nicotinamide adenine dinucleotide phosphate']
+CH2_THF: ['5,10-methylenetetrahydrofolate', 'CH2-THF', '5,10-methylene-THF']
+
+Reason: The species names were matched to their corresponding standardized names based on the display names provided in the model and common biochemical knowledge. p_ABA is likely "para-aminobenzoic acid" due to its involvement in the folate biosynthesis pathway. H2_Pteroate is matched to "dihydropterote" or "dihydropteroic acid" based on its reaction with p_ABA to form H2_Pteroate. CH2_THF is matched to "5,10-methylenetetrahydrofolate" due to its involvement in the folate pathway and reaction with PanB. The other species were matched based on their common biochemical names.

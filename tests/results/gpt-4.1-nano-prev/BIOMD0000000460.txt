@@ -1,0 +1,9 @@
+Model: BIOMD0000000460
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:47:59
+
+Synonyms:
+IPTG: ['isopropyl β-D-1-thiogalactopyranoside', 'IPTG', 'isopropylthiogalactoside']
+x: ['UNK']
+
+Reason: "x" is a generic variable, not a chemical entity; IPTG is a known inducer molecule.

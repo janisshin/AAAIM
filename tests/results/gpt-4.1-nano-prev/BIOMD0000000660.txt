@@ -1,0 +1,11 @@
+Model: BIOMD0000000660
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:05:58
+
+Synonyms:
+MrnaP21: ['p21 mRNA', 'CDKN1A mRNA', 'p21 transcript']
+MrnaCy: ['cyclical mRNA', 'cyclin mRNA', 'cell cycle mRNA']
+MrnaP53: ['p53 mRNA', 'TP53 mRNA', 'tumor protein p53 transcript']
+Dna: ['DNA', 'deoxyribonucleic acid', 'genomic DNA']
+
+Reason: The species are mRNA transcripts and DNA; "MrnaP21" and "MrnaP53" are specific mRNAs for p21 and p53 proteins, respectively. "MrnaCy" likely refers to cyclin mRNA involved in cell cycle regulation. "Dna" is a common abbreviation for DNA.

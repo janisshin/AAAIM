@@ -1,0 +1,16 @@
+Model: BIOMD0000000246
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:56:57
+
+Synonyms:
+Ca_in: ['calcium ion', 'Ca2+', 'intracellular calcium']
+Ca_store: ['calcium store', 'endoplasmic reticulum calcium', 'intracellular calcium reservoir']
+Ca_ex: ['extracellular calcium', 'Ca2+ outside cell', 'extracellular calcium ion']
+Cl_ex: ['extracellular chloride', 'Cl− outside cell', 'chloride ion']
+Cl_o: ['extracellular chloride', 'Cl− outside cell', 'chloride ion']
+GABA: ['gamma-aminobutyric acid', 'GABA neurotransmitter', 'GABA']
+GABA_o: ['extracellular GABA', 'GABA outside cell', 'GABA neurotransmitter']
+K_in: ['intracellular potassium', 'K+ inside cell', 'potassium ion']
+K_ex: ['extracellular potassium', 'K+ outside cell', 'potassium ion']
+
+Reason: All species are related to common ionic or neurotransmitter entities involved in neuronal electrophysiology, with standard names or synonyms suitable for ontology lookup.

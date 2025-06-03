@@ -1,0 +1,24 @@
+Model: BIOMD0000000244
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:56:51
+
+Synonyms:
+ACT: ['acetyl-CoA', 'acetyl coenzyme A', 'CoA']
+GLC: ['glucose', 'd-glucose', 'blood sugar']
+ACoA: ['acetyl-CoA', 'acetyl coenzyme A', 'CoA']
+AKG: ['alpha-ketoglutarate', '2-oxoglutarate', 'α-ketoglutaric acid']
+cAMP: ['cyclic AMP', 'cyclic adenosine monophosphate', 'cAMP']
+FBP: ['fructose-1,6-bisphosphate', 'FBP', 'fructose 1,6-bisphosphate']
+G6P: ['glucose-6-phosphate', 'G6P', 'glucose-6-phosphate']
+GLX: ['glycolate', 'glyoxylate', 'glyoxylate']
+ICT: ['isocitrate', 'isocitric acid', 'isocitrate']
+MAL: ['malate', 'malic acid', 'malate']
+OAA: ['oxaloacetate', 'oxaloacetic acid', 'OAA']
+PEP: ['phosphoenolpyruvate', 'PEP', 'phosphoenolpyruvic acid']
+PG3: ['3-phosphoglycerate', '3-PG', '3-phosphoglyceric acid']
+PYR: ['pyruvate', 'pyruvic acid', 'pyruvate']
+CraFBP: ['fructose-1,6-bisphosphate', 'FBP', '(as a regulatory metabolite)', 'or  (if referring to the same compound in regulation context)']
+CrpcAMP: ['cyclic AMP', 'cAMP', '(as a regulatory molecule)', 'or']
+PdhRPYR: ['pyruvate', 'pyruvate', '(as substrate)', 'or']
+
+Reason: All species are central metabolites or signaling molecules in bacterial metabolism; synonyms are based on common biochemical names. "ACT" and "ACoA" are both acetyl-CoA derivatives, "GLC" is glucose, "AKG" is alpha-ketoglutarate, etc. Some species like CraFBP and CrpcAMP are regulatory molecules related to their respective metabolites. "PdhRPYR" is pyruvate, a key metabolic intermediate.

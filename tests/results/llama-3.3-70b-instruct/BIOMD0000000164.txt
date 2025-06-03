@@ -1,0 +1,25 @@
+Model: BIOMD0000000164
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:56:07
+
+Synonyms:
+Carrier_RanGTP_Cytosol: ['GTP', 'guanosine triphosphate', "guanosine 5'-triphosphate"]
+RanBP1_Carrier_RanGTP_Cytosol: ['RanBP1', 'Ran-binding protein 1', 'UNK']
+RanGDP_Nucleus: ['GDP', 'guanosine diphosphate', "guanosine 5'-diphosphate"]
+RanGTP_Nucleus: ['GTP', 'guanosine triphosphate', "guanosine 5'-triphosphate"]
+NTF2_RanGDP_Nucleus: ['NTF2', 'nuclear transport factor 2', 'UNK']
+RanGDP_Cytosol: ['GDP', 'guanosine diphosphate', "guanosine 5'-diphosphate"]
+Carrier_RanGTP_Nucleus: ['GTP', 'guanosine triphosphate', "guanosine 5'-triphosphate"]
+NTF2_RanGDP_Cytosol: ['NTF2', 'nuclear transport factor 2', 'UNK']
+FRanGTP_Cytosol: ['UNK', 'UNK', 'UNK']
+FCarrier_RanGTP_Cytosol: ['UNK', 'UNK', 'UNK']
+FRanGDP_Cytosol: ['UNK', 'UNK', 'UNK']
+FNTF2_RanGDP_Cytosol: ['UNK', 'UNK', 'UNK']
+FRanBP1_Carrier_RanGTP_Cytosol: ['UNK', 'UNK', 'UNK']
+FCarrier_RanGTP_Nucleus: ['UNK', 'UNK', 'UNK']
+FRanGDP_Nucleus: ['UNK', 'UNK', 'UNK']
+FNTF2_RanGDP_Nucleus: ['UNK', 'UNK', 'UNK']
+FRanGTP_Nucleus: ['UNK', 'UNK', 'UNK']
+RanGTP_Cytosol: ['GTP', 'guanosine triphosphate', "guanosine 5'-triphosphate"]
+
+Reason: The species names were annotated based on the presence of keywords like "Ran", "GTP", "GDP", and "NTF2" in the species names, which are related to the Ran transport model. The species with prefixes like "F" were annotated as "UNK" because their meanings are unclear. The species with "Ran" and "GTP" or "GDP" were annotated with guanosine triphosphate or diphosphate, respectively. The species with "NTF2" were annotated with nuclear transport factor 2. The species with "RanBP1" were annotated with Ran-binding protein 1. The species with "Carrier" were annotated with GTP, assuming they are related to the carrier protein in the Ran transport model.

@@ -1,0 +1,32 @@
+Model: BIOMD0000000080
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:36:16
+
+Synonyms:
+D: ['UNK']
+
+Reason: No specific display name or chemical context provided; D appears as a placeholder or generic label.
+
+DR: "UNK"
+Reason: No chemical name or common synonym given; likely a label for a species or state, not a chemical entity.
+
+DRG_GDP: "GDP", "guanosine diphosphate", "guanosine diphosphate"
+Reason: "DRG_GDP" indicates a GDP-bound form of a GTPase or similar molecule; standard name is GDP, a common nucleotide.
+
+G_GDP: "GDP", "guanosine diphosphate", "guanosine diphosphate"
+Reason: G_GDP is a GTPase in GDP-bound form; standard name is GDP.
+
+DRG: "GTPase", "G-protein", "UNK"
+Reason: Likely a GTPase or G-protein; no specific name provided, so "GTPase" or "G-protein" as general terms.
+
+GDP: "guanosine diphosphate", "GDP", "guanosine diphosphate"
+Reason: Standard nucleotide name for GDP.
+
+DRG_GTP: "GTP", "guanosine triphosphate", "GTP"
+Reason: GTP-bound form of a GTPase; standard name is GTP.
+
+GTP: "guanosine triphosphate", "GTP", "guanosine triphosphate"
+Reason: Standard nucleotide name for GTP.
+
+G_GTP: "GTP", "guanosine triphosphate", "GTP"
+Reason: G_GTP indicates GTP-bound form; standard name is GTP.

@@ -1,0 +1,8 @@
+Model: BIOMD0000001030
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:10:30
+
+Synonyms:
+Antigen_expressing_cells: ['antigen-presenting cells', 'APC', 'dendritic cells']
+
+Reason: These are the immune cells responsible for presenting antigens to T cells, commonly referred to as antigen-presenting cells.

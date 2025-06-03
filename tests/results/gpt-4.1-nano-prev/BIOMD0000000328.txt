@@ -1,0 +1,14 @@
+Model: BIOMD0000000328
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:43:19
+
+Synonyms:
+AS_m: ['atorvastatin', 'lipitor', 'atorvastatin calcium']
+ASoOH_m: ['atorvastatin hydroxy metabolite', 'atorvastatin hydroxylated', 'atorvastatin phenol']
+ASpOH_m: ['atorvastatin glucuronide', 'atorvastatin conjugate', 'atorvastatin metabolite']
+AS_c: ['atorvastatin', 'lipitor', 'atorvastatin calcium']
+ASoOH_c: ['atorvastatin hydroxy metabolite', 'atorvastatin hydroxylated', 'atorvastatin phenol']
+ASpOH_c: ['atorvastatin glucuronide', 'atorvastatin conjugate', 'atorvastatin metabolite']
+AS_b: ['atorvastatin conjugate', 'atorvastatin metabolite', 'atorvastatin glucuronide']
+
+Reason: All species are related to atorvastatin and its metabolites; "AS" likely refers to atorvastatin, with various hydroxylated and conjugated forms. The species with suffixes "_m" and "_c" denote different compartments (e.g., membrane, cytosol).

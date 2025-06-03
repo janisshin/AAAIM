@@ -1,0 +1,11 @@
+Model: BIOMD0000000182
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:38:44
+
+Synonyms:
+G_GDP_cyto: ['GDP', 'guanosine diphosphate', 'guanosine diphosphate (cytoplasmic)']
+ATP_cyto: ['ATP', 'adenosine triphosphate', 'adenosine triphosphate (cytoplasmic)']
+AMP_cyto: ['AMP', 'adenosine monophosphate', 'adenosine monophosphate (cytoplasmic)']
+cAMP_cyto: ['cAMP', 'cyclic adenosine monophosphate', 'cyclic AMP (cytoplasmic)']
+
+Reason: The species are nucleotide derivatives involved in signaling pathways; "G_GDP_cyto" is likely GDP, "ATP_cyto" ATP, "AMP_cyto" AMP, and "cAMP_cyto" cyclic AMP, all common signaling molecules in cytoplasm.

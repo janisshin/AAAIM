@@ -1,0 +1,21 @@
+Model: BIOMD0000000162
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:55:38
+
+Synonyms:
+PABCa_D_Cytosol: ['calcium phosphate', 'phosphocalcic acid', 'calcium phosphate ion']
+Ca_D_Cytosol: ['calcium', 'calcium ion', 'ca2+']
+PABMg_D_Cytosol: ['magnesium phosphate', 'phosphomagnesic acid', 'magnesium phosphate ion']
+PABCa_Cytosol: ['calcium phosphate', 'phosphocalcic acid', 'calcium phosphate ion']
+Mg_Cytosol: ['magnesium', 'magnesium ion', 'mg2+']
+Ca_ER: ['calcium', 'calcium ion', 'ca2+']
+Ca_D_ER: ['calcium', 'calcium ion', 'ca2+']
+PABMg_Cytosol: ['magnesium phosphate', 'phosphomagnesic acid', 'magnesium phosphate ion']
+IP3_Cytosol: ['inositol trisphosphate', 'myo-inositol 1,4,5-trisphosphate', 'd-myo-inositol 1,4,5-trisphosphate']
+Ca_Extracellular: ['calcium', 'calcium ion', 'ca2+']
+IP3_D_Cytosol: ['inositol trisphosphate', 'myo-inositol 1,4,5-trisphosphate', 'd-myo-inositol 1,4,5-trisphosphate']
+Mg_D_Cytosol: ['magnesium', 'magnesium ion', 'mg2+']
+Ca_Cytosol: ['calcium', 'calcium ion', 'ca2+']
+Ca_D_Extracellular: ['calcium', 'calcium ion', 'ca2+']
+
+Reason: The species names were annotated based on their suffixes and prefixes, with "_Ca" and "_Mg" indicating calcium and magnesium ions, "_D" possibly indicating a deprotonated form, and "_ER" indicating endoplasmic reticulum location, while "IP3" is a known abbreviation for inositol trisphosphate, and "PAB" is less clear but paired with calcium or magnesium, possibly indicating a phosphate compound.

@@ -1,0 +1,40 @@
+Model: BIOMD0000000085
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:36:29
+
+Synonyms:
+species_3: ['threonine', 'L-threonine', 'UNK']
+
+Reason: The label 'T' commonly denotes threonine in biochemical contexts.
+
+species_5: "GTP", "guanosine triphosphate", "UNK"
+Reason: 'G*T' suggests a GTP-related species, with 'G' for guanine and 'T' for triphosphate.
+
+species_6: "GDP", "guanosine diphosphate", "UNK"
+Reason: 'GD' is a common abbreviation for GDP, the diphosphate form of GTP.
+
+species_7: "inorganic phosphate", "Pi", "phosphate"
+Reason: 'Pi' is a standard symbol for inorganic phosphate.
+
+species_8: "D", "unknown", "UNK"
+Reason: 'D' is ambiguous; no context or common biochemical entity matches directly.
+
+species_10: "RG*T", "GTP-bound GTPase", "GTP complex"
+Reason: 'RG*T' suggests a GTP-bound form of a GTPase, with 'R' possibly indicating a receptor or regulator.
+
+species_11: "G*AT", "GTPase", "GTP-binding protein"
+Reason: 'G*AT' likely refers to a GTPase or GTP-binding protein.
+
+species_12: "GAD", "GTPase-activating protein", "GTPase activating factor"
+Reason: 'GAD' could denote a GTPase-activating protein, involved in GTPase regulation.
+
+species_13: "RGD", "GTPase complex", "GTPase with RGD"
+Reason: 'RGD' may refer to a complex involving GTPase and RGD motif-containing proteins.
+
+species_15: "RG*AT", "GTPase with regulator", "GTPase complex"
+Reason: 'RG*AT' suggests a GTPase complex with regulatory components.
+
+species_16: "RGAD", "GTPase with activator", "GTPase complex"
+Reason: 'RGAD' indicates a GTPase complex with an activator or regulatory protein.
+
+Reason: The species labels are abbreviations from the paper, with many related to GTPase signaling components; some are ambiguous without further context.

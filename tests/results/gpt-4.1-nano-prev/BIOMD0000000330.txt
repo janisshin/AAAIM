@@ -1,0 +1,10 @@
+Model: BIOMD0000000330
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:43:20
+
+Synonyms:
+Ca_cyt: ['calcium ion', 'Ca2+', 'cytoplasmic calcium']
+Ca_ER: ['endoplasmic reticulum calcium', 'Ca2+ in ER', 'ER calcium']
+Ca_mit: ['mitochondrial calcium', 'mitochondria calcium', 'Ca2+ in mitochondria']
+
+Reason: All are calcium ions localized in specific cellular compartments, which are common biological terms.

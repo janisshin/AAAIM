@@ -1,0 +1,25 @@
+Model: BIOMD0000000017
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:42:51
+
+Synonyms:
+ADP: ['adenosine diphosphate', 'ADP(3-)']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD(+)']
+ATP: ['adenosine triphosphate', 'ATP(4-)']
+NADH: ['nicotinamide adenine dinucleotide + hydrogen', 'NADH(2+)']
+pyruvate: ['pyruvic acid', '2-oxopropanoic acid']
+lactate: ['lactic acid', '2-hydroxypropanoic acid']
+CoA: ['coenzyme A', 'CoA(SH)']
+AcCoA: ['acetyl-CoA', 'acetyl coenzyme A']
+AcP: ['acetyl phosphate', 'acetic phosphate']
+Ac: ['acetate', 'acetic acid']
+AcO: ['acetaldehyde', 'ethanal']
+EtOH: ['ethanol', 'ethyl alcohol']
+AcLac: ['acetolactate', '2-hydroxy-2-methyl-3-oxobutanoic acid']
+AcetoinIn: ['acetoin', '3-hydroxybutan-2-one']
+AcetoinOut: ['acetoin', '3-hydroxybutan-2-one']
+Butanediol: ['2,3-butanediol', 'butane-2,3-diol']
+O2: ['oxygen', 'dioxygen']
+PO4: ['phosphate', 'orthophosphate']
+
+Reason: The standardized names and common synonyms are based on the display names and reaction equations provided in the model, as well as general knowledge of biochemical nomenclature. The likelihood of each name is ranked based on the specificity and common usage of the name in the context of biochemistry. For example, "acetyl-CoA" is a more specific and commonly used name than "acetic phosphate" for AcCoA. The names for AcLac, AcetoinIn, and AcetoinOut are based on the reaction equations and the common names used in the context of the pyruvate branch metabolism. The names for O2 and PO4 are based on general knowledge of biochemical nomenclature.

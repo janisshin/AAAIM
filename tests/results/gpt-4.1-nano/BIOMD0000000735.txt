@@ -1,0 +1,28 @@
+Model: BIOMD0000000735
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:23:08
+
+Synonyms:
+FeDuo: ['dimeric transferrin', 'FeDuo', 'FeDuo complex']
+FeDuo_0: ['dimeric transferrin', 'FeDuo', 'FeDuo complex']
+FeRBC: ['red blood cell iron', 'FeRBC', 'hemoglobin iron']
+FeRBC_0: ['red blood cell iron', 'FeRBC', 'hemoglobin iron']
+FeSpleen: ['spleen iron', 'FeSpleen', 'splenic iron']
+FeSpleen_0: ['spleen iron', 'FeSpleen', 'splenic iron']
+FeLiver: ['liver iron', 'FeLiver', 'hepatic iron']
+FeLiver_0: ['liver iron', 'FeLiver', 'hepatic iron']
+Fe2Tf: ['diferric transferrin', 'Fe2Tf', 'transferrin with two iron atoms']
+NTBI: ['non-transferrin bound iron', 'NTBI', 'free iron']
+Fe1Tf: ['monomeric transferrin', 'Fe1Tf', 'transferrin with one iron atom']
+Fe2Tf_0: ['diferric transferrin', 'Fe2Tf', 'transferrin with two iron atoms']
+Fe1Tf_0: ['monomeric transferrin', 'Fe1Tf', 'transferrin with one iron atom']
+NTBI_0: ['non-transferrin bound iron', 'NTBI', 'free iron']
+Fe2Tf_: ['diferric transferrin', 'Fe2Tf', 'transferrin with two iron atoms']
+FeRest: ['rest of iron', 'FeRest', 'storage iron']
+FeOutside: ['extracellular iron', 'FeOutside', 'plasma iron']
+FeRest_0: ['rest of iron', 'FeRest', 'storage iron']
+FeOutside_0: ['extracellular iron', 'FeOutside', 'plasma iron']
+FeBM: ['bone marrow iron', 'FeBM', 'marrow iron']
+FeBM_0: ['bone marrow iron', 'FeBM', 'marrow iron']
+
+Reason: The species are related to iron forms and compartments, mostly transferrin-bound or stored in tissues, which are standard terms in iron metabolism. "Dimeric transferrin" and "monomeric transferrin" are common synonyms for Fe2Tf and Fe1Tf. "NTBI" is a standard abbreviation for non-transferrin bound iron. The rest are tissue or compartment-specific iron pools.

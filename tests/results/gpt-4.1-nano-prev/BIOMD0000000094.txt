@@ -1,0 +1,9 @@
+Model: BIOMD0000000094
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:02
+
+Synonyms:
+mRNAn: ['messenger RNA', 'mRNA', 'mRNA molecule']
+mRNAc: ['messenger RNA', 'mRNA', 'mRNA molecule']
+
+Reason: Both are forms of messenger RNA involved in gene expression; "mRNA" is the standard abbreviation and common name. The model distinguishes nuclear (n) and cytoplasmic (c) forms, but both are generally referred to as mRNA.

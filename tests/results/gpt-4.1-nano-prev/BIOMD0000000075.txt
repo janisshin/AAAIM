@@ -1,0 +1,16 @@
+Model: BIOMD0000000075
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:36:10
+
+Synonyms:
+PIP2_PHGFP_PM: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'phosphatidylinositol 4,5-bisphosphate (PIP2)']
+PI_PM: ['phosphatidylinositol', 'PI', 'inositol phospholipid']
+IP3_PHGFP_Cyt: ['inositol 1,4,5-trisphosphate', 'IP3', 'InsP3']
+PIP2_PM: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'phosphatidylinositol 4,5-bisphosphate (PIP2)']
+PIP_PM: ['phosphatidylinositol', 'PI', 'inositol phospholipid']
+DAG_PM: ['diacylglycerol', 'DAG', 'glycerolipid']
+hv_Cytosol: ['cytosol', 'cytoplasm', 'cell cytoplasm']
+IP3X_Cytosol: ['inositol 1,4,5-trisphosphate', 'IP3', 'InsP3']
+IP3_Cyt: ['inositol 1,4,5-trisphosphate', 'IP3', 'InsP3']
+
+Reason: all species are related to phosphoinositide signaling molecules or cellular compartments; the names are standard or common synonyms for these lipid signaling entities.

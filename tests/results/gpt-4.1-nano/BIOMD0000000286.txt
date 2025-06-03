@@ -1,0 +1,10 @@
+Model: BIOMD0000000286
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:58:06
+
+Synonyms:
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+AMP: ['adenosine monophosphate', 'AMP', 'adenosine monophosphate']
+
+Reason: All three are well-known nucleotides involved in energy transfer, with standard names matching their abbreviations.

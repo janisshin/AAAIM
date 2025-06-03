@@ -1,0 +1,28 @@
+Model: BIOMD0000000734
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:31:51
+
+Synonyms:
+FeDuo: ['iron', 'ferric ion', 'ferrous ion']
+FeDuo_0: ['iron', 'ferric ion', 'ferrous ion']
+FeRBC: ['hemin', 'iron(III) ion', 'ferric ion']
+FeRBC_0: ['hemin', 'iron(III) ion', 'ferric ion']
+FeSpleen: ['iron', 'ferric ion', 'ferrous ion']
+FeSpleen_0: ['iron', 'ferric ion', 'ferrous ion']
+FeLiver: ['iron', 'ferric ion', 'ferrous ion']
+FeLiver_0: ['iron', 'ferric ion', 'ferrous ion']
+Fe2Tf: ['diferric transferrin', 'holotransferrin', 'transferrin']
+NTBI: ['non-transferrin-bound iron', 'free iron', 'labile iron']
+Fe1Tf: ['monoferric transferrin', 'transferrin', 'apotransferrin']
+Fe2Tf_0: ['diferric transferrin', 'holotransferrin', 'transferrin']
+Fe1Tf_0: ['monoferric transferrin', 'transferrin', 'apotransferrin']
+NTBI_0: ['non-transferrin-bound iron', 'free iron', 'labile iron']
+Fe2Tf_: ['diferric transferrin', 'holotransferrin', 'transferrin']
+FeRest: ['iron', 'ferric ion', 'ferrous ion']
+FeOutside: ['iron', 'ferric ion', 'ferrous ion']
+FeRest_0: ['iron', 'ferric ion', 'ferrous ion']
+FeOutside_0: ['iron', 'ferric ion', 'ferrous ion']
+FeBM: ['hemin', 'iron(III) ion', 'ferric ion']
+FeBM_0: ['hemin', 'iron(III) ion', 'ferric ion']
+
+Reason: The model appears to be simulating iron distribution and metabolism in mice, with various species representing different forms and locations of iron in the body. The standardized names and synonyms are based on the display names and reaction equations provided, as well as general knowledge of iron biochemistry. Species with "Fe" prefixes are likely to represent iron-containing compounds, while "Tf" suggests transferrin, a protein that binds and transports iron. "RBC" and "BM" likely refer to red blood cells and bone marrow, respectively, while "Spleen" and "Liver" refer to those organs. "NTBI" is a known term for non-transferrin-bound iron, and "Rest" and "Outside" may refer to iron in other tissues or outside the body.

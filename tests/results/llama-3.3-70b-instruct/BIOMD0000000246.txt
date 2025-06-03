@@ -1,0 +1,16 @@
+Model: BIOMD0000000246
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:06:08
+
+Synonyms:
+Ca_in: ['calcium ion', 'calcium(2+)', 'Ca2+']
+Ca_store: ['calcium ion', 'calcium(2+)', 'Ca2+']
+Ca_ex: ['calcium ion', 'calcium(2+)', 'Ca2+']
+Cl_ex: ['chloride ion', 'chloride', 'Cl-']
+Cl_o: ['chloride ion', 'chloride', 'Cl-']
+GABA: ['gamma-aminobutyric acid', 'GABA', '4-aminobutanoic acid']
+GABA_o: ['gamma-aminobutyric acid', 'GABA', '4-aminobutanoic acid']
+K_in: ['potassium ion', 'potassium', 'K+']
+K_ex: ['potassium ion', 'potassium', 'K+']
+
+Reason: The species names are likely referring to ions and neurotransmitters involved in the electrophysiology of SCN pacemaker cells, as described in the model notes. The names are standardized based on common chemical names and symbols for ions, and the GABA species is identified as the neurotransmitter gamma-aminobutyric acid. The "_in", "_ex", and "_store" suffixes suggest intracellular, extracellular, and stored forms of the ions, respectively, but do not affect the standardized names. The "_o" suffix for GABA_o is unclear, but it is likely referring to the same neurotransmitter as GABA.

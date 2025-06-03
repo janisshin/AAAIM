@@ -1,0 +1,16 @@
+Model: BIOMD0000000063
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:46:56
+
+Synonyms:
+Glci: ['glucose', 'D-glucose', 'blood glucose']
+ATP: ["adenosine 5'-triphosphate", 'ATP', 'adenine nucleotide']
+G6P: ['glucose 6-phosphate', 'D-glucose 6-phosphate', 'glucose-6-phosphate']
+FDP: ['fructose 1,6-bisphosphate', 'fructose-1,6-diphosphate', 'FBP']
+PEP: ['phosphoenolpyruvate', 'phosphoenolpyruvic acid', 'PEP']
+Gly: ['glycerol', 'glycerin', 'propan-1,2,3-triol']
+EtOH: ['ethanol', 'ethyl alcohol', 'alcohol']
+Carbo: ['glycogen', 'trehalose', 'starch']
+Glco: ['glucose', 'D-glucose', 'blood glucose']
+
+Reason: The display names provided in the model are used to determine the standardized names, with Glci and Glco both referring to glucose but in different locations, Carbo referring to both glycogen and trehalose, and the other species having straightforward matches to their display names.

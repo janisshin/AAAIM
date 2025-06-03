@@ -1,0 +1,9 @@
+Model: BIOMD0000000658
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:21:51
+
+Synonyms:
+TCF: ['T-cell factor', 'TCF transcription factor', 'TCF family protein']
+B_catenin_TCF: ['beta-catenin/TCF complex', 'beta-catenin TCF', 'beta-catenin transcription complex']
+
+Reason: TCF is a transcription factor activated by beta-catenin in Wnt signaling; B_catenin_TCF represents their complex. Both are key signaling molecules, not small molecules.

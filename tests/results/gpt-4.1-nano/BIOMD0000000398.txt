@@ -1,0 +1,9 @@
+Model: BIOMD0000000398
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:00:09
+
+Synonyms:
+s101: ['erlotinib', 'Tarceva', 'Erlotinib hydrochloride']
+s147: ["6-bromoindirubin-3'-oxime", 'BIO', '6-BIO']
+
+Reason: Both species are chemical compounds used as drugs or inhibitors in signaling pathways; Erlotinib is a known EGFR inhibitor, and 6-bromoindirubin-3'-oxime is a GSK-3β inhibitor used in neural differentiation studies.

@@ -1,0 +1,10 @@
+Model: BIOMD0000000463
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:48:03
+
+Synonyms:
+species_1: ['hemagglutinin', 'HA', 'viral surface glycoprotein']
+species_2: ['neuraminidase', 'NA', 'viral surface glycoprotein']
+species_6: ['viral nucleoprotein', 'NP', 'viral nucleocapsid protein']
+
+Reason: The model describes influenza virus components; species_1 is likely hemagglutinin (Bhi), species_2 is neuraminidase (VattHi), and species_6 is nucleoprotein (Ven).

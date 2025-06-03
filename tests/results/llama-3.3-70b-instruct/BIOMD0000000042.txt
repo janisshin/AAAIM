@@ -1,0 +1,20 @@
+Model: BIOMD0000000042
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:44:16
+
+Synonyms:
+ATP: ['adenosine triphosphate', "adenosine 5'-triphosphate", 'ATP']
+ADP: ['adenosine diphosphate', "adenosine 5'-diphosphate", 'ADP']
+AMP: ['adenosine monophosphate', "adenosine 5'-monophosphate", 'AMP']
+GLC: ['glucose', 'D-glucose', 'alpha-D-glucose']
+FBP: ['fructose-1,6-bisphosphate', 'fructose 1,6-diphosphate', 'FBP']
+GAP: ['glyceraldehyde 3-phosphate', 'D-glyceraldehyde 3-phosphate', 'G3P']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+', 'nicotinamide adenine dinucleotide (oxidized form)']
+NADH: ['nicotinamide adenine dinucleotide (reduced form)', 'NADH', 'dihydronicotinamide adenine dinucleotide']
+DPG: ['1,3-bisphosphoglycerate', '1,3-bisphosphoglyceric acid', '1,3-DPG']
+PEP: ['phosphoenolpyruvate', 'phosphoenolpyruvic acid', 'PEP']
+PYR: ['pyruvate', 'pyruvic acid', '2-oxopropanoic acid']
+ACA: ['acetaldehyde', 'ethanal', 'acetic aldehyde']
+EtOH: ['ethanol', 'ethyl alcohol', 'alcohol']
+
+Reason: The species names were matched to their corresponding biochemical names based on the context of the glycolysis model, where ATP, ADP, and AMP are energy transfer molecules, GLC is the initial substrate, FBP, GAP, DPG, PEP, and PYR are intermediates, NAD and NADH are electron carriers, and ACA and EtOH are products of pyruvate metabolism. The names were standardized to their most commonly used forms in biochemistry.

@@ -1,0 +1,26 @@
+Model: BIOMD0000000399
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:00:15
+
+Synonyms:
+x20: ['EGF', 'epidermal growth factor', 'recombinant human EGF']
+x21: ['EGFR', 'epidermal growth factor receptor', 'EGF receptor']
+x26: ['Ras-GDP', 'Ras inactive form', 'Ras GDP']
+x27: ['EGFR', 'epidermal growth factor receptor', 'EGF receptor']
+x28: ['Ras-GTP', 'Ras active form', 'Ras GTP']
+x29: ['EGFR', 'epidermal growth factor receptor', 'EGF receptor']
+x36: ['EGFR', 'epidermal growth factor receptor', 'EGF receptor']
+x37: ['EGF-EGFR', 'EGF bound to EGFR', 'EGF-EGFR complex']
+x42: ['Raf', 'Raf kinase', 'MAPKKK']
+x43: ['Ras-GTP', 'Ras active form', 'Ras GTP']
+x67: ['EGF-EGFR', 'epidermal growth factor receptor complex', 'EGF-EGFR']
+x68: ['EGF-EGFR', 'epidermal growth factor receptor complex', 'EGF-EGFR']
+x69: ['Ras-GTP', 'Ras active form', 'Ras GTP']
+x70: ['Ras-GTP', 'Ras active form', 'Ras GTP']
+x71: ['Ras-GTP', 'Ras active form', 'Ras GTP']
+x89: ['EGF-EGFR', 'epidermal growth factor receptor complex', 'EGF-EGFR']
+x90: ['EGF-EGFR', 'epidermal growth factor receptor complex', 'EGF-EGFR']
+x93: ['EGF-EGFR', 'epidermal growth factor receptor complex', 'EGF-EGFR']
+x94: ['EGF-EGFR', 'epidermal growth factor receptor complex', 'EGF-EGFR']
+
+Reason: All species are related to EGF, EGFR, Ras, or Raf, which are well-known signaling molecules in the MAPK pathway. The complexes involve ligand-receptor interactions or active/inactive states of Ras. The names are standardized to common synonyms for these proteins and complexes.

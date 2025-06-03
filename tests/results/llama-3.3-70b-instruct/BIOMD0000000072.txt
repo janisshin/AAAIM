@@ -1,0 +1,9 @@
+Model: BIOMD0000000072
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:49:14
+
+Synonyms:
+Gd: ['GDP-bound G-alpha', 'G-alpha-GDP', 'guanine diphosphate-bound G-alpha']
+Ga: ['GTP-bound G-alpha', 'G-alpha-GTP', 'guanine triphosphate-bound G-alpha']
+
+Reason: The display names and reactions suggest that Gd and Ga are related to the G protein cycle, specifically the alpha subunit bound to GDP or GTP, respectively. The reactions show the interconversion between these states, consistent with the G protein activation and deactivation cycle.

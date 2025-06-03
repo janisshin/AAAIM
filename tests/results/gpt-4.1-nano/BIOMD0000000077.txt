@@ -1,0 +1,8 @@
+Model: BIOMD0000000077
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:52:01
+
+Synonyms:
+IP3: ['inositol 1,4,5-trisphosphate', 'IP3', 'Ins(1,4,5)P3']
+
+Reason: IP3 is a well-known second messenger involved in intracellular signaling pathways, commonly referred to as inositol 1,4,5-trisphosphate.

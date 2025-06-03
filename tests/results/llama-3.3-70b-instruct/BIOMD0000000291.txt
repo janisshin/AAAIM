@@ -1,0 +1,13 @@
+Model: BIOMD0000000291
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:09:29
+
+Synonyms:
+x2: ['bilirubin', 'bilirubin albumin complex']
+x3: ['albumin bilirubin complex', 'bilirubin albumin complex']
+x6: ['bilirubin', 'bilirubin ion', 'bilirubin molecule']
+x7: ['carbon', 'carbon surface', 'activated carbon']
+B0: ['UNK']
+C0: ['UNK']
+
+Reason: x2, x3, x6, and x7 are annotated based on their display names and the context of the model, which involves the binding of albumin-bilirubin complex to a carbon pyropolymer surface. B0 and C0 are unknown because their display names do not provide any information about their chemical identity.

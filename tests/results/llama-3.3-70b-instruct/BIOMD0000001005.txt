@@ -1,0 +1,10 @@
+Model: BIOMD0000001005
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:43:00
+
+Synonyms:
+ACTH: ['adrenocorticotropic hormone', 'corticotropin', 'adrenocorticotropin']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+', 'diphosphopyridine nucleotide']
+NAM: ['nicotinamide', 'niacinamide', 'vitamin B3']
+
+Reason: ACTH is a hormone with a well-known full name, NAD is a coenzyme with established synonyms, and NAM is identified through its relationship with NAD in the reactions, likely referring to nicotinamide, a form of vitamin B3.

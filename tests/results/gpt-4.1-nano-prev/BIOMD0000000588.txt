@@ -1,0 +1,11 @@
+Model: BIOMD0000000588
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:03:04
+
+Synonyms:
+mwe599c4c4c1_2d8e_446c_bf3f_4c97baced8a9: ['tanezumab', 'monoclonal antibody', 'anti-NGF antibody']
+
+Reason: The species is labeled as "tanezumab," which is a known monoclonal antibody targeting nerve growth factor (NGF).
+
+mwe0b9d340_24f5_4c7e_a80f_4faadae6c0fc: "tz_deg", "unknown"
+Reason: The species name "tz_deg" appears as a placeholder or internal code with no clear chemical or biological entity associated; thus, uncertain.

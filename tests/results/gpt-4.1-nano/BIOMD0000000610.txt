@@ -1,0 +1,20 @@
+Model: BIOMD0000000610
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:20:28
+
+Synonyms:
+glycerol_i: ['glycerol', 'glycerin', '1,2,3-propanetriol']
+glucose_i: ['glucose', 'd-glucose', 'blood sugar']
+G6P: ['glucose-6-phosphate', 'G6P', 'gluc-6-P']
+trehalose: ['trehalose', 'maltose', '(less common', 'but related disaccharide)']
+F16DP: ['fructose-1,6-bisphosphate', 'F16BP', 'FBP']
+pyruvate: ['pyruvate', 'pyruvic acid']
+acetate_i: ['acetate', 'acetic acid', 'ethyl acetate', '(less common)']
+ethanol_i: ['ethanol', 'ethyl alcohol']
+glycerol_e: ['glycerol', 'glycerin', '1,2,3-propanetriol']
+glucose_e: ['glucose', 'd-glucose', 'blood sugar']
+acetate_e: ['acetate', 'acetic acid']
+ethanol_e: ['ethanol', 'ethyl alcohol']
+trehalose_e: ['trehalose']
+
+Reason: All species are common metabolites or sugars involved in glycolysis, osmoadaptation, or fermentation pathways; the abbreviations and context support their identification as chemical entities.

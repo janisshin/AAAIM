@@ -1,0 +1,9 @@
+Model: BIOMD0000000214
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:39:59
+
+Synonyms:
+MF: ['frq mRNA', 'frequency mRNA', 'frequency transcript']
+MW: ['WC-1 mRNA', 'white collar-1 mRNA', 'white collar 1 transcript']
+
+Reason: MF corresponds to "Frq mRNA" as indicated in display names, and MW corresponds to "WC-1 mRNA". Both are mRNA transcripts of specific circadian clock genes in Neurospora crassa.

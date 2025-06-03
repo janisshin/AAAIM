@@ -1,0 +1,11 @@
+Model: BIOMD0000000525
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:01:05
+
+Synonyms:
+PrNES_mCherry: ['PrNES', 'nuclear export signal', 'NES']
+PrER_mGFP: ['PrER', 'endoplasmic reticulum', 'ER', 'GFP']
+PrNES: ['PrNES', 'nuclear export signal', 'NES']
+PrER: ['PrER', 'endoplasmic reticulum', 'ER']
+
+Reason: PrNES and PrER are likely promoter or localization tags; mCherry and mGFP are fluorescent proteins. The model involves protein localization or tagging, not chemical entities.

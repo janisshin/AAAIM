@@ -1,0 +1,16 @@
+Model: BIOMD0000000590
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:20:59
+
+Synonyms:
+cp: ['3-phosphocreatine', 'phosphocreatine', 'creatine phosphate']
+ca: ['calcium', 'calcium ion', 'Ca2+']
+dho: ['dihydroorotate', '6-hydroxyuracil', 'dihydroorotic acid']
+oro: ['orotate', '6-uracilcarboxylic acid', 'orotic acid']
+omp: ["orotidine 5'-monophosphate", 'orotidine monophosphate', 'OMP']
+ump: ["uridine 5'-monophosphate", 'uridine monophosphate', 'UMP']
+udp: ["uridine 5'-diphosphate", 'uridine diphosphate', 'UDP']
+utp: ["uridine 5'-triphosphate", 'uridine triphosphate', 'UTP']
+ctp: ["cytidine 5'-triphosphate", 'cytidine triphosphate', 'CTP']
+
+Reason: The model is described as a kinetic model for de novo pyrimidine biosynthesis in yeast, and the species names match compounds involved in this pathway. The names are based on common biochemical nomenclature and the context of the model. cp and ca are less directly related to the pyrimidine biosynthesis pathway, but cp is a common energy transfer molecule and ca is a common ion, so they are still assigned likely names based on their common usage in biochemistry.

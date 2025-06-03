@@ -1,0 +1,8 @@
+Model: BIOMD0000000569
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:02:10
+
+Synonyms:
+glu: ['glutamate', 'L-glutamic acid', 'glutamic acid']
+
+Reason: The species abbreviation "glu" commonly refers to glutamate, the ionized form of glutamic acid, a well-known neurotransmitter and amino acid.

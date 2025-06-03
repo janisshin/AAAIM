@@ -1,0 +1,14 @@
+Model: BIOMD0000000482
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:59:46
+
+Synonyms:
+PYRout: ['pyruvate', 'pyruvic acid', '2-oxopropanoic acid']
+GLCex: ['glucose', 'D-glucose', 'blood sugar']
+F16P: ['fructose 1,6-bisphosphate', 'fructose-1,6-diphosphate', 'Fru-1,6-P2']
+PYRin: ['pyruvate', 'pyruvic acid', '2-oxopropanoic acid']
+LAC: ['lactic acid', 'lactate', '2-hydroxypropanoic acid']
+OAA: ['oxaloacetic acid', 'oxaloacetate', '2-oxosuccinic acid']
+G1P: ['glucose-1-phosphate', 'D-glucose-1-phosphate', 'alpha-D-glucose-1-phosphate']
+
+Reason: The annotations are based on common biochemical abbreviations and names, where PYRout and PYRin are likely referring to pyruvate, F16P to fructose 1,6-bisphosphate, GLCex to glucose, LAC to lactic acid, OAA to oxaloacetic acid, and G1P to glucose-1-phosphate, considering the reactions provided and general knowledge of metabolic pathways.

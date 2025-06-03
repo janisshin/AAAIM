@@ -1,0 +1,8 @@
+Model: BIOMD0000000119
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:53:34
+
+Synonyms:
+Ca: ['calcium', 'calcium ion', 'Ca2+']
+
+Reason: The model is related to a paper about neuronal bursting and mentions [Ca2+] initial value, indicating that Ca refers to calcium, a common ion in biological systems.

@@ -1,0 +1,10 @@
+Model: BIOMD0000001005
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:24:18
+
+Synonyms:
+ACTH: ['adrenocorticotropic hormone', 'ACTH', 'adrenocorticotropin']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD', 'nicotinamide adenine dinucleotide']
+NAM: ['nicotinamide', 'NAM', 'niacinamide']
+
+Reason: ACTH is a peptide hormone; NAD and NAM are well-known cofactors and metabolites in redox and NAD salvage pathways.

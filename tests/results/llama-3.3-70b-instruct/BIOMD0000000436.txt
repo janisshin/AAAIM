@@ -1,0 +1,16 @@
+Model: BIOMD0000000436
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:21:28
+
+Synonyms:
+FA: ['fatty acid', 'free fatty acid', 'fatty acyl']
+PGH2: ['prostaglandin H2', 'prostaglandin H<sub>2</sub>', 'PGH<sub>2</sub>']
+PGF2a: ['prostaglandin F2α', 'prostaglandin F<sub>2α</sub>', 'dinoprost']
+PGD2: ['prostaglandin D2', 'prostaglandin D<sub>2</sub>', 'PGD<sub>2</sub>']
+PGJ2: ['prostaglandin J2', 'prostaglandin J<sub>2</sub>', 'Δ<sup>12</sup>-PGJ<sub>2</sub>']
+dPGJ2: ['15-deoxy-Δ<sup>12,14</sup>-prostaglandin J2', '15-deoxy-Δ<sup>12,14</sup>-PGJ<sub>2</sub>', '15d-PGJ2']
+AA: ['arachidonic acid', 'eicosatetraenoic acid', 'all-cis-5,8,11,14-eicosatetraenoic acid']
+DG: ['diacylglycerol', 'diglyceride', 'diacyl-glycerol']
+GPCho: ['glycerophosphocholine', 'sn-glycero-3-phosphocholine', '1-glycerophosphocholine']
+
+Reason: The model is an integrated model of eicosanoid metabolism and signaling, and the species names can be matched to known biochemical entities based on their roles in the reactions and the context of the model. FA is likely a fatty acid, which is a precursor to arachidonic acid (AA). PGH2, PGF2a, PGD2, PGJ2, and dPGJ2 are all prostaglandins, which are eicosanoids derived from arachidonic acid. DG is likely diacylglycerol, which is a precursor to phospholipids, and GPCho is likely glycerophosphocholine, which is a metabolite of phospholipid metabolism. The reactions and display names provided in the model support these annotations.

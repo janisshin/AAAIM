@@ -1,0 +1,35 @@
+Model: BIOMD0000000575
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:17:55
+
+Synonyms:
+Dopamine: ['dopamine', '3,4-dihydroxyphenethylamine', 'DA']
+OH: ['hydroxide', 'hydroxyl', 'OH-']
+OH_radical: ['hydroxyl radical', 'OH.', 'hydroxy radical']
+H2O2: ['hydrogen peroxide', 'H2O2', 'dihydrogen dioxide']
+DA_quinone: ['dopamine quinone', 'DAQ', 'dopamine-o-quinone']
+Fragments: ['UNK']
+L_Dopa: ['levodopa', 'L-3,4-dihydroxyphenylalanine', 'L-DOPA']
+DOPAL: ['3,4-dihydroxyphenylacetaldehyde', 'DOPAL', 'dopamine aldehyde']
+DOPAC: ['3,4-dihydroxyphenylacetic acid', 'DOPAC', 'homoprotocatechuic acid']
+GSH: ['glutathione', 'GSH', 'γ-glutamylcysteinylglycine']
+GSSG: ['glutathione disulfide', 'GSSG', 'oxidized glutathione']
+Fe2: ['iron(II)', 'ferrous ion', 'Fe2+']
+Fe3: ['iron(III)', 'ferric ion', 'Fe3+']
+DA_S_parkin: ['UNK']
+O2: ['oxygen', 'O2', 'dioxygen']
+DA_GSH: ['dopamine-glutathione conjugate', 'DA-GSH', 'N-(dehydrodopamine)-glutathione']
+Neuromelanin: ['neuromelanin', 'NM', 'melanin']
+Neuromelanin_ntox_Fe3: ['UNK']
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+L_Tyr: ['tyrosine', 'L-tyrosine', 'L-Tyr']
+CO2: ['carbon dioxide', 'CO2', 'dioxide']
+O2_0: ['oxygen', 'O2', 'dioxygen']
+NH3: ['ammonia', 'NH3', 'azane']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+', 'NAD']
+NADH: ['nicotinamide adenine dinucleotide (reduced)', 'NADH', 'NADH']
+H2O: ['water', 'H2O', 'dihydrogen monoxide']
+Cysteine: ['cysteine', 'L-cysteine', 'Cys']
+V_DA: ['vesicular dopamine', 'V-DA', 'dopamine']
+
+Reason: The species were annotated based on their display names and reaction equations. Fragments, DA_S_parkin, and Neuromelanin_ntox_Fe3 were annotated as "UNK" because their display names do not provide enough information to determine their standardized names. DA_GSH was annotated as "dopamine-glutathione conjugate" based on its reaction equation with GSH. Other species were annotated based on their common synonyms and chemical formulas.

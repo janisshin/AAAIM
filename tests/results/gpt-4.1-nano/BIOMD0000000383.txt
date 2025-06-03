@@ -1,0 +1,12 @@
+Model: BIOMD0000000383
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:59:29
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'RuBP', 'ribulose bisphosphate']
+PGA: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'PGA']
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'NADPH', 'reduced NADP']
+CO2: ['carbon dioxide', 'CO2', 'carbonic acid']
+O2: ['oxygen', 'O2', 'dioxygen']
+
+Reason: These are standard biochemical names for the molecules involved in the Calvin cycle, commonly used in metabolic databases and literature.

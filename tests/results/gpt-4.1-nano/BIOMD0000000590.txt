@@ -1,0 +1,16 @@
+Model: BIOMD0000000590
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:19:38
+
+Synonyms:
+cp: ['cytidine phosphate', "cytidine-5'-monophosphate", 'CMP']
+ca: ['calcium ion', 'calcium', 'Ca2+']
+dho: ['dihydroorotate', 'dihydroorotate', 'DHO']
+oro: ['orotate', 'orotic acid', 'orotate']
+ump: ['uridine monophosphate', 'UMP', "uridine-5'-monophosphate"]
+udp: ['uridine diphosphate', 'UDP', "uridine-5'-diphosphate"]
+utp: ['uridine triphosphate', 'UTP', "uridine-5'-triphosphate"]
+ctp: ['cytidine triphosphate', 'CTP', "cytidine-5'-triphosphate"]
+omp: ['orotate phosphoribosyltransferase', 'OMP', 'orotate phosphoribosyltransferase enzyme']
+
+Reason: All species are involved in pyrimidine biosynthesis; most are nucleotides or related intermediates, except 'ca' which is a calcium ion.

@@ -1,0 +1,52 @@
+Model: BIOMD0000000303
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:41
+
+Synonyms:
+PC: ['phosphatidylcholine', 'lecithin', 'PC']
+
+Reason: PC commonly refers to phosphatidylcholine, a major phospholipid in cell membranes and lipoproteins.
+
+PC_CRP: "phosphatidylcholine", "lecithin", "PC"
+Reason: PC is the same as above; combined with CRP (C-reactive protein), likely indicating a complex or association involving phosphatidylcholine.
+
+PC_CRP_C1: "phosphatidylcholine", "lecithin", "PC"
+Reason: Same as above; C1 likely denotes a specific form or complex involving phosphatidylcholine.
+
+GlcNac: "N-acetylglucosamine", "GlcNAc", "NAG"
+Reason: GlcNac is a standard abbreviation for N-acetylglucosamine, a monosaccharide involved in glycosylation.
+
+GlcNac_LF: "N-acetylglucosamine", "GlcNAc", "NAG"
+Reason: Same as above; LF indicates a specific form or context, but the core compound remains N-acetylglucosamine.
+
+GlcNac_LF_MASP: "N-acetylglucosamine", "GlcNAc", "NAG"
+Reason: Same core compound; MASP is a protease in the lectin pathway, but the species is still GlcNAc.
+
+PC_CRP_LF: "phosphatidylcholine", "lecithin", "PC"
+Reason: PC as above; combined with CRP and LF, indicating a complex involving phosphatidylcholine.
+
+PC_CRP_LF_MASP: "phosphatidylcholine", "lecithin", "PC"
+Reason: Same as above; the species is a complex involving PC, CRP, LF, and MASP.
+
+GlcNac_LF_CRP: "N-acetylglucosamine", "GlcNAc", "NAG"
+Reason: Core compound is GlcNAc; LF and CRP are proteins or complexes associated with the complement system.
+
+GlcNac_LF_CRP_C1: "N-acetylglucosamine", "GlcNAc", "NAG"
+Reason: Same as above; C1 indicates a specific complex or form.
+
+C4BP_PC_CRP: "C4b-binding protein", "C4BP", "complement regulator"
+Reason: C4BP is a known complement regulatory protein.
+
+C4BP_GlcNac_LF_CRP: "C4b-binding protein", "C4BP", "complement regulator"
+Reason: Same as above; the species involves C4BP and glycan or protein complexes.
+
+PC_CRP_LF_C1: "phosphatidylcholine", "lecithin", "PC"
+Reason: As above, a complex involving PC, CRP, LF, and C1.
+
+C4BP_PC_CRP_LF: "C4b-binding protein", "C4BP", "complement regulator"
+Reason: Same as above; complex involving C4BP, PC, CRP, LF.
+
+Species with no specific name: "UNK"
+Reason: The species are abbreviations of complexes or molecules, but without explicit biochemical identities, they are best classified as unknown.
+
+Reason: All species are abbreviations or complex labels related to complement system components; most are not standard chemical entities but protein complexes or glycans.

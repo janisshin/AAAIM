@@ -1,0 +1,10 @@
+Model: BIOMD0000000489
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:55:56
+
+Synonyms:
+species_4: ['lipopolysaccharide', 'LPS', 'endotoxin']
+species_5: ['lipopolysaccharide', 'LPS', 'endotoxin']
+species_52: ['lipopolysaccharide', 'LPS', 'endotoxin']
+
+Reason: All three species are labeled as LPS, which is a well-known bacterial endotoxin. The additional annotations indicate complex receptor interactions, but the core entity remains lipopolysaccharide.

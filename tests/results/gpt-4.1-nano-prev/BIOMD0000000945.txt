@@ -1,0 +1,12 @@
+Model: BIOMD0000000945
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:09:03
+
+Synonyms:
+L_m: ['lactate', 'lactic acid', 'pyruvate']
+H_m: ['hydrogen ion', 'proton', 'H+']
+L_c: ['lactate', 'lactic acid', 'pyruvate']
+H_c: ['hydrogen ion', 'proton', 'H+']
+L_n: ['lactate', 'lactic acid', 'pyruvate']
+
+Reason: The species are labeled with 'L' and 'H', which commonly denote lactate/lactic acid and hydrogen ions, respectively. The subscripts suggest different compartments (e.g., membrane 'm', cytosol 'c', nucleus 'n'), but the core chemical identities remain consistent across compartments.

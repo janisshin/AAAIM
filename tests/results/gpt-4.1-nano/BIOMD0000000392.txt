@@ -1,0 +1,32 @@
+Model: BIOMD0000000392
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:59:55
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'RuBP', 'ribulose bisphosphate']
+PGA: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'PGA']
+GAP: ['glyceraldehyde-3-phosphate', 'G3P', 'GAP']
+DHAP: ['dihydroxyacetone phosphate', 'DHAP', 'dihydroxyacetone phosphate']
+FBP: ['fructose-1,6-bisphosphate', 'F1,6BP', 'fructose bisphosphate']
+F6P: ['fructose-6-phosphate', 'F6P', 'fructose-6-phosphate']
+Ru5P: ['ribulose-5-phosphate', 'Ru5P', 'ribulose-5-phosphate']
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+Pi: ['inorganic phosphate', 'Pi', 'orthophosphate']
+CO2: ['carbon dioxide', 'CO2', 'carbonic acid']
+O2: ['oxygen', 'O2', 'dioxygen']
+NADPH: ['nicotinamide adenine dinucleotide phosphate (reduced)', 'NADPH', 'reduced NADP']
+PGAc: ['3-phosphoglycerate (cytosolic)', '3-phosphoglycerate', 'PGA']
+GAPc: ['glyceraldehyde-3-phosphate (cytosolic)', 'G3P', 'GAP']
+DHAPc: ['dihydroxyacetone phosphate (cytosolic)', 'DHAP', 'dihydroxyacetone phosphate']
+FBPc: ['fructose-1,6-bisphosphate (cytosolic)', 'F1,6BP', 'fructose bisphosphate']
+F6Pc: ['fructose-6-phosphate (cytosolic)', 'F6P', 'fructose-6-phosphate']
+UTPc: ['uridine triphosphate', 'UTP', 'uridine triphosphate']
+UDPc: ['uridine diphosphate', 'UDP', 'uridine diphosphate']
+ATPc: ['adenosine triphosphate (cytosolic)', 'ATP', 'adenosine triphosphate']
+ADPc: ['adenosine diphosphate (cytosolic)', 'ADP', 'adenosine diphosphate']
+Succ: ['succinate', 'succinate', 'butanedioate']
+Pic: ['picric acid', '2,4,6-trinitrophenol', 'pic']
+Hc: ['protons', 'H+', 'hydrogen ion']
+
+Reason: All species are standard biochemical metabolites or cofactors involved in photosynthesis and Calvin cycle pathways, with common synonyms available. "Pic" is less common but can refer to picric acid, a chemical compound, though context suggests it may be a placeholder or abbreviation.

@@ -1,0 +1,21 @@
+Model: BIOMD0000000213
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:39:58
+
+Synonyms:
+_5mTHF: ['5-methyltetrahydrofolate', '5-methyl THF', '5-methyl tetrahydrofolate']
+THF: ['tetrahydrofolate', 'THF', 'folate']
+DHF: ['dihydrofolate', 'DHF', 'dihydrofolic acid']
+_5_10_CH2THF: ['5,10-methylenetetrahydrofolate', '5,10-CH2-THF', 'methylene THF']
+_5_10_CHTHF: ['5,10-methenyltetrahydrofolate', '5,10-CH=THF', 'methenyl THF']
+_10fTHF: ['10-formyltetrahydrofolate', '10-formyl THF', 'formyl THF']
+Ser: ['serine', 'Ser', '2-amino-3-hydroxypropanoic acid']
+Gly: ['glycine', 'Gly', 'aminoacetic acid']
+dUMP: ['deoxyuridine monophosphate', 'dUMP', 'deoxyuridylate']
+GAR: ['glycinamide ribonucleotide', 'GAR', 'glycinamide ribonucleoside']
+AICAR: ['5-aminoimidazole-4-carboxamide ribonucleotide', 'AICAR', 'ZMP']
+HCOOH: ['formic acid', 'formic acid', 'methanoic acid']
+NADPH: ['NADPH', 'nicotinamide adenine dinucleotide phosphate, reduced form', 'reduced NADP']
+Hcy: ['homocysteine', 'Hcy', '2-amino-4-mercaptobutanoic acid']
+
+Reason: All are recognized chemical or biochemical names or common synonyms for the species involved in folate metabolism, suitable for ontology lookup.

@@ -1,0 +1,8 @@
+Model: BIOMD0000000966
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:42:46
+
+Synonyms:
+Zn_2: ['zinc(2+) ion', 'zinc ion', 'Zn2+']
+
+Reason: Zn_2 is annotated as 'Zn^2' in the display names, indicating it represents a zinc ion with a +2 charge, which is commonly referred to as zinc(2+) ion or zinc ion.

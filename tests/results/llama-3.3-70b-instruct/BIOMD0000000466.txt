@@ -1,0 +1,9 @@
+Model: BIOMD0000000466
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:28:00
+
+Synonyms:
+s102: ['Ras GTP', 'Ras protein, GTP-bound', 'GTP-bound Ras']
+s103: ['Ras GDP', 'Ras protein, GDP-bound', 'GDP-bound Ras']
+
+Reason: The display names 'Ras:GTP' and 'Ras:GDP' directly indicate the species are Ras protein bound to GTP or GDP, which are common representations in biochemical models.

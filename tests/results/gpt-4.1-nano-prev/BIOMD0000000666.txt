@@ -1,0 +1,8 @@
+Model: BIOMD0000000666
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:06:00
+
+Synonyms:
+Dabrafenib: ['Dabrafenib', 'GSK2118436', 'BRAF inhibitor']
+
+Reason: The species is Dabrafenib, a known BRAF inhibitor used in melanoma treatment, with common synonyms including its chemical name and GSK code.

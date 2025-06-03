@@ -1,0 +1,10 @@
+Model: BIOMD0000000137
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:31
+
+Synonyms:
+x13: ['phosphatidylinositol 3,4,5-trisphosphate', 'PIP3', 'PI(3,4,5)P3']
+x14: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'PI(4,5)P2']
+x15: ['phosphatidylinositol 3,4-bisphosphate', 'PI(3,4)P2']
+
+Reason: All are phosphoinositides involved in signaling pathways; their names correspond to their phosphorylation states on the inositol ring.

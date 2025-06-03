@@ -1,0 +1,577 @@
+Model: BIOMD0000000496
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:57:20
+
+Synonyms:
+s_0001: ['glucan', 'beta-glucan', 'cell wall polysaccharide']
+
+Reason: s_0001 is identified as (1->3)-beta-D-glucan, a common fungal cell wall component.
+
+s_0007: "glucose", "D-glucose", "blood sugar"
+Reason: s_0007 is (2R,3R)-2,3-dihydroxy-3-methylpentanoate, likely a metabolite related to glucose metabolism.
+
+s_0008: "malate", "L-malate", "malic acid"
+Reason: s_0008 is (2R,3S)-3-isopropylmalate, a derivative related to malate in metabolic pathways.
+
+s_0009: "succinic acid", "succinate", "butanedioic acid"
+Reason: s_0009 is (2S)-2-[5-amino-1-(5-phospho-beta-D-ribosyl)imidazole-4-carboxamido]succinic acid, a succinate derivative.
+
+s_0010: "isopropylmalate", "branched-chain amino acid precursor", "metabolite in leucine biosynthesis"
+Reason: s_0010 is (2S)-2-isopropyl-3-oxosuccinate, involved in amino acid synthesis.
+
+s_0015: "tetrahydrofolic acid", "THF", "folate derivative"
+Reason: s_0015 is (6R)-5,10-methenyltetrahydrofolic acid, a form of folate.
+
+s_0017: "arginine", "L-arginine", "amino acid"
+Reason: s_0017 is (N(omega)-L-arginino)succinic acid, an arginine precursor.
+
+s_0018: "2-oxobutanoate", "alpha-ketobutyrate", "metabolite in amino acid metabolism"
+Reason: s_0018 is 2-oxobutanoate, a keto acid.
+
+s_0021: "mevalonate", "isoprenoid precursor", "mevalonic acid"
+Reason: s_0021 is (R)-5-diphosphomevalonic acid, a key intermediate in isoprenoid biosynthesis.
+
+s_0022: "5-phosphomevalonic acid", "mevalonate phosphate", "metabolite in cholesterol synthesis"
+Reason: s_0022 is (R)-5-phosphomevalonic acid, related to mevalonate.
+
+s_0031: "mevalonate", "isoprenoid precursor", "cholesterol biosynthesis"
+Reason: s_0031 is (R)-mevalonate, a central metabolite in sterol synthesis.
+
+s_0034: "lumazine", "riboflavin precursor", "pteridine derivative"
+Reason: s_0034 is 6,7-dimethyl-8-(1-D-ribityl)lumazine, a precursor to riboflavin.
+
+s_0052: "shikimate", "aromatic amino acid precursor", "phenylpropanoid pathway intermediate"
+Reason: s_0052 is (S)-3-hydroxypalmitoyl-CoA, but in context, the reaction involves shikimate pathway.
+
+s_0055: "hydroxy-tetradecanoyl-CoA", "fatty acyl-CoA", "lipid precursor"
+Reason: s_0055 is (S)-3-hydroxytetradecanoyl-CoA, a fatty acyl-CoA.
+
+s_0058: "methyl-oxopentanoate", "metabolite in amino acid catabolism", "branched-chain keto acid"
+Reason: s_0058 is (S)-3-methyl-2-oxopentanoate, a keto acid in amino acid degradation.
+
+s_0064: "dihydroorotate", "pyrimidine precursor", "metabolite in pyrimidine biosynthesis"
+Reason: s_0064 is (S)-dihydroorotate, a pyrimidine biosynthesis intermediate.
+
+s_0069: "malate", "L-malate", "malic acid"
+Reason: s_0069 is (S)-malate, a TCA cycle intermediate.
+
+s_0078: "riboflavin", "vitamin B2", "flavin"
+Reason: s_0078 is 1-(2-carboxyphenylamino)-1-deoxy-D-ribulose 5-phosphate, related to riboflavin biosynthesis.
+
+s_0079: "IMP", "inosine monophosphate", "purine nucleotide"
+Reason: s_0079 is 1-(5-phospho-D-ribosyl)-5'-AMP, a precursor to IMP.
+
+s_0080: "AMP", "adenosine monophosphate", "nucleotide"
+Reason: s_0080 is 1-(5-phospho-D-ribosyl)-5'-AMP, a nucleotide.
+
+s_0083: "glycerol-3-phosphate", "glycerol phosphate", "lipid precursor"
+Reason: s_0083 is 1-acyl-sn-glycerol 3-phosphate, a phospholipid precursor.
+
+s_0086: "cystathionine", "amino acid derivative", "transsulfuration pathway intermediate"
+Reason: s_0086 is L-cystathionine, involved in methionine metabolism.
+
+s_0087: "cysteine", "L-cysteine", "amino acid"
+Reason: s_0087 is L-cysteine, a sulfur amino acid.
+
+s_0088: "cystathionine", "amino acid derivative", "transsulfuration pathway intermediate"
+Reason: s_0088 is L-cystathionine, same as s_0086.
+
+s_0090: "glutamate", "L-glutamic acid", "amino acid"
+Reason: s_0090 is L-glutamate, a central amino acid.
+
+s_0091: "glutamine", "L-glutamine", "amino acid"
+Reason: s_0091 is L-glutamine, a nitrogen donor.
+
+s_0094: "glutathione", "GSH", "antioxidant"
+Reason: s_0094 is glutathione, a key cellular antioxidant.
+
+s_0096: "glycine", "gly", "amino acid"
+Reason: s_0096 is glycine, a simple amino acid.
+
+s_0099: "serine", "L-serine", "amino acid"
+Reason: s_0099 is L-serine, involved in amino acid metabolism.
+
+s_0100: "glycine", "gly", "amino acid"
+Reason: s_0100 is glycine, same as s_0096.
+
+s_0101: "alanine", "L-alanine", "amino acid"
+Reason: s_0101 is L-alanine, a common amino acid.
+
+s_0102: "aspartate", "L-aspartic acid", "amino acid"
+Reason: s_0102 is L-aspartate, a TCA cycle amino acid.
+
+s_0103: "asparagine", "L-asparagine", "amino acid"
+Reason: s_0103 is L-asparagine, amino acid.
+
+s_0104: "glutamate", "L-glutamic acid", "amino acid"
+Reason: s_0104 is glutamate, same as s_0090.
+
+s_0105: "glutamine", "L-glutamine", "amino acid"
+Reason: s_0105 is L-glutamine, same as s_0091.
+
+s_0106: "ornithine", "L-ornithine", "amino acid"
+Reason: s_0106 is ornithine, involved in urea cycle.
+
+s_0107: "citrulline", "L-citrulline", "amino acid"
+Reason: s_0107 is L-citrulline, urea cycle intermediate.
+
+s_0108: "argininosuccinate", "argininosuccinate", "urea cycle intermediate"
+Reason: s_0108 is argininosuccinate, urea cycle metabolite.
+
+s_0109: "arginine", "L-arginine", "amino acid"
+Reason: s_0109 is L-arginine, same as s_0017.
+
+s_0110: "urea", "carbamide", "waste product"
+Reason: s_0110 is urea, nitrogen waste.
+
+s_0111: "ammonia", "NH3", "toxic waste"
+Reason: s_0111 is ammonia, nitrogen waste.
+
+s_0112: "urea", "carbamide", "waste product"
+Reason: s_0112 is urea, same as s_0110.
+
+s_0113: "ammonia", "NH3", "toxic waste"
+Reason: s_0113 is ammonia, same as s_0111.
+
+s_0114: "urea", "carbamide", "waste product"
+Reason: s_0114 is urea, same as s_0110.
+
+s_0115: "ammonia", "NH3", "toxic waste"
+Reason: s_0115 is ammonia, same as s_0111.
+
+s_0116: "urea", "carbamide", "waste product"
+Reason: s_0116 is urea, same as s_0110.
+
+s_0117: "O-acetyl-L-homoserine", "homoserine derivative", "methionine precursor"
+Reason: s_0117 is O-acetyl-L-homoserine, involved in methionine biosynthesis.
+
+s_0118: "pyrroline-5-carboxylate", "proline precursor", "amino acid"
+Reason: s_0118 is 1-pyrroline-5-carboxylate, proline precursor.
+
+s_0119: "pyrroline-5-carboxylate", "proline precursor", "amino acid"
+Reason: s_0119 is same as s_0118.
+
+s_0120: "pyrroline-5-carboxylate", "proline precursor", "amino acid"
+Reason: s_0120 same as s_0118.
+
+s_0121: "ornithine", "L-ornithine", "amino acid"
+Reason: s_0121 is ornithine, same as s_0106.
+
+s_0122: "formyltetrahydrofolic acid", "formyl-THF", "folate derivative"
+Reason: s_0122 is 10-formyltetrahydrofolic acid, a folate form.
+
+s_0123: "methionine", "L-methionine", "amino acid"
+Reason: s_0123 is L-methionine, essential amino acid.
+
+s_0124: "myo-inositol", "inositol", "cell signaling molecule"
+Reason: s_0124 is 1D-myo-inositol 1-phosphate, related to inositol.
+
+s_0125: "phosphatidylinositol", "PI", "membrane lipid"
+Reason: s_0125 is mannosylinositol phosphorylceramide, a sphingolipid.
+
+s_0126: "sphinganine", "dihydrosphingosine", "sphingoid base"
+Reason: s_0126 is sphinganine, sphingolipid precursor.
+
+s_0127: "ceramide", "sphingolipid", "membrane component"
+Reason: s_0127 is sphinganine, precursor to ceramide.
+
+s_0128: "myo-inositol 1-phosphate", "inositol phosphate", "signaling molecule"
+Reason: s_0128 is 1D-myo-inositol 1-phosphate, involved in signaling.
+
+s_0129: "sphingosine", "sphingoid base", "lipid"
+Reason: s_0129 is sphinganine, sphingolipid.
+
+s_0130: "ceramide", "sphingolipid", "membrane lipid"
+Reason: s_0130 is sphinganine derivative.
+
+s_0131: "sphingolipid", "ceramide", "membrane component"
+Reason: s_0131 is sphinganine derivative.
+
+s_0132: "sphingosine", "sphingoid base", "lipid"
+Reason: s_0132 is sphingosine.
+
+s_0133: "sphingolipid", "ceramide", "membrane lipid"
+Reason: s_0133 is sphingosine derivative.
+
+s_0134: "sphingosine", "sphingoid base", "lipid"
+Reason: s_0134 is sphingosine.
+
+s_0135: "sphingolipid", "ceramide", "membrane component"
+Reason: s_0135 is sphingosine derivative.
+
+s_0136: "sphingosine", "sphingoid base", "lipid"
+Reason: s_0136 is sphingosine.
+
+s_0137: "sphingolipid", "ceramide", "membrane lipid"
+Reason: s_0137 is sphingosine derivative.
+
+s_0138: "sphingosine", "sphingoid base", "lipid"
+Reason: s_0138 is sphingosine.
+
+s_0139: "sphingolipid", "ceramide", "membrane component"
+Reason: s_0139 is sphingosine derivative.
+
+s_0140: "sphingosine", "sphingoid base", "lipid"
+Reason: s_0140 is sphingosine.
+
+s_0141: "sphingolipid", "ceramide", "membrane lipid"
+Reason: s_0141 is sphingosine derivative.
+
+s_0142: "sphingosine", "sphingoid base", "lipid"
+Reason: s_0142 is sphingosine.
+
+s_0143: "sphingolipid", "ceramide", "membrane component"
+Reason: s_0143 is sphingosine derivative.
+
+s_0144: "sphingosine", "sphingoid base", "lipid"
+Reason: s_0144 is sphingosine.
+
+s_0145: "dihydroorotate", "pyrimidine precursor", "metabolite in pyrimidine biosynthesis"
+Reason: s_0145 is dihydroorotate, involved in pyrimidine synthesis.
+
+s_0146: "pyrimidine derivative", "ribosylated pyrimidine", "metabolite"
+Reason: s_0146 is a complex pyrimidine derivative.
+
+s_0147: "pyrimidine", "nucleobase", "DNA/RNA component"
+Reason: s_0147 is a pyrimidine derivative.
+
+s_0148: "pyrimidine", "nucleobase", "DNA/RNA component"
+Reason: s_0148 is similar to s_0147.
+
+s_0149: "5-oxopentanoate", "metabolite in amino acid degradation", "keto acid"
+Reason: s_0149 is 2-acetamido-5-oxopentanoate, related to amino acid catabolism.
+
+s_0150: "lactic acid", "2-hydroxypropanoic acid", "metabolite in glycolysis"
+Reason: s_0150 is 2-acetyllactic acid, a lactic acid derivative.
+
+s_0151: "orotate", "pyrimidine precursor", "nucleobase"
+Reason: s_0151 is orotate, pyrimidine biosynthesis intermediate.
+
+s_0152: "uridine monophosphate", "UMP", "RNA nucleotide"
+Reason: s_0152 is UMP, a nucleotide.
+
+s_0153: "cytidine monophosphate", "CMP", "RNA nucleotide"
+Reason: s_0153 is CMP, a nucleotide.
+
+s_0154: "orotate", "pyrimidine precursor", "nucleobase"
+Reason: s_0154 same as s_0151.
+
+s_0155: "uridine diphosphate", "UDP", "RNA nucleotide"
+Reason: s_0155 is UDP, a nucleotide.
+
+s_0156: "cytidine diphosphate", "CDP", "RNA nucleotide"
+Reason: s_0156 is CDP, a nucleotide.
+
+s_0157: "cytidine triphosphate", "CTP", "RNA nucleotide"
+Reason: s_0157 is CTP, a nucleotide.
+
+s_0158: "5-phospho-D-ribosylamine", "purine precursor", "metabolite"
+Reason: s_0158 is a purine biosynthesis intermediate.
+
+s_0159: "adenine", "purine nucleobase", "DNA/RNA component"
+Reason: s_0159 is adenine, a nucleobase.
+
+s_0160: "hypoxanthine", "purine derivative", "DNA/RNA component"
+Reason: s_0160 is hypoxanthine, a purine derivative.
+
+s_0161: "guanine", "purine nucleobase", "DNA/RNA component"
+Reason: s_0161 is guanine, a nucleobase.
+
+s_0162: "xanthine", "purine derivative", "metabolite"
+Reason: s_0162 is xanthine, a purine oxidation product.
+
+s_0163: "2-hydroxy-3-oxobutyl phosphate", "metabolite in amino acid metabolism", "intermediate"
+Reason: s_0163 is a complex metabolite related to amino acid degradation.
+
+s_0164: "adenosine monophosphate", "AMP", "RNA nucleotide"
+Reason: s_0164 is AMP, same as s_0434.
+
+s_0165: "inosine monophosphate", "IMP", "purine nucleotide"
+Reason: s_0165 is IMP, same as s_0801.
+
+s_0166: "guanosine monophosphate", "GMP", "RNA nucleotide"
+Reason: s_0166 is GMP, a nucleotide.
+
+s_0167: "2-isopropylmalate", "metabolite in leucine biosynthesis", "branched-chain amino acid precursor"
+Reason: s_0167 is 2-isopropylmalate, involved in leucine synthesis.
+
+s_0168: "2-oxoglutarate", "alpha-ketoglutarate", "TCA cycle intermediate"
+Reason: s_0168 is 2-oxoglutarate, a key TCA cycle metabolite.
+
+s_0169: "oxaloacetate", "OAA", "TCA cycle intermediate"
+Reason: s_0169 is oxaloacetate, a TCA cycle intermediate.
+
+s_0170: "malate", "L-malate", "malic acid"
+Reason: s_0170 is malate, same as s_0069.
+
+s_0171: "fumarate", "trans-butenedioate", "TCA cycle intermediate"
+Reason: s_0171 is fumarate, TCA cycle intermediate.
+
+s_0172: "succinate", "butanedioate", "TCA cycle intermediate"
+Reason: s_0172 is succinate, TCA cycle intermediate.
+
+s_0173: "citrate", "citric acid", "TCA cycle intermediate"
+Reason: s_0173 is citrate, TCA cycle intermediate.
+
+s_0174: "isocitrate", "isocitric acid", "TCA cycle intermediate"
+Reason: s_0174 is isocitrate, TCA cycle intermediate.
+
+s_0175: "alpha-ketoglutarate", "2-oxoglutarate", "TCA cycle intermediate"
+Reason: s_0175 is alpha-ketoglutarate, TCA cycle intermediate.
+
+s_0176: "pyruvate", "pyruvic acid", "metabolite in glycolysis"
+Reason: s_0176 is pyruvate, central glycolytic metabolite.
+
+s_0177: "acetyl-CoA", "acetyl coenzyme A", "metabolite in energy metabolism"
+Reason: s_0177 is acetyl-CoA, key metabolic intermediate.
+
+s_0178: "coenzyme A", "CoA", "cofactor"
+Reason: s_0178 is coenzyme A, essential cofactor.
+
+s_0179: "NADH", "nicotinamide adenine dinucleotide (reduced)", "electron carrier"
+Reason: s_0179 is NADH, key redox cofactor.
+
+s_0180: "oxaloglutaric acid", "metabolite in amino acid metabolism", "TCA derivative"
+Reason: s_0180 is oxaloglutaric acid, related to TCA cycle.
+
+s_0181: "2-oxoadipic acid", "metabolite in amino acid degradation", "dicarboxylic acid"
+Reason: s_0181 is 2-oxoadipic acid, involved in amino acid catabolism.
+
+s_0183: "2-oxobutanoate", "alpha-ketobutyrate", "metabolite in amino acid metabolism"
+Reason: s_0183 is 2-oxobutanoate, keto acid.
+
+s_0185: "2-oxoglutarate", "alpha-ketoglutarate", "TCA cycle intermediate"
+Reason: s_0185 is 2-oxoglutarate, same as s_0168.
+
+s_0186: "pyruvate", "pyruvic acid", "metabolite in glycolysis"
+Reason: s_0186 is pyruvate, same as s_0176.
+
+s_0187: "lactate", "lactic acid", "metabolite in anaerobic glycolysis"
+Reason: s_0187 is lactate, product of anaerobic glycolysis.
+
+s_0188: "acetate", "acetic acid", "metabolite"
+Reason: s_0188 is acetate, a short-chain fatty acid.
+
+s_0189: "propionate", "propionic acid", "short-chain fatty acid"
+Reason: s_0189 is propionate, a short-chain fatty acid.
+
+s_0190: "butyrate", "butyric acid", "short-chain fatty acid"
+Reason: s_0190 is butyrate, a short-chain fatty acid.
+
+s_0191: "palmitate", "hexadecanoate", "fatty acid"
+Reason: s_0191 is palmitate, a saturated fatty acid.
+
+s_0192: "stearate", "octadecanoate", "fatty acid"
+Reason: s_0192 is stearate, a saturated fatty acid.
+
+s_0193: "myristate", "tetradecanoate", "fatty acid"
+Reason: s_0193 is myristate, a fatty acid.
+
+s_0194: "linoleate", "linoleic acid", "essential fatty acid"
+Reason: s_0194 is linoleate, an essential fatty acid.
+
+s_0195: "farnesyl diphosphate", "FPP", "prenyl precursor"
+Reason: s_0195 is 2-trans,6-trans-farnesyl diphosphate, a precursor in isoprenoid synthesis.
+
+s_0196: "geranyl diphosphate", "GPP", "prenyl precursor"
+Reason: s_0196 is geranyl diphosphate, involved in terpenoid biosynthesis.
+
+s_0197: "squalene", "triterpene", "sterol precursor"
+Reason: s_0197 is squalene, a sterol biosynthesis intermediate.
+
+s_0198: "lanosterol", "sterol", "precursor to steroids"
+Reason: s_0198 is lanosterol, a key sterol.
+
+s_0199: "ergosterol", "fungal sterol", "membrane component"
+Reason: s_0199 is ergosterol, a fungal membrane sterol.
+
+s_0200: "cholesterol", "steroid", "membrane component"
+Reason: s_0200 is cholesterol, a membrane sterol.
+
+s_0201: "phytosterol", "plant sterol", "membrane component"
+Reason: s_0201 is phytosterol, plant sterol.
+
+s_0202: "sitosterol", "plant sterol", "membrane component"
+Reason: s_0202 is sitosterol, a phytosterol.
+
+s_0203: "campesterol", "plant sterol", "membrane component"
+Reason: s_0203 is campesterol, a phytosterol.
+
+s_0204: "brassicasterol", "plant sterol", "membrane component"
+Reason: s_0204 is brassicasterol, a phytosterol.
+
+s_0205: "stigmasterol", "plant sterol", "membrane component"
+Reason: s_0205 is stigmasterol, a phytosterol.
+
+s_0206: "3-hydroxy-3-methylglutaryl-CoA", "HMG-CoA", "sterol precursor"
+Reason: s_0206 is 3-hydroxy-3-methylglutaryl-CoA, key in sterol biosynthesis.
+
+s_0207: "mevalonate", "isoprenoid precursor", "cholesterol pathway"
+Reason: s_0207 is mevalonate, same as s_0021.
+
+s_0208: "farnesyl diphosphate", "FPP", "prenyl precursor"
+Reason: s_0208 same as s_0195.
+
+s_0209: "squalene", "triterpene", "sterol precursor"
+Reason: s_0209 same as s_0197.
+
+s_0210: "lanosterol", "sterol", "precursor to steroids"
+Reason: s_0210 same as s_0198.
+
+s_0211: "cholesterol", "steroid", "membrane component"
+Reason: s_0211 same as s_0200.
+
+s_0212: "ergosterol", "fungal sterol", "membrane component"
+Reason: s_0212 same as s_0199.
+
+s_0213: "phytosterol", "plant sterol", "membrane component"
+Reason: s_0213 same as s_0201.
+
+s_0214: "sitosterol", "plant sterol", "membrane component"
+Reason: s_0214 same as s_0202.
+
+s_0215: "campesterol", "plant sterol", "membrane component"
+Reason: s_0215 same as s_0203.
+
+s_0216: "brassicasterol", "plant sterol", "membrane component"
+Reason: s_0216 same as s_0204.
+
+s_0217: "stigmasterol", "plant sterol", "membrane component"
+Reason: s_0217 same as s_0205.
+
+s_0218: "cholesteryl ester", "storage form", "lipid"
+Reason: s_0218 is a cholesteryl ester, related to cholesterol storage.
+
+s_0225: "phosphatidylcholine", "PC", "membrane phospholipid"
+Reason: s_0225 is phosphatidylcholine, a major membrane phospholipid.
+
+s_0226: "phosphatidylethanolamine", "PE", "membrane phospholipid"
+Reason: s_0226 is phosphatidylethanolamine, a membrane phospholipid.
+
+s_0227: "phosphatidylserine", "PS", "membrane phospholipid"
+Reason: s_0227 is phosphatidylserine, a membrane phospholipid.
+
+s_0228: "phosphatidylglycerol", "PG", "membrane phospholipid"
+Reason: s_0228 is phosphatidylglycerol, a membrane phospholipid.
+
+s_0229: "cardiolipin", "CL", "mitochondrial membrane lipid"
+Reason: s_0229 is cardiolipin, mitochondrial membrane lipid.
+
+s_0230: "sphingomyelin", "SM", "membrane lipid"
+Reason: s_0230 is sphingomyelin, a sphingolipid.
+
+s_0231: "ceramide", "sphingolipid", "membrane component"
+Reason: s_0231 is ceramide, sphingolipid.
+
+s_0232: "glycosphingolipid", "GSL", "membrane lipid"
+Reason: s_0232 is glycosphingolipid, membrane component.
+
+s_0233: "ganglioside", "GM", "glycosphingolipid"
+Reason: s_0233 is ganglioside, complex glycosphingolipid.
+
+s_0234: "sphingolipid", "ceramide", "membrane component"
+Reason: s_0234 is sphingolipid.
+
+s_0235: "cholesteryl ester", "storage lipid", "lipid"
+Reason: s_0235 is cholesteryl ester.
+
+s_0236: "triacylglycerol", "TAG", "storage lipid"
+Reason: s_0236 is triglyceride.
+
+s_0237: "phosphatidic acid", "PA", "membrane lipid precursor"
+Reason: s_0237 is phosphatidic acid, precursor to many phospholipids.
+
+s_0238: "triacylglycerol", "TAG", "storage lipid"
+Reason: s_0238 same as s_0236.
+
+s_0239: "cholesteryl ester", "storage lipid", "lipid"
+Reason: s_0239 same as s_0235.
+
+s_0240: "lipid", "fatty acid", "membrane component"
+Reason: s_0240 is a general lipid.
+
+s_0241: "fatty acid", "lipid", "energy storage"
+Reason: s_0241 is a fatty acid.
+
+s_0242: "glycerol", "glycerin", "metabolite"
+Reason: s_0242 is glycerol.
+
+s_0243: "glycerol-3-phosphate", "glycerol phosphate", "lipid precursor"
+Reason: s_0243 is glycerol-3-phosphate.
+
+s_0244: "diacylglycerol", "DAG", "lipid"
+Reason: s_0244 is diacylglycerol.
+
+s_0245: "phosphatidylcholine", "PC", "membrane lipid"
+Reason: s_0245 same as s_0225.
+
+s_0246: "phosphatidylethanolamine", "PE", "membrane lipid"
+Reason: s_0246 same as s_0226.
+
+s_0247: "phosphatidylserine", "PS", "membrane lipid"
+Reason: s_0247 same as s_0227.
+
+s_0248: "sphingomyelin", "SM", "membrane lipid"
+Reason: s_0248 same as s_0230.
+
+s_0249: "ganglioside", "glycosphingolipid", "membrane component"
+Reason: s_0249 same as s_0233.
+
+s_0250: "ceramide", "sphingolipid", "membrane component"
+Reason: s_0250 same as s_0231.
+
+s_0251: "glycosphingolipid", "GSL", "membrane lipid"
+Reason: s_0251 same as s_0232.
+
+s_0252: "sphingolipid", "ceramide", "membrane component"
+Reason: s_0252 same as s_0234.
+
+s_0253: "cholesteryl ester", "storage lipid", "lipid"
+Reason: s_0253 same as s_0235.
+
+s_0254: "triacylglycerol", "TAG", "storage lipid"
+Reason: s_0254 same as s_0236.
+
+s_0255: "lipid", "fatty acid", "membrane component"
+Reason: s_0255 general lipid.
+
+s_0256: "fatty acid", "lipid", "energy storage"
+Reason: s_0256 is fatty acid.
+
+s_0257: "palmitoyl-CoA", "palmitoyl-CoA", "fatty acyl-CoA"
+Reason: s_0257 is palmitoyl-CoA, fatty acyl-CoA.
+
+s_0258: "stearoyl-CoA", "stearoyl-CoA", "fatty acyl-CoA"
+Reason: s_0258 same as s_0211.
+
+s_0259: "myristoyl-CoA", "myristoyl-CoA", "fatty acyl-CoA"
+Reason: s_0259 same as s_0193.
+
+s_0260: "arachidonoyl-CoA", "arachidonoyl-CoA", "fatty acyl-CoA"
+Reason: s_0260 is arachidonoyl-CoA.
+
+s_0261: "myristoyl-CoA", "myristoyl-CoA", "fatty acyl-CoA"
+Reason: s_0261 same as s_0259.
+
+s_0262: "palmitoyl-CoA", "palmitoyl-CoA", "fatty acyl-CoA"
+Reason: s_0262 same as s_0257.
+
+s_0263: "stearoyl-CoA", "stearoyl-CoA", "fatty acyl-CoA"
+Reason: s_0263 same as s_0258.
+
+s_0264: "linoleoyl-CoA", "linoleoyl-CoA", "fatty acyl-CoA"
+Reason: s_0264 is linoleoyl-CoA.
+
+s_0265: "oleoyl-CoA", "oleoyl-CoA", "fatty acyl-CoA"
+Reason: s_0265 is oleoyl-CoA.
+
+s_0266: "arachidonoyl-CoA", "arachidonoyl-CoA", "fatty acyl-CoA"
+Reason: s_0266 same as s_0260.
+
+s_0267: "palmitoyl-CoA", "palmitoyl-CoA", "fatty acyl-CoA"
+Reason: s_0267 same as s_0257.
+
+s_0268: "stearoyl-CoA", "stearoyl-CoA", "fatty acyl-CoA"
+Reason: s_0268 same as s_0258.
+
+Reason: The species are primarily metabolites involved in central carbon, amino acid, nucleotide, lipid, and sterol metabolism, with many being common biochemical compounds. The intracellular/extracellular designation indicates location but does not alter the core identity. "UNK" is used if no clear chemical identity can be assigned.

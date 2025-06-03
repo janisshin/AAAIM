@@ -1,0 +1,14 @@
+Model: BIOMD0000000049
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:35:02
+
+Synonyms:
+Rap1_GDP: ['Rap1', 'Ras-related protein Rap-1', 'Rap1 GTPase']
+B_Raf_Rap1_GTP: ['B-Raf', 'Proto-oncogene B-Raf', 'BRAF kinase']
+Ras_GDP: ['Ras', 'Ras protein', 'GTPase HRas']
+B_Raf_Rap1_GTP_MEK: ['B-Raf', 'BRAF kinase', 'Proto-oncogene B-Raf']
+B_Raf_Rap1_GTP_pMEK: ['pMEK', 'MAPK/ERK kinase', 'phosphorylated MEK']
+B_Raf_Rap1_GTP_MEK_ERK: ['ERK', 'Extracellular signal-regulated kinase', 'phosphorylated ERK']
+B_Raf_Rap1_GTP_pMEK_ERK: ['ppERK', 'phosphorylated ERK', 'active ERK']
+
+Reason: These species are components or active forms of well-characterized signaling proteins in the MAPK pathway, with common synonyms used in literature. "Rap1" and "Ras" are small GTPases; "B-Raf" and "c-Raf" are kinase proteins; "MEK" and "ERK" are downstream kinases, with phosphorylated forms indicated as pMEK, pERK, or ppERK.

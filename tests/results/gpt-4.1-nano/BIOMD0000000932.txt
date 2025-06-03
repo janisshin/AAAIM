@@ -1,0 +1,10 @@
+Model: BIOMD0000000932
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:23:53
+
+Synonyms:
+Gp: ['glutamate', 'L-glutamate', 'glutamic acid']
+Gi: ['glutamate', 'L-glutamate', 'glutamic acid']
+A: ['ammonia', 'NH3', 'ammonia (gas)']
+
+Reason: Gp and Gi are involved in glutamate uptake and diffusion, indicating they are related to glutamate. A is involved in ammonia diffusion and consumption, indicating it is ammonia.

@@ -1,0 +1,18 @@
+Model: BIOMD0000000495
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:00:45
+
+Synonyms:
+mw73259e20_240e_4f3a_b2e0_9ca248658898: ['L-serine ethanolaminephosphate', 'phosphoserine', 'L-serine']
+mw15abaa48_d7d0_4845_ae04_c573d289d495: ['L-serine', 'serine', 'L-ser']
+mwfcfaf604_14d4_47a6_b021_226d1fb5497c: ['phosphatidylserine', '1,2-diacyl-sn-glycero-3-phospho-L-serine', 'PS']
+mw8796c919_9251_4970_8f87_0bca9ecfeb5c: ['ethanolamine', '2-aminoethanol', 'monoethanolamine']
+mw849ed3fd_87d9_44d2_9f3e_4d631b900d41: ['phosphatidylethanolamine', '1,2-diacyl-sn-glycero-3-phosphoethanolamine', 'PEtn']
+mwcb834e43_dc57_45ae_9452_f4c10955caf1: ['phosphocholine', 'O-phosphocholine', 'PCho']
+mwf166ad55_4ff0_49fb_95d2_b657ad7653d5: ['phosphatidylcholine', '1,2-diacyl-sn-glycero-3-phosphocholine', 'PC']
+mwee54b5b4_b8c0_41df_8dda_5b160c5e10a5: ['CDP-choline', "cytidine 5'-diphosphocholine", 'Cytidine diphosphate choline']
+mw919f8a86_e702_4b24_9cd7_adad694fcf9b: ['ethanolamine phosphate', 'O-phosphoethanolamine', 'PEtn']
+mw812f63db_4cb0_40ad_b92b_9874be969dfe: ['choline', 'trimethylammonium', 'Chol']
+mw08818dfe_fb12_45cc_8c1d_d965f142d0ce: ['ethanolamine phosphate', 'O-phosphoethanolamine', 'EtnE']
+
+Reason: The model describes phospholipid synthesis in Plasmodium knowlesi, and the display names and reactions suggest the involvement of various phospholipid species. The standardized names are based on the display names and the biochemical context of the model. For example, "SerE" is likely "L-serine ethanolaminephosphate" or "phosphoserine", while "PC" is likely "phosphatidylcholine". Similarly, "PEtn" is likely "phosphatidylethanolamine", and "PCho" is likely "phosphocholine". The reactions and display names also suggest the involvement of ethanolamine, choline, and other phospholipid species.

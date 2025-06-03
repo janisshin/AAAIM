@@ -1,0 +1,17 @@
+Model: BIOMD0000000408
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:45:40
+
+Synonyms:
+ADPi: ['ADP', 'adenosine diphosphate', 'ADP']
+ATPi: ['ATP', 'adenosine triphosphate', 'ATP']
+Cri: ['creatine', 'creatine']
+PCri: ['phosphocreatine', 'creatine phosphate', 'PCr']
+PCr: ['phosphocreatine', 'creatine phosphate', 'PCr']
+ADP: ['ADP', 'adenosine diphosphate', 'ADP']
+ATP: ['ATP', 'adenosine triphosphate', 'ATP']
+Cr: ['creatine', 'creatine']
+P_ii: ['inorganic phosphate', 'Pi', 'orthophosphate']
+P_i: ['inorganic phosphate', 'Pi', 'orthophosphate']
+
+Reason: All species are related to energy transfer molecules or phosphate groups involved in cellular energy metabolism; "P_i" and "P_ii" both refer to inorganic phosphate, with "Pi" being the common standard.

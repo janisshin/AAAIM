@@ -1,0 +1,29 @@
+Model: BIOMD0000000090
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:36:58
+
+Synonyms:
+sul_ex: ['sulfate', 'sulfate ion', 'sulfate salt']
+eth_ex: ['ethanol', 'ethyl alcohol', 'ethanolamine']
+oxy_ex: ['oxygen', 'oxygen molecule', 'dioxygen']
+oxy: ['oxygen', 'dioxygen', 'O2']
+H2O: ['water', 'dihydrogen monoxide', 'H2O']
+A3c: ['ATP', 'adenosine triphosphate', 'triphosphate nucleotide']
+aps: ['adenosine phosphosulfate', 'PAPS', "3'-phosphoadenosine-5'-phosphosulfate"]
+PPi: ['pyrophosphate', 'diphosphate', 'PPi']
+pap: ["adenosine 3',5'-bisphosphate", 'PAP', "3'-phosphoadenosine-5'-phosphate"]
+sul: ['sulfate', 'sulfate ion', 'sulfate salt']
+eth: ['ethanol', 'ethyl alcohol', 'ethanolamine']
+A2c: ['ADP', 'adenosine diphosphate', 'diphosphate nucleotide']
+hyd: ['hydrogen sulfide', 'H2S', 'hydrosulfide']
+cys: ['cysteine', 'cys', 'amino acid cysteine']
+N2: ['NADH', 'nicotinamide adenine dinucleotide (reduced)', 'reduced NAD']
+N1: ['NAD', 'nicotinamide adenine dinucleotide', 'oxidized NAD']
+aco: ['acetyl-CoA', 'acetyl coenzyme A', 'acetyl-CoA']
+oah: ['oxaloacetate', 'OAA', 'oxaloacetate']
+A2m: ['ADP', 'adenosine diphosphate', 'diphosphate nucleotide']
+A3m: ['ATP', 'adenosine triphosphate', 'triphosphate nucleotide']
+Ho: ['unknown', 'UNK', 'unspecified']
+Hm: ['unknown', 'UNK', 'unspecified']
+
+Reason: Species are mostly metabolites or cofactors involved in respiration and sulfur metabolism; some are ambiguous or not standard, so "UNK" is used when unclear.

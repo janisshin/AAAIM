@@ -1,0 +1,18 @@
+Model: BIOMD0000000190
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:55:04
+
+Synonyms:
+SAM: ['S-adenosyl-L-methionine', 'SAM', 'adenosylmethionine']
+A: ['S-adenosylmethioninamine', 'AdoMet', 'SAM', '(since A is S-adenosylmethioninamine', 'a derivative of SAM)']
+P: ['Putrescine', 'PUT', '1,4-diaminobutane']
+S: ['Spermine', 'SPM', 'tetramethylenepiperidine']
+D: ['Spermidine', 'SPD', 'triamine']
+aS: ['N1-Acetylspermine', 'AcSpermine', 'N1-Acetylspermine']
+aD: ['N1-Acetylspermidine', 'AcSpermidine', 'N1-Acetylspermidine']
+Met: ['Methionine', 'MET', 'L-methionine']
+ORN: ['L-Ornithine', 'ORN', 'L-ornithine']
+AcCoA: ['Acetyl-CoA', 'Acetyl coenzyme A', 'acetyl-CoA']
+CoA: ['Coenzyme A', 'CoA', "Adenosine-3',5'-diphosphate-4'-phosphopantetheine"]
+
+Reason: The species are involved in polyamine metabolism, with many derivatives and common synonyms. The names provided match standard biochemical terminology, facilitating ontology lookup.

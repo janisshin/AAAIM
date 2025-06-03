@@ -1,0 +1,31 @@
+Model: BIOMD0000000281
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:09:05
+
+Synonyms:
+GLU: ['glucose', 'D-glucose', 'blood sugar']
+ENG: ['hexokinase-glucose complex', 'glucose-hexokinase intermediate', 'UNK']
+TP1: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+GLP: ['glucose 6-phosphate', 'D-glucose 6-phosphate', 'glucose-6-phosphate']
+ETG: ['phosphofructokinase intermediate', 'UNK', 'UNK']
+GPP: ['hexose diphosphate', 'fructose 1,6-bisphosphate', 'fructose-1,6-diphosphate']
+GAP: ['glyceraldehyde 3-phosphate', 'D-glyceraldehyde 3-phosphate', '3-phosphoglyceraldehyde']
+DHA: ['dihydroxyacetone phosphate', 'DHAP', '1,3-dihydroxyacetone phosphate']
+DPN: ['nicotinamide adenine dinucleotide', 'NAD+', 'nicotinamide adenine dinucleotide (oxidized)']
+DPH: ['nicotinamide adenine dinucleotide (reduced)', 'NADH', 'nicotinamide adenine dinucleotide (reduced form)']
+PID: ['inorganic phosphate', 'phosphate ion', 'orthophosphate']
+DGA: ['1,3-diphosphoglycerate', '1,3-diphosphoglyceric acid', '3-phosphoglyceroyl phosphate']
+PGA: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'glycerate 3-phosphate']
+PYR: ['pyruvate', 'pyruvic acid', '2-oxopropanoic acid']
+LAC: ['lactate', 'lactic acid', '2-hydroxypropanoic acid']
+DIN: ['nicotinamide adenine dinucleotide phosphate', 'NADP', 'nicotinamide adenine dinucleotide phosphate (oxidized)']
+DIH: ['nicotinamide adenine dinucleotide phosphate (reduced)', 'NADPH', 'nicotinamide adenine dinucleotide phosphate (reduced form)']
+OXY: ['oxygen', 'dioxygen', 'molecular oxygen']
+TP2: ['adenosine triphosphate (mitochondrial)', 'ATP (mitochondrial)', "adenosine 5'-triphosphate (mitochondrial)"]
+PPP: ['enzyme intermediate', 'UNK', 'UNK']
+AGP: ['alpha-glycerophosphate', 'alpha-glycerol phosphate', 'sn-glycerol 3-phosphate']
+MOD: ['glyceraldehyde 3-phosphate dehydrogenase-DPN complex', 'UNK', 'UNK']
+MOB: ['acyl enzyme intermediate', 'UNK', 'UNK']
+
+Reason: The model is a biochemical model of glycolysis and oxidative phosphorylation, and most species can be identified as common biochemical compounds based on their display names and reaction equations. Some species, such as ENG, ETG, MOD, MOB, and PPP, are less clear and may represent intermediate or complex species, so "UNK" is included as a possible name. The reaction equations and display names provide context for identifying the species, but some species may have multiple possible names or may not be easily identifiable.

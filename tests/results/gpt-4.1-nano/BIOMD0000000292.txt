@@ -1,0 +1,13 @@
+Model: BIOMD0000000292
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:58:10
+
+Synonyms:
+NADPH: ['NADPH', 'Nicotinamide adenine dinucleotide phosphate (reduced)', 'NADPH']
+ADP: ['ADP', 'Adenosine diphosphate']
+ATP: ['ATP', 'Adenosine triphosphate']
+X: ['UNK']
+Y: ['UNK']
+NADP: ['NADP', 'Nicotinamide adenine dinucleotide phosphate']
+
+Reason: NADPH and NADP are the reduced and oxidized forms of NADP, respectively; ATP and ADP are well-known nucleotides involved in energy transfer. X and Y are unspecified species with no clear chemical identity provided, thus annotated as "UNK".

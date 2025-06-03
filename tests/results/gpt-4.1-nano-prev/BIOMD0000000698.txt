@@ -1,0 +1,12 @@
+Model: BIOMD0000000698
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:06:44
+
+Synonyms:
+Methionine: ['methionine', 'L-methionine', 'MET']
+AdoMet: ['S-adenosylmethionine', 'SAM', 'AdoMet']
+Homocysteine: ['homocysteine', 'Hcy']
+_5mTHF: ['5-methyltetrahydrofolate', '5-methyl-THF', '5-methyltetrahydrofolate']
+Cystathionine: ['cystathionine', 'L-cystathionine', 'cystathionine (L-form)']
+
+Reason: These are well-established chemical names or common synonyms for the respective metabolites involved in the methionine cycle.

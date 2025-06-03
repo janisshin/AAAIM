@@ -1,0 +1,76 @@
+Model: BIOMD0000000554
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:01:40
+
+Synonyms:
+NAg: ['sodium ion', 'Na+', 'sodium']
+
+Reason: NAg likely refers to extracellular sodium, a common ion in physiology.
+
+GLCg: "glucose", "D-glucose", "blood sugar"
+Reason: GLCg indicates extracellular glucose, a primary energy substrate.
+
+G6Pg: "glucose-6-phosphate", "G6P", "hexose phosphate"
+Reason: G6Pg is glucose-6-phosphate, a key metabolic intermediate.
+
+F6Pg: "fructose-6-phosphate", "F6P", "hexose phosphate"
+Reason: F6Pg is fructose-6-phosphate, involved in glycolysis.
+
+GAPg: "glyceraldehyde-3-phosphate", "G3P", "glycolytic intermediate"
+Reason: GAPg is glyceraldehyde-3-phosphate, a glycolysis intermediate.
+
+PEPg: "phosphoenolpyruvate", "PEP", "enolpyruvate"
+Reason: PEPg is phosphoenolpyruvate, a glycolytic metabolite.
+
+PYRg: "pyruvate", "pyruvic acid"
+Reason: PYRg is pyruvate, a key metabolic end-product of glycolysis.
+
+LACg: "lactate", "lactic acid"
+Reason: LACg is lactate, produced during anaerobic glycolysis.
+
+NADHg: "NAD+", "nicotinamide adenine dinucleotide", "oxidized NAD"
+Reason: NADHg is the oxidized form of NAD, involved in redox reactions.
+
+ATPg: "ATP", "adenosine triphosphate"
+Reason: ATPg is ATP, the primary energy currency.
+
+PCrg: "phosphocreatine", "creatine phosphate"
+Reason: PCrg is phosphocreatine, an energy buffer.
+
+O2g: "oxygen", "O2"
+Reason: O2g is extracellular oxygen.
+
+GLYg: "glycogen"
+Reason: GLYg is glycogen, stored form of glucose.
+
+GLUg: "glutamate", "glutamic acid"
+Reason: GLUg is glutamate, a neurotransmitter and metabolic substrate.
+
+NADg: "NAD+", "nicotinamide adenine dinucleotide"
+Reason: NADg is oxidized NAD, involved in metabolism.
+
+ADPg: "ADP", "adenosine diphosphate"
+Reason: ADPg is ADP, a product of ATP dephosphorylation.
+
+CRg: "creatine"
+Reason: CRg is creatine, involved in energy buffering.
+
+NADHg: "NADH", "reduced nicotinamide adenine dinucleotide"
+Reason: NADHg is the reduced form of NAD, involved in redox reactions.
+
+ATPn: "ATP", "adenosine triphosphate"
+Reason: ATPn is intracellular ATP.
+
+PCrn: "phosphocreatine"
+Reason: PCrn is phosphocreatine, energy buffer inside cells.
+
+O2n: "oxygen", "O2"
+Reason: O2n is intracellular oxygen.
+
+GLUn: "glutamate", "glutamic acid"
+Reason: GLUn is intracellular glutamate.
+
+dHb: "deoxyhemoglobin"
+Reason: dHb is deoxygenated hemoglobin, relevant in oxygen transport.
+
+Reason: All species are standard metabolic or ionic compounds involved in brain energy metabolism, with common synonyms.

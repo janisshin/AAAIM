@@ -1,0 +1,24 @@
+Model: BIOMD0000000468
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:28:37
+
+Synonyms:
+s1: ['calcium ion', 'Ca2+', 'calcium(2+)']
+s2: ['calcium ion', 'Ca2+', 'calcium(2+)']
+s3: ['calcium ion', 'Ca2+', 'calcium(2+)']
+s4: ['calcium ion', 'Ca2+', 'calcium(2+)']
+s6: ['inositol 1,4,5-trisphosphate', 'IP3', 'D-myo-inositol 1,4,5-trisphosphate']
+s19: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', '1-phosphatidyl-1D-myo-inositol 4,5-bisphosphate']
+s45: ['eNOS-CaM-Ca4 complex', 'endothelial nitric oxide synthase-calmodulin-calcium complex', 'UNK']
+s47: ['calmodulin-Ca4 complex', 'calmodulin-calcium complex', 'UNK']
+s48: ['calmodulin-Ca2 complex', 'calmodulin-calcium complex', 'UNK']
+s50: ['eNOS-CaM-Ca2 complex', 'endothelial nitric oxide synthase-calmodulin-calcium complex', 'UNK']
+s58: ['Hsp90-eNOS-CaM-Ca4 complex', 'heat shock protein 90-endothelial nitric oxide synthase-calmodulin-calcium complex', 'UNK']
+s60: ['Hsp90-p-eNOS-CaM-Ca4 complex', 'heat shock protein 90-phosphorylated endothelial nitric oxide synthase-calmodulin-calcium complex', 'UNK']
+s61: ['Hsp90-eNOS-CaM-Ca2 complex', 'heat shock protein 90-endothelial nitric oxide synthase-calmodulin-calcium complex', 'UNK']
+s62: ['Hsp90-p-eNOS-CaM-Ca2 complex', 'heat shock protein 90-phosphorylated endothelial nitric oxide synthase-calmodulin-calcium complex', 'UNK']
+s64: ['nitric oxide', 'NO', 'nitrogen monoxide']
+s102: ['Ras-GTP', 'Ras protein-GTP complex', 'UNK']
+s103: ['Ras-GDP', 'Ras protein-GDP complex', 'UNK']
+
+Reason: The species with display names that match common chemical or biological entities were annotated with their corresponding standardized names or common synonyms. Species without clear display names or those that appear to be protein complexes were annotated with "UNK" as their composition or structure is unclear. The reactions provided helped to identify the relationships between species, but the lack of clear chemical or biological information for some species limited the annotation.

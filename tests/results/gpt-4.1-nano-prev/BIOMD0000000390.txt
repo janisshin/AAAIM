@@ -1,0 +1,15 @@
+Model: BIOMD0000000390
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:58
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'RuBP', 'ribulose bisphosphate']
+PGA: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'PGA']
+Ru5P: ['ribulose-5-phosphate', 'ribulose-5-P', 'Ru5P']
+Pi: ['inorganic phosphate', 'Pi', 'phosphate']
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+Pic: ['phosphocholine', 'phosphocholine', 'UNK']
+
+Reason: 
+RuBP, PGA, Ru5P, Pi, ATP, ADP are well-known biochemical entities with standard names. Pic is less common and could refer to phosphocholine or other compounds; without further context, "UNK" is used if uncertain.

@@ -1,0 +1,10 @@
+Model: BIOMD0000000397
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:45:23
+
+Synonyms:
+s32: ['ATP', 'adenosine triphosphate', 'adenosine triphosphate (ATP)']
+s33: ['ADP', 'adenosine diphosphate', 'adenosine diphosphate (ADP)']
+s304: ["6-bromoindirubin-3'-oxime", '6-bromoindirubin oxime', 'bromoindirubin oxime']
+
+Reason: s32 and s33 are well-known nucleotides involved in energy transfer, with standard names ATP and ADP. s304 is a specific chemical compound, a brominated indirubin derivative, commonly named as "6-bromoindirubin-3'-oxime".

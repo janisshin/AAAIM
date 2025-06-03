@@ -1,0 +1,37 @@
+Model: BIOMD0000000247
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:41:05
+
+Synonyms:
+P: ['inorganic phosphate', 'Pi', 'phosphorus']
+G6P: ['glucose-6-phosphate', 'G6P', 'hexose phosphate']
+F6P: ['fructose-6-phosphate', 'F6P', 'hexose phosphate']
+F16P: ['fructose-1,6-bisphosphate', 'F1,6BP', 'F16P']
+NADH: ['nicotinamide adenine dinucleotide (reduced)', 'NADH', 'reduced NAD']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+', 'oxidized NAD']
+BPG: ['1,3-bisphosphoglycerate', '1,3-BPG', 'BPG']
+P3G: ['3-phosphoglycerate', '3PG', 'glycerate-3-phosphate']
+P2G: ['2-phosphoglycerate', '2PG', 'glycerate-2-phosphate']
+PEP: ['phosphoenolpyruvate', 'PEP', 'enolpyruvate']
+PYR: ['pyruvate', 'pyruvic acid', 'UNK']
+ACE: ['acetaldehyde', 'ethanal', 'UNK']
+CO2: ['carbon dioxide', 'CO2', 'carbonic acid']
+ETOH: ['ethanol', 'ethyl alcohol', 'alcohol']
+SUCC: ['succinate', 'butanedioate', 'succinate ion']
+GA3P: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde 3-phosphate']
+DHAP: ['dihydroxyacetone phosphate', 'DHAP', 'glycerone phosphate']
+GLY: ['glycerol', 'glycerin', 'UNK']
+D6PGluconoLactone: ['D-6-phosphoglucono-delta-lactone', '6-phosphoglucono-delta-lactone', 'D6PGL']
+D6PGluconate: ['6-phosphogluconate', '6PG', 'D6P']
+NADP: ['nicotinamide adenine dinucleotide phosphate', 'NADP+', 'oxidized NADP']
+NADPH: ['nicotinamide adenine dinucleotide phosphate (reduced)', 'NADPH', 'reduced NADP']
+Ribulose5P: ['ribulose-5-phosphate', 'Ru5P', 'ribulose 5-phosphate']
+Ribose5P: ['ribose-5-phosphate', 'R5P', 'ribose 5-phosphate']
+Xyl5P: ['xylulose-5-phosphate', 'X5P', 'xylulose 5-phosphate']
+Seduhept7P: ['sedoheptulose-7-phosphate', 'S7P', 'sedoheptulose 7-phosphate']
+Erythrose4P: ['erythrose-4-phosphate', 'E4P', 'erythrose 4-phosphate']
+GLCo: ['extracellular glucose', 'glucose outside cell', 'glucose in medium']
+GLCi: ['glucose in cytosol', 'cytoplasmic glucose', 'glucose (cytoplasm)']
+F26BP: ['fructose-2,6-bisphosphate', 'F2,6BP', 'F26P']
+
+Reason: All are recognized chemical entities or common synonyms, with some abbreviations expanded for clarity. "PYR" and "ACE" are metabolic intermediates, but "pyruvate" and "acetaldehyde" are standard names. "G6P", "F6P", "F16P", "NADH", "NAD", "BPG", "P3G", "P2G", "PEP", "SUCC", "GA3P", "DHAP", "D6PGluconoLactone", "D6PGluconate", "NADP", "NADPH", "Ribulose5P", "Ribose5P", "Xyl5P", "Seduhept7P", "Erythrose4P", "F26BP" are standard biochemical names. "GLCo" and "GLCi" are specific to glucose localization, but "extracellular glucose" and "cytoplasmic glucose" are appropriate. "P" is a high-energy phosphate, commonly "inorganic phosphate" or "Pi". Reason: all are chemical entities or well-known biochemical compounds.

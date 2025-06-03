@@ -1,0 +1,9 @@
+Model: BIOMD0000000375
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:59:16
+
+Synonyms:
+Ca_er_Ca_equations: ['calcium store', 'endoplasmic reticulum calcium', 'Ca2+ store']
+Ca_i: ['cytoplasmic calcium', 'intracellular calcium', 'cytosolic calcium']
+
+Reason: Ca_er_Ca_equations refers to calcium in the endoplasmic reticulum, a calcium store; Ca_i is cytoplasmic calcium concentration. Both are well-known calcium-related entities in cell physiology.

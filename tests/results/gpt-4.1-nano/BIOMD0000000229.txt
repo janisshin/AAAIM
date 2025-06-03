@@ -1,0 +1,9 @@
+Model: BIOMD0000000229
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:56:19
+
+Synonyms:
+incAMP: ['cyclic AMP', 'cAMP', "adenosine 3',5'-cyclic monophosphate"]
+excAMP: ['extracellular cAMP', 'cyclic AMP', 'cAMP']
+
+Reason: Both are likely forms of cyclic AMP, with incAMP possibly indicating intracellular and excAMP extracellular; these are common synonyms for cAMP molecules involved in signaling pathways.

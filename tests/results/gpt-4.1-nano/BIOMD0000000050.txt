@@ -1,0 +1,12 @@
+Model: BIOMD0000000050
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:50:49
+
+Synonyms:
+Gly: ['glycine', 'gly', 'aminoacetic acid']
+FA: ['fatty acid', 'FA', 'free fatty acid']
+AA: ['amino acid', 'AA', 'generic amino acid']
+Glu: ['glutamic acid', 'glutamate', 'glutamic']
+MG: ['methylglyoxal', 'MG', 'pyruvaldehyde']
+
+Reason: Gly is a common amino acid; FA is a general term for fatty acids; AA is a generic amino acid; Glu is a well-known amino acid; MG is a reactive dicarbonyl compound involved in Maillard reactions.

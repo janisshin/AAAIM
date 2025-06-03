@@ -1,0 +1,9 @@
+Model: BIOMD0000000609
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:20:24
+
+Synonyms:
+Sulphate__PAPS: ["3'-phosphoadenosine-5'-phosphosulfate", 'PAPS', "adenosine 3'-phospho-5'-phosphosulfate"]
+GSH: ['glutathione', 'reduced glutathione', 'GSH']
+
+Reason: Sulphate__PAPS is the sulfate donor in sulfation reactions, commonly known as PAPS. GSH is glutathione, a key antioxidant involved in detoxification, explicitly named in the display names.

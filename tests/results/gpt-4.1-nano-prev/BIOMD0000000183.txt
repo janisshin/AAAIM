@@ -1,0 +1,130 @@
+Model: BIOMD0000000183
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:39:02
+
+Synonyms:
+species_49: ['calmodulin', 'CaM', 'calcium-binding messenger protein']
+
+Reason: The name "camR_ca4_ABCD_CaMKII" and context suggest calmodulin, a key calcium sensor involved in activating CaMKII and PP2B.
+
+species_24: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The abbreviation "CaMKII" indicates calcium/calmodulin-dependent kinase II, a well-known kinase activated by calmodulin.
+
+species_11: "protein phosphatase 2B", "PP2B", "calcineurin"
+Reason: "PP2B" is a common synonym for calcineurin, a calcium/calmodulin-dependent phosphatase.
+
+species_5: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: Same as species_24, likely representing CaMKII.
+
+species_22: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: Same as species_24, involved in calmodulin signaling.
+
+species_54: "protein phosphatase 2B", "PP2B", "calcineurin"
+Reason: Same as species_11, PP2B is calcineurin.
+
+species_2: "calmodulin", "CaM", "calcium-binding messenger protein"
+Reason: The name "camR_ca1_A" suggests calmodulin, a calcium sensor.
+
+species_65: "calmodulin", "CaM", "calcium-binding messenger protein"
+Reason: "camR_ca4_ABCD_PP2B" indicates calmodulin involved in PP2B regulation.
+
+species_51: "protein phosphatase 2B", "PP2B", "calcineurin"
+Reason: "camR_PP2B" directly indicates PP2B (calcineurin).
+
+species_58: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The name suggests CaMKII, a kinase activated by calmodulin.
+
+species_52: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: Similar to species_58, indicating CaMKII.
+
+species_26: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The "camT_ca2_BD" suggests a calmodulin-dependent kinase.
+
+species_64: "calmodulin", "CaM", "calcium-binding messenger protein"
+Reason: The name "camR_ca3_ABD_PP2B" indicates calmodulin.
+
+species_13: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The "camR_ca3_ABD" suggests CaMKII.
+
+species_47: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The name indicates CaMKII.
+
+species_46: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: Same as species_47.
+
+species_48: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: Same as species_47.
+
+species_39: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The name suggests CaMKII.
+
+species_29: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The "camT_ca3_ABD" indicates CaMKII.
+
+species_23: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The "camT_ca2_AC" suggests CaMKII.
+
+species_44: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The name indicates CaMKII.
+
+species_62: "protein phosphatase 2B", "PP2B", "calcineurin"
+Reason: "camR_ca3_ABC_PP2B" indicates PP2B.
+
+species_40: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The name suggests CaMKII.
+
+species_0: "calmodulin", "CaM", "calcium-binding messenger protein"
+Reason: "camR" alone suggests calmodulin.
+
+species_60: "protein phosphatase 2B", "PP2B", "calcineurin"
+Reason: "camR_ca2_BD_PP2B" indicates PP2B.
+
+species_57: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The name suggests CaMKII.
+
+species_43: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The name indicates CaMKII.
+
+species_18: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The "camT_ca1_A" suggests CaMKII.
+
+species_31: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The "camT_ca3_BCD" indicates CaMKII.
+
+species_17: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The name "camT" suggests CaMKII.
+
+species_28: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The "camT_ca3_ABC" indicates CaMKII.
+
+species_15: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The "camR_ca3_BCD" suggests CaMKII.
+
+species_38: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The name indicates CaMKII.
+
+species_56: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The name suggests CaMKII.
+
+species_19: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The "camT_ca1_B" indicates CaMKII.
+
+species_9: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The name suggests CaMKII.
+
+species_3: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The "camR_ca1_B" indicates CaMKII.
+
+species_25: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The "camT_ca2_BC" suggests CaMKII.
+
+species_42: "calcium/calmodulin-dependent protein kinase II", "CaMKII", "CaMKII kinase"
+Reason: The name indicates CaMKII.
+
+species_55: "protein phosphatase 2B", "PP2B", "calcineurin"
+Reason: "camR_ca1_D_PP2B" indicates PP2B.
+
+species_59: "protein phosphatase 2B", "PP2B", "calcineurin"
+Reason: The name indicates PP2B.
+
+Reason: The model and display names strongly suggest calmodulin and its associated calcium-dependent kinases and phosphatases, with common synonyms as listed.

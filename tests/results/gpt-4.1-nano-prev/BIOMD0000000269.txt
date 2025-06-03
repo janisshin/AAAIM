@@ -1,0 +1,13 @@
+Model: BIOMD0000000269
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:41:59
+
+Synonyms:
+Auxin: ['indole-3-acetic acid', 'IAA', 'auxin']
+CK: ['cytokinin', 'kinetin', 'cytokinin hormone']
+ET: ['ethylene', 'ethene', 'ethylene gas']
+IAA: ['indole-3-acetic acid', 'IAA', 'auxin']
+ACC: ['1-aminocyclopropane-1-carboxylic acid', 'ACC', 'ethylene precursor']
+CK_ex: ['cytokinin external', 'exogenous cytokinin', 'cytokinin supplement']
+
+Reason: These are well-known plant hormones and their common synonyms. Auxin and IAA are the same compound, ethylene is a gaseous hormone, ACC is the immediate precursor to ethylene, and CK_ex refers to externally supplied cytokinin.

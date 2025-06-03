@@ -1,0 +1,17 @@
+Model: BIOMD0000000737
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:32:54
+
+Synonyms:
+FeDuo: ['iron', 'ferric ion', 'non-transferrin bound iron']
+FeRBC: ['iron', 'ferric ion', 'heme iron']
+FeSpleen: ['iron', 'ferric ion', 'spleen iron']
+FeLiver: ['iron', 'ferric ion', 'liver iron']
+Fe2Tf: ['transferrin', 'diferric transferrin', 'holotransferrin']
+Fe1Tf: ['monoferric transferrin', 'transferrin', 'apotransferrin']
+NTBI: ['non-transferrin bound iron', 'labile iron', 'free iron']
+FeRest: ['iron', 'ferric ion', 'tissue iron']
+FeOutside: ['iron', 'ferric ion', 'extracellular iron']
+FeBM: ['iron', 'ferric ion', 'bone marrow iron']
+
+Reason: The model describes iron distribution in mice, and the species names suggest their roles in iron metabolism. FeDuo, FeRBC, FeSpleen, FeLiver, FeRest, FeOutside, and FeBM are likely to represent iron in different forms or locations, while Fe2Tf and Fe1Tf represent transferrin with two or one iron ions bound, respectively. NTBI represents non-transferrin bound iron, which is a common term in iron metabolism. The standardized names are based on the context of the model and the display names provided.

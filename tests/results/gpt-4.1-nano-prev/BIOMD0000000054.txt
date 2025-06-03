@@ -1,0 +1,10 @@
+Model: BIOMD0000000054
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:35:14
+
+Synonyms:
+I: ['UNK']
+E: ['adenylate pool', 'ATP', 'energy carrier']
+A: ['adenylate pool', 'AMP', 'ADP']
+
+Reason: I is an unspecified ion, likely a generic ion or unspecified species, so "UNK". E is labeled as "Energy pool" and "Adenylate pool," indicating adenylates like ATP, ADP, AMP. A is "Adenylate pool," which includes adenylates such as AMP, ADP, ATP; the model's context suggests these are the main adenylate species.

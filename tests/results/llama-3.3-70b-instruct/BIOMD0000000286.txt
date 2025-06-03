@@ -1,0 +1,10 @@
+Model: BIOMD0000000286
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:09:21
+
+Synonyms:
+ATP: ['adenosine triphosphate', "adenosine 5'-triphosphate", 'ATP']
+ADP: ['adenosine diphosphate', "adenosine 5'-diphosphate", 'ADP']
+AMP: ['adenosine monophosphate', "adenosine 5'-monophosphate", 'AMP']
+
+Reason: The species ATP, ADP, and AMP are likely adenosine triphosphate, adenosine diphosphate, and adenosine monophosphate respectively, as they are commonly involved in energy transfer reactions in cellular processes, and their display names match their standard biochemical abbreviations.

@@ -1,0 +1,19 @@
+Model: BIOMD0000000218
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:56:02
+
+Synonyms:
+aca: ['acetyl-CoA', 'acetyl coenzyme A', 'UNK']
+oaa: ['oxaloacetate', 'oxaloacetate (cyclic form)', 'UNK']
+coa: ['coenzyme A', 'CoA', 'UNK']
+cit: ['citrate', 'citric acid', 'sodium citrate']
+icit: ['isocitrate', 'isocitric acid', 'UNK']
+akg: ['alpha-ketoglutarate', 'alpha-ketoglutaric acid', '2-oxoglutarate']
+ssa: ['succinate', 'succinate (anion)', 'UNK']
+suc: ['succinate', 'succinate (anion)', 'UNK']
+sca: ['scyllo-inositol', 'scyllo-inositol (not relevant here)', 'UNK']
+fa: ['fatty acid', 'fatty acid', 'UNK']
+mal: ['malate', 'malic acid', 'UNK']
+gly: ['glycine', 'gly', 'UNK']
+
+Reason: All species are metabolites involved in the TCA cycle or related pathways; "sca" is likely a typo or unrelated compound, so marked as "UNK".

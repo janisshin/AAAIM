@@ -1,0 +1,14 @@
+Model: BIOMD0000000390
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:16:57
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'RuBP', 'ribulose 1,5-diphosphate']
+PGA: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'phosphoglycerate']
+Ru5P: ['ribulose-5-phosphate', 'ribulose phosphate', 'ru5p']
+Pi: ['inorganic phosphate', 'phosphate', 'orthophosphate']
+ATP: ['adenosine triphosphate', 'ATP', "adinosine 5'-triphosphate"]
+ADP: ['adenosine diphosphate', 'ADP', "adinosine 5'-diphosphate"]
+Pic: ['UNK']
+
+Reason: The model is of the Calvin-Benson cycle, a photosynthetic process in plants. RuBP, PGA, Ru5P, Pi, ATP, and ADP are all known intermediates or cofactors in this cycle, with well-established chemical names. Pic has no clear definition or reaction in the provided model, making its identity uncertain.

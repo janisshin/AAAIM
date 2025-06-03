@@ -1,0 +1,9 @@
+Model: BIOMD0000000375
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:31
+
+Synonyms:
+Ca_er_Ca_equations: ['calcium ion', 'calcium', 'Ca2+']
+Ca_i: ['cytoplasmic calcium', 'intracellular calcium', 'Ca2+']
+
+Reason: Both species refer to calcium ions involved in cellular calcium dynamics; Ca_er_Ca_equations likely pertains to ER calcium, and Ca_i to cytosolic calcium.

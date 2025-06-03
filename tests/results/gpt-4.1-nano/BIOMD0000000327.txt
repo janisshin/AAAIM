@@ -1,0 +1,15 @@
+Model: BIOMD0000000327
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:58:40
+
+Synonyms:
+bb: ['bicarbonate', 'HCO3−', 'hydrogen carbonate']
+cb: ['chloride', 'Cl−', 'chloride ion']
+nb: ['sodium ion', 'Na+', 'sodium']
+bi: ['bicarbonate', 'HCO3−', 'hydrogen carbonate']
+ci: ['chloride', 'Cl−', 'chloride ion']
+ni: ['sodium ion', 'Na+', 'sodium']
+bl: ['bicarbonate', 'HCO3−', 'hydrogen carbonate']
+cl: ['chloride', 'Cl−', 'chloride ion']
+
+Reason: All species are ions involved in bicarbonate and chloride transport; "bb", "bi", "bl" are bicarbonate ions, "cb", "cl" are chloride ions, "nb", "ni" are sodium ions. The synonyms reflect their chemical identities.

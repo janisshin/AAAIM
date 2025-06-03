@@ -1,0 +1,11 @@
+Model: BIOMD0000000458
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:47:58
+
+Synonyms:
+p3g: ['3-phosphoglycerate', '3-phosphoglyceric acid', '3-phosphoglycerate (L-form)']
+php: ['phosphohydroxypyruvate', 'phosphohydroxypyruvic acid']
+pser: ['phosphoserine', 'O-phosphoserine']
+ser: ['serine', '2-amino-3-hydroxypropanoic acid']
+
+Reason: All species are metabolites involved in serine biosynthesis pathway; their display names directly correspond to known biochemical compounds.

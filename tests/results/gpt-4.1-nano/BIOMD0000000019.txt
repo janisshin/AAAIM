@@ -1,0 +1,9 @@
+Model: BIOMD0000000019
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:50:13
+
+Synonyms:
+x26: ['Ras-GDP', 'Ras guanosine diphosphate', 'Ras GDP']
+x28: ['Ras-GTP', 'Ras guanosine triphosphate', 'Ras GTP']
+
+Reason: Both species are forms of Ras protein bound to nucleotides; GDP-bound is inactive, GTP-bound is active. Standard names reflect their nucleotide states.

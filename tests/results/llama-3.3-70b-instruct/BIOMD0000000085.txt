@@ -1,0 +1,18 @@
+Model: BIOMD0000000085
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:50:30
+
+Synonyms:
+species_3: ['thymine', 'thymin', 'thymine base']
+species_5: ['GTP', 'guanosine triphosphate', "guanosine 5'-triphosphate"]
+species_6: ['GDP', 'guanosine diphosphate', "guanosine 5'-diphosphate"]
+species_7: ['phosphate', 'inorganic phosphate', 'orthophosphate']
+species_8: ['dGDP', 'deoxyguanosine diphosphate', "deoxyguanosine 5'-diphosphate"]
+species_10: ['RGTP', 'UNK', 'UNK']
+species_11: ['GTP', 'guanosine triphosphate', "guanosine 5'-triphosphate"]
+species_12: ['GAD', 'UNK', 'UNK']
+species_13: ['RGDP', 'UNK', 'UNK']
+species_15: ['RGTP', 'UNK', 'UNK']
+species_16: ['RGDP', 'UNK', 'UNK']
+
+Reason: The model appears to be related to the GTPase-cycle signaling module, and the display names suggest involvement of guanine nucleotides (GTP, GDP) and their interactions with proteins (e.g., G*AT, RG*AT). species_3 is likely thymine due to the single-letter abbreviation 'T'. species_7 is phosphate due to the abbreviation 'Pi'. The other species are annotated based on their display names and the context of the GTPase-cycle. species_8, species_10, species_12, species_13, species_15, and species_16 have uncertain annotations due to the lack of clear information about their chemical structures or common names.

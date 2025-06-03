@@ -1,0 +1,76 @@
+Model: BIOMD0000000579
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:03:01
+
+Synonyms:
+s4: ['cis-Aconitate', 'aconitate', 'UNK']
+
+Reason: s4 is labeled as "cis-Aconitate" in the display names, a known TCA cycle intermediate.
+
+s188: "Xylulose-5-phosphate", "Xylulose5P", "UNK"
+Reason: s188 is "Xylulose5P" in display names, a sugar phosphate involved in pentose phosphate pathway.
+
+s49: "UREA", "Urea", "UNK"
+Reason: s49 is "UREA" in display names, a common nitrogen waste product.
+
+s335: "UDP-Glucose", "Uridine diphosphate glucose", "UNK"
+Reason: s335 is "UDP-Glucose", a nucleotide sugar involved in glycogen synthesis.
+
+s199: "UDP", "Uridine diphosphate", "UNK"
+Reason: s199 is "UDP", a nucleotide involved in various biosynthetic processes.
+
+s292: "Triglyceride", "TAG", "UNK"
+Reason: s292 is "Triglyceride", a common storage lipid.
+
+s297: "UDP-Glucose", "Uridine diphosphate glucose", "UNK"
+Reason: s297 is "Trehalose", a disaccharide sugar.
+
+s302: "Galactose-1-phosphate", "Galactose-1P", "UNK"
+Reason: s302 is "Galactose1P" in display names, a sugar phosphate in galactose metabolism.
+
+s306: "Galactose", "Gal", "UNK"
+Reason: s306 is "Galactose", a simple sugar.
+
+s351: "NADH", "Nicotinamide adenine dinucleotide (reduced)", "UNK"
+Reason: s351 is "NADH", a key electron carrier.
+
+s358: "2H+", "Protons", "UNK"
+Reason: s358 is "2H+", a proton.
+
+s269: "FMN", "Flavin mononucleotide", "UNK"
+Reason: s269 is "FMN", a cofactor in redox reactions.
+
+s373: "Cytosolic NADH", "NADH", "UNK"
+Reason: s373 is "NADH" in display names, involved in energy metabolism.
+
+s322: "HMG-CoA", "Hydroxy-methylglutaryl-CoA", "UNK"
+Reason: s322 is "HMGCoA", a precursor in cholesterol synthesis.
+
+s335: "UDP-Glucose", "Uridine diphosphate glucose", "UNK"
+Reason: s335 is "UDP-Glucose", involved in glycogen biosynthesis.
+
+s353: "FADH2", "Flavin adenine dinucleotide (reduced)", "UNK"
+Reason: s353 is "FADH2", a redox cofactor.
+
+s381: "NADH", "Nicotinamide adenine dinucleotide (reduced)", "UNK"
+Reason: s381 is "NADH", a key energy carrier.
+
+s93: "NAD+", "Nicotinamide adenine dinucleotide", "UNK"
+Reason: s93 is "NAD+", an oxidized form of NADH.
+
+s340: "Glutamine", "Gln", "UNK"
+Reason: s340 is "Glutamine", an amino acid involved in nitrogen metabolism.
+
+s349: "CO2", "Carbon dioxide", "UNK"
+Reason: s349 is "CO2", a metabolic waste.
+
+s378: "Glutamine", "Gln", "UNK"
+Reason: s378 is "Glutamine", an amino acid.
+
+s351: "NADH", "Nicotinamide adenine dinucleotide (reduced)", "UNK"
+Reason: s351 is "NADH", a key energy molecule.
+
+s293: "Glyceraldehyde-3-phosphate", "G3P", "UNK"
+Reason: s293 is "Glyceraldehyde", likely referring to G3P, a glycolytic intermediate.
+
+Reason: All other species are either not chemical entities or are ambiguous; "UNK" is used where no clear chemical name is available.

@@ -1,0 +1,10 @@
+Model: BIOMD0000000065
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:51:21
+
+Synonyms:
+A: ['allolactose', 'b-D-Glucose 1-thiogalactopyranoside', 'UNK']
+L: ['lactose', 'beta-D-Galactopyranosyl-(1→4)-D-glucose', 'milk sugar']
+L_e: ['external lactose', 'extracellular lactose', 'lactose outside cell']
+
+Reason: A is explicitly named as allolactose, a known inducer in lac operon; L is lactose, the substrate; L_e is external lactose, the extracellular form.

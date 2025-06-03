@@ -1,0 +1,18 @@
+Model: BIOMD0000000415
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:45:48
+
+Synonyms:
+species_1: ['linoleic acid', 'linoleic acid (C18:2)', 'UNK']
+species_7: ['9-hydroxy-octadecadienoic acid', '9-HODE', 'hydroxy fatty acid']
+species_8: ['13-hydroxy-octadecadienoic acid', '13-HODE', 'hydroxy fatty acid']
+species_9: ['13-hydroxy-octadecadienoic acid', '13-HODE', 'hydroxy fatty acid']
+species_10: ['13-hydroxy-octadecadienoic acid', '13-HODE', 'hydroxy fatty acid']
+species_11: ['9-hydroxy-octadecadienoic acid', '9-HODE', 'hydroxy fatty acid']
+species_12: ['9-hydroxy-octadecadienoic acid', '9-HODE', 'hydroxy fatty acid']
+species_13: ['9-hydroxy-octadecadienoic acid', '9-HODE', 'hydroxy fatty acid']
+species_14: ['9-hydroxy-octadecadienoic acid', '9-HODE', 'hydroxy fatty acid']
+
+Reason: 
+species_1 (LA): Likely linoleic acid, a common fatty acid involved in LOX pathways.
+species_7, 8, 9, 10, 11, 12, 13, 14: All are different stereoisomers or positional isomers of hydroxy-octadecadienoic acids (HODEs), known LOX pathway products. The names match the abbreviations and typical naming conventions for these hydroxy fatty acids. "UNK" is used if uncertain.

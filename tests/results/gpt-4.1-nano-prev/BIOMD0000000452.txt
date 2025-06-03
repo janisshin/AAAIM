@@ -1,0 +1,15 @@
+Model: BIOMD0000000452
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:46:59
+
+Synonyms:
+mw8f5a7b5c_ca4c_4a4c_85b1_e5d640c426bf: ['GDP', 'guanosine diphosphate', 'GDP (guanosine diphosphate)']
+mwa54a9c38_c98b_45e5_8432_4119fb777e44: ['Ras', 'HRas', 'Ras protein']
+mwa6e82fc9_a0ce_461c_93c8_17f3c807c1a1: ['pAkt', 'phosphorylated Akt', 'p-Akt']
+mw28464aad_8013_4a23_ae09_a406954859a6: ['SOS', 'Son of Sevenless', 'SOS protein']
+mwf40d6176_abfc_4a30_886f_83a19fcffc48: ['EGFR', 'epidermal growth factor receptor', 'EGFR receptor']
+mwd7bf31ba_b05c_4c45_bb2f_6a2468a2a507: ['Ras-GTP', 'active Ras', 'GTP-bound Ras']
+mw83de7813_4941_45a6_a320_a551165bf22a: ['Raf1', 'Raf kinase', 'MAPKKK']
+mw62bf5275_ce02_4e86_b3b6_3f87a335e1de: ['Akt', 'Protein kinase B', 'Akt kinase']
+
+Reason: The identifiers are complex and do not directly correspond to standard names; based on the context of EGFR signaling pathways, these are likely to be key signaling molecules such as Ras, Akt, SOS, Raf1, and GDP.

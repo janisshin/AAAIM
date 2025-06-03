@@ -1,0 +1,21 @@
+Model: BIOMD0000000246
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:40:56
+
+Synonyms:
+Ca_in: ['calcium ion', 'Ca2+', 'intracellular calcium']
+Ca_store: ['calcium store', 'endoplasmic reticulum calcium', 'intracellular calcium reservoir']
+Ca_ex: ['extracellular calcium', 'Ca2+ outside cell', 'extracellular calcium ion']
+M_P: ['phosphorylated molecule', 'phosphorylated species', 'UNK']
+M_C: ['metabolite C', 'UNK', 'UNK']
+M_B: ['metabolite B', 'UNK', 'UNK']
+Cl_ex: ['extracellular chloride', 'Cl− outside cell', 'chloride ion']
+Cl_o: ['extracellular chloride', 'Cl− outside cell', 'chloride ion']
+GABA: ['gamma-aminobutyric acid', 'GABA', 'GABA neurotransmitter']
+GABA_o: ['extracellular GABA', 'GABA outside cell', 'GABA neurotransmitter']
+K_in: ['intracellular potassium', 'K+', 'potassium ion']
+K_ex: ['extracellular potassium', 'K+', 'potassium ion']
+Na_in: ['intracellular sodium', 'Na+', 'sodium ion']
+Na_ex: ['extracellular sodium', 'Na+', 'sodium ion']
+
+Reason: All species are related to ions or common neurotransmitters involved in neuronal electrophysiology; some are unspecified metabolites or molecules, hence "UNK" for uncertain or unspecified entities.

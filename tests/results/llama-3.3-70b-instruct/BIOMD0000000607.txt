@@ -1,0 +1,20 @@
+Model: BIOMD0000000607
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:22:38
+
+Synonyms:
+glycerol_i: ['glycerol', 'glycerin', 'propan-1,2,3-triol']
+glucose_i: ['glucose', 'D-glucose', 'dextrose']
+G6P: ['glucose-6-phosphate', 'D-glucose-6-phosphate', 'G6P']
+trehalose: ['trehalose', 'mycose', 'α,α-trehalose']
+F16DP: ['fructose-1,6-bisphosphate', 'D-fructose-1,6-bisphosphate', 'F1,6BP']
+pyruvate: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+acetate_i: ['acetic acid', 'acetate', 'ethanoic acid']
+ethanol_i: ['ethanol', 'ethyl alcohol', 'alcohol']
+glycerol_e: ['glycerol', 'glycerin', 'propan-1,2,3-triol']
+glucose_e: ['glucose', 'D-glucose', 'dextrose']
+acetate_e: ['acetic acid', 'acetate', 'ethanoic acid']
+ethanol_e: ['ethanol', 'ethyl alcohol', 'alcohol']
+trehalose_e: ['trehalose', 'mycose', 'α,α-trehalose']
+
+Reason: The species were annotated based on their display names and reaction equations. For species with "_i" or "_e" suffixes, they were assumed to be the same chemical entity as their suffix-less counterparts, with the suffix indicating intracellular or extracellular location. F16DP was annotated as fructose-1,6-bisphosphate based on its involvement in glycolytic reactions. G6P was annotated as glucose-6-phosphate based on its display name and reaction equations.

@@ -1,0 +1,88 @@
+Model: BIOMD0000000177
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:38:40
+
+Synonyms:
+GLCi: ['glucose', 'glucose (cytoplasmic)', 'D-glucose']
+
+Reason: GLCi likely refers to cytoplasmic glucose, a common abbreviation.
+
+ATP: "adenosine triphosphate", "ATP"
+Reason: Standard energy currency molecule.
+
+G6P: "glucose-6-phosphate", "G6P"
+Reason: Key glycolytic intermediate.
+
+ADP: "adenosine diphosphate", "ADP"
+Reason: Product of ATP dephosphorylation.
+
+F6P: "fructose-6-phosphate", "F6P"
+Reason: Glycolytic intermediate.
+
+F16bP: "fructose-1,6-bisphosphate", "F1,6BP"
+Reason: Key glycolytic intermediate.
+
+F26bP: "fructose-2,6-bisphosphate", "F2,6BP"
+Reason: Regulatory glycolytic molecule.
+
+AMP: "adenosine monophosphate", "AMP"
+Reason: Nucleotide involved in energy regulation.
+
+DHAP: "dihydroxyacetone phosphate", "DHAP"
+Reason: Glycolytic intermediate.
+
+GAP: "glyceraldehyde-3-phosphate", "G3P"
+Reason: Glycolytic intermediate.
+
+NAD: "nicotinamide adenine dinucleotide", "NAD+"
+Reason: Electron carrier in oxidation reactions.
+
+BPG: "1,3-bisphosphoglycerate", "BPG"
+Reason: Glycolytic intermediate.
+
+NADH: "nicotinamide adenine dinucleotide (reduced)", "NADH"
+Reason: Electron carrier in reduced form.
+
+P3G: "3-phosphoglycerate", "3PG"
+Reason: Glycolytic intermediate.
+
+P2G: "2-phosphoglycerate", "2PG"
+Reason: Glycolytic intermediate.
+
+PEP: "phosphoenolpyruvate", "PEP"
+Reason: Glycolytic intermediate.
+
+PYR: "pyruvate", "pyruvic acid"
+Reason: End product of glycolysis.
+
+PYRmito: "mitochondrial pyruvate", "pyruvate (mitochondrial)"
+Reason: Pyruvate within mitochondria.
+
+AcAld: "acetaldehyde", "ethanal"
+Reason: Common aldehyde metabolite.
+
+GLCo: "glucose", "glucose (extracellular)", "D-glucose"
+Reason: Likely extracellular glucose.
+
+CO2: "carbon dioxide", "CO2"
+Reason: Common metabolic waste.
+
+EtOH: "ethanol", "ethyl alcohol"
+Reason: Fermentation product.
+
+Glycerol: "glycerol", "glycerin"
+Reason: Simple polyol.
+
+Glycogen: "glycogen", "animal starch"
+Reason: Storage polysaccharide.
+
+Trehalose: "trehalose", "mycose"
+Reason: Disaccharide sugar.
+
+Succinate: "succinate", "butanedioate"
+Reason: TCA cycle intermediate.
+
+CO2mito: "mitochondrial carbon dioxide", "CO2 (mitochondrial)"
+Reason: CO2 produced in mitochondria.
+
+Reason: All species are recognized as biochemical compounds, with standard or common synonyms. "UNK" is not needed here.

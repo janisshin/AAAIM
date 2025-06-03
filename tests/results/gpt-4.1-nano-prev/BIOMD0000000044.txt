@@ -1,0 +1,15 @@
+Model: BIOMD0000000044
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:52
+
+Synonyms:
+EC: ['endoplasmic reticulum calcium ATPase', 'SERCA pump', 'sarcoplasmic/endoplasmic reticulum calcium ATPase']
+Z: ['cytosolic calcium', 'Ca2+', 'free calcium ion']
+A: ['inositol 1,4,5-trisphosphate', 'IP3', 'InsP3']
+Y: ['unknown', 'UNK', 'not specified']
+
+Reason: 
+EC is likely the endoplasmic reticulum calcium pump involved in calcium regulation.
+Z is the cytosolic calcium concentration, a common signaling ion.
+A is inositol 1,4,5-trisphosphate, a key signaling molecule in calcium release.
+Y is unspecified in the data; no information provided.

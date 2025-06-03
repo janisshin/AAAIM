@@ -1,0 +1,11 @@
+Model: BIOMD0000000055
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:35:15
+
+Synonyms:
+cLm: ['LHY mRNA', 'LHY transcript', 'LHY RNA']
+cTm: ['TOC1 mRNA', 'TOC1 transcript', 'TOC1 RNA']
+cXm: ['X mRNA', 'X transcript', 'X RNA']
+cYm: ['Y mRNA', 'Y transcript', 'Y RNA']
+
+Reason: All species are labeled as mRNA in the model, indicating they are messenger RNAs of specific genes involved in the circadian clock. The synonyms reflect their status as RNA molecules transcribed from respective genes.

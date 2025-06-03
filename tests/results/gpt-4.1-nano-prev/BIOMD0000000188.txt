@@ -1,0 +1,10 @@
+Model: BIOMD0000000188
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:39:06
+
+Synonyms:
+Mdm2_mRNA: ['Mdm2 mRNA', 'MDM2 mRNA', 'Mdm2 transcript']
+p53_mRNA: ['p53 mRNA', 'TP53 mRNA', 'p53 transcript']
+damDNA: ['damaged DNA', 'DNA with damage', 'DNA damage']
+
+Reason: Mdm2_mRNA and p53_mRNA are messenger RNAs for their respective proteins, commonly called by gene name plus "mRNA". damDNA refers to DNA that has sustained damage, a standard term in molecular biology.

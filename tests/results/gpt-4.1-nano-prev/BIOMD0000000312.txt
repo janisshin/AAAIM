@@ -1,0 +1,9 @@
+Model: BIOMD0000000312
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:52
+
+Synonyms:
+R: ['UNK']
+X: ['UNK']
+
+Reason: The model description indicates these species are part of a regulatory network with no explicit chemical identities provided; they are likely proteins or genes, not small molecules, thus not suitable for ChEBI annotation.

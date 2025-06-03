@@ -1,0 +1,9 @@
+Model: BIOMD0000000842
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:08:20
+
+Synonyms:
+PIP2: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'PI(4,5)P2']
+DAG: ['diacylglycerol', 'DAG', '1,2-diacylglycerol']
+
+Reason: Both are well-known lipid signaling molecules involved in GPCR pathways; their names are standard in biochemical contexts.

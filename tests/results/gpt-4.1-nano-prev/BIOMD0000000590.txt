@@ -1,0 +1,22 @@
+Model: BIOMD0000000590
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:03:12
+
+Synonyms:
+cp: ['cytidine phosphate', 'cytidine monophosphate', 'CMP']
+ca: ['cytidine', 'cytidine nucleoside', 'UNK']
+dho: ['dihydroorotate', 'dihydroorotate', 'UNK']
+oro: ['orotate', 'orotate', 'UNK']
+omp: ["orotidine 5'-monophosphate", 'OMP', 'uridine monophosphate']
+ump: ['uridine monophosphate', 'UMP', 'uridine monophosphate']
+udp: ['uridine diphosphate', 'UDP', 'uridine diphosphate']
+utp: ['uridine triphosphate', 'UTP', 'uridine triphosphate']
+ctp: ['cytidine triphosphate', 'CTP', 'cytidine triphosphate']
+
+Reason: 
+cp is likely cytidine monophosphate, a common nucleotide.
+ca is probably cytidine, a nucleoside, but less specific; "UNK" if uncertain.
+dho is dihydroorotate, an intermediate in pyrimidine biosynthesis.
+oro is orotate, a pyrimidine precursor.
+omp, ump, udp, utp, ctp are all nucleotides involved in pyrimidine metabolism, with standard abbreviations.
+All are consistent with pyrimidine biosynthesis pathway components.

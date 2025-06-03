@@ -1,0 +1,9 @@
+Model: BIOMD0000000171
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:38:20
+
+Synonyms:
+M_T: ['tim protein', 'timeless protein', 'tim gene product']
+M_P: ['per protein', 'period protein', 'per gene product']
+
+Reason: Both are mRNA species for circadian clock proteins in Drosophila, not chemical entities. They are gene transcripts, not chemicals.

@@ -1,0 +1,23 @@
+Model: BIOMD0000000097
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:06
+
+Synonyms:
+cLm: ['UNK']
+
+Reason: No clear chemical identity or common synonym; likely a model-specific notation.
+
+cP7m: "UNK"
+Reason: No identifiable chemical name; possibly a modified or synthetic molecule.
+
+cP9m: "UNK"
+Reason: No identifiable chemical name; possibly a modified or synthetic molecule.
+
+cTm: "UNK"
+Reason: No clear chemical identity; likely a model-specific or hypothetical species.
+
+cXm: "UNK"
+Reason: No identifiable chemical name; possibly a synthetic or model-specific entity.
+
+cYm: "UNK"
+Reason: No identifiable chemical name; possibly a synthetic or model-specific entity.

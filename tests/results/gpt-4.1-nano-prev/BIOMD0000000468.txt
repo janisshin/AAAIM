@@ -1,0 +1,25 @@
+Model: BIOMD0000000468
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:48:19
+
+Synonyms:
+s1: ['calcium ion', 'Ca2+', 'calcium']
+s2: ['cytosolic calcium', 'Ca2+ (cytoplasm)', 'cytoplasmic calcium']
+s3: ['calcium ion', 'Ca2+', 'calcium']
+s4: ['calcium extracellular', 'Ca2+ (extracellular)', 'extracellular calcium']
+s6: ['IP3', 'inositol 1,4,5-trisphosphate', 'inositol triphosphate']
+s19: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'phosphatidylinositol 4,5-bisphosphate']
+s45: ['eNOS-CaM-Ca4', 'endothelial nitric oxide synthase complex', 'eNOS with calcium-calmodulin']
+s47: ['calmodulin', 'CaM', 'calcium-binding messenger protein']
+s48: ['CaM-Ca2+', 'calcium-calmodulin complex', 'calmodulin with calcium']
+s50: ['endothelial nitric oxide synthase', 'eNOS', 'nitric oxide synthase 3']
+s58: ['Hsp90-eNOS-CaM-Ca4', 'Hsp90-eNOS complex', 'Hsp90 with eNOS and calcium-calmodulin']
+s60: ['Hsp90-p-eNOS-CaM-Ca4', 'phosphorylated Hsp90-eNOS complex', 'Hsp90-eNOS with phosphorylation']
+s61: ['Hsp90-eNOS-CaM-Ca2', 'Hsp90-eNOS complex with calcium-calmodulin', 'Hsp90 with eNOS and calcium']
+s62: ['Hsp90-p-eNOS-CaM-Ca2', 'phosphorylated Hsp90-eNOS complex with calcium', 'Hsp90 with phosphorylated eNOS and calcium']
+s63: ['L-Arginine', 'L-arginine', 'arginine']
+s64: ['NO', 'nitric oxide', 'nitrogen monoxide']
+s102: ['Ras-GTP', 'Ras in active form', 'Ras bound to GTP']
+s103: ['Ras-GDP', 'Ras in inactive form', 'Ras bound to GDP']
+
+Reason: The species are mostly well-known ions, signaling molecules, or proteins. Calcium species are identified by their common forms, PIP2 and IP3 are phospholipids and signaling molecules, eNOS and Hsp90 are proteins with well-established names, and NO is a common signaling gas. Ras states are standard GTP/GDP-bound forms.

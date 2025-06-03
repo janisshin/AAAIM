@@ -1,0 +1,13 @@
+Model: BIOMD0000000633
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:21:10
+
+Synonyms:
+glc_ext: ['glucose', 'glucose (extracellular)', 'blood glucose']
+lac_ext: ['lactate', 'lactic acid', 'lactate (extracellular)']
+glc: ['glucose', 'glucose (intracellular)', 'blood glucose']
+bpg13: ['bisphosphoglycerate', '1,3-bisphosphoglycerate', 'BPG']
+lac: ['lactate', 'lactic acid', 'lactate']
+glc_er: ['glucose', 'glucose (endoplasmic reticulum)', 'intracellular glucose']
+
+Reason: The species are related to glucose and lactate, common metabolic substrates; "bpg13" is a well-known glycolytic intermediate; "glc_er" likely refers to glucose in the ER, but "glucose" is the most general and recognizable name.

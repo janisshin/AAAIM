@@ -1,0 +1,10 @@
+Model: BIOMD0000000394
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:18:01
+
+Synonyms:
+s125: ['guanosine diphosphate', 'GDP', "guanosine 5'-diphosphate"]
+s126: ['guanosine triphosphate', 'GTP', "guanosine 5'-triphosphate"]
+s142: ['erlotinib', 'erlotinib hydrochloride', 'OSI-774']
+
+Reason: s125 and s126 are annotated based on their display names 'GDP' and 'GTP' which are standard abbreviations for guanosine diphosphate and guanosine triphosphate. s142 is annotated based on its display name 'erlotinib', a well-known tyrosine kinase inhibitor used in cancer treatment, with the additional names being a salt form and a research code name.

@@ -1,0 +1,11 @@
+Model: BIOMD0000000045
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:50:39
+
+Synonyms:
+EC: ['endoplasmic reticulum calcium', 'ER calcium', 'calcium store']
+Z: ['cytosolic calcium', 'cytoplasmic calcium', 'Ca2+']
+Y: ['intracellular calcium', 'cell calcium', 'Ca2+']
+X: ['calcium pool', 'intracellular calcium store', 'calcium compartment']
+
+Reason: The model involves calcium oscillations with species labeled as EC (likely endoplasmic reticulum calcium), Z and Y (cytosolic calcium levels), and X (another calcium pool or store). The reactions suggest calcium fluxes between these compartments, typical in calcium signaling models.

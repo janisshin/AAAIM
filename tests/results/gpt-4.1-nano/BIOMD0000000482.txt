@@ -1,0 +1,14 @@
+Model: BIOMD0000000482
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:12:24
+
+Synonyms:
+PYRout: ['pyruvate', 'pyruvic acid', 'pyruvate (external)']
+GLCex: ['glucose', 'glucose (external)', 'd-glucose']
+F16P: ['fructose-1,6-bisphosphate', 'F1,6BP', 'F16P']
+PYRin: ['pyruvate', 'pyruvic acid', 'pyruvate (input)']
+LAC: ['lactate', 'lactic acid', 'lactate (external)']
+OAA: ['oxaloacetate', 'oxaloacetate', 'OAA']
+G1P: ['glucose-1-phosphate', 'G1P', 'α-D-glucose-1-phosphate']
+
+Reason: The model involves key glycolytic and gluconeogenic intermediates; species are standard metabolites involved in these pathways.

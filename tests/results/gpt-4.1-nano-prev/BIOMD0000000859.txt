@@ -1,0 +1,17 @@
+Model: BIOMD0000000859
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:08:38
+
+Synonyms:
+sucr: ['sucrose', 'table sugar', 'sucrose (disaccharide)']
+EtrioseP: ['glyceraldehyde 3-phosphate', 'triose phosphate', 'g3p']
+Ephe: ['phe', 'phenylalanine', 'phenylalanine (amino acid)']
+N: ['nitrogen', 'ammonia', 'ammonium']
+starch: ['starch', 'amylose', 'amylopectin']
+Next: ['UNK']
+Enitrate: ['nitrate', 'nitrate ion', 'NO3−']
+trioseP: ['glyceraldehyde 3-phosphate', 'triose phosphate', 'g3p']
+ECO2: ['carbon dioxide', 'CO2', 'dioxide']
+Estarch: ['starch', 'amylose', 'amylopectin']
+
+Reason: The reactions involve common metabolic intermediates and molecules; "sucr" is sucrose, "starch" and "Estarch" are starch, "ECO2" is CO2, "N" is nitrogen, "Enitrate" is nitrate, and "trioseP" is glyceraldehyde 3-phosphate. "EtrioseP" and "Ephe" are likely the same as "trioseP" and phenylalanine, respectively. "Next" is undefined.

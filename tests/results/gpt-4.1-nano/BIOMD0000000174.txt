@@ -1,0 +1,11 @@
+Model: BIOMD0000000174
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:54:21
+
+Synonyms:
+r5: ['Rab5-GTP', 'Rab5', 'RAB5']
+R5: ['Rab5-GTP', 'Rab5', 'RAB5']
+r7: ['Rab7-GTP', 'Rab7', 'RAB7']
+R7: ['Rab7-GTP', 'Rab7', 'RAB7']
+
+Reason: The species are the GTP-bound and GDP-bound forms of Rab5 and Rab7, which are well-known small GTPases involved in endosomal trafficking. The notation r and R likely denote GDP- and GTP-bound states respectively, so the standardized names reflect their active/inactive forms.

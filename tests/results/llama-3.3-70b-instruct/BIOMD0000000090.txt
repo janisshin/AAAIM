@@ -1,0 +1,29 @@
+Model: BIOMD0000000090
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:52:18
+
+Synonyms:
+sul_ex: ['sulfate', 'sulfuric acid', 'sulfate ion']
+eth_ex: ['ethanol', 'ethyl alcohol', 'alcohol']
+oxy_ex: ['oxygen', 'dioxygen', 'O2']
+oxy: ['oxygen', 'dioxygen', 'O2']
+H2O: ['water', 'dihydrogen monoxide', 'H2O']
+A3c: ['ATP', 'adenosine triphosphate', "adenosine 5'-triphosphate"]
+aps: ["adenosine 5'-phosphosulfate", 'APS', "5'-adenylylsulfate"]
+PPi: ['diphosphate', 'pyrophosphate', 'inorganic diphosphate']
+pap: ["3'-phosphoadenosine 5'-phosphosulfate", 'PAPS', 'phosphoadenosine phosphosulfate']
+sul: ['sulfate', 'sulfuric acid', 'sulfate ion']
+eth: ['ethanol', 'ethyl alcohol', 'alcohol']
+A2c: ['ADP', 'adenosine diphosphate', "adenosine 5'-diphosphate"]
+hyd: ['hydrogen sulfide', 'H2S', 'sulfane']
+cys: ['cysteine', 'L-cysteine', '3-mercaptopropanoic acid']
+N2: ['NADH', 'nicotinamide adenine dinucleotide', 'reduced nicotinamide adenine dinucleotide']
+N1: ['NAD', 'nicotinamide adenine dinucleotide', 'oxidized nicotinamide adenine dinucleotide']
+aco: ['acetyl-CoA', 'acetyl coenzyme A', 'S-acetyl-CoA']
+oah: ['UNK']
+A2m: ['ADP', 'adenosine diphosphate', "adenosine 5'-diphosphate"]
+A3m: ['ATP', 'adenosine triphosphate', "adenosine 5'-triphosphate"]
+Ho: ['UNK']
+Hm: ['UNK']
+
+Reason: The species were matched to their display names and then standardized to common chemical names. sul_ex, eth_ex, oxy_ex, oxy, H2O, A3c, aps, PPi, pap, sul, eth, A2c, hyd, cys, N2, N1, aco, A2m, and A3m were matched directly to their display names. oah, Ho, and Hm were not matched as they do not have clear chemical names associated with them.

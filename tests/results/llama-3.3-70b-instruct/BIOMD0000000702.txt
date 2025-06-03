@@ -1,0 +1,23 @@
+Model: BIOMD0000000702
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:31:12
+
+Synonyms:
+Tem1GTP: ['GTP', 'guanosine triphosphate', "guanosine 5'-triphosphate"]
+Tem1GDP: ['GDP', 'guanosine diphosphate', "guanosine 5'-diphosphate"]
+T_Tem1GTP: ['UNK']
+T_Tem1GDP: ['UNK']
+B_Bfa1_Tem1GTP: ['UNK']
+B_Bfa1P4_Tem1GTP: ['UNK']
+B_Bfa1P5_Tem1GTP: ['UNK']
+B_Bfa1_Tem1GDP: ['UNK']
+B_Bfa1P4_Tem1GDP: ['UNK']
+B_Bfa1P5_Tem1GDP: ['UNK']
+Bfa1_Tem1GTP: ['UNK']
+Bfa1P4_Tem1GTP: ['UNK']
+Bfa1P5_Tem1GTP: ['UNK']
+Bfa1_Tem1GDP: ['UNK']
+Bfa1P4_Tem1GDP: ['UNK']
+Bfa1P5_Tem1GDP: ['UNK']
+
+Reason: The species names Tem1GTP and Tem1GDP can be annotated with GTP and GDP respectively, as they are likely referring to the bound state of the Tem1 protein with GTP or GDP. The other species names contain protein names (Tem1, Bfa1) and post-translational modifications (GTP, GDP, P4, P5), but without more context or information about the specific biochemical reactions involved, it is difficult to provide standardized names or common synonyms, so they are annotated as "UNK".

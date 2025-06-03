@@ -1,0 +1,13 @@
+Model: BIOMD0000000075
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:49:31
+
+Synonyms:
+PIP2_PHGFP_PM: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', '1-phosphatidylinositol 4,5-bisphosphate']
+IP3_PHGFP_Cyt: ['inositol 1,4,5-trisphosphate', 'IP3', 'myo-inositol 1,4,5-trisphosphate']
+PIP2_PM: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', '1-phosphatidylinositol 4,5-bisphosphate']
+DAG_PM: ['1,2-diacylglycerol', 'DAG', 'diglyceride']
+IP3X_Cytosol: ['UNK']
+IP3_Cyt: ['inositol 1,4,5-trisphosphate', 'IP3', 'myo-inositol 1,4,5-trisphosphate']
+
+Reason: The model is about phosphoinositide turnover, and the display names and notes suggest that PIP2 and IP3 are phosphatidylinositol 4,5-bisphosphate and inositol 1,4,5-trisphosphate respectively. DAG is likely 1,2-diacylglycerol, a product of PIP2 hydrolysis. IP3X_Cytosol has no clear definition or reaction, so it is annotated as "UNK".

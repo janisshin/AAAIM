@@ -1,0 +1,10 @@
+Model: BIOMD0000000184
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:39:03
+
+Synonyms:
+X: ['calcium', 'calcium ion', 'Ca2+']
+Y: ['calcium in endoplasmic reticulum', 'ER calcium', 'calcium store']
+Z: ['inositol 1,4,5-trisphosphate', 'IP3', 'InsP3']
+
+Reason: X is cytoplasmic calcium, a common cellular signaling ion; Y is ER calcium, a stored form; Z is IP3, a well-known second messenger involved in calcium release.

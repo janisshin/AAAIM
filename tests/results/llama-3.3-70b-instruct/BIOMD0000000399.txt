@@ -1,0 +1,26 @@
+Model: BIOMD0000000399
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:18:41
+
+Synonyms:
+x20: ['Ras-GDP', 'GDP-bound Ras', 'Ras protein']
+x21: ['Ras-GTP', 'GTP-bound Ras', 'Ras protein']
+x26: ['Ras-GDP', 'GDP-bound Ras', 'Ras protein']
+x27: ['Ras-GDP', 'GDP-bound Ras', 'Ras protein']
+x28: ['Ras-GTP', 'GTP-bound Ras', 'Ras protein']
+x29: ['Ras-GTP', 'GTP-bound Ras', 'Ras protein']
+x36: ['Ras-GDP', 'GDP-bound Ras', 'Ras protein']
+x37: ['Ras-GTP', 'GTP-bound Ras', 'Ras protein']
+x42: ['Raf-Ras-GTP', 'Raf1 protein', 'A-Raf protein']
+x43: ['Ras-GTP', 'GTP-bound Ras', 'Ras protein']
+x67: ['Ras-GDP', 'GDP-bound Ras', 'Ras protein']
+x68: ['Ras-GTP', 'GTP-bound Ras', 'Ras protein']
+x69: ['Ras-GTP', 'GTP-bound Ras', 'Ras protein']
+x70: ['Raf-Ras-GTP', 'Raf1 protein', 'A-Raf protein']
+x71: ['Ras-GTP', 'GTP-bound Ras', 'Ras protein']
+x89: ['UNK']
+x90: ['UNK']
+x93: ['UNK']
+x94: ['UNK']
+
+Reason: The species with names containing "Ras" are likely referring to the Ras protein, a small GTPase involved in cellular signal transduction. The species with names containing "Raf" are likely referring to the Raf protein, a kinase involved in the MAPK/ERK pathway. The species without clear references to known proteins or chemicals (x89, x90, x93, x94) are annotated as "UNK" due to the lack of clear information.

@@ -1,0 +1,24 @@
+Model: BIOMD0000000081
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:36:21
+
+Synonyms:
+GTPgS_C: ['GTP gamma S', 'GTPγS', "Guanosine 5'-O-(3-thiotriphosphate)"]
+PIP2_M: ['Phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'PIP2']
+GGDPbS_M: ['Geranylgeranyl diphosphate', 'GGDP', 'Geranylgeranyl pyrophosphate']
+Mg2_C: ['Magnesium ion', 'Mg2+', 'Magnesium']
+ATP_C: ['Adenosine triphosphate', 'ATP', 'Adenosine triphosphate']
+oxoM_EX: ['Oxomolybdate', 'Molybdate', 'Oxidized molybdenum species']
+GDPbS_C: ['GDP', 'Guanosine diphosphate', 'GDP']
+GGTPMg_M: ['Geranylgeranyl transferase', 'GGTase', 'GGT enzyme']
+GDP_C: ['Guanosine diphosphate', 'GDP', 'Guanosine diphosphate']
+GTP_C: ['Guanosine triphosphate', 'GTP', 'Guanosine triphosphate']
+GGDPAlF4Mg_M: ['Geranylgeranyl diphosphate analog', 'GGDP-AlF4', 'Geranylgeranyl pyrophosphate analog']
+ip3_C: ['Inositol 1,4,5-trisphosphate', 'IP3', 'Inositol trisphosphate']
+AlF4_C: ['Aluminum tetrafluoride', 'AlF4', 'Aluminum tetrafluoride']
+GGTPgS_M: ['Geranylgeranyl transferase', 'GGTase', 'GGT enzyme']
+GGDPAlF4_M: ['Geranylgeranyl diphosphate analog', 'GGDP-AlF4', 'Geranylgeranyl pyrophosphate analog']
+GGTPgSMg_M: ['Geranylgeranyl transferase with Mg', 'GGTase Mg', 'GGT enzyme with Mg']
+GGDP_M: ['Geranylgeranyl diphosphate', 'GGDP', 'Geranylgeranyl pyrophosphate']
+
+Reason: All are known biochemical entities or common analogs involved in lipid modification, nucleotide signaling, or enzyme activity. "GTPγS" is a common GTP analog, and PIP2 is a well-known phospholipid.

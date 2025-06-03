@@ -1,0 +1,130 @@
+Model: BIOMD0000000070
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:35:58
+
+Synonyms:
+Glcin: ['glucose', 'd-glucose', 'glucose (D)']
+
+Reason: Glcin is likely glucose, a common substrate in metabolism.
+
+MgATP: "magnesium ATP", "ATP", "adenosine triphosphate"
+Reason: MgATP is magnesium-bound ATP, a key energy currency.
+
+Glc6P: "glucose 6-phosphate", "G6P", "glucose-6-phosphate"
+Reason: Glc6P is glucose 6-phosphate, a central metabolite.
+
+MgADP: "magnesium ADP", "ADP", "adenosine diphosphate"
+Reason: MgADP is magnesium-bound ADP, involved in energy transfer.
+
+Fru6P: "fructose 6-phosphate", "F6P", "fructose-6-phosphate"
+Reason: Fru6P is fructose 6-phosphate, a glycolytic intermediate.
+
+Fru16P2: "fructose 1,6-bisphosphate", "F1,6BP", "fructose 1,6-phosphate"
+Reason: Fru16P2 is fructose 1,6-bisphosphate, a glycolytic intermediate.
+
+GraP: "glyceraldehyde 3-phosphate", "G3P", "glyceraldehyde-3-phosphate"
+Reason: GraP is glyceraldehyde 3-phosphate, a glycolytic intermediate.
+
+DHAP: "dihydroxyacetone phosphate", "DHAP", "dihydroxyacetone phosphate"
+Reason: DHAP is dihydroxyacetone phosphate, a glycolytic intermediate.
+
+Phi: "inorganic phosphate", "Pi", "phosphate"
+Reason: Phi is phosphate, a common inorganic form.
+
+NAD: "nicotinamide adenine dinucleotide", "NAD+", "NAD"
+Reason: NAD is a coenzyme involved in redox reactions.
+
+Gri13P2: "1,3-bisphosphoglycerate", "1,3-BPG", "1,3-bisphosphoglycerate"
+Reason: Gri13P2 is 1,3-bisphosphoglycerate, a glycolytic intermediate.
+
+NADH: "nicotinamide adenine dinucleotide (reduced)", "NADH", "reduced NAD"
+Reason: NADH is the reduced form of NAD, involved in energy transfer.
+
+Gri3P: "3-phosphoglycerate", "3PG", "3-phosphoglycerate"
+Reason: Gri3P is 3-phosphoglycerate, a glycolytic intermediate.
+
+Gri23P2f: "2,3-bisphosphoglycerate", "2,3-BPG", "2,3-bisphosphoglycerate"
+Reason: Gri23P2f is 2,3-bisphosphoglycerate, a glycolytic metabolite.
+
+Gri2P: "2-phosphoglycerate", "2PG", "2-phosphoglycerate"
+Reason: Gri2P is 2-phosphoglycerate, a glycolytic intermediate.
+
+P1NADP: "NADP", "nicotinamide adenine dinucleotide phosphate", "NADP+"
+Reason: P1NADP is NADP, a coenzyme in anabolic reactions.
+
+P1NADPH: "NADPH", "reduced NADP", "nicotinamide adenine dinucleotide phosphate (reduced)"
+Reason: P1NADPH is NADPH, a reducing agent.
+
+P2NADP: "NADP", "nicotinamide adenine dinucleotide phosphate", "NADP+"
+Reason: P2NADP is NADP, similar to P1NADP.
+
+P2NADPH: "NADPH", "reduced NADP", "nicotinamide adenine dinucleotide phosphate (reduced)"
+Reason: P2NADPH is NADPH, similar to P1NADPH.
+
+ATPf: "ATP", "adenosine triphosphate", "energy molecule"
+Reason: ATPf is ATP, the main energy currency.
+
+ADPf: "ADP", "adenosine diphosphate", "energy carrier"
+Reason: ADPf is ADP, involved in energy transfer.
+
+AMPf: "AMP", "adenosine monophosphate", "nucleotide"
+Reason: AMPf is AMP, a nucleotide involved in energy regulation.
+
+Mgf: "magnesium", "Mg", "magnesium ion"
+Reason: Mgf is magnesium ion, a cofactor.
+
+MgATP: "magnesium ATP", "MgATP", "adenosine triphosphate with magnesium"
+Reason: MgATP is magnesium-bound ATP.
+
+MgADP: "magnesium ADP", "MgADP", "adenosine diphosphate with magnesium"
+Reason: MgADP is magnesium-bound ADP.
+
+MgGri23P2: "magnesium 2,3-bisphosphoglycerate", "Mg-2,3-BPG"
+Reason: MgGri23P2 is magnesium complexed with 2,3-bisphosphoglycerate.
+
+P1f: "protein1", "protein", "polypeptide"
+Reason: P1f is a generic protein species.
+
+P2f: "protein2", "protein", "polypeptide"
+Reason: P2f is a generic protein species.
+
+GlcA6P: "glucose 6-phosphate", "G6P", "glucose-6-phosphate"
+Reason: GlcA6P is glucose 6-phosphate.
+
+Rul5P: "ribulose 5-phosphate", "Ru5P", "ribulose-5-phosphate"
+Reason: Rul5P is ribulose 5-phosphate.
+
+Xul5P: "xylulose 5-phosphate", "Xu5P", "xylulose-5-phosphate"
+Reason: Xul5P is xylulose 5-phosphate.
+
+Rib5P: "ribose 5-phosphate", "R5P", "ribose-5-phosphate"
+Reason: Rib5P is ribose 5-phosphate.
+
+Sed7P: "sedoheptulose 7-phosphate", "S7P", "sedoheptulose-7-phosphate"
+Reason: Sed7P is sedoheptulose 7-phosphate.
+
+E4P: "erythrose 4-phosphate", "E4P", "erythrose-4-phosphate"
+Reason: E4P is erythrose 4-phosphate.
+
+MgAMP: "magnesium AMP", "MgAMP", "adenosine monophosphate with magnesium"
+Reason: MgAMP is magnesium-bound AMP.
+
+P1f: "protein1", "protein", "polypeptide"
+Reason: P1f is a generic protein species.
+
+Lac: "lactate", "lactic acid", "pyruvate (lactate form)"
+Reason: Lac is lactate, a fermentation product.
+
+Lacex: "external lactate", "lactate outside", "lactate outside cell"
+Reason: Lacex is external lactate.
+
+Pyrex: "external pyruvate", "pyruvate outside", "pyruvate outside cell"
+Reason: Pyrex is external pyruvate.
+
+Glcout: "glucose outside", "extracellular glucose", "glucose outside cell"
+Reason: Glcout is extracellular glucose.
+
+Phiex: "external phosphate", "phosphate outside", "extracellular phosphate"
+Reason: Phiex is external phosphate.
+
+Reason: All species are recognized as common metabolites or cofactors in central metabolism; "UNK" is not needed.

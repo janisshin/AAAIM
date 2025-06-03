@@ -1,0 +1,26 @@
+Model: BIOMD0000000570
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:16:19
+
+Synonyms:
+species_1: ['sodium ion', 'sodium', 'Na+']
+species_2: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+species_3: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+species_4: ['glucose', 'D-glucose', 'dextrose']
+species_5: ['glyceraldehyde 3-phosphate', 'GAP', '3-phosphoglyceraldehyde']
+species_6: ['nicotinamide adenine dinucleotide', 'NAD+', 'nicotinamide adenine dinucleotide cation']
+species_7: ['nicotinamide adenine dinucleotide reduced form', 'NADH', 'reduced nicotinamide adenine dinucleotide']
+species_8: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+species_9: ['phosphoenolpyruvic acid', 'PEP', 'phosphoenolpyruvate']
+species_10: ['lactic acid', 'lactate', '2-hydroxypropanoic acid']
+species_11: ['phosphocreatine', 'PCr', 'creatine phosphate']
+species_12: ['creatine', 'Cr', 'methylguanidineacetic acid']
+species_13: ['oxygen', 'dioxygen', 'O2']
+species_14: ['oxygen', 'dioxygen', 'O2']
+species_15: ['glucose', 'D-glucose', 'dextrose']
+species_16: ['lactic acid', 'lactate', '2-hydroxypropanoic acid']
+species_17: ['glucose', 'D-glucose', 'dextrose']
+species_18: ['lactic acid', 'lactate', '2-hydroxypropanoic acid']
+species_19: ['oxygen', 'dioxygen', 'O2']
+
+Reason: The species names were matched to their corresponding display names in the model, and then standardized names or common synonyms were found for each species based on their biochemical roles and the context of the model. The likelihood of each synonym was ranked based on its frequency of use in biochemical literature and its relevance to the specific reaction or pathway in which the species is involved.

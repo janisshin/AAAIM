@@ -1,0 +1,16 @@
+Model: BIOMD0000000248
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:57:09
+
+Synonyms:
+ATP: ['adenosine triphosphate', 'ATP', 'triphosphate nucleotide']
+PCr: ['phosphocreatine', 'creatine phosphate', 'PCr']
+ADP: ['adenosine diphosphate', 'ADP', 'diphosphate nucleotide']
+Cr: ['creatine', 'creatine', 'UNK']
+Pi: ['inorganic phosphate', 'phosphate', 'Pi']
+CTcap: ['muscle total creatine', 'muscle creatine pool', 'total creatine in capillaries']
+CTtis: ['tissue total creatine', 'tissue creatine pool', 'total creatine in tissue']
+CFcap: ['muscle free creatine', 'capillary free creatine', 'free creatine in capillaries']
+CFtis: ['tissue free creatine', 'tissue free creatine', 'free creatine in tissue']
+
+Reason: All species are standard biochemical entities involved in energy metabolism and creatine phosphate shuttle; abbreviations are mapped to common names or synonyms. Cr is ambiguous but most likely creatine.

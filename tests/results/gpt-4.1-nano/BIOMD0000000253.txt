@@ -1,0 +1,13 @@
+Model: BIOMD0000000253
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:57:11
+
+Synonyms:
+HMP: ['hexose monophosphate', 'glucose-6-phosphate', 'glucose-6-phosphate (D-)']
+Fru16P2: ['fructose 1,6-bisphosphate', 'FBP', 'fructose 1,6-biphosphate']
+ATP: ['adenosine triphosphate', 'ATP']
+Glc: ['glucose', 'd-glucose', 'blood sugar']
+Tre6P: ['trehalose 6-phosphate', 'trehalose-6-phosphate', 'Tre6P']
+ADP: ['adenosine diphosphate', 'ADP']
+
+Reason: All are well-established biochemical compounds, standard names or common synonyms for these metabolites.

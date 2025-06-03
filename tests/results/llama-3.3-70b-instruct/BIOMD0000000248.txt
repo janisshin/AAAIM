@@ -1,0 +1,16 @@
+Model: BIOMD0000000248
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:06:25
+
+Synonyms:
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+PCr: ['phosphocreatine', 'creatine phosphate', 'phosphocreatine ion']
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+Cr: ['creatine', 'creatine monohydrate', 'methylguanidineacetic acid']
+Pi: ['inorganic phosphate', 'phosphate ion', 'orthophosphate']
+CTcap: ['UNK']
+CTtis: ['UNK']
+CFcap: ['UNK']
+CFtis: ['UNK']
+
+Reason: ATP, PCr, ADP, and Cr are well-known biochemical compounds with established standardized names. Pi is also a well-known compound, often referred to as inorganic phosphate. CTcap, CTtis, CFcap, and CFtis do not have display names that match common biochemical compounds, and their reactions do not provide enough information to determine their standardized names, so they are annotated as "UNK".

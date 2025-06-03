@@ -1,0 +1,34 @@
+Model: BIOMD0000000153
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:55:06
+
+Synonyms:
+PP2B: ['protein phosphatase 2B', 'calcineurin', 'PP2B enzyme']
+D34_PP2B: ['UNK']
+D34_75_PP2B: ['UNK']
+D34_137_PP2B: ['UNK']
+D34_75_137_PP2B: ['UNK']
+Ca: ['calcium', 'calcium ion', 'Ca2+']
+PP2BinactiveCa2: ['UNK']
+cAMP: ['cyclic adenosine monophosphate', 'cAMP molecule', "adenosine 3',5'-cyclic monophosphate"]
+cAMP_R2C2: ['UNK']
+cAMP2_R2C2: ['UNK']
+cAMP3_R2C2: ['UNK']
+cAMP4_R2C2: ['UNK']
+cAMP4_R2C: ['UNK']
+cAMP4_R2: ['UNK']
+cAMP_PDE: ['cAMP-phosphodiesterase complex', 'cAMP-PDE', 'UNK']
+AMP: ['adenosine monophosphate', 'AMP molecule', "adenosine 5'-monophosphate"]
+cAMP_PDEP: ['UNK']
+D34_75_PP2ACa: ['UNK']
+D34_75_137_PP2ACa: ['UNK']
+D75_PP2ACa: ['UNK']
+D75_137_PP2ACa: ['UNK']
+D34_75_PP2APCa: ['UNK']
+PP2APCa: ['protein phosphatase 2A catalytic subunit', 'PP2A catalytic subunit', 'UNK']
+D34_75_137_PP2APCa: ['UNK']
+D75_PP2APCa: ['UNK']
+D75_137_PP2APCa: ['UNK']
+PP2ACa_PKA: ['UNK']
+
+Reason: Most species are annotated as "UNK" because their names do not directly correspond to known chemical entities or their display names do not provide sufficient information to determine their chemical identity. PP2B is identified as "protein phosphatase 2B" or "calcineurin" based on its display name and common knowledge. Ca is identified as "calcium" due to its common symbol. cAMP is identified as "cyclic adenosine monophosphate" based on its display name and common knowledge. AMP is identified as "adenosine monophosphate" based on its display name and common knowledge. PP2APCa is identified as "protein phosphatase 2A catalytic subunit" based on its display name and common knowledge.

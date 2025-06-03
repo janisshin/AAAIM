@@ -1,0 +1,12 @@
+Model: BIOMD0000000165
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:54:09
+
+Synonyms:
+Gsa_gdp_cell: ['G protein alpha subunit GDP', 'Gα-GDP', 'G protein alpha subunit GDP']
+Gsa_gtp_cell: ['G protein alpha subunit GTP', 'Gα-GTP', 'G protein alpha subunit GTP']
+ATP_cell: ['ATP', 'adenosine triphosphate', 'adenosine triphosphate (ATP)']
+cAMP_cell: ['cAMP', 'cyclic AMP', 'cyclic adenosine monophosphate']
+DMNB_cAMP_cell: ['DMNB-cAMP', 'dinitromethylbenzyl-cAMP', 'cyclic AMP derivative']
+
+Reason: The species are related to signaling molecules and G-protein subunits. Gsa_gdp_cell and Gsa_gtp_cell are G protein alpha subunits in GDP and GTP forms, respectively. ATP_cell and cAMP_cell are well-known nucleotides involved in signaling pathways. DMNB_cAMP_cell is a derivative of cAMP, likely a modified form used in experiments.

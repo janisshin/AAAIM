@@ -1,0 +1,11 @@
+Model: BIOMD0000000705
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:07:07
+
+Synonyms:
+nucleus_RNA_Inr: ['UNK', 'nuclear RNA', 'nuclear RNA Inr']
+cytoplasm_RNA_Inr: ['UNK', 'cytoplasmic RNA', 'cytoplasmic RNA Inr']
+nucleus_RNA_Sod2: ['UNK', 'nuclear SOD2 RNA', 'nuclear RNA Sod2']
+cytoplasm_RNA_Sod2: ['UNK', 'cytoplasmic SOD2 RNA', 'cytoplasmic RNA Sod2']
+
+Reason: All species are labeled as RNA associated with specific cellular compartments and proteins, but no direct chemical entities or standard names are provided. They likely represent RNA molecules, but without explicit sequence or chemical details, they cannot be confidently mapped to known chemical entities.

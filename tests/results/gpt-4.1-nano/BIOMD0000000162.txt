@@ -1,0 +1,21 @@
+Model: BIOMD0000000162
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:53:58
+
+Synonyms:
+PABCa_D_Cytosol: ['phosphatidic acid', 'PA', '1,2-diacyl-sn-glycerol-3-phosphate']
+Ca_D_ER: ['calcium', 'Ca2+', 'calcium ion']
+PABMg_D_Cytosol: ['magnesium phosphatidic acid', 'magnesium PA', 'MgPA']
+PABCa_Cytosol: ['phosphatidic acid', 'PA', '1,2-diacyl-sn-glycerol-3-phosphate']
+Mg_Cytosol: ['magnesium ion', 'Mg2+', 'magnesium']
+Ca_ER: ['calcium', 'Ca2+', 'calcium ion']
+Ca_D_Cytosol: ['calcium', 'Ca2+', 'calcium ion']
+PABMg_Cytosol: ['magnesium phosphatidic acid', 'magnesium PA', 'MgPA']
+IP3_Cytosol: ['inositol 1,4,5-trisphosphate', 'IP3', 'InsP3']
+Ca_Extracellular: ['calcium', 'Ca2+', 'extracellular calcium']
+IP3_D_Cytosol: ['inositol 1,4,5-trisphosphate', 'IP3', 'InsP3']
+Mg_D_Cytosol: ['magnesium ion', 'Mg2+', 'magnesium']
+Ca_Cytosol: ['calcium', 'Ca2+', 'cytosolic calcium']
+Ca_D_Extracellular: ['calcium', 'Ca2+', 'extracellular calcium']
+
+Reason: All species are related to calcium, magnesium, or phosphatidic acid, common signaling molecules or membrane lipids involved in calcium signaling pathways. The abbreviations and context suggest these are chemical entities, mostly ions or lipid derivatives.

@@ -1,0 +1,20 @@
+Model: BIOMD0000000603
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:20:05
+
+Synonyms:
+glycerol_i: ['glycerol', 'glycerol-3-phosphate', 'glycerin']
+glucose_i: ['glucose', 'd-glucose', 'blood sugar']
+G6P: ['glucose-6-phosphate', 'G6P', 'gluc-6-P']
+trehalose: ['trehalose', 'maltose', 'mycose']
+F16DP: ['fructose-1,6-bisphosphate', 'F16DP', 'FDP']
+pyruvate: ['pyruvate', 'pyruvic acid', 'pyruvate ion']
+acetate_i: ['acetate', 'acetic acid', 'acetate ion']
+ethanol_i: ['ethanol', 'ethyl alcohol', 'alcohol']
+glycerol_e: ['glycerol', 'glycerol', 'glycerin']
+glucose_e: ['glucose', 'd-glucose', 'blood sugar']
+acetate_e: ['acetate', 'acetic acid', 'acetate ion']
+ethanol_e: ['ethanol', 'ethyl alcohol', 'alcohol']
+trehalose_e: ['trehalose', 'maltose', 'disaccharide']
+
+Reason: The species are primarily metabolites involved in central carbon metabolism, with many being common sugars or their phosphorylated forms, and glycerol and acetate as simple organic molecules. The extracellular and intracellular distinctions are standard, and the synonyms reflect common biochemical nomenclature.

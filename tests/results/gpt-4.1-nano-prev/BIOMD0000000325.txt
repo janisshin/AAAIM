@@ -1,0 +1,10 @@
+Model: BIOMD0000000325
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:43:08
+
+Synonyms:
+L: ['ligand', 'signal molecule', 'chemical ligand']
+C: ['ligand-receptor complex', 'L-R complex', 'receptor-ligand complex']
+X: ['bound complex', 'X', 'ligand-receptor-inactive complex']
+
+Reason: L is a generic ligand; C is a receptor-ligand complex; X is a complex of ligand-receptor bound to an inactive transcription factor, all are chemical or biochemical entities.

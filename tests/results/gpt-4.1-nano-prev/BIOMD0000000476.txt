@@ -1,0 +1,12 @@
+Model: BIOMD0000000476
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:55:36
+
+Synonyms:
+cLm: ['mRNA', 'messenger RNA', 'RNA']
+cTm: ['mRNA', 'messenger RNA', 'RNA']
+cYm: ['mRNA', 'messenger RNA', 'RNA']
+cXm: ['mRNA', 'messenger RNA', 'RNA']
+cAm: ['mRNA', 'messenger RNA', 'RNA']
+
+Reason: All species are labeled as mRNA, which are nucleic acids, not small molecules or chemicals. Therefore, they are annotated as RNA/mRNA, not chemical entities.

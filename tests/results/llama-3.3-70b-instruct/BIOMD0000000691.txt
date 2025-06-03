@@ -1,0 +1,19 @@
+Model: BIOMD0000000691
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:30:19
+
+Synonyms:
+S1__Cell_1_: ['glucose', 'D-glucose', 'alpha-D-glucose']
+S1__Cell_2_: ['glucose', 'D-glucose', 'alpha-D-glucose']
+S3__Cell_1_: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'glycerate 3-phosphate']
+S3__Cell_2_: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'glycerate 3-phosphate']
+N2__Cell_1_: ['acetaldehyde', 'ethanal', 'acetic aldehyde']
+N2__Cell_2_: ['acetaldehyde', 'ethanal', 'acetic aldehyde']
+A3__Cell_1_: ['ATP', 'adenosine triphosphate', "adenosine 5'-triphosphate"]
+A3__Cell_2_: ['ATP', 'adenosine triphosphate', "adenosine 5'-triphosphate"]
+N1__Cell_1_: ['NAD+', 'nicotinamide adenine dinucleotide', 'NAD plus']
+N1__Cell_2_: ['NAD+', 'nicotinamide adenine dinucleotide', 'NAD plus']
+A2__Cell_1_: ['ADP', 'adenosine diphosphate', "adenosine 5'-diphosphate"]
+A2__Cell_2_: ['ADP', 'adenosine diphosphate', "adenosine 5'-diphosphate"]
+
+Reason: The model is a two-cell model of glycolysis, and the species names are inferred based on the reactions and the context of glycolysis. S1 is likely glucose, the starting material of glycolysis. S3 is likely 3-phosphoglycerate, an intermediate in glycolysis. N2 is likely acetaldehyde, mentioned in the notes as a mediator of intercellular interaction. A3 is likely ATP, a key energy carrier in glycolysis. N1 is likely NAD+, a coenzyme involved in glycolysis. A2 is likely ADP, the product of ATP dephosphorylation.

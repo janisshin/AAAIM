@@ -1,0 +1,12 @@
+Model: BIOMD0000000241
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:40:42
+
+Synonyms:
+X_gut: ['UNK', 'gut content', 'digestive tract content']
+C_p: ['plasma caffeine', 'blood caffeine', 'serum caffeine']
+C_per: ['peripheral caffeine', 'peripheral compartment', 'tissue caffeine']
+C_e: ['extravascular caffeine', 'extracellular caffeine', 'interstitial caffeine']
+C_t: ['tolerance effect', 'tolerance level', 'tolerance compartment']
+
+Reason: All species are model variables representing caffeine concentrations or effects; they are not standard chemical entities.

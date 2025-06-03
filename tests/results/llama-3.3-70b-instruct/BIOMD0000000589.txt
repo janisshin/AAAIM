@@ -1,0 +1,15 @@
+Model: BIOMD0000000589
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:20:43
+
+Synonyms:
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'NADP+', 'reduced nicotinamide adenine dinucleotide phosphate']
+NADPplus: ['nicotinamide adenine dinucleotide phosphate', 'NADP+', 'oxidized nicotinamide adenine dinucleotide phosphate']
+GSH: ['glutathione', 'reduced glutathione', 'L-glutathione']
+GSSG: ['glutathione disulfide', 'oxidized glutathione', 'L-glutathione disulfide']
+DHA: ['dehydroascorbic acid', 'dehydroascorbate', '5-dehydroascorbic acid']
+MDA: ['monodehydroascorbate', 'monodehydroascorbic acid', 'MDA radical']
+H2O2: ['hydrogen peroxide', 'hydroperoxide', 'dihydrogen dioxide']
+O2neg: ['superoxide', 'superoxide anion', 'dioxide(1-)']
+
+Reason: The model is described as the ascorbate-glutathione cycle, which is a well-known biochemical pathway involving the antioxidant defenses of plants. The species names are matched to their common biochemical names based on their roles in the pathway and the display names provided. NADPH and NADPplus are matched to their common names as electron carriers, GSH and GSSG are matched to their roles as antioxidants, DHA and MDA are matched to their roles as intermediates in the ascorbate-glutathione cycle, H2O2 is matched to its role as a reactive oxygen species, and O2neg is matched to its role as a superoxide anion.

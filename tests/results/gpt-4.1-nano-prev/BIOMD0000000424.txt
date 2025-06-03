@@ -1,0 +1,23 @@
+Model: BIOMD0000000424
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:46:07
+
+Synonyms:
+RasGDP: ['Ras GDP', 'Ras inactive', 'Ras guanosine diphosphate']
+
+Reason: RasGDP is the inactive form of Ras bound to GDP, a common nomenclature.
+
+PI2: "Phosphatidylinositol 2", "PI(2)", "PI2"
+Reason: PI2 likely refers to phosphatidylinositol 2, a lipid precursor.
+
+PIP3: "Phosphatidylinositol 3,4,5-trisphosphate", "PIP3", "Phosphatidylinositol (3,4,5)-trisphosphate"
+Reason: PIP3 is a well-known phosphoinositide involved in signaling.
+
+PTEN_PI: "PTEN phosphoinositide", "PTEN lipid substrate", "PTEN PIP2"
+Reason: PTEN acts on phosphoinositides, especially PIP3 and PIP2, as a lipid phosphatase.
+
+PI3Ka_PI: "PI3K alpha phosphoinositide", "PI3K alpha PIP2", "PI3K alpha lipid substrate"
+Reason: PI3Ka (PI3K alpha) phosphorylates PIP2 to PIP3, so this species likely refers to PIP2 involved in PI3K activity.
+
+RasGTP: "Ras GTP-bound", "Active Ras", "Ras guanosine triphosphate"
+Reason: RasGTP is the active form of Ras, bound to GTP, involved in signaling pathways.

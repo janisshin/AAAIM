@@ -1,0 +1,10 @@
+Model: BIOMD0000000076
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:52:00
+
+Synonyms:
+G3P: ['glycerol 3-phosphate', 'glycerol-3-phosphate', 'glycerol-3-phosphate (G3P)']
+Gly: ['glycerol', 'glycerin', 'glycerol (Gly)']
+DHAP: ['dihydroxyacetone phosphate', 'DHAP', 'dihydroxyacetone phosphate (DHAP)']
+
+Reason: G3P and DHAP are well-known glycolytic intermediates; Gly is glycerol, a common metabolite. The display names confirm these identities.

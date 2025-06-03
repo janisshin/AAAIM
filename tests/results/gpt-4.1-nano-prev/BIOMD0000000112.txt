@@ -1,0 +1,8 @@
+Model: BIOMD0000000112
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:37:20
+
+Synonyms:
+Pi: ['inorganic phosphate', 'phosphate', 'Pi']
+
+Reason: Pi is a common abbreviation for inorganic phosphate, a key molecule in phosphorylation reactions and energy transfer.

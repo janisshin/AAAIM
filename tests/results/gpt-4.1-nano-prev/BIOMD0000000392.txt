@@ -1,0 +1,91 @@
+Model: BIOMD0000000392
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:45:10
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'RuBP', 'ribulose bisphosphate']
+
+Reason: RuBP is the primary substrate for Rubisco in the Calvin cycle, well-known as ribulose-1,5-bisphosphate.
+
+PGA: "3-phosphoglycerate", "3-phosphoglyceric acid"
+Reason: PGA is the common abbreviation for 3-phosphoglycerate, a key Calvin cycle intermediate.
+
+GAP: "glyceraldehyde-3-phosphate", "G3P"
+Reason: GAP is the abbreviation for glyceraldehyde-3-phosphate, a triose phosphate in the Calvin cycle.
+
+DHAP: "dihydroxyacetone phosphate", "DHAP"
+Reason: DHAP is a standard abbreviation for dihydroxyacetone phosphate, a triose phosphate.
+
+FBP: "fructose-1,6-bisphosphate", "FBP"
+Reason: FBP is the common abbreviation for fructose-1,6-bisphosphate, an intermediate in Calvin cycle and glycolysis.
+
+HeP: "hexulose-6-phosphate", "hexulose phosphate"
+Reason: HeP likely refers to hexulose phosphate, involved in the Calvin cycle.
+
+F6P: "fructose-6-phosphate", "F6P"
+Reason: F6P is the standard abbreviation for fructose-6-phosphate, a sugar phosphate.
+
+Ru5P: "ribulose-5-phosphate", "Ru5P"
+Reason: Ru5P is the common abbreviation for ribulose-5-phosphate, a Calvin cycle intermediate.
+
+ATP: "adenosine triphosphate", "ATP"
+Reason: ATP is the universal energy currency.
+
+ADP: "adenosine diphosphate", "ADP"
+Reason: ADP is the dephosphorylated form of ATP.
+
+Pi: "inorganic phosphate", "Pi"
+Reason: Pi is the standard abbreviation for inorganic phosphate.
+
+CO2: "carbon dioxide", "CO2"
+Reason: CO2 is the chemical formula for carbon dioxide.
+
+O2: "oxygen", "O2"
+Reason: O2 is the molecular form of oxygen.
+
+NADPH: "nicotinamide adenine dinucleotide phosphate (reduced)", "NADPH"
+Reason: NADPH is the reduced form of NADP+, involved in reductive biosynthesis.
+
+NADP: "nicotinamide adenine dinucleotide phosphate (oxidized)", "NADP"
+Reason: NADP is the oxidized form, a cofactor in photosynthesis.
+
+PGAc: "3-phosphoglycerate (cytoplasmic)", "3-phosphoglycerate"
+Reason: PGAc likely refers to cytoplasmic 3-phosphoglycerate, a Calvin cycle intermediate.
+
+GAPc: "glyceraldehyde-3-phosphate (cytoplasmic)", "G3P"
+Reason: GAPc indicates cytoplasmic glyceraldehyde-3-phosphate.
+
+DHAPc: "dihydroxyacetone phosphate (cytoplasmic)", "DHAP"
+Reason: DHAPc refers to cytoplasmic dihydroxyacetone phosphate.
+
+FBPc: "fructose-1,6-bisphosphate (cytoplasmic)", "FBP"
+Reason: FBPc indicates cytoplasmic fructose-1,6-bisphosphate.
+
+HePc: "hexulose-6-phosphate (cytoplasmic)", "hexulose phosphate"
+Reason: HePc likely refers to cytoplasmic hexulose phosphate.
+
+F6Pc: "fructose-6-phosphate (cytoplasmic)", "F6P"
+Reason: F6Pc indicates cytoplasmic fructose-6-phosphate.
+
+UTPc: "uridine triphosphate (cytoplasmic)", "UTP"
+Reason: UTPc refers to cytoplasmic UTP, a nucleotide.
+
+UDPc: "uridine diphosphate (cytoplasmic)", "UDP"
+Reason: UDPc indicates cytoplasmic UDP, a nucleotide.
+
+ATPc: "adenosine triphosphate (cytoplasmic)", "ATP"
+Reason: ATPc is cytoplasmic ATP.
+
+ADPc: "adenosine diphosphate (cytoplasmic)", "ADP"
+Reason: ADPc is cytoplasmic ADP.
+
+Succ: "succinate", "succ"
+Reason: Succ is a common abbreviation for succinate, a TCA cycle intermediate.
+
+Pic: "picolinate", "picolinic acid"
+Reason: Pic likely refers to picolinate or picolinic acid, a known compound.
+
+Hc: "hydrogen ion", "proton"
+Reason: Hc probably refers to a proton (H+), common in biochemical reactions.
+
+Reason: All species are standard biochemical entities or common synonyms; "UNK" is not needed.

@@ -1,0 +1,13 @@
+Model: BIOMD0000000547
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:18:09
+
+Synonyms:
+species_6: ['arsenic(III) intracellular pool', 'vacuolar arsenic(III)', 'arsenic(III) sequestered']
+species_4: ['arsenic-glutathione conjugate', 'arsenic-glutathione complex', 'arsenic bound to glutathione']
+species_3: ['arsenic-glutathione conjugate', 'arsenic-GSH', 'arsenic bound to glutathione']
+species_1: ['arsenic(III) in cell', 'intracellular arsenic(III)', 'arsenic(III) in']
+species_2: ['protein-bound arsenic(III)', 'arsenic-protein complex', 'arsenic bound to proteins']
+species_7: ['glutathione', 'GSH', 'reduced glutathione']
+
+Reason: The model describes arsenic species and their interactions with glutathione and proteins in yeast cells, with arsenic(III) as the central element. GSH is a well-known antioxidant involved in detoxification.

@@ -1,0 +1,16 @@
+Model: BIOMD0000000206
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:01:02
+
+Synonyms:
+s1: ['glucose', 'D-glucose', 'blood sugar']
+at: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+s2: ['fructose-1,6-bisphosphate', 'fructose 1,6-diphosphate', 'F1,6BP']
+s3: ['glyceraldehyde 3-phosphate', '3-phosphoglyceraldehyde', 'G3P']
+s4: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'PGA']
+s5: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+s6: ['acetaldehyde', 'ethanal', 'acetic aldehyde']
+s6o: ['acetaldehyde', 'ethanal', 'acetic aldehyde']
+na: ['nicotinamide adenine dinucleotide', 'NAD', 'diphosphopyridine nucleotide']
+
+Reason: The model is based on glycolytic oscillations, and the display names provided match common intermediates in the glycolytic pathway. s1 is likely glucose, the starting material for glycolysis. at is likely ATP, a key energy currency in the cell. s2-s5 match other intermediates in the glycolytic pathway. s6 and s6o are likely acetaldehyde, a product of pyruvate decarboxylation. na is likely NAD, a cofactor involved in redox reactions in glycolysis.

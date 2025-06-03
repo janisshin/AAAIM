@@ -1,0 +1,24 @@
+Model: BIOMD0000000422
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:45:56
+
+Synonyms:
+s1: ['gibberellin A4', 'GA4', 'GA4 gibberellin']
+s23: ['gibberellin A12', 'GA12', 'GA12 gibberellin']
+s24: ['gibberellin A15', 'GA15', 'GA15 gibberellin']
+s25: ['gibberellin A24', 'GA24', 'GA24 gibberellin']
+s26: ['gibberellin A9', 'GA9', 'GA9 gibberellin']
+s29: ['gibberellin A9-GA3 oxidase', 'GA3ox', 'gibberellin 3-oxidase']
+s30: ['gibberellin A24-GA20 oxidase', 'GA20ox', 'gibberellin 20-oxidase']
+s31: ['gibberellin A15-GA20 oxidase', 'GA20ox', 'gibberellin 20-oxidase']
+s32: ['gibberellin A12-GA20 oxidase', 'GA20ox', 'gibberellin 20-oxidase']
+s36: ['gibberellin A4-GID receptor', 'GID1', 'gibberellin receptor']
+s45: ['GA4-GID-DELLA complex', 'GID-DELLA complex', 'gibberellin signaling complex']
+s62: ['GA4-GID-closed', 'GID1 complex', 'gibberellin receptor complex']
+s65: ['GA4-GID', 'GID1-GA4 complex', 'gibberellin receptor complex']
+s66: ['GA4 source', 'gibberellin source', 'GA4 biosynthesis']
+s68: ['sa6 degraded', 'degraded gibberellin', 'inactive gibberellin']
+s67: ['sa5 degraded', 'degraded gibberellin', 'inactive gibberellin']
+s70: ['sa8 degraded', 'degraded gibberellin', 'inactive gibberellin']
+
+Reason: All species are gibberellins, gibberellin biosynthesis enzymes, or receptor complexes involved in gibberellin signaling. "s1", "s23", "s24", "s25", "s26" are specific gibberellins; "s29", "s30", "s31" are oxidases involved in gibberellin biosynthesis; "s36" and "s62" are GID1 receptor complexes; "s45", "s65" are complexes involved in gibberellin signaling; degraded species are inactive forms. "s2" is GID, a receptor component, but not a chemical entity, hence "UNK".

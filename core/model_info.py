@@ -227,7 +227,7 @@ Model: "{model_info["model_name"]}"
 {model_info["model_notes"]}
 
 Return up to 3 standardized names or common synonyms for each species, ranked by likelihood.
-Use the below format, do not include any other text except the synonyms, and give short reasons for all species after 'Reason:'
+Use the below format, do not include any other text except the synonyms, and give short reasons for all species after 'Reason:' by the end.
 
 SpeciesA: "name1", "name2", …
 SpeciesB:  …

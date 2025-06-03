@@ -1,0 +1,8 @@
+Model: BIOMD0000000300
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:34
+
+Synonyms:
+species_11: ['oxygen', 'molecular oxygen', 'O2']
+
+Reason: The display name explicitly states "O2," which is the common chemical name for diatomic oxygen.

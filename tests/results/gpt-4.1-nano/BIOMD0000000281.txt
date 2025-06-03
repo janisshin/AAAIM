@@ -1,0 +1,31 @@
+Model: BIOMD0000000281
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:58:02
+
+Synonyms:
+GLU: ['glucose', 'dextrose', 'blood sugar']
+ENG: ['hexokinase-glucose intermediate', 'glucose-hexokinase complex', 'UNK']
+TP1: ['ATP in cytoplasm', 'cytoplasmic ATP', 'adenosine triphosphate']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+GLP: ['glucose-6-phosphate', 'G6P', 'glucose 6-phosphate']
+ETG: ['phosphofructokinase intermediate', 'PFK intermediate', 'UNK']
+GPP: ['hexose diphosphate', 'glucose diphosphate', 'UDP-glucose']
+GAP: ['glyceraldehyde 3-phosphate', 'G3P', 'glyceraldehyde-3-phosphate']
+DHA: ['dihydroxyacetone phosphate', 'DHAP', 'dihydroxyacetone phosphate']
+DPN: ['extramitochondrial diphospyridine nucleotide', 'DPN', 'NADH', '(assuming NADH as the reduced form)']
+DPH: ['extramitochondrial reduced diphospyridine nucleotide', 'DHP', 'reduced NADH']
+PID: ['inorganic phosphate', 'Pi', 'phosphate']
+DGA: ['1,3-diphosphoglycerate', '1,3-BPG', '3-phosphoglycerate', '(though DGA is specifically 1', '3-BPG)']
+PGA: ['3-phosphoglycerate', '3PG', 'phosphoglycerate']
+PYR: ['pyruvate', 'pyruvic acid', 'pyruvate']
+LAC: ['lactate', 'lactic acid', 'lactate']
+DIN: ['diphospyridine nucleotide in mitochondria', 'DIN', 'mitochondrial NADH', '(assuming NADH form)']
+DIH: ['reduced diphospyridine nucleotide in mitochondria', 'DIH', 'reduced NADH']
+OXY: ['oxygen', 'O2', 'dioxygen']
+TP2: ['ATP in store 2', 'mitochondrial ATP', 'ATP in mitochondria']
+PPP: ['enzyme intermediate in ATP utilization', 'PPP', 'phosphoryl transfer intermediate']
+AGP: ['alpha-glycerophosphate', 'GPA', 'glycerophosphate']
+MOD: ['glyceraldehyde 3-phosphate dehydrogenase-DPN complex', 'G3P-DPN complex', 'UNK']
+MOB: ['glyceraldehyde 3-phosphate dehydrogenase enzyme intermediate', 'G3P enzyme complex', 'UNK']
+
+Reason: The species are mostly well-known metabolites or enzyme complexes involved in glycolysis and related pathways. Some abbreviations are ambiguous but are associated with common metabolic intermediates or cofactors. ENG and ETZ are enzyme intermediates, and their exact chemical names are less certain, so "UNK" is used when appropriate.

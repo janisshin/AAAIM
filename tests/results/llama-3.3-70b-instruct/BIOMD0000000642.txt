@@ -1,0 +1,8 @@
+Model: BIOMD0000000642
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:28:34
+
+Synonyms:
+E: ['estrogen', 'oestradiol', '17beta-estradiol']
+
+Reason: The display name for E is 'estrogen', which is a common term for a group of related hormones, with oestradiol being a specific and prevalent form of estrogen, and 17beta-estradiol being a more precise chemical name for the same compound.

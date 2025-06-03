@@ -1,0 +1,11 @@
+Model: BIOMD0000000065
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:35:38
+
+Synonyms:
+M: ['mRNA', 'messenger RNA', 'transcript']
+A: ['allolactose', 'allolactose', 'beta-D-galactopyranosyl-(1→6)-D-galactose']
+L: ['lactose', 'lactose', 'beta-D-galactopyranosyl-(1→4)-D-glucose']
+L_e: ['external lactose', 'extracellular lactose', 'lactose outside cell']
+
+Reason: M is mRNA involved in gene expression; A is allolactose, a disaccharide derivative; L is lactose, the substrate; L_e is external lactose, the extracellular form.

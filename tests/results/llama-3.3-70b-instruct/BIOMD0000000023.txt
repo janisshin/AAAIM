@@ -1,0 +1,20 @@
+Model: BIOMD0000000023
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:43:29
+
+Synonyms:
+Fru: ['fructose', 'd-fructose', 'beta-d-fructose']
+Glc: ['glucose', 'd-glucose', 'alpha-d-glucose']
+HexP: ['hexose phosphate', 'd-hexose phosphate', 'hexose-1-phosphate']
+Suc6P: ['sucrose-6-phosphate', "sucrose-6'-phosphate", '6-phosphosucrose']
+Suc: ['sucrose', 'alpha-d-sucrose', 'beta-d-fructofuranosyl alpha-d-glucopyranoside']
+Sucvac: ['UNK']
+Glcex: ['extracellular glucose', 'external glucose', 'glucose(ex)']
+Fruex: ['extracellular fructose', 'external fructose', 'fructose(ex)']
+glycolysis: ['UNK']
+phos: ['phosphate group', 'phosphoryl group', 'phosphate ion']
+UDP: ['uridine diphosphate', "uridine 5'-diphosphate", 'UDP(3-)']
+ADP: ['adenosine diphosphate', "adenosine 5'-diphosphate", 'ADP(3-)']
+ATP: ['adenosine triphosphate', "adenosine 5'-triphosphate", 'ATP(4-)']
+
+Reason: The model is related to sucrose metabolism, and most species have display names that match common biochemical names. However, Sucvac and glycolysis are not clearly defined, and their names do not match any specific chemical entity. Glcex and Fruex are likely extracellular forms of glucose and fructose, respectively. phos is likely referring to a phosphate group, but it's not a specific chemical entity. UDP, ADP, and ATP are standardized names for common nucleotides.

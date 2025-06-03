@@ -1,0 +1,9 @@
+Model: BIOMD0000000040
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:43:52
+
+Synonyms:
+Br: ['bromide', 'bromide ion', 'Br-']
+BrO3: ['bromate', 'bromate ion', 'BrO3-']
+
+Reason: The display names and reactions in the model suggest that Br and BrO3 are ions, and the model is a simulation of the Belousov-Zhabotinsky reaction, which involves bromide and bromate ions. The display names {'Br': 'Br-', 'BrO3': 'BrO3-'} also support this annotation.

@@ -1,0 +1,9 @@
+Model: BIOMD0000000465
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:48:06
+
+Synonyms:
+s19: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'phosphatidylinositol 4,5-biphosphate']
+s17: ['phosphatidylinositol 3-phosphate', 'PI3P', 'phosphatidylinositol 3-phosphate']
+
+Reason: s19 is labeled as PIP2, a common abbreviation for phosphatidylinositol 4,5-bisphosphate; s17 is PI3P, a well-known phosphoinositide involved in signaling pathways.

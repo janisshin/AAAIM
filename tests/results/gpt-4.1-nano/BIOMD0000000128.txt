@@ -1,0 +1,10 @@
+Model: BIOMD0000000128
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:53:15
+
+Synonyms:
+c: ['cytosolic calcium', 'intracellular calcium', 'Ca2+']
+cer: ['endoplasmic reticulum calcium', 'ER calcium', 'calcium store']
+cAMP: ['cyclic AMP', 'cAMP', "adenosine 3',5'-cyclic monophosphate"]
+
+Reason: c is cytosolic calcium concentration; cer is ER calcium concentration; cAMP is cyclic adenosine monophosphate. The model references calcium concentrations and cAMP, which are well-known signaling molecules.

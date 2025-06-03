@@ -1,0 +1,11 @@
+Model: BIOMD0000000304
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:58:23
+
+Synonyms:
+h1: ['hyperpolarization-activated cyclic nucleotide-gated channel', 'h-current', 'Ih']
+x1: ['voltage-gated potassium channel', 'delayed rectifier potassium channel', 'Kv channel']
+n1: ['sodium channel', 'Na+ channel', 'voltage-gated sodium channel']
+c: ['calcium ion', 'Ca2+', 'calcium']
+
+Reason: The model references nerve cell bursting behavior and typical ion conductances involved in excitability. "h1" is likely the hyperpolarization-activated current (Ih), "x1" and "n1" are voltage-gated potassium and sodium channels, respectively, and "c" is calcium.

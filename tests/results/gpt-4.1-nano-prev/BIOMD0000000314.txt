@@ -1,0 +1,12 @@
+Model: BIOMD0000000314
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:55
+
+Synonyms:
+CD274mRNA: ['CD274 mRNA', 'PD-L1 mRNA', 'CD274 transcript']
+
+Reason: The species refers to the messenger RNA of CD274, also known as PD-L1, a well-known immune checkpoint ligand.
+
+Reason: Not applicable, as species is a nucleic acid transcript, not a chemical compound.
+
+Reason: Not applicable, as species is a nucleic acid transcript, not a chemical compound.

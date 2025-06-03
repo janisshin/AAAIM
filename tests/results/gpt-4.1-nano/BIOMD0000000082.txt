@@ -1,0 +1,13 @@
+Model: BIOMD0000000082
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:52:15
+
+Synonyms:
+DRG_GDP: ['GDP', 'guanosine diphosphate', 'GDP']
+GDP: ['GDP', 'guanosine diphosphate', 'guanosine diphosphate']
+DRG_GTP: ['GTP', 'guanosine triphosphate', 'GTP']
+GTP: ['GTP', 'guanosine triphosphate', 'guanosine triphosphate']
+G_GDP: ['GDP', 'guanosine diphosphate', 'GDP']
+G_GTP: ['GTP', 'guanosine triphosphate', 'GTP']
+
+Reason: The species are likely guanine nucleotide forms involved in GTPase activity; "DRG" is not a standard abbreviation, but the context suggests they are related to GTP/GDP.

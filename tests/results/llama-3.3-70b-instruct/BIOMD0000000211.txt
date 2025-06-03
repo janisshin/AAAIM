@@ -1,0 +1,34 @@
+Model: BIOMD0000000211
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:01:32
+
+Synonyms:
+species_1: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+species_2: ['ADP', 'adenosine diphosphate', "adenosine 5'-diphosphate"]
+species_3: ['ATP', 'adenosine triphosphate', "adenosine 5'-triphosphate"]
+species_4: ['phosphoenolpyruvic acid', 'phosphoenolpyruvate', '2-phosphoenolpyruvate']
+species_5: ['2-phosphoglyceric acid', '2-phosphoglycerate', '2-phosphoglyceric acid']
+species_6: ['cyclic adenosine monophosphate', 'cAMP', 'cyclic AMP']
+species_7: ['3-phosphoglyceric acid', '3-phosphoglycerate', '3-phosphoglyceric acid']
+species_8: ['dihydroxyacetone phosphate', 'DHAP', 'dihydroxyacetonephosphate']
+species_9: ['glycerol 3-phosphate', 'glycerol phosphate', 'sn-glycerol 3-phosphate']
+species_10: ['glucose', 'D-glucose', 'alpha-D-glucose']
+species_11: ['ADP', 'adenosine diphosphate', "adenosine 5'-diphosphate"]
+species_12: ['ADP', 'adenosine diphosphate', "adenosine 5'-diphosphate"]
+species_13: ['AMP', 'adenosine monophosphate', "adenosine 5'-monophosphate"]
+species_14: ['glucose 6-phosphate', 'D-glucose 6-phosphate', 'alpha-D-glucose 6-phosphate']
+species_15: ['fructose 6-phosphate', 'D-fructose 6-phosphate', 'beta-D-fructose 6-phosphate']
+species_16: ['fructose 1,6-bisphosphate', 'D-fructose 1,6-bisphosphate', 'beta-D-fructose 1,6-bisphosphate']
+species_17: ['dihydroxyacetone phosphate', 'DHAP', 'dihydroxyacetonephosphate']
+species_18: ['glyceraldehyde 3-phosphate', 'G3P', 'D-glyceraldehyde 3-phosphate']
+species_19: ['NAD', 'nicotinamide adenine dinucleotide', 'nicotinamide adenine dinucleotide (oxidized)']
+species_20: ['NADH', 'nicotinamide adenine dinucleotide (reduced)', 'reduced nicotinamide adenine dinucleotide']
+species_21: ['2,3-bisphosphoglyceric acid', '2,3-bisphosphoglycerate', '2,3-diphosphoglyceric acid']
+species_22: ['glycerol 3-phosphate', 'glycerol phosphate', 'sn-glycerol 3-phosphate']
+species_23: ['3-phosphoglyceric acid', '3-phosphoglycerate', '3-phosphoglyceric acid']
+species_24: ['glycerol', 'propane-1,2,3-triol', '1,2,3-propanetriol']
+species_25: ['glucose', 'D-glucose', 'alpha-D-glucose']
+species_26: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+species_27: ['glycerol', 'propane-1,2,3-triol', '1,2,3-propanetriol']
+
+Reason: The model is a glycolytic pathway model, and most of the species have display names that match common biochemical compounds. The reactions and notes provide additional context for identifying the species. For example, species_1 is identified as pyruvate based on its display name and its involvement in the reaction "vPT: species_1 => $species_26". Some species, such as species_6 and species_13, are identified as cyclic AMP and AMP, respectively, based on their display names, but may not be directly related to the glycolytic pathway. Species_19 and species_20 are identified as NAD and NADH, respectively, based on their display names and their roles as electron carriers in the glycolytic pathway.

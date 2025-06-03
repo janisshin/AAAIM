@@ -1,0 +1,29 @@
+Model: BIOMD0000000013
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:49:58
+
+Synonyms:
+x_CO2: ['carbon dioxide', 'CO2', 'unk']
+ATP_ch: ['adenosine triphosphate', 'ATP', 'unk']
+x_NADPH_ch: ['nicotinamide adenine dinucleotide phosphate', 'NADPH', 'unk']
+GAP_ch: ['glyceraldehyde-3-phosphate', 'G3P', 'unk']
+Pi_ch: ['inorganic phosphate', 'Pi', 'phosphate']
+DHAP_ch: ['dihydroxyacetone phosphate', 'DHAP', 'unk']
+FBP_ch: ['fructose-1,6-bisphosphate', 'FBP', 'unk']
+F6P_ch: ['fructose-6-phosphate', 'F6P', 'unk']
+E4P_ch: ['erythrose-4-phosphate', 'E4P', 'unk']
+X5P_ch: ['xylulose-5-phosphate', 'X5P', 'unk']
+SBP_ch: ['sedoheptulose-1,7-bisphosphate', 'SBP', 'unk']
+S7P_ch: ['sedoheptulose-7-phosphate', 'S7P', 'unk']
+R5P_ch: ['ribose-5-phosphate', 'R5P', 'unk']
+Ru5P_ch: ['ribulose-5-phosphate', 'Ru5P', 'unk']
+x_Pi_cyt: ['inorganic phosphate', 'Pi', 'phosphate']
+x_GAP_cyt: ['glyceraldehyde-3-phosphate', 'G3P', 'unk']
+G6P_ch: ['glucose-6-phosphate', 'G6P', 'unk']
+x_NADP_ch: ['nicotinamide adenine dinucleotide phosphate', 'NADP', 'unk']
+ADP_ch: ['adenosine diphosphate', 'ADP', 'unk']
+x_DHAP_cyt: ['dihydroxyacetone phosphate', 'DHAP', 'unk']
+x_Proton_ch: ['proton', 'H+', 'hydrogen ion']
+G1P_ch: ['glucose-1-phosphate', 'G1P', 'unk']
+
+Reason: All species are related to common biochemical molecules involved in photosynthesis and Calvin cycle pathways; "x_" prefix indicates variable or unspecified species, so "unk" is used when no clear name is provided.

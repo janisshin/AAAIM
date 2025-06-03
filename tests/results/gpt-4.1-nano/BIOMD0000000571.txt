@@ -1,0 +1,24 @@
+Model: BIOMD0000000571
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:18:59
+
+Synonyms:
+CRP_cAMP: ['cyclic AMP', 'cAMP', "adenosine 3',5'-cyclic monophosphate"]
+CRP_cAMP_CRPsiteI_crp: ['CRP-cAMP complex', 'cAMP-CRP', 'cyclic AMP receptor protein']
+CRP_cAMP_CRPsiteII_crp: ['CRP-cAMP complex', 'cAMP-CRP', 'cyclic AMP receptor protein']
+CRP_cAMP_CRPsite_cyaA: ['CyaA', 'adenylate cyclase', 'cAMP synthase']
+CRP_cAMP_CRPsite_genome: ['cyclic AMP', 'cAMP', "adenosine 3',5'-cyclic monophosphate"]
+CRP_cAMP_CRPsite_ptsGp1: ['PTS system component', 'phosphotransferase system protein']
+CRP_cAMP_CRPsite_ptsGp2: ['PTS system component', 'phosphotransferase system protein']
+CRP_cAMP_CRPsite_ptsHp0: ['PTS system component', 'phosphotransferase system protein']
+CRP_cAMP_CRPsite_ptsHp1: ['PTS system component', 'phosphotransferase system protein']
+CRP_cAMP_CRPsite_ptsIp0: ['PTS system component', 'phosphotransferase system protein']
+CRP_cAMP_CRPsite_ptsIp1: ['PTS system component', 'phosphotransferase system protein']
+CRP_cAMP_CRPsite_mlcp1: ['Mlc phosphatase', 'MLC phosphatase']
+CRP_cAMP_CRPsite_mlcp2: ['Mlc phosphatase', 'MLC phosphatase']
+Pyr: ['pyruvate', 'pyruvic acid']
+Glc6P: ['glucose-6-phosphate', 'glucose-6-phosphate']
+Glucose: ['glucose', 'd-glucose']
+ATP: ['adenosine triphosphate', 'ATP']
+
+Reason: The species are mostly related to cyclic AMP, a well-known signaling molecule, and various components of the PTS glucose transport system, which are standard biochemical entities. Pyr, Glc6P, Glucose, and ATP are common metabolites. The complex species are likely protein complexes or gene products, but without specific names, they are best represented by their general biochemical identities.

@@ -1,0 +1,12 @@
+Model: BIOMD0000000373
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:28
+
+Synonyms:
+c: ['glucose', 'glucose (D-)', 'D-glucose']
+cer: ['ceramide', 'ceramide (sphingolipid)', 'cer']
+g6p: ['glucose-6-phosphate', 'G6P', 'glucose-6-phosphate (D-)']
+fbp: ['fructose-1,6-bisphosphate', 'FBP', 'fructose 1,6-bisphosphate']
+adp: ['ADP', 'adenosine diphosphate', 'adenine nucleotide diphosphate']
+
+Reason: c is likely glucose, the primary substrate in glycolysis; cer is ceramide, a sphingolipid involved in signaling; g6p is glucose-6-phosphate, a key glycolytic intermediate; fbp is fructose-1,6-bisphosphate, a glycolytic metabolite; adp is adenosine diphosphate, a common energy currency.

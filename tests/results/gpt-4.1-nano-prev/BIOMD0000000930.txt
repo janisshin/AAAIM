@@ -1,0 +1,8 @@
+Model: BIOMD0000000930
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:08:57
+
+Synonyms:
+Chemotherapeutic_drug_concentration__M: ['chemotherapy drug', 'anticancer agent', 'cytotoxic agent']
+
+Reason: The species represents the concentration of a chemotherapeutic drug, which is a chemical compound used in cancer treatment; thus, standard names relate to the drug itself or its general class.

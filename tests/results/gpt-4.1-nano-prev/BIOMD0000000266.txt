@@ -1,0 +1,15 @@
+Model: BIOMD0000000266
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:41:43
+
+Synonyms:
+X0: ['glucose', 'D-glucose', 'blood sugar']
+X1: ['glucose', 'D-glucose', 'blood sugar']
+X2: ['glucose-6-phosphate', 'G6P', 'glucose-6-phosphate']
+X3: ['glucose-1-phosphate', 'G1P', 'glucose-1-phosphate']
+X4: ['uridine diphosphate glucose', 'UDP-glucose', 'UDPG']
+X5: ['glycogen', 'animal starch', 'glycogen']
+X6: ['trehalose-6-phosphate', 'T6P', 'trehalose-6-phosphate']
+X7: ['trehalose', 'maltose', 'mycose']
+
+Reason: The model describes yeast trehalose cycle; X2 and X6 are intermediates G6P and T6P, X4 is UDP-glucose, X5 is glycogen, X7 is trehalose, and X1/X0 are glucose. "G1P" is a common name for glucose-1-phosphate.

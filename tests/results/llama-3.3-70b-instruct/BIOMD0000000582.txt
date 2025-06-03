@@ -1,0 +1,8 @@
+Model: BIOMD0000000582
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:20:31
+
+Synonyms:
+Insulin: ['insulin', 'human insulin', 'insulin hormone']
+
+Reason: The species is explicitly named as "Insulin" in the display names, and the model description mentions "insulin-TOR" signaling, indicating that it refers to the hormone insulin, which is a well-known protein hormone that regulates blood sugar levels.

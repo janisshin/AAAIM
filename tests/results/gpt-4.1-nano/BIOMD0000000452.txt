@@ -1,0 +1,10 @@
+Model: BIOMD0000000452
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:01:22
+
+Synonyms:
+mwf40d6176_abfc_4a30_886f_83a19fcffc48: ['epidermal growth factor receptor 2', 'EGFR2', 'HER2']
+mwa54a9c38_c98b_45e5_8432_4119fb777e44: ['Ras-GTP', 'Ras bound GTP', 'active Ras']
+mw83de7813_4941_45a6_a320_a551165bf22a: ['Ras-GTP', 'Ras bound GTP', 'active Ras']
+
+Reason: The display names indicate these are signaling molecules involved in EGFR pathway; Ras-GTP is a common active form of Ras, and EGFR2 is a receptor tyrosine kinase. The other species are related to signaling intermediates or states.

@@ -1,0 +1,11 @@
+Model: BIOMD0000000182
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:58:03
+
+Synonyms:
+G_GDP_cyto: ['GDP', 'guanosine diphosphate']
+ATP_cyto: ['ATP', 'adenosine triphosphate', "adenosine 5'-triphosphate"]
+AMP_cyto: ['AMP', 'adenosine monophosphate', "adenosine 5'-monophosphate"]
+cAMP_cyto: ['cAMP', 'cyclic AMP', 'cyclic adenosine monophosphate']
+
+Reason: The model description and notes mention the cAMP/PKA signaling pathway, indicating that G_GDP_cyto is likely GDP, ATP_cyto is ATP, AMP_cyto is AMP, and cAMP_cyto is cyclic AMP, which are all common molecules in cellular signaling pathways.

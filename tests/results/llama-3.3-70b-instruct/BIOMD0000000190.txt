@@ -1,0 +1,18 @@
+Model: BIOMD0000000190
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:59:28
+
+Synonyms:
+SAM: ['S-adenosylmethionine', 'S-adenosyl-L-methionine', 'AdoMet']
+A: ['decarboxylated S-adenosylmethionine', 'S-adenosylmethioninamine', 'dcAdoMet']
+P: ['putrescine', '1,4-diaminobutane', 'butane-1,4-diamine']
+S: ['spermine', "N,N'-bis(3-aminopropyl)propane-1,3-diamine", 'spermin']
+D: ['spermidine', 'N-(3-aminopropyl)propane-1,3-diamine', 'spermidin']
+aS: ['N1-acetylspermine', 'N-acetylspermine', 'monoacetylspermine']
+aD: ['N1-acetylspermidine', 'N-acetylspermidine', 'monoacetylspermidine']
+Met: ['methionine', 'L-methionine', '2-amino-4-(methylthio)butanoic acid']
+ORN: ['ornithine', 'L-ornithine', '2,5-diaminopentanoic acid']
+AcCoA: ['acetyl-CoA', 'acetyl coenzyme A', 'CoA-SH']
+CoA: ['coenzyme A', 'CoA-SH', "3'-phosphoadenosine-5'-diphospho-(phospho-CoA)"]
+
+Reason: The species were identified based on their display names and roles in the polyamine metabolism model, with SAM, A, P, S, D, aS, aD, Met, ORN, AcCoA, and CoA being matched to their corresponding biochemical names and synonyms, considering the context of the model and the provided notes.

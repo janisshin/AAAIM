@@ -1,0 +1,18 @@
+Model: BIOMD0000000404
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:00:21
+
+Synonyms:
+asp: ['L-aspartate', 'aspartic acid', 'aspartate']
+ni: ['Nickel', 'Ni']
+Tasp: ['phosphorylated CheY', 'CheY-P', 'phospho-CheY']
+Tni: ['unphosphorylated CheY', 'CheY', 'CheY']
+Tasp_W: ['CheY-W', 'CheY with phosphorylation', 'phospho-CheY']
+Tni_W: ['CheY-W', 'CheY unphosphorylated', 'CheY']
+Tasp_A: ['CheY-A', 'CheY with Aspartate complex', 'phospho-CheY']
+Tni_A: ['CheY-A', 'CheY with Aspartate complex', 'CheY']
+Tasp_WA: ['CheY-WA', 'CheY with phosphorylation and Aspartate', 'phospho-CheY']
+Tni_WA: ['CheY-WA', 'CheY unphosphorylated with Aspartate', 'CheY']
+species_1: ['ATP', 'adenosine triphosphate', 'ATP molecule']
+
+Reason: Asp is aspartate; Ni is nickel; Tasp and Tni are phosphorylated and unphosphorylated CheY, respectively; the other Tasp/Tni variants involve receptor complexes with Asp or phosphorylation states; species_1 is ATP.

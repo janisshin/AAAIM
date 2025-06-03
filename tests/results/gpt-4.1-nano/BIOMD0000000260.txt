@@ -1,0 +1,24 @@
+Model: BIOMD0000000260
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:57:27
+
+Synonyms:
+s1: ['iron', 'Fe', 'ferrous ion']
+s2: ['iron', 'Fe', 'ferrous ion']
+s3: ['iron', 'Fe', 'ferrous ion']
+s4: ['iron', 'Fe', 'ferrous ion']
+s5: ['iron', 'Fe', 'ferrous ion']
+s6: ['iron', 'Fe', 'ferrous ion']
+s7: ['iron', 'Fe', 'ferrous ion']
+s8: ['iron', 'Fe', 'ferrous ion']
+s9: ['iron', 'Fe', 'ferrous ion']
+s10: ['iron', 'Fe', 'ferrous ion']
+s11: ['iron', 'Fe', 'ferrous ion']
+s12: ['iron', 'Fe', 'ferrous ion']
+s13: ['iron', 'Fe', 'ferrous ion']
+s14: ['iron', 'Fe', 'ferrous ion']
+s15: ['iron', 'Fe', 'ferrous ion']
+s16: ['iron', 'Fe', 'ferrous ion']
+s17: ['iron', 'Fe', 'ferrous ion']
+
+Reason: All species are labeled as iron in different tissues or compartments; "iron" and "Fe" are standard chemical names, and "ferrous ion" specifies the oxidation state. Since they are tissue-specific pools of iron, these synonyms are appropriate for ontology lookup.

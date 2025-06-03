@@ -1,0 +1,12 @@
+Model: BIOMD0000000355
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:14:21
+
+Synonyms:
+CaI: ['calcium ion', 'Ca2+', 'calcium']
+IP3: ['inositol 1,4,5-trisphosphate', 'D-myo-inositol 1,4,5-trisphosphate', 'IP3']
+mwd6b792d8_c983_42c1_b3bc_2494d6a3363e: ['UNK']
+mw013a7c64_a9ec_483c_b3b8_ed658337ee95: ['calmodulin', 'CaM', 'calcium-modulated protein']
+CaS: ['calcium ion', 'Ca2+', 'calcium']
+
+Reason: CaI and CaS are likely "calcium ion" due to the model context of calcium signaling. IP3 is a well-known molecule in cell signaling, and mw013a7c64_a9ec_483c_b3b8_ed658337ee95 is annotated as 'CaM', which is a common abbreviation for calmodulin. mwd6b792d8_c983_42c1_b3bc_2494d6a3363e and mw013a7c64_a9ec_483c_b3b8_ed658337ee95 have display names 'CaO' and 'CaM' respectively, but 'CaO' is not a standard name for a molecule in this context, and 'CaM' is a common abbreviation for calmodulin, hence the annotations. mw013a7c64_a9ec_483c_b3b8_ed658337ee95 is likely calmodulin due to its display name 'CaM'. Other species with long alphanumeric names are unknown due to lack of information.

@@ -1,0 +1,13 @@
+Model: BIOMD0000000624
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:20:38
+
+Synonyms:
+APAP: ['acetaminophen', 'paracetamol', 'acetaminol']
+NAPQI: ['N-acetyl-p-quinoneimine', 'NAPQI', 'N-acetyl-p-benzoquinone imine']
+GSH: ['glutathione', 'reduced glutathione', 'GSSG', '(though GSH is the reduced form)']
+NAPQIGSH: ['NAPQI-glutathione conjugate', 'NAPQIGSH', 'NAPQI-GSH adduct']
+APAPconj_Glu: ['APAP-glucuronide', 'acetaminophen glucuronide', 'APAP conjugated with Glu']
+APAPconj_Sul: ['APAP-sulfate', 'acetaminophen sulfate', 'APAP conjugated with sulfate']
+
+Reason: The model describes acetaminophen metabolism, with NAPQI as a toxic metabolite, GSH as a detoxifying agent, and conjugates as phase II metabolites.

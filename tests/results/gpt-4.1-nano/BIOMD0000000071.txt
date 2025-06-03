@@ -1,0 +1,32 @@
+Model: BIOMD0000000071
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:51:53
+
+Synonyms:
+GlcI: ['glucose', 'd-glucose', 'blood sugar']
+Glc6P: ['glucose 6-phosphate', 'G6P', 'gluc-6-P']
+Fru6P: ['fructose 6-phosphate', 'F6P', 'fructose-6-phosphate']
+Fru16BP: ['fructose 1,6-bisphosphate', 'FBP', 'F-1,6-BP']
+DHAP: ['dihydroxyacetone phosphate', 'DHAP', 'dihydroxyacetone phosphate']
+GAP: ['glyceraldehyde 3-phosphate', 'G3P', 'glyceraldehyde-3-phosphate']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+', 'NAD']
+BPGA13: ['1,3-bisphosphoglycerate', '1,3-BPG', '3-phosphoglycerate']
+NADH: ['nicotinamide adenine dinucleotide, reduced', 'NADH', 'reduced NAD']
+Pyr: ['pyruvate', 'pyruvic acid', 'pyruvate']
+Nb: ['3-phosphoglycerate', '3-PGA', '3-phosphoglycerate']
+PyrE: ['pyruvate external', 'pyruvate outside cell', 'extracellular pyruvate']
+Gly: ['glycerol', 'glycerine', 'glycerin']
+GlcE: ['glucose external', 'extracellular glucose', 'glucose outside cell']
+Gly3P: ['glycerol 3-phosphate', 'G3P', 'glycerol-3-phosphate']
+ATPc: ['ATP cytosol', 'cytosolic ATP', 'ATP inside cell']
+ADPc: ['ADP cytosol', 'cytosolic ADP', 'ADP inside cell']
+ATPg: ['ATP glycosome', 'glycosomal ATP', 'ATP in glycosome']
+ADPg: ['ADP glycosome', 'glycosomal ADP', 'ADP in glycosome']
+DHAPg: ['DHAP glycosome', 'glycosomal DHAP', 'glycosome dihydroxyacetone phosphate']
+DHAPc: ['DHAP cytosol', 'cytosolic DHAP', 'dihydroxyacetone phosphate']
+Gly3Pc: ['G3P cytosol', 'cytosolic glycerol 3-phosphate', 'G3P']
+Gly3Pg: ['G3P glycosome', 'glycosomal G3P', 'glycerol 3-phosphate in glycosome']
+PGAg: ['3-phosphoglycerate', '3-PGA', '3-phosphoglycerate']
+PEPc: ['PEP cytosol', 'cytosolic PEP', 'phosphoenolpyruvate']
+
+Reason: The species are identified as common glycolytic intermediates or cofactors, with some specified as external or glycosomal forms, matching known biochemical names.

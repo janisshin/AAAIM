@@ -1,0 +1,10 @@
+Model: BIOMD0000000609
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:04:04
+
+Synonyms:
+Sulphate__PAPS: ["3'-phosphoadenosine-5'-phosphosulfate", 'PAPS', "adenosine 3'-phospho-5'-phosphosulfate"]
+GSH: ['glutathione', 'reduced glutathione', 'GSH']
+Protein_adducts: ['protein adduct', 'protein conjugate', 'protein modification']
+
+Reason: Sulphate__PAPS is a sulfate donor in sulfation reactions; GSH is a well-known antioxidant and conjugate in detoxification; Protein_adducts are covalent modifications of proteins by reactive metabolites.

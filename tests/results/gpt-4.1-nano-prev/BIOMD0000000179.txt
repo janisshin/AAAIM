@@ -1,0 +1,14 @@
+Model: BIOMD0000000179
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:38:41
+
+Synonyms:
+R1: ['UNK']
+P1: ['UNK']
+P1_prime: ['UNK']
+R2: ['UNK']
+P2: ['UNK']
+P2_prime: ['UNK']
+P3_prime: ['UNK']
+
+Reason: No display names or chemical identifiers are provided; the species are likely regulatory proteins or abstract species in a model, not standard chemical entities.

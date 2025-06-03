@@ -1,0 +1,21 @@
+Model: BIOMD0000000213
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:02:14
+
+Synonyms:
+_5mTHF: ['5-methyltetrahydrofolate', '5-methyl-THF', 'L-5-methyltetrahydrofolate']
+THF: ['tetrahydrofolate', 'THF', 'tetrahydrofolic acid']
+DHF: ['dihydrofolate', 'DHF', '7,8-dihydrofolate']
+_5_10_CH2THF: ['5,10-methylenetetrahydrofolate', '5,10-CH2-THF', '5,10-methylene-THF']
+_5_10_CHTHF: ['5,10-methenyltetrahydrofolate', '5,10-CH-THF', '5,10-methenyl-THF']
+_10fTHF: ['10-formyltetrahydrofolate', '10-formyl-THF', '10-formylfolate']
+Ser: ['serine', 'L-serine', 'Ser']
+Gly: ['glycine', 'Gly', 'aminoacetic acid']
+dUMP: ['deoxyuridine monophosphate', 'dUMP', "2'-deoxyuridine 5'-monophosphate"]
+GAR: ['glycinamide ribonucleotide', 'GAR', 'N-glycinamide ribonucleotide']
+AICAR: ['5-amino-4-imidazolecarboxamide ribonucleotide', 'AICAR', '5-amino-1-(β-D-ribofuranosyl)-4-imidazolecarboxamide']
+HCOOH: ['formic acid', 'HCOOH', 'methanoic acid']
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'NADPH', 'reduced nicotinamide adenine dinucleotide phosphate']
+Hcy: ['homocysteine', 'L-homocysteine', 'Hcy']
+
+Reason: The species names were matched to their corresponding standardized names based on the context of the folate cycle model, using common biochemical nomenclature and synonyms. The reactions and display names provided in the model helped to disambiguate species with similar names. For example, _5mTHF was matched to "5-methyltetrahydrofolate" due to its involvement in the methionine synthase reaction. Similarly, THF was matched to "tetrahydrofolate" due to its central role in the folate cycle. Species with unclear or incomplete display names, such as _5_10_CHTHF, were matched to their most likely standardized names based on their reaction involvement and common biochemical naming conventions.

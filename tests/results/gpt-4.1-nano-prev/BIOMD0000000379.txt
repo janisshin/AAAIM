@@ -1,0 +1,12 @@
+Model: BIOMD0000000379
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:37
+
+Synonyms:
+G_p: ['plasma glucose', 'blood glucose', 'glucose in plasma']
+G_t: ['tissue glucose', 'interstitial glucose', 'cellular glucose']
+Q_sto1: ['glucose storage', 'glycogen', 'glucose reservoir']
+Q_gut: ['gut glucose', 'intestinal glucose', 'glucose in gut']
+Q_sto2: ['second glucose store', 'additional glycogen', 'extra glucose reservoir']
+
+Reason: G_p and G_t are likely plasma and tissue glucose levels; Q_sto1 and Q_sto2 are related to glucose storage or reservoirs; Q_gut refers to glucose in the gut, all consistent with glucose-insulin system modeling.

@@ -1,0 +1,13 @@
+Model: BIOMD0000000038
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:39
+
+Synonyms:
+PyrPI: ['pyridoxal phosphate', 'PLP', 'pyridoxal phosphate']
+EIICBPGlc: ['glucose-specific PTS enzyme IIC component', 'PTS IIC glucose', 'glucose transporter']
+PEP: ['phosphoenolpyruvate', 'PEP', 'enolpyruvate']
+Pyr: ['pyruvate', 'pyruvic acid', 'pyruvate']
+GlcP: ['glucose-6-phosphate', 'G6P', 'glucose-6-phosphate']
+Glc: ['glucose', 'd-glucose', 'blood sugar']
+
+Reason: All are common metabolites or transport components involved in bacterial phosphotransferase systems; no specific reaction data, so names are based on typical biochemical roles.

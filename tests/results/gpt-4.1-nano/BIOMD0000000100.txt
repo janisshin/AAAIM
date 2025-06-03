@@ -1,0 +1,11 @@
+Model: BIOMD0000000100
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:52:53
+
+Synonyms:
+EC: ['calcium', 'calcium ion', 'Ca2+']
+Z: ['cytosolic calcium', 'cytoplasmic calcium', 'Ca2+ (cytoplasm)']
+Y: ['vesicular calcium', 'intravesicular calcium', 'Ca2+ (vesicle)']
+A: ['IP3', 'inositol 1,4,5-trisphosphate', 'IP3 (inositol trisphosphate)']
+
+Reason: EC, Z, Y, and A are all calcium-related species or signaling molecules. EC is extracellular calcium, Z and Y are cytosolic and vesicular calcium, respectively, and A is IP3, a common second messenger involved in calcium release.

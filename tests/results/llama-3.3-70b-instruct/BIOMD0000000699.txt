@@ -1,0 +1,23 @@
+Model: BIOMD0000000699
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:30:45
+
+Synonyms:
+Tem1GTP: ['GTP', 'guanosine triphosphate', "guanosine 5'-triphosphate"]
+Tem1GDP: ['GDP', 'guanosine diphosphate', "guanosine 5'-diphosphate"]
+T_Tem1GTP: ['UNK']
+T_Tem1GDP: ['UNK']
+B_Bfa1_Tem1GTP: ['UNK']
+B_Bfa1P4_Tem1GTP: ['UNK']
+B_Bfa1P5_Tem1GTP: ['UNK']
+B_Bfa1_Tem1GDP: ['UNK']
+B_Bfa1P4_Tem1GDP: ['UNK']
+B_Bfa1P5_Tem1GDP: ['UNK']
+Bfa1_Tem1GTP: ['UNK']
+Bfa1P4_Tem1GTP: ['UNK']
+Bfa1P5_Tem1GTP: ['UNK']
+Bfa1_Tem1GDP: ['UNK']
+Bfa1P4_Tem1GDP: ['UNK']
+Bfa1P5_Tem1GDP: ['UNK']
+
+Reason: The Tem1GTP and Tem1GDP species can be annotated with GTP and GDP respectively, as they are likely referring to the bound state of the Tem1 protein with these molecules. The other species cannot be annotated with standardized names as they appear to be protein complexes or modified proteins, and their names do not directly correspond to chemical entities in the ChEBI database.

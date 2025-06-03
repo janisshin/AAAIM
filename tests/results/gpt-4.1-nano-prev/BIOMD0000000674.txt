@@ -1,0 +1,157 @@
+Model: BIOMD0000000674
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:06:21
+
+Synonyms:
+b_met: ['methionine', 'c_Methionine', 'MET']
+
+Reason: b_met is a methionine species, a common amino acid involved in methylation and sulfur metabolism.
+
+b_ser: "serine", "L-Serine", "Ser"
+Reason: b_ser is a serine amino acid, a standard amino acid involved in amino acid metabolism.
+
+b_gly: "glycine", "Gly", "Glycine"
+Reason: b_gly is glycine, a simple amino acid involved in one-carbon metabolism.
+
+b_glu: "glutamate", "L-Glutamic acid", "Glu"
+Reason: b_glu is glutamate, a key amino acid in nitrogen metabolism.
+
+b_cys: "cysteine", "L-Cysteine", "Cys"
+Reason: b_cys is cysteine, a sulfur-containing amino acid.
+
+b_gsg: "GSSG", "oxidized glutathione", "glutathione disulfide"
+Reason: b_gsg is oxidized glutathione, the disulfide form of GSH.
+
+b_gsh: "GSH", "reduced glutathione", "glutathione"
+Reason: b_gsh is reduced glutathione, a major cellular antioxidant.
+
+GAR: "glycinamide ribonucleotide", "GAR", "glycinamide ribonucleotide"
+Reason: GAR is glycinamide ribonucleotide, an intermediate in purine biosynthesis.
+
+NADPH: "NADPH", "nicotinamide adenine dinucleotide phosphate", "reduced NADP"
+Reason: NADPH is a cofactor involved in reductive biosynthesis.
+
+BET: "betaine", "trimethylglycine", "BET"
+Reason: BET is betaine, involved in methylation reactions.
+
+DUMP: "dUMP", "deoxyuridine monophosphate", "dUMP"
+Reason: DUMP is deoxyuridine monophosphate, a pyrimidine nucleotide precursor.
+
+H2O2: "hydrogen peroxide", "H2O2", "peroxide"
+Reason: H2O2 is hydrogen peroxide, a reactive oxygen species.
+
+c_thf: "tetrahydrofolate", "THF", "tetrahydrofolic acid"
+Reason: c_thf is tetrahydrofolate, a key folate cofactor in one-carbon transfer.
+
+c_5mf: "5-methyl-THF", "methyl-tetrahydrofolate", "c_5-methyl-THF"
+Reason: c_5mf is 5-methyl-tetrahydrofolate, involved in methylation.
+
+c_2cf: "5,10-methylene-THF", "methylene-THF", "c_2cf"
+Reason: c_2cf is 5,10-methylene-THF, involved in thymidylate synthesis.
+
+c_10f: "10-formyl-THF", "formyl-THF", "c_10f"
+Reason: c_10f is 10-formyl-tetrahydrofolate, involved in purine synthesis.
+
+c_dhf: "dihydrofolate", "DHF", "dihydrofolic acid"
+Reason: c_dhf is dihydrofolate, the oxidized form of tetrahydrofolate.
+
+aic: "AICAR", "5-Aminoimidazole-4-carboxamide ribonucleotide", "AICAR"
+Reason: aic is AICAR, an intermediate in purine biosynthesis.
+
+c_glu: "glutamate", "Glu", "L-Glutamic acid"
+Reason: c_glu is glutamate, involved in amino acid and nitrogen metabolism.
+
+c_cys: "cysteine", "Cys", "L-Cysteine"
+Reason: c_cys is cysteine, a sulfur amino acid.
+
+glc: "glucose", "D-Glucose", "Glc"
+Reason: glc is glucose, a primary energy source.
+
+c_gly: "glycine", "Gly", "L-Glycine"
+Reason: c_gly is glycine, involved in one-carbon metabolism.
+
+c_gsg: "GSSG", "oxidized glutathione", "glutathione disulfide"
+Reason: c_gsg is oxidized glutathione.
+
+c_gsh: "GSH", "reduced glutathione", "glutathione"
+Reason: c_gsh is reduced glutathione.
+
+hcy: "homocysteine", "Hcy", "L-Homocysteine"
+Reason: hcy is homocysteine, a sulfur amino acid involved in methylation cycles.
+
+c_ser: "serine", "Ser", "L-Serine"
+Reason: c_ser is serine, a non-essential amino acid.
+
+sah: "S-adenosylhomocysteine", "SAH", "S-adenosylhomocysteine"
+Reason: sah is S-adenosylhomocysteine, a methylation cycle byproduct.
+
+sam: "S-adenosylmethionine", "SAM", "S-adenosylmethionine"
+Reason: sam is S-adenosylmethionine, a universal methyl donor.
+
+met: "methionine", "Met", "L-Methionine"
+Reason: met is methionine, an essential amino acid.
+
+c_coo: "formate", "formic acid", "c_COO"
+Reason: c_coo is formate, a one-carbon donor.
+
+species_1: "dcSAM", "decarboxylated S-adenosylmethionine", "dcSAM"
+Reason: species_1 is decarboxylated SAM, involved in polyamine synthesis.
+
+species_2: "putrescine", "Putrescine", "PUT"
+Reason: species_2 is putrescine, a polyamine precursor.
+
+species_3: "spermine", "Spermine", "SPM"
+Reason: species_3 is spermine, a polyamine.
+
+species_4: "spermidine", "Spermidine", "SPD"
+Reason: species_4 is spermidine, a polyamine.
+
+species_5: "acetylspermine", "Acetylspermine", "Acetyl-SPM"
+Reason: species_5 is acetylated spermine, a polyamine derivative.
+
+species_6: "acetylspermidine", "Acetylspermidine", "Acetyl-SPD"
+Reason: species_6 is acetylated spermidine.
+
+species_7: "ornithine", "L-Ornithine", "Orn"
+Reason: species_7 is ornithine, a precursor in polyamine synthesis.
+
+species_8: "acetyl-CoA", "Acetyl-CoA", "CoA"
+Reason: species_8 is acetyl-CoA, a central metabolite.
+
+species_9: "CoA", "Coenzyme A", "CoA"
+Reason: species_9 is CoA, involved in acyl group transfer.
+
+CO: "carbon monoxide", "CO", "carbon monoxide"
+Reason: CO is carbon monoxide, a gaseous molecule.
+
+m_thf: "tetrahydrofolate", "THF", "tetrahydrofolic acid"
+Reason: m_thf is tetrahydrofolate, involved in one-carbon transfer.
+
+m_2cf: "5,10-methylene-THF", "methylene-THF", "c_2cf"
+Reason: m_2cf is 5,10-methylene-THF, involved in nucleotide synthesis.
+
+m_10f: "10-formyl-THF", "formyl-THF", "c_10f"
+Reason: m_10f is 10-formyl-THF, involved in purine synthesis.
+
+m_ser: "serine", "Ser", "L-Serine"
+Reason: m_ser is serine, involved in one-carbon metabolism.
+
+m_gly: "glycine", "Gly", "L-Glycine"
+Reason: m_gly is glycine, a one-carbon donor.
+
+m_coo: "formate", "formic acid", "c_COO"
+Reason: m_coo is formate, a one-carbon unit.
+
+Fol: "folate", "vitamin B9", "Folate"
+Reason: Fol is folate, a vitamin involved in one-carbon metabolism.
+
+HCHO: "formaldehyde", "HCHO", "formic aldehyde"
+Reason: HCHO is formaldehyde, a simple aldehyde.
+
+src: "sarcosine", "N-methylglycine", "src"
+Reason: src is sarcosine, an intermediate in methylation pathways.
+
+dmg: "dimethylglycine", "DMG", "dimethylglycine"
+Reason: dmg is dimethylglycine, a methylation cycle intermediate.
+
+Reason: All species are recognized as standard amino acids, cofactors, or common metabolites involved in methylation, amino acid, or nucleotide metabolism, or are well-known chemical entities. Species labeled as "species_X" are identified based on their display names or typical biochemical roles. "UNK" is not needed here because all species are identifiable as known chemical entities.

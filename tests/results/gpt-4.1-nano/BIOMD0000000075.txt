@@ -1,0 +1,13 @@
+Model: BIOMD0000000075
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:51:58
+
+Synonyms:
+PIP2_PHGFP_PM: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'PIP2 (phosphatidylinositol 4,5-bisphosphate)']
+IP3_PHGFP_Cyt: ['inositol 1,4,5-trisphosphate', 'IP3', 'InsP3']
+PIP2_PM: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'PIP2 (phosphatidylinositol 4,5-bisphosphate)']
+DAG_PM: ['diacylglycerol', 'DAG', '1,2-diacylglycerol']
+IP3X_Cytosol: ['inositol 1,4,5-trisphosphate', 'IP3', 'InsP3']
+IP3_Cyt: ['inositol 1,4,5-trisphosphate', 'IP3', 'InsP3']
+
+Reason: All species are related to phosphoinositide signaling molecules involved in cellular signaling pathways; PIP2 and IP3 are well-established chemical entities, DAG is a common second messenger, and the species names align with standard biochemical terminology.

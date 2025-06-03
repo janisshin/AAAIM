@@ -1,0 +1,12 @@
+Model: BIOMD0000000282
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:12
+
+Synonyms:
+x: ['hydrogen peroxide', 'H2O2', 'peroxide']
+p: ['catalase enzyme complex', 'catalase-substrate complex', 'enzyme-substrate complex']
+p1: ['product 1', 'oxidized peroxide', 'hydrogen peroxide breakdown product']
+a: ['electron donor', 'reducing agent', 'donor molecule']
+p2: ['product 2', 'reduced donor', 'donor after reaction']
+
+Reason: x is hydrogen peroxide, the substrate for catalase; p is the enzyme-substrate complex involving catalase; p1 and p2 are reaction products; a is an electron donor involved in the reaction.

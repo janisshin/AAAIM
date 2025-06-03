@@ -1,0 +1,860 @@
+Model: BIOMD0000000472
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:53:50
+
+Synonyms:
+s_0002: ['beta-glucan', '(1->3)-beta-D-glucan', 'UNK']
+
+Reason: The display name indicates a (1->3)-beta-D-glucan, a polysaccharide.
+
+s_0004: "UNK"
+Reason: No display name provided; likely a polysaccharide but cannot confirm.
+
+s_0008: "UNK"
+Reason: No display name; possibly a metabolite or compound, but uncertain.
+
+s_0009: "UNK"
+Reason: No display name; structure unknown.
+
+s_0010: "UNK"
+Reason: No display name; likely a metabolite, uncertain.
+
+s_0015: "UNK"
+Reason: No display name; no clear chemical identity.
+
+s_0016: "UNK"
+Reason: No display name; structure unknown.
+
+s_0018: "UNK"
+Reason: No display name; likely a metabolite, uncertain.
+
+s_0019: "UNK"
+Reason: No display name; structure unknown.
+
+s_0028: "phosphatidylinositol", "1-acyl-sn-glycerol 3-phosphate", "UNK"
+Reason: The display name indicates a phosphatidylinositol or similar phospholipid.
+
+s_0037: "squalene", "squalene (C30 hydrocarbon)", "UNK"
+Reason: The display name indicates a triterpene hydrocarbon.
+
+s_0039: "UNK"
+Reason: No display name; structure unknown.
+
+s_0056: "L-methylmalonate", "methylmalonic acid", "UNK"
+Reason: The name suggests a methylated malonate derivative.
+
+s_0061: "dihydroorotate", "S-dihydroorotate", "UNK"
+Reason: The display name indicates a dihydroorotate, a pyrimidine precursor.
+
+s_0066: "malate", "L-malate", "UNK"
+Reason: The display name indicates malate, a TCA cycle intermediate.
+
+s_0075: "glycogen", "polysaccharide", "UNK"
+Reason: The name indicates glycogen, a storage carbohydrate.
+
+s_0076: "ribulose 5-phosphate", "D-ribulose 5-phosphate", "UNK"
+Reason: The display name indicates a sugar phosphate involved in pentose phosphate pathway.
+
+s_0077: "imidazole-4-carboxamide ribonucleotide", "AICAR", "UNK"
+Reason: The display name indicates AICAR, an intermediate in purine biosynthesis.
+
+s_0078: "AMP", "adenosine monophosphate", "UNK"
+Reason: The name indicates AMP, a nucleotide.
+
+s_0082: "1-acyl-sn-glycerol 3-phosphate", "lysophosphatidic acid", "UNK"
+Reason: The display name indicates a lysophospholipid.
+
+s_0086: "indol-3-yl glycerol phosphate", "indol-3-ylglycerol phosphate", "UNK"
+Reason: The name indicates a precursor in tryptophan biosynthesis.
+
+s_0089: "phosphatidylinositol", "PI", "UNK"
+Reason: The display name indicates a phosphatidylinositol lipid.
+
+s_0118: "pyrroline-5-carboxylate", "P5C", "UNK"
+Reason: The name indicates a pyrroline derivative in proline biosynthesis.
+
+s_0120: "formyl-THF", "10-formyl-tetrahydrofolate", "UNK"
+Reason: The display name indicates a formylated folate derivative.
+
+s_0122: "lanosterol", "lanosterol (C30 sterol)", "UNK"
+Reason: The name indicates a sterol precursor in ergosterol synthesis.
+
+s_0126: "myo-inositol 1-phosphate", "inositol-1-phosphate", "UNK"
+Reason: The display name indicates an inositol phosphate.
+
+s_0141: "pyrimidine derivative", "unknown pyrimidine", "UNK"
+Reason: No specific name, likely a pyrimidine-related compound.
+
+s_0142: "pyrimidine derivative", "unknown pyrimidine", "UNK"
+Reason: No specific name, likely a pyrimidine-related compound.
+
+s_0145: "N-acetyl-5-oxopentanoate", "N-acetyl-5-oxopentanoic acid", "UNK"
+Reason: The name suggests an acetylated keto acid.
+
+s_0146: "lactic acid", "2-hydroxypropanoic acid", "UNK"
+Reason: The display name indicates 2-acetyllactic acid, a lactic acid derivative.
+
+s_0158: "2-hydroxy-3-oxobutyl phosphate", "unknown", "UNK"
+Reason: Likely a metabolic intermediate, but no common name.
+
+s_0162: "2-isopropylmalate", "isopropylmalate", "UNK"
+Reason: The name indicates a TCA cycle intermediate.
+
+s_0165: "malic acid", "L-malate", "UNK"
+Reason: The display name indicates malate.
+
+s_0176: "2-oxoadipic acid", "oxo-dicarboxylic acid", "UNK"
+Reason: The name indicates a dicarboxylic acid related to lysine degradation.
+
+s_0178: "2-oxobutanoate", "alpha-ketobutyrate", "UNK"
+Reason: The name indicates a keto acid involved in amino acid metabolism.
+
+s_0180: "2-oxoglutarate", "alpha-ketoglutarate", "UNK"
+Reason: The display name indicates a key TCA cycle intermediate.
+
+s_0188: "2-phospho-D-glyceric acid", "2-phosphoglycerate", "UNK"
+Reason: The name indicates a glycolytic intermediate.
+
+s_0190: "farnesyl diphosphate", "FPP", "UNK"
+Reason: The name indicates a precursor in isoprenoid biosynthesis.
+
+s_0201: "phospho-5'-adenylyl sulfate", "PAPS", "UNK"
+Reason: The name indicates a sulfate donor in sulfation.
+
+s_0204: "3-(4-hydroxyphenyl)pyruvate", "hydroxyphenylpyruvate", "UNK"
+Reason: The name indicates a phenylpyruvate derivative.
+
+s_0207: "imidazol-4-yl-2-oxopropyl dihydrogen phosphate", "unknown", "UNK"
+Reason: Likely a metabolic intermediate, but no common name.
+
+s_0210: "3-dehydroquinate", "DHQ", "UNK"
+Reason: The display name indicates a shikimate pathway intermediate.
+
+s_0211: "3-dehydroshikimate", "DHShikimate", "UNK"
+Reason: The name indicates a shikimate pathway intermediate.
+
+s_0218: "3-hydroxy-3-methylglutaryl-CoA", "HMG-CoA", "UNK"
+Reason: The display name indicates a key intermediate in mevalonate pathway.
+
+s_0231: "3-ketosphinganine", "sphinganine ketone", "UNK"
+Reason: The name indicates a sphingolipid precursor.
+
+s_0232: "3-methyl-2-oxobutanoate", "alpha-ketomethylbutyrate", "UNK"
+Reason: The name indicates a keto acid involved in amino acid metabolism.
+
+s_0258: "3-phospho-hydroxypyruvate", "3-phospho-oxypyruvate", "UNK"
+Reason: The name indicates a serine biosynthesis intermediate.
+
+s_0259: "3-phospho-serine", "phosphoserine", "UNK"
+Reason: The name indicates a phosphorylated amino acid.
+
+s_0260: "3-phosphoglycerate", "3-PG", "UNK"
+Reason: The glycolytic intermediate.
+
+s_0261: "3-phosphoshikimate", "shikimate-3-phosphate", "UNK"
+Reason: An intermediate in aromatic amino acid biosynthesis.
+
+s_0262: "4,4-dimethyl-5alpha-cholesta-8,14,24-trien-3beta-ol", "ergosterol", "UNK"
+Reason: The display name indicates a sterol compound.
+
+s_0295: "4-phospho-L-aspartate", "L-aspartate-4-phosphate", "UNK"
+Reason: The name indicates an amino acid derivative.
+
+s_0296: "zymosterol", "intermediate sterol", "UNK"
+Reason: The display name indicates a sterol intermediate.
+
+s_0297: "4beta-methylzymosterol-4alpha-carboxylic acid", "sterol derivative", "UNK"
+Reason: Likely a sterol precursor.
+
+s_0298: "adenylyl sulfate", "APS", "UNK"
+Reason: The name indicates a sulfate donor.
+
+s_0299: "5'-phosphoribosyl-4-(N-succinocarboxamide)-5-aminoimidazole", "SAICAR", "UNK"
+Reason: An intermediate in purine biosynthesis.
+
+s_0300: "5'-phosphoribosyl-N-formylglycineamide", "FGAR", "UNK"
+Reason: Purine biosynthesis intermediate.
+
+s_0301: "5'-phosphoribosyl-N-formylglycineamidine", "FGAM", "UNK"
+Reason: Purine biosynthesis intermediate.
+
+s_0302: "5'-phosphoribosyl-N-formylglycineamidine", "FGAM", "UNK"
+Reason: Same as above, involved in purine synthesis.
+
+s_0304: "5,10-methenyl-THF", "5,10-methenyltetrahydrofolate", "UNK"
+Reason: Folate derivative involved in one-carbon metabolism.
+
+s_0306: "5,10-methylenetetrahydrofolate", "5,10-methylene-THF", "UNK"
+Reason: Folate derivative.
+
+s_0312: "5-[(5-phospho-1-deoxy-D-ribulos-1-ylamino)methylideneamino]-1-(5-phospho-D-ribosyl)imidazole-4-carboxamide", "PRPP derivative", "UNK"
+Reason: Complex purine pathway intermediate.
+
+s_0313: "5-amino-6-(5-phosphoribitylamino)uracil", "ARU", "UNK"
+Reason: Pyrimidine biosynthesis intermediate.
+
+s_0314: "5-amino-6-(D-ribitylamino)uracil", "ARU", "UNK"
+Reason: Pyrimidine biosynthesis intermediate.
+
+s_0322: "5-methyltetrahydrofolate", "5-methyl-THF", "UNK"
+Reason: Folate derivative involved in methylation.
+
+s_0324: "5-O-(1-carboxyvinyl)-3-phosphoshikimic acid", "shikimate pathway intermediate", "UNK"
+Reason: Involved in aromatic amino acid biosynthesis.
+
+s_0325: "5-phospho-ribosyl-glycineamide", "GAR", "UNK"
+Reason: Purine biosynthesis intermediate.
+
+s_0326: "5-phosphoribosyl-ATP", "PR-ATP", "UNK"
+Reason: Purine nucleotide precursor.
+
+s_0327: "5-phosphoribosylamine", "PRA", "UNK"
+Reason: Purine biosynthesis intermediate.
+
+s_0328: "6,7-dimethyl-8-(1-D-ribityl)lumazine", "riboflavin precursor", "UNK"
+Reason: Flavoprotein precursor.
+
+s_0349: "7-phospho-2-dehydro-3-deoxy-D-arabino-heptonic acid", "unknown", "UNK"
+Reason: Likely a pathway intermediate, no common name.
+
+s_0362: "acetate", "vinegar acid", "UNK"
+Reason: The display name indicates acetate.
+
+s_0367: "acetyl-CoA", "acetyl-CoA", "UNK"
+Reason: The display name indicates acetyl-CoA, a central metabolite.
+
+s_0373: "farnesyl diphosphate", "FPP", "UNK"
+Reason: The name indicates a precursor in isoprenoid biosynthesis.
+
+s_0380: "acyl-CoA", "acyl-CoA", "UNK"
+Reason: The display name indicates acyl-CoA, a fatty acyl carrier.
+
+s_0386: "adenosine", "Adenosine", "UNK"
+Reason: The display name indicates adenosine, a nucleoside.
+
+s_0390: "adenosine 3',5'-bismonophosphate", "cyclic AMP", "UNK"
+Reason: The name indicates cAMP, a signaling molecule.
+
+s_0393: "adenylo-succinate", "adenylosuccinate", "UNK"
+Reason: Purine biosynthesis intermediate.
+
+s_0394: "ADP", "adenosine diphosphate", "UNK"
+Reason: The display name indicates ADP, a nucleotide.
+
+s_0403: "AICAR", "5-Aminoimidazole-4-carboxamide ribonucleotide", "UNK"
+Reason: The name indicates AICAR, a purine biosynthesis intermediate.
+
+s_0404: "alanine", "L-alanine", "UNK"
+Reason: The display name indicates alanine, an amino acid.
+
+s_0409: "alpha,alpha-trehalose 6-phosphate", "trehalose-6-phosphate", "UNK"
+Reason: A sugar phosphate involved in trehalose biosynthesis.
+
+s_0413: "S-adenosyl-L-homocysteine", "SAH", "UNK"
+Reason: The name indicates a methylation cycle intermediate.
+
+s_0416: "S-adenosyl-L-methionine", "SAM", "UNK"
+Reason: The name indicates a methyl donor.
+
+s_0420: "ammonium", "NH4+", "UNK"
+Reason: The display name indicates ammonium ion.
+
+s_0423: "AMP", "adenosine monophosphate", "UNK"
+Reason: The display name indicates AMP.
+
+s_0427: "anthranilate", "2-aminobenzoate", "UNK"
+Reason: An aromatic amino acid precursor.
+
+s_0428: "Arg-tRNA(Arg)", "arginyl-tRNA", "UNK"
+Reason: The name indicates arginine-tRNA.
+
+s_0430: "Asn-tRNA(Asn)", "asparaginyl-tRNA", "UNK"
+Reason: The name indicates asparagine-tRNA.
+
+s_0432: "Asp-tRNA(Asp)", "aspartyl-tRNA", "UNK"
+Reason: The name indicates aspartate-tRNA.
+
+s_0434: "ATP", "adenosine triphosphate", "UNK"
+Reason: The display name indicates ATP, a primary energy currency.
+
+s_0454: "bicarbonate", "HCO3-", "UNK"
+Reason: The name indicates bicarbonate ion.
+
+s_0455: "carbamoyl phosphate", "CP", "UNK"
+Reason: The name indicates a key intermediate in urea and pyrimidine synthesis.
+
+s_0456: "carbon dioxide", "CO2", "UNK"
+Reason: The display name indicates CO2.
+
+s_0458: "cysteine", "L-cysteine", "UNK"
+Reason: The display name indicates cysteine, an amino acid.
+
+s_0467: "CDP", "cytidine diphosphate", "UNK"
+Reason: The name indicates CDP, a nucleotide.
+
+s_0471: "CDP-diacylglycerol", "CDP-DAG", "UNK"
+Reason: The display name indicates a phospholipid precursor.
+
+s_0481: "ceramide-2 (C24)", "ceramide", "UNK"
+Reason: The name indicates a ceramide lipid.
+
+s_0493: "ceramide-3 (C24)", "ceramide", "UNK"
+Reason: Similar to above, a ceramide.
+
+s_0550: "D-erythrose 4-phosphate", "erythrose-4-phosphate", "UNK"
+Reason: The name indicates a sugar phosphate in the pentose phosphate pathway.
+
+s_0551: "D-erythrose 4-phosphate", "erythrose-4-phosphate", "UNK"
+Reason: Same as above.
+
+s_0555: "D-fructose 1,6-bisphosphate", "FBP", "UNK"
+Reason: Glycolytic intermediate.
+
+s_0557: "D-fructose 6-phosphate", "F6P", "UNK"
+Reason: Glycolytic intermediate.
+
+s_0563: "D-glucose", "glucose", "UNK"
+Reason: The display name indicates glucose.
+
+s_0565: "D-glucose", "glucose", "UNK"
+Reason: Same as above.
+
+s_0567: "D-glucose 1-phosphate", "G1P", "UNK"
+Reason: Sugar phosphate involved in glycogen metabolism.
+
+s_0568: "D-glucose 6-phosphate", "G6P", "UNK"
+Reason: Glycolytic and gluconeogenic intermediate.
+
+s_0573: "D-mannose 1-phosphate", "mannose-1-phosphate", "UNK"
+Reason: A sugar phosphate involved in mannose metabolism.
+
+s_0574: "D-mannose 6-phosphate", "mannose-6-phosphate", "UNK"
+Reason: Glycolytic intermediate in mannose pathway.
+
+s_0577: "D-ribulose 5-phosphate", "ribulose-5-phosphate", "UNK"
+Reason: Pentose phosphate pathway intermediate.
+
+s_0581: "D-xylulose 5-phosphate", "xylulose-5-phosphate", "UNK"
+Reason: Pentose phosphate pathway intermediate.
+
+s_0582: "dADP", "deoxy-ADP", "UNK"
+Reason: Likely a nucleotide derivative, but no common name.
+
+s_0584: "dAMP", "deoxy-AMP", "UNK"
+Reason: Deoxyadenosine monophosphate, no common name.
+
+s_0586: "dATP", "deoxy-ATP", "UNK"
+Reason: Deoxynucleotide.
+
+s_0587: "dCDP", "deoxy-cytidine diphosphate", "UNK"
+Reason: Nucleotide derivative.
+
+s_0589: "dCMP", "deoxy-cytidine monophosphate", "UNK"
+Reason: Nucleotide.
+
+s_0595: "decanoate", "caproate", "UNK"
+Reason: Fatty acid.
+
+s_0613: "dGDP", "deoxy-GDP", "UNK"
+Reason: Nucleotide.
+
+s_0615: "dGMP", "deoxy-GMP", "UNK"
+Reason: Nucleotide.
+
+s_0629: "dihydroxyacetone phosphate", "DHAP", "UNK"
+Reason: Glycolytic intermediate.
+
+s_0644: "dolichyl D-mannosyl phosphate", "dolichol phosphate", "UNK"
+Reason: Lipid-linked sugar donor.
+
+s_0645: "dolichyl phosphate", "dolichol phosphate", "UNK"
+Reason: Lipid carrier.
+
+s_0649: "dTMP", "deoxythymidine monophosphate", "UNK"
+Reason: Nucleotide.
+
+s_0654: "dUMP", "deoxyuridine monophosphate", "UNK"
+Reason: Nucleotide.
+
+s_0656: "dUTP", "deoxyuridine triphosphate", "UNK"
+Reason: Nucleotide.
+
+s_0657: "episterol", "episterol (C28 sterol)", "UNK"
+Reason: Sterol intermediate.
+
+s_0662: "ergosta-5,7,22,24(28)-tetraen-3beta-ol", "ergosterol", "UNK"
+Reason: Sterol compound.
+
+s_0664: "ergosta-5,7,24(28)-trien-3beta-ol", "ergosterol", "UNK"
+Reason: Sterol.
+
+s_0666: "ergosterol", "ergosterol", "UNK"
+Reason: Sterol.
+
+s_0672: "ergosta-5,7,24(28)-trien-3beta-ol", "ergosterol", "UNK"
+Reason: Sterol.
+
+s_0700: "fecosterol", "sterol precursor", "UNK"
+Reason: Sterol intermediate.
+
+s_0709: "ferricytochrome c", "cytochrome c (oxidized)", "UNK"
+Reason: Electron transport component.
+
+s_0710: "ferrocytochrome c", "cytochrome c (reduced)", "UNK"
+Reason: Electron transport component.
+
+s_0722: "formate", "methanoate", "UNK"
+Reason: Simple one-carbon molecule.
+
+s_0723: "formate", "methanoate", "UNK"
+Reason: Same as above.
+
+s_0725: "fumarate", "trans-butenedioate", "UNK"
+Reason: TCA cycle intermediate.
+
+s_0739: "GTP", "guanosine triphosphate", "UNK"
+Reason: Nucleotide.
+
+s_0743: "GDP-alpha-D-mannose", "GDP-mannose", "UNK"
+Reason: Nucleotide sugar.
+
+s_0745: "geranyl diphosphate", "GPP", "UNK"
+Reason: Isoprenoid precursor.
+
+s_0747: "Gln-tRNA(Gln)", "glutaminyl-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_0750: "glutathione", "GSH", "UNK"
+Reason: Antioxidant tripeptide.
+
+s_0754: "glutathione disulfide", "GSSG", "UNK"
+Reason: Oxidized glutathione.
+
+s_0757: "Gly-tRNA(Gly)", "glycyl-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_0764: "glyceraldehyde 3-phosphate", "G3P", "UNK"
+Reason: Glycolytic intermediate.
+
+s_0767: "glycerol 3-phosphate", "glycerol-3-phosphate", "UNK"
+Reason: Lipid precursor.
+
+s_0782: "GMP", "guanosine monophosphate", "UNK"
+Reason: Nucleotide.
+
+s_0785: "GTP", "guanosine triphosphate", "UNK"
+Reason: Nucleotide.
+
+s_0832: "His-tRNA(His)", "histidyl-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_0835: "homocitrate", "citrate derivative", "UNK"
+Reason: TCA cycle intermediate.
+
+s_0836: "homoisocitrate", "homoisocitrate", "UNK"
+Reason: TCA cycle intermediate.
+
+s_0837: "hydrogen peroxide", "H2O2", "UNK"
+Reason: Reactive oxygen species.
+
+s_0841: "hydrogen sulfide", "H2S", "UNK"
+Reason: Gasotransmitter.
+
+s_0847: "Ile-tRNA(Ile)", "isoleucyl-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_0849: "IMP", "inosine monophosphate", "UNK"
+Reason: Purine nucleotide.
+
+s_0951: "keto-phenylpyruvate", "phenylpyruvate keto form", "UNK"
+Reason: Aromatic amino acid degradation product.
+
+s_0953: "L-2-aminoadipate", "aminoadipate", "UNK"
+Reason: Lysine degradation intermediate.
+
+s_0955: "L-alanine", "alanine", "UNK"
+Reason: Amino acid.
+
+s_0959: "L-allysine", "allysine", "UNK"
+Reason: Lysine degradation product.
+
+s_0965: "L-arginine", "arginine", "UNK"
+Reason: Amino acid.
+
+s_0969: "L-asparagine", "asparagine", "UNK"
+Reason: Amino acid.
+
+s_0973: "L-aspartate", "aspartate", "UNK"
+Reason: Amino acid.
+
+s_0978: "L-aspartate 4-semialdehyde", "aspartate semialdehyde", "UNK"
+Reason: Intermediate in amino acid biosynthesis.
+
+s_0979: "L-citrulline", "citrulline", "UNK"
+Reason: Urea cycle intermediate.
+
+s_0980: "L-cystathionine", "cystathionine", "UNK"
+Reason: Transsulfuration pathway intermediate.
+
+s_0981: "L-cysteine", "cysteine", "UNK"
+Reason: Amino acid.
+
+s_0991: "L-glutamate", "glutamate", "UNK"
+Reason: Amino acid.
+
+s_0999: "L-glutamine", "glutamine", "UNK"
+Reason: Amino acid.
+
+s_1003: "glycine", "glycine", "UNK"
+Reason: Amino acid.
+
+s_1006: "L-histidine", "histidine", "UNK"
+Reason: Amino acid.
+
+s_1010: "L-histidinol", "histidinol", "UNK"
+Reason: Histidine degradation intermediate.
+
+s_1011: "L-histidinol phosphate", "histidinol phosphate", "UNK"
+Reason: Histidine pathway intermediate.
+
+s_1012: "L-homocysteine", "homocysteine", "UNK"
+Reason: Sulfur amino acid.
+
+s_1014: "L-homoserine", "homoserine", "UNK"
+Reason: Intermediate in amino acid biosynthesis.
+
+s_1016: "L-isoleucine", "isoleucine", "UNK"
+Reason: Branched-chain amino acid.
+
+s_1021: "L-leucine", "leucine", "UNK"
+Reason: Branched-chain amino acid.
+
+s_1025: "L-lysine", "lysine", "UNK"
+Reason: Essential amino acid.
+
+s_1029: "L-methionine", "methionine", "UNK"
+Reason: Essential amino acid.
+
+s_1032: "L-phenylalanine", "phenylalanine", "UNK"
+Reason: Aromatic amino acid.
+
+s_1035: "L-proline", "proline", "UNK"
+Reason: Amino acid.
+
+s_1038: "L-saccharopine", "saccharopine", "UNK"
+Reason: Lysine degradation intermediate.
+
+s_1039: "L-serine", "serine", "UNK"
+Reason: Amino acid.
+
+s_1045: "L-threonine", "threonine", "UNK"
+Reason: Amino acid.
+
+s_1048: "L-tryptophan", "tryptophan", "UNK"
+Reason: Aromatic amino acid.
+
+s_1051: "L-tyrosine", "tyrosine", "UNK"
+Reason: Aromatic amino acid.
+
+s_1056: "L-valine", "valine", "UNK"
+Reason: Branched-chain amino acid.
+
+s_1059: "lanosterol", "lanosterol", "UNK"
+Reason: Sterol precursor.
+
+s_1065: "laurate", "C12 fatty acid", "UNK"
+Reason: Fatty acid.
+
+s_1073: "lauroyl-CoA", "Lauroyl-CoA", "UNK"
+Reason: Fatty acyl-CoA.
+
+s_1077: "leucine", "L-leucine", "UNK"
+Reason: Amino acid.
+
+s_1084: "lignoceric acid", "C24 fatty acid", "UNK"
+Reason: Very long-chain fatty acid.
+
+s_1099: "Lys-tRNA(Lys)", "lysyl-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1101: "malonyl-CoA", "malonyl-CoA", "UNK"
+Reason: Fatty acid biosynthesis precursor.
+
+s_1107: "mannan", "mannan polysaccharide", "UNK"
+Reason: Polysaccharide.
+
+s_1148: "Met-tRNA(Met)", "methionyl-tRNA", "UNK"
+Reason: Initiator tRNA.
+
+s_1153: "myo-inositol", "inositol", "UNK"
+Reason: Sugar alcohol.
+
+s_1161: "myristate", "tetradecanoic acid", "UNK"
+Reason: Fatty acid.
+
+s_1176: "myristoyl-CoA", "myristoyl-CoA", "UNK"
+Reason: Fatty acyl-CoA.
+
+s_1182: "N(2)-acetyl-L-ornithine", "acetyl-ornithine", "UNK"
+Reason: Ornithine derivative.
+
+s_1187: "N-(5-phospho-beta-D-ribosyl)anthranilate", "P-ribosyl-anthranilate", "UNK"
+Reason: Tryptophan biosynthesis intermediate.
+
+s_1191: "N-acetyl-L-gamma-glutamyl phosphate", "N-acetyl-glutamyl phosphate", "UNK"
+Reason: Glutamate pathway intermediate.
+
+s_1192: "N-acetyl-L-glutamate", "N-acetyl-glutamate", "UNK"
+Reason: Amino acid derivative.
+
+s_1194: "N-carbamoyl-L-aspartate", "carbamoyl aspartate", "UNK"
+Reason: Pyrimidine biosynthesis intermediate.
+
+s_1198: "NAD", "nicotinamide adenine dinucleotide", "UNK"
+Reason: Coenzyme.
+
+s_1203: "NADH", "reduced NAD", "UNK"
+Reason: Electron carrier.
+
+s_1207: "NADP(+)", "nicotinamide adenine dinucleotide phosphate", "UNK"
+Reason: Coenzyme.
+
+s_1212: "NADPH", "reduced NADP", "UNK"
+Reason: Electron carrier.
+
+s_1233: "O-acetyl-L-homoserine", "O-acetyl-homoserine", "UNK"
+Reason: Amino acid precursor.
+
+s_1238: "O-phospho-L-homoserine", "O-phospho-homoserine", "UNK"
+Reason: Intermediate in methionine and threonine biosynthesis.
+
+s_1245: "ornithine", "L-ornithine", "UNK"
+Reason: Urea cycle intermediate.
+
+s_1266: "ornithine", "L-ornithine", "UNK"
+Reason: Same as above.
+
+s_1269: "orotate", "orotic acid", "UNK"
+Reason: Pyrimidine biosynthesis intermediate.
+
+s_1270: "oxaloacetate", "OAA", "UNK"
+Reason: TCA cycle intermediate.
+
+s_1271: "oxaloacetate", "OAA", "UNK"
+Reason: Same as above.
+
+s_1275: "oxygen", "O2", "UNK"
+Reason: Molecular oxygen.
+
+s_1277: "oxygen", "O2", "UNK"
+Reason: Same as above.
+
+s_1286: "palmitate", "hexadecanoic acid", "UNK"
+Reason: Fatty acid.
+
+s_1302: "palmitoyl-CoA", "palmitoyl-CoA", "UNK"
+Reason: Fatty acyl-CoA.
+
+s_1314: "Phe-tRNA(Phe)", "phenylalanine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1322: "phosphate", "Pi", "UNK"
+Reason: Inorganic phosphate.
+
+s_1324: "phosphate", "Pi", "UNK"
+Reason: Same as above.
+
+s_1331: "phosphatidate", "diacylglycerol phosphate", "UNK"
+Reason: Lipid precursor.
+
+s_1337: "phosphatidyl-L-serine", "PS", "UNK"
+Reason: Phospholipid.
+
+s_1342: "phosphatidyl-N,N-dimethylethanolamine", "PC", "UNK"
+Reason: Phospholipid.
+
+s_1343: "phosphatidyl-N-methylethanolamine", "PE", "UNK"
+Reason: Phospholipid.
+
+s_1346: "phosphatidylcholine", "PC", "UNK"
+Reason: Major membrane phospholipid.
+
+s_1351: "phosphatidylethanolamine", "PE", "UNK"
+Reason: Phospholipid.
+
+s_1360: "phosphoenolpyruvate", "PEP", "UNK"
+Reason: Glycolytic intermediate.
+
+s_1364: "phosphoribosyl-carboxy-aminoimidazole", "AICAR precursor", "UNK"
+Reason: Purine biosynthesis intermediate.
+
+s_1365: "phosphoribosyl-formamido-carboxamide", "FAICAR", "UNK"
+Reason: Purine biosynthesis intermediate.
+
+s_1366: "phytosphingosine", "sphingoid base", "UNK"
+Reason: Sphingolipid component.
+
+s_1376: "prenyl diphosphate", "geranyl pyrophosphate", "UNK"
+Reason: Isoprenoid precursor.
+
+s_1377: "prephenate", "prephenic acid", "UNK"
+Reason: Aromatic amino acid biosynthesis intermediate.
+
+s_1386: "PRPP", "phosphoribosyl pyrophosphate", "UNK"
+Reason: Key nucleotide precursor.
+
+s_1399: "pyruvate", "pyruvic acid", "UNK"
+Reason: Central metabolic intermediate.
+
+s_1405: "riboflavin", "vitamin B2", "UNK"
+Reason: Vitamin cofactor.
+
+s_1408: "ribose-5-phosphate", "R5P", "UNK"
+Reason: Pentose phosphate pathway intermediate.
+
+s_1413: "S-adenosyl-L-homocysteine", "SAH", "UNK"
+Reason: Methylation cycle intermediate.
+
+s_1416: "S-adenosyl-L-methionine", "SAM", "UNK"
+Reason: Methyl donor.
+
+s_1427: "sedoheptulose 7-phosphate", "S7P", "UNK"
+Reason: Pentose phosphate pathway intermediate.
+
+s_1428: "Ser-tRNA(Ser)", "serine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1429: "shikimate", "shikimic acid", "UNK"
+Reason: Aromatic amino acid pathway intermediate.
+
+s_1445: "sphinganine", "dihydrosphingosine", "UNK"
+Reason: Sphingolipid backbone.
+
+s_1447: "squalene", "squalene", "UNK"
+Reason: Triterpene hydrocarbon.
+
+s_1449: "stearate", "stearic acid", "UNK"
+Reason: Fatty acid.
+
+s_1454: "stearoyl-CoA", "stearoyl-CoA", "UNK"
+Reason: Fatty acyl-CoA.
+
+s_1467: "sulfate", "SO4^2-", "UNK"
+Reason: Inorganic sulfate.
+
+s_1468: "sulfite", "SO3^2-", "UNK"
+Reason: Sulfur compound.
+
+s_1469: "sulphite", "SO3^2-", "UNK"
+Reason: Same as above.
+
+s_1487: "THF", "tetrahydrofolate", "UNK"
+Reason: Folate derivative.
+
+s_1491: "Thr-tRNA(Thr)", "threonine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1520: "trehalose", "trehalose", "UNK"
+Reason: Disaccharide.
+
+s_1524: "triglyceride", "TAG", "UNK"
+Reason: Lipid storage molecule.
+
+s_1527: "Trp-tRNA(Trp)", "tryptophan-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1533: "Tyr-tRNA(Tyr)", "tyrosine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1535: "ubiquinol-6", "reduced ubiquinol", "UNK"
+Reason: Electron transport component.
+
+s_1537: "ubiquinone-6", "ubiquinone", "UNK"
+Reason: Electron carrier.
+
+s_1538: "UDP", "uridine diphosphate", "UNK"
+Reason: Nucleotide sugar.
+
+s_1543: "UDP-glucose", "UDP-Glc", "UNK"
+Reason: Glycosyl donor.
+
+s_1545: "UMP", "uridine monophosphate", "UNK"
+Reason: Nucleotide.
+
+s_1559: "UTP", "uridine triphosphate", "UNK"
+Reason: Nucleotide.
+
+s_1576: "zymosterol intermediate 1a", "sterol intermediate", "UNK"
+Reason: Sterol pathway intermediate.
+
+s_1577: "zymosterol intermediate 1b", "sterol intermediate", "UNK"
+Reason: Sterol pathway intermediate.
+
+s_1578: "zymosterol intermediate 1c", "sterol intermediate", "UNK"
+Reason: Sterol pathway intermediate.
+
+s_1579: "zymosterol intermediate 2", "sterol intermediate", "UNK"
+Reason: Sterol pathway intermediate.
+
+s_1582: "tRNA(Ala)", "alanine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1583: "tRNA(Arg)", "arginine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1585: "tRNA(Asn)", "asparagine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1587: "tRNA(Asp)", "aspartate-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1589: "tRNA(Cys)", "cysteine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1590: "tRNA(Gln)", "glutamine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1591: "tRNA(Glu)", "glutamate-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1593: "tRNA(Gly)", "glycine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1594: "tRNA(His)", "histidine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1596: "tRNA(Ile)", "isoleucine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1598: "tRNA(Leu)", "leucine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1600: "tRNA(Lys)", "lysine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1602: "tRNA(Met)", "methionine-tRNA", "UNK"
+Reason: Initiator tRNA.
+
+s_1604: "tRNA(Phe)", "phenylalanine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1606: "tRNA(Pro)", "proline-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1607: "tRNA(Ser)", "serine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1608: "tRNA(Thr)", "threonine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1610: "tRNA(Trp)", "tryptophan-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1612: "tRNA(Tyr)", "tyrosine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1614: "tRNA(Val)", "valine-tRNA", "UNK"
+Reason: Aminoacyl-tRNA.
+
+s_1620: "TRX1 disulphide", "thioredoxin disulfide", "UNK"
+Reason: Redox protein form.

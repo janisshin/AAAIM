@@ -1,0 +1,16 @@
+Model: BIOMD0000000400
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:18:50
+
+Synonyms:
+Gd: ['GDP', 'guanosine diphosphate', "Guanosine 5'-diphosphate"]
+Gt: ['GTP', 'guanosine triphosphate', "Guanosine 5'-triphosphate"]
+Rg: ['receptor', 'G protein-coupled receptor', 'GPCR']
+Rlg: ['ligand', 'agonist', 'endothelin-1']
+Rlgp: ['ligand-bound receptor', 'activated receptor', 'endothelin-1-bound receptor']
+Pc: ['IP3', 'inositol trisphosphate', 'myo-inositol 1,4,5-trisphosphate']
+Pcg: ['cGMP', 'cyclic guanosine monophosphate', "guanosine 3',5'-cyclic monophosphate"]
+Pg: ['GTP-binding protein', 'G protein', 'heterotrimeric G protein']
+Ca: ['calcium', 'calcium ion', 'Ca2+']
+
+Reason: The species names were annotated based on the context of the model, which is related to the IP3 signal production system in cardiac myocytes. The names were chosen based on the reaction equations and the notes provided, which mention specific biological molecules and processes, such as G proteins, receptors, ligands, and second messengers like IP3 and cGMP. The annotations for Gd and Gt are based on their roles in G protein activation, while Rg and Rlg are related to receptor-ligand interactions. Pc is likely IP3, a key molecule in the model, and Pcg may be cGMP, another important second messenger. Pg could be a GTP-binding protein, and Ca is likely calcium, an essential ion in cellular signaling.

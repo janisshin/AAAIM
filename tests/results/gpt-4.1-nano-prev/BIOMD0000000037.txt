@@ -1,0 +1,10 @@
+Model: BIOMD0000000037
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:37
+
+Synonyms:
+Pfr: ['phytochrome Pfr', 'phytochrome far-red absorbing form', 'phytochrome P']
+Pr: ['phytochrome Pr', 'phytochrome red absorbing form', 'phytochrome R']
+Gluc: ['glucose', 'D-glucose', 'blood sugar']
+
+Reason: Pfr and Pr are forms of phytochrome involved in light sensing; Gluc is a common abbreviation for glucose, a well-known sugar.

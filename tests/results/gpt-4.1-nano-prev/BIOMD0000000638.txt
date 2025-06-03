@@ -1,0 +1,15 @@
+Model: BIOMD0000000638
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:05:48
+
+Synonyms:
+Gt: ['GTP', 'guanosine triphosphate', 'guanosine triphosphate']
+Gd: ['GDP', 'guanosine diphosphate', 'guanosine diphosphate']
+LRGt: ['LRGt', 'LGRTP', 'LGRGTP']
+RGt: ['RGt', 'RGS protein GTP-bound form']
+RGd: ['RGd', 'RGS protein GDP-bound form']
+LRGd: ['LRGd', 'LGRGd', 'LGRGDP']
+RrgsGt: ['RGS GTP-bound', 'RGS protein GTP form']
+RrgsGd: ['RGS GDP-bound', 'RGS protein GDP form']
+
+Reason: These are likely GTP/GDP forms of G-proteins and RGS proteins involved in GPCR signaling pathways.

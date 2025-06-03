@@ -1,0 +1,13 @@
+Model: BIOMD0000000059
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:46:09
+
+Synonyms:
+Ca_cyt: ['calcium ion', 'calcium(2+)', 'Ca2+']
+Ca_er: ['calcium ion', 'calcium(2+)', 'Ca2+']
+IP3_cyt: ['inositol 1,4,5-trisphosphate', 'D-myo-inositol 1,4,5-trisphosphate', 'IP3']
+Na_cyt: ['sodium ion', 'sodium(1+)', 'Na+']
+ATP_cyt: ["adenosine 5'-triphosphate", 'ATP', 'adenosine triphosphate']
+ADP_cyt: ["adenosine 5'-diphosphate", 'ADP', 'adenosine diphosphate']
+
+Reason: The annotations are based on the display names provided, which directly correspond to common chemical names or synonyms. Calcium and sodium are annotated as ions, while IP3, ATP, and ADP are annotated with their full chemical names and common abbreviations. The model context and reactions support these annotations, as they involve typical biochemical processes such as ion transport and energy metabolism.

@@ -1,0 +1,20 @@
+Model: BIOMD0000000422
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:19:52
+
+Synonyms:
+s1: ['gibberellin A4', 'GA4', 'gibberellic acid']
+s23: ['gibberellin A12', 'GA12', 'gibberellin A12']
+s24: ['gibberellin A15', 'GA15', 'gibberellin 15']
+s25: ['gibberellin A24', 'GA24', 'gibberellin 24']
+s26: ['gibberellin A9', 'GA9', 'gibberellin 9']
+s65: ['gibberellin A4-GID1 complex', 'GA4-GID1', 'gibberellin-GID1 complex']
+s29: ['gibberellin A9-GA3ox', 'GA9-GA3ox', 'gibberellin 9-GA3ox']
+s30: ['gibberellin A24-GA20ox', 'GA24-GA20ox', 'gibberellin 24-GA20ox']
+s31: ['gibberellin A15-GA20ox', 'GA15-GA20ox', 'gibberellin 15-GA20ox']
+s32: ['gibberellin A12-GA20ox', 'GA12-GA20ox', 'gibberellin 12-GA20ox']
+s62: ['GA4-GID1-closed', 'gibberellin A4-GID1-closed', 'GA4-GID1 closed complex']
+s36: ['GA4-GID-DELLA2', 'gibberellin A4-GID-DELLA2', 'GA4-GID1-DELLA2']
+s45: ['GA4-GID-DELLA1', 'gibberellin A4-GID-DELLA1', 'GA4-GID1-DELLA1']
+
+Reason: The species names are annotated based on the display names and reactions provided in the model. The annotations are ranked by likelihood, with the most likely name being the one that matches the display name or is most closely related to the reaction. The reasons for each species are as follows: s1-s26 are gibberellin species, s29-s32 are gibberellin-enzyme complexes, s62 and s65 are GID1 complexes, and s36 and s45 are DELLA complexes. The annotations for s29-s32 are based on the display names and reactions, which indicate that they are gibberellin-enzyme complexes. The annotations for s62 and s65 are based on the display names and reactions, which indicate that they are GID1 complexes. The annotations for s36 and s45 are based on the display names and reactions, which indicate that they are DELLA complexes.

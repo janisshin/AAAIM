@@ -1,0 +1,8 @@
+Model: BIOMD0000000779
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:33:15
+
+Synonyms:
+M_Chemotherapy_Drug: ['chemotherapy drug', 'anticancer drug', 'antineoplastic agent']
+
+Reason: M_Chemotherapy_Drug is likely referring to a general term for chemotherapy drugs, which are also known as anticancer or antineoplastic agents, given its role in the cancer chemo-immunotherapy model and reactions involving medicine injection and excretion.

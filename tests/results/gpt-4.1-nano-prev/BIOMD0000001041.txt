@@ -1,0 +1,10 @@
+Model: BIOMD0000001041
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:10:38
+
+Synonyms:
+Antigen_presenting_tumour_cells: ['tumour cells', 'cancer cells', 'malignant cells']
+
+Reason: The species name refers to a type of cells involved in immune response to tumors, specifically those presenting antigens, which are a subset of tumor cells.
+
+Reason: The species is not a chemical entity but a cell type; thus, chemical normalization is not applicable.

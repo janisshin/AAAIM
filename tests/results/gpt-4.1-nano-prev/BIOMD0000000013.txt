@@ -1,0 +1,73 @@
+Model: BIOMD0000000013
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:11
+
+Synonyms:
+x_CO2: ['carbon dioxide', 'CO2', 'unk']
+
+Reason: x_CO2 likely represents CO2 involved in the Calvin cycle, standard name is carbon dioxide.
+
+ATP_ch: "ATP", "adenosine triphosphate", "unk"
+Reason: ATP is a common energy currency molecule, standard name is ATP.
+
+x_NADPH_ch: "NADPH", "nicotinamide adenine dinucleotide phosphate", "unk"
+Reason: x_NADPH_ch likely refers to NADPH, a common reducing agent in photosynthesis.
+
+GAP_ch: "glyceraldehyde-3-phosphate", "G3P", "UNK"
+Reason: GAP is a common abbreviation for glyceraldehyde-3-phosphate, a Calvin cycle intermediate.
+
+Pi_ch: "inorganic phosphate", "Pi", "phosphate"
+Reason: Pi commonly denotes inorganic phosphate, involved in phosphorylation reactions.
+
+DHAP_ch: "dihydroxyacetone phosphate", "DHAP", "UNK"
+Reason: DHAP is a standard abbreviation for dihydroxyacetone phosphate, a Calvin cycle intermediate.
+
+FBP_ch: "fructose-1,6-bisphosphate", "FBP", "UNK"
+Reason: FBP is a common name for fructose-1,6-bisphosphate, a Calvin cycle metabolite.
+
+F6P_ch: "fructose-6-phosphate", "F6P", "UNK"
+Reason: F6P is a standard name for fructose-6-phosphate, involved in Calvin cycle and glycolysis.
+
+E4P_ch: "erythrose-4-phosphate", "E4P", "UNK"
+Reason: E4P is a common abbreviation for erythrose-4-phosphate, a Calvin cycle intermediate.
+
+X5P_ch: "xylulose-5-phosphate", "X5P", "UNK"
+Reason: X5P is a standard name for xylulose-5-phosphate, involved in pentose phosphate pathway.
+
+SBP_ch: "sedoheptulose-1,7-bisphosphate", "SBP", "UNK"
+Reason: SBP is a common name for sedoheptulose-1,7-bisphosphate, a Calvin cycle intermediate.
+
+S7P_ch: "sedoheptulose-7-phosphate", "S7P", "UNK"
+Reason: S7P is a standard name for sedoheptulose-7-phosphate, a Calvin cycle intermediate.
+
+R5P_ch: "ribose-5-phosphate", "R5P", "UNK"
+Reason: R5P is a common name for ribose-5-phosphate, involved in nucleotide synthesis and Calvin cycle.
+
+Ru5P_ch: "ribulose-5-phosphate", "Ru5P", "UNK"
+Reason: Ru5P is a standard name for ribulose-5-phosphate, a Calvin cycle intermediate.
+
+x_Pi_cyt: "inorganic phosphate", "Pi", "phosphate"
+Reason: x_Pi_cyt likely refers to inorganic phosphate in cytosol, standard name is Pi.
+
+x_GAP_cyt: "glyceraldehyde-3-phosphate", "G3P", "UNK"
+Reason: x_GAP_cyt is glyceraldehyde-3-phosphate in cytosol, a Calvin cycle intermediate.
+
+G6P_ch: "glucose-6-phosphate", "G6P", "UNK"
+Reason: G6P is a common metabolite in Calvin cycle and glycolysis.
+
+x_NADP_ch: "NADP+", "nicotinamide adenine dinucleotide phosphate", "unk"
+Reason: x_NADP_ch likely refers to NADP+, the oxidized form of NADPH.
+
+ADP_ch: "ADP", "adenosine diphosphate", "unk"
+Reason: ADP is a standard energy carrier molecule.
+
+x_DHAP_cyt: "dihydroxyacetone phosphate", "DHAP", "UNK"
+Reason: x_DHAP_cyt is dihydroxyacetone phosphate in cytosol, a Calvin cycle intermediate.
+
+x_Proton_ch: "proton", "H+", "hydrogen ion"
+Reason: x_Proton_ch likely refers to protons (H+), involved in pH and energy transduction.
+
+G1P_ch: "glucose-1-phosphate", "G1P", "UNK"
+Reason: G1P is a common name for glucose-1-phosphate, involved in starch synthesis.
+
+Reason: All species are biochemical molecules involved in the Calvin cycle or related metabolic processes; standard names are provided where possible, otherwise "UNK".

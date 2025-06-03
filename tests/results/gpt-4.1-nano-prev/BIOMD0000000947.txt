@@ -1,0 +1,16 @@
+Model: BIOMD0000000947
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:09:09
+
+Synonyms:
+C_para_Apical: ['paracetamol', 'acetaminophen', 'para-hydroxyacetanilide']
+C_para_Caco_2: ['paracetamol', 'acetaminophen', 'para-hydroxyacetanilide']
+C_para__Basolateral___HepG2_: ['paracetamol', 'acetaminophen', 'para-hydroxyacetanilide']
+C_sulf_Apical: ['paracetamol sulfate', 'acetaminophen sulfate', 'para-hydroxyacetanilide sulfate']
+C_sulf_Caco_2: ['paracetamol sulfate', 'acetaminophen sulfate', 'para-hydroxyacetanilide sulfate']
+C_sulf__Basolateral___HepG2_: ['paracetamol sulfate', 'acetaminophen sulfate', 'para-hydroxyacetanilide sulfate']
+C_glu_Apical: ['paracetamol glucuronide', 'acetaminophen glucuronide', 'para-hydroxyacetanilide glucuronide']
+C_glu_Caco_2: ['paracetamol glucuronide', 'acetaminophen glucuronide', 'para-hydroxyacetanilide glucuronide']
+C_glu__Basolateral___HepG2_: ['paracetamol glucuronide', 'acetaminophen glucuronide', 'para-hydroxyacetanilide glucuronide']
+
+Reason: All species are derivatives of paracetamol (acetaminophen), with sulfate or glucuronide conjugates, common in metabolism pathways. The display names and reactions indicate these are conjugated metabolites, so normalized names reflect these conjugates.

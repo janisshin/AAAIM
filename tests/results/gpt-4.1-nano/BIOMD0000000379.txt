@@ -1,0 +1,12 @@
+Model: BIOMD0000000379
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:59:22
+
+Synonyms:
+G_p: ['plasma glucose', 'blood glucose', 'glucose in plasma']
+G_t: ['tissue glucose', 'interstitial glucose', 'cellular glucose']
+Q_sto1: ['glucose storage pool 1', 'glycogen pool 1', 'glucose reservoir']
+Q_gut: ['gut glucose', 'intestinal glucose', 'glucose in gut']
+Q_sto2: ['glucose storage pool 2', 'glycogen pool 2', 'second glucose reservoir']
+
+Reason: These species represent glucose compartments and pools within the model, with G_p and G_t clearly indicating plasma and tissue glucose, while Q_sto1 and Q_sto2 are likely storage or reservoir pools, and Q_gut relates to gut glucose absorption.

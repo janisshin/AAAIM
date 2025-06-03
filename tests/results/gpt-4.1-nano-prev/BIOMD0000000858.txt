@@ -1,0 +1,17 @@
+Model: BIOMD0000000858
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:08:31
+
+Synonyms:
+sucr: ['sucrose', 'sucrose (common name)', 'sucrose (chemical name)']
+EtrioseP: ['glyceraldehyde 3-phosphate', 'triose phosphate', 'glyceraldehyde-3-phosphate']
+Ephe: ['ephe', 'ephe (unknown)', 'UNK']
+N: ['nitrogen', 'ammonia', 'UNK']
+starch: ['starch', 'amylose', 'amylopectin']
+Next: ['UNK']
+Enitrate: ['nitrate', 'nitrate ion', 'UNK']
+trioseP: ['glyceraldehyde 3-phosphate', 'triose phosphate', 'glyceraldehyde-3-phosphate']
+ECO2: ['carbon dioxide', 'CO2', 'dioxide']
+Estarch: ['starch', 'amylose', 'amylopectin']
+
+Reason: The model involves common metabolic intermediates and compounds; "sucr" is sucrose, "trioseP" is glyceraldehyde-3-phosphate, "ECO2" is CO2, "starch" is starch. "EtrioseP" and "Estarch" are variants of the same compounds. "Ephe" and "Next" are unclear or not standard chemical entities, so labeled as "UNK". "Enitrate" is nitrate.

@@ -1,0 +1,13 @@
+Model: BIOMD0000000253
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:41:12
+
+Synonyms:
+HMP: ['hexose monophosphate', 'glucose-6-phosphate', 'glucose 6-phosphate']
+Fru16P2: ['fructose 1,6-bisphosphate', 'fructose 1,6-biphosphate', 'F-1,6-P2']
+ATP: ['adenosine triphosphate']
+Glc: ['glucose']
+Tre6P: ['trehalose 6-phosphate']
+ADP: ['adenosine diphosphate']
+
+Reason: All are well-established biochemical compounds with standard names; HMP and Fru16P2 are specific intermediates in glycolysis, ATP and ADP are primary energy carriers, Glc is a common abbreviation for glucose, and Tre6P is a known precursor in trehalose biosynthesis.

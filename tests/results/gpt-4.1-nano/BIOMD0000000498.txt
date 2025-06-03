@@ -1,0 +1,16 @@
+Model: BIOMD0000000498
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:15:27
+
+Synonyms:
+species_24: ['ferritin', 'ferric iron complex', 'Fe-FT']
+species_26: ['ferritin', 'ferric iron complex', 'Fe-FT']
+species_5: ['heme', 'hemoglobin', 'porphyrin']
+species_2: ['labile iron pool', 'free iron', 'Fe(II)']
+species_43: ['transferrin-iron complex', 'Fe-transferrin', 'transferrin-bound iron']
+species_12: ['transferrin-iron-transferrin receptor complex', 'Tf-Fe-TfR', 'transferrin receptor complex']
+species_15: ['transferrin-iron-transferrin receptor complex', 'Tf-Fe-TfR', 'transferrin receptor complex']
+species_16: ['transferrin-iron-transferrin receptor complex', 'Tf-Fe-TfR', 'transferrin receptor complex']
+species_19: ['transferrin-iron-transferrin receptor complex', 'Tf-Fe-TfR', 'transferrin receptor complex']
+
+Reason: The model focuses on iron metabolism, with species representing iron complexes, transferrin, and heme. "species_24" and "species_26" are ferritin-related, "species_5" is heme, "species_2" is free or labile iron, and the others are transferrin-iron complexes or receptor-bound forms.

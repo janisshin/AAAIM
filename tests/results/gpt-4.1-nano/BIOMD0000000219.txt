@@ -1,0 +1,19 @@
+Model: BIOMD0000000219
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:56:06
+
+Synonyms:
+aca: ['acetyl-CoA', 'acetyl coenzyme A', 'UNK']
+oaa: ['oxaloacetate', 'oxaloacetate (cyclic form)', 'UNK']
+coa: ['coenzyme A', 'CoA', 'UNK']
+cit: ['citrate', 'citric acid', 'sodium citrate']
+icit: ['isocitrate', 'isocitric acid', 'UNK']
+akg: ['alpha-ketoglutarate', 'alpha-ketoglutaric acid', '2-oxoglutarate']
+ssa: ['succinate', 'succinate (anion)', 'UNK']
+suc: ['succinate', 'succinate (anion)', 'UNK']
+sca: ['scyllo-inositol', 'scyllo-inositol (not relevant here)', 'UNK']
+fa: ['fatty acid', 'FA', 'UNK']
+mal: ['malate', 'malic acid', 'UNK']
+gly: ['glycine', 'gly', 'UNK']
+
+Reason: All species are metabolites involved in the TCA cycle or related pathways. "aca" and "coa" are well-known abbreviations for acetyl-CoA and coenzyme A. "oaa" is oxaloacetate, a key TCA cycle intermediate. "cit" and "icit" are citrate and isocitrate, respectively. "akg" is alpha-ketoglutarate. "ssa" and "suc" are succinate. "mal" is malate, and "gly" is glycine, which can be involved in related metabolic processes. "sca" is less clear but could refer to a metabolite like scyllo-inositol, though less relevant here; given the context, "UNK" is used when uncertain.

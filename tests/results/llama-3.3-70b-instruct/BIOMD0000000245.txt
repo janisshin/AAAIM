@@ -1,0 +1,14 @@
+Model: BIOMD0000000245
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:05:49
+
+Synonyms:
+s_glu: ['glucose', 'D-glucose', 'blood sugar']
+s_pyr: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+s_acetald: ['acetaldehyde', 'ethanal', 'acetic aldehyde']
+s_EtOH: ['ethanol', 'ethyl alcohol', 'alcohol']
+CO2: ['carbon dioxide', 'CO2', 'carbonic acid gas']
+Red: ['NADH', 'nicotinamide adenine dinucleotide', 'reduced nicotinamide adenine dinucleotide']
+S_f: ['glucose', 'D-glucose', 'blood sugar']
+
+Reason: The species names were matched to their display names and then standardized to common chemical names. s_glu and S_f are both glucose, s_pyr is pyruvic acid, s_acetald is acetaldehyde, s_EtOH is ethanol, CO2 is carbon dioxide, and Red is likely NADH based on the context of the reaction equations and the model description.

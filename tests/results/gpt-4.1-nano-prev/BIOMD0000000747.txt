@@ -1,0 +1,12 @@
+Model: BIOMD0000000747
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:08:06
+
+Synonyms:
+Xa_Xa_Inhibitor: ['activated factor Xa inhibitor', 'factor Xa inhibitor', 'FXa inhibitor']
+Xa_Inhibitor: ['factor Xa inhibitor', 'FXa inhibitor', 'activated factor Xa inhibitor']
+Va_Xa_Xa_Inhibitor: ['factor Va:factor Xa:factor Xa inhibitor', 'FXa:FXa inhibitor', 'factor Va:factor Xa inhibitor']
+IIa_IIa_Inhibitor: ['thrombin inhibitor', 'factor IIa inhibitor', 'fIIa inhibitor']
+IIa_Inhibitor: ['thrombin inhibitor', 'factor IIa inhibitor', 'fIIa inhibitor']
+
+Reason: All are inhibitors targeting coagulation factors (Xa and IIa), which are well-known in blood coagulation pathways. The specific names suggest enzyme inhibitors, so the synonyms reflect their target factors.

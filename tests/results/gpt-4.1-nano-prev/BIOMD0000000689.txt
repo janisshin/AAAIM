@@ -1,0 +1,23 @@
+Model: BIOMD0000000689
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:06:32
+
+Synonyms:
+H2_HMPt: ['6-Hydroxymethylpterin', 'H2-Pterin', 'pterin derivative']
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+H2_HMPterinPP: ['H2-HMPterin pyrophosphate', 'pterin pyrophosphate', 'H2-HMPtPP']
+AMP: ['adenosine monophosphate', 'AMP', 'adenylate']
+p_ABA: ['p-Aminobenzoic acid', 'p-ABA', 'para-aminobenzoate']
+H2_Pteroate: ['H2-Pteroate', 'pteroate', 'p-aminobenzoyl-PABA']
+L_Glutamate: ['L-Glutamate', 'glutamic acid', 'glutamate']
+Phosphate: ['inorganic phosphate', 'phosphate', 'Pi']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+DHF: ['dihydrofolate', 'dihydrofolic acid', 'DHF']
+L_serine: ['L-Serine', 'serine', 'L-serine']
+Glycine: ['Glycine', 'glycine', 'aminoacetic acid']
+NADP: ['nicotinamide adenine dinucleotide phosphate', 'NADP', 'NADP+']
+NADPH: ['reduced nicotinamide adenine dinucleotide phosphate', 'NADPH', 'NADPH']
+THF: ['tetrahydrofolate', 'THF', 'tetrahydrofolic acid']
+CH2_THF: ['1-Carbon-THF', 'methylene-THF', 'CH2-THF']
+
+Reason: All species are recognized as folate derivatives, nucleotides, amino acids, or related cofactors, with standard synonyms aligning with biochemical nomenclature.

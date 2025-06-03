@@ -1,0 +1,27 @@
+Model: BIOMD0000000735
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:07:22
+
+Synonyms:
+FeDuo: ['ferrous duodenal iron', 'duodenal iron', 'Fe(II) in duodenum']
+FeDuo_0: ['radioactive duodenal iron', 'Fe isotope in duodenum', 'Fe(II) tracer in duodenum']
+FeRBC: ['red blood cell iron', 'hemoglobin iron', 'erythrocyte iron']
+FeRBC_0: ['radioactive RBC iron', 'Fe isotope in RBC', 'Fe tracer in erythrocytes']
+FeSpleen: ['spleen iron', 'splenic iron', 'iron in spleen tissue']
+FeSpleen_0: ['radioactive spleen iron', 'Fe isotope in spleen', 'Fe tracer in spleen']
+FeLiver: ['liver iron', 'hepatic iron', 'iron in liver tissue']
+FeLiver_0: ['radioactive liver iron', 'Fe isotope in liver', 'Fe tracer in liver']
+Fe2Tf: ['Fe(II)-transferrin', 'ferrous transferrin', 'transferrin bound Fe(II)']
+NTBI: ['non-transferrin bound iron', 'labile plasma iron', 'free iron']
+Fe1Tf: ['Fe(III)-transferrin', 'ferric transferrin', 'transferrin bound Fe(III)']
+Fe2Tf_0: ['radioactive Fe(II)-transferrin', 'Fe isotope in Fe(II)-transferrin', 'tracer Fe(II)-transferrin']
+NTBI_0: ['radioactive NTBI', 'tracer non-transferrin bound iron', 'free iron isotope']
+Fe1Tf_0: ['radioactive Fe(III)-transferrin', 'tracer ferric transferrin', 'Fe isotope in Fe(III)-transferrin']
+FeRest: ['resting iron pool', 'storage iron', 'tissue iron']
+FeRest_0: ['radioactive resting iron', 'tracer storage iron', 'Fe isotope in tissue']
+FeOutside: ['extracellular iron', 'plasma iron', 'circulating iron']
+FeOutside_0: ['radioactive extracellular iron', 'tracer plasma iron', 'Fe isotope outside cells']
+FeBM: ['bone marrow iron', 'erythropoietic tissue iron', 'marrow iron']
+FeBM_0: ['radioactive bone marrow iron', 'Fe isotope in marrow', 'tracer marrow iron']
+
+Reason: All are chemical species related to iron in various tissues or forms, with some labeled as radioactive tracers, fitting known iron chemistry and biological compartments.

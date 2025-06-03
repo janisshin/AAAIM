@@ -1,0 +1,9 @@
+Model: BIOMD0000000229
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:40:20
+
+Synonyms:
+incAMP: ['cyclic AMP', 'cAMP', "adenosine 3',5'-cyclic monophosphate"]
+excAMP: ['extracellular cAMP', 'cyclic AMP', 'cAMP']
+
+Reason: Both species are variants of cyclic adenosine monophosphate, with "inc" indicating intracellular and "exc" indicating extracellular.

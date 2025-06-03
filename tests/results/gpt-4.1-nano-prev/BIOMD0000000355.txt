@@ -1,0 +1,12 @@
+Model: BIOMD0000000355
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:23
+
+Synonyms:
+CaI: ['calcium ion', 'Ca2+', 'calcium']
+IP3: ['inositol 1,4,5-trisphosphate', 'IP3', 'inositol trisphosphate']
+mwd6b792d8_c983_42c1_b3bc_2494d6a3363e: ['calcium oxide', 'CaO', 'calcium monoxide']
+mw013a7c64_a9ec_483c_b3b8_ed658337ee95: ['calmodulin', 'CaM', 'calcium-binding messenger protein']
+CaS: ['calcium sulfate', 'CaSO4', 'calcium sulfite']
+
+Reason: CaI and CaS are likely calcium ions and calcium sulfate respectively; IP3 is a well-known signaling molecule; the long identifier corresponds to calcium oxide; the other identifier is calmodulin, a calcium-binding protein.

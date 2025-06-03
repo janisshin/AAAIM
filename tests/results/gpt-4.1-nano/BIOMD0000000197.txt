@@ -1,0 +1,14 @@
+Model: BIOMD0000000197
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:55:10
+
+Synonyms:
+x1: ['bile salt', 'bile acid', 'bile component']
+x2: ['bound bile salt', 'bile salt complex', 'bile salt conjugate']
+x3: ['intracellular bile salt', 'cellular bile salt', 'bile salt']
+x4: ['bound intracellular bile salt', 'intracellular bile salt complex', 'bile salt conjugate']
+x5: ['apical bile salt', 'bile salt', 'bile component']
+BSP_tot: ['total bile salt', 'total bile acid', 'total bile component']
+BSP_cell: ['intracellular bile salt', 'cellular bile salt', 'bile salt']
+
+Reason: All species are related to bile salts and their complexes within cellular compartments or membranes, consistent with transporter names and localization.

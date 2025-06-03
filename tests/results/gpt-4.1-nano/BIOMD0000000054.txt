@@ -1,0 +1,10 @@
+Model: BIOMD0000000054
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:51:00
+
+Synonyms:
+I: ['potassium ion', 'K+', 'ion']
+E: ['adenylate energy pool', 'ATP/ADP/AMP', 'energy carrier']
+A: ['adenylate pool', 'adenylate', 'AMP/ADP/ATP']
+
+Reason: I is labeled as ions, likely representing common intracellular cations like potassium; E is the energy pool, corresponding to adenine nucleotides; A is the adenylate pool, encompassing ATP, ADP, AMP.

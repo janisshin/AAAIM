@@ -1,0 +1,15 @@
+Model: BIOMD0000000638
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:21:48
+
+Synonyms:
+Gt: ['GTP', 'guanosine triphosphate', 'GTP']
+Gd: ['GDP', 'guanosine diphosphate', 'GDP']
+LRGt: ['LRG GTP', 'LGR GTP', 'LGR GTP']
+RGd: ['RG GDP', 'RGS GDP', 'Regulator GTPase GDP']
+RGt: ['RG GTP', 'RGS GTP', 'Regulator GTPase']
+LRGd: ['LGR GDP', 'LGR GTP', 'LGR GTP/GDP']
+LRrgsGt: ['LR RGS GTP', 'LGR RGS GTP', 'LGR RGS']
+RrgsGd: ['RGS GDP', 'RGS GTP', 'Regulator GTPase']
+
+Reason: The species are abbreviations for GTP/GDP bound forms of G-proteins and RGS proteins involved in GPCR signaling. The abbreviations Gt and Gd clearly correspond to GTP and GDP, respectively. The other species are complexes or variants involving these molecules.

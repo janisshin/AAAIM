@@ -1,0 +1,23 @@
+Model: BIOMD0000000380
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:44:41
+
+Synonyms:
+glc: ['glucose', 'd-glucose', 'blood sugar']
+g1p: ['glucose 1-phosphate', 'glucose-1-phosphate']
+g6p: ['glucose 6-phosphate', 'glucose-6-phosphate']
+trh: ['trehalose', 'trehalose']
+t6p: ['trehalose 6-phosphate', 'trehalose-6-phosphate']
+udg: ['UDP-glucose', 'uridine diphosphate glucose']
+adp: ['ADP', 'adenosine diphosphate']
+atp: ['ATP', 'adenosine triphosphate']
+ppi: ['diphosphate', 'pyrophosphate']
+f6p: ['fructose 6-phosphate', 'fructose-6-phosphate']
+h: ['H+', 'proton']
+pho: ['phosphate', 'orthophosphate']
+udp: ['UDP', 'uridine diphosphate']
+utp: ['UTP', 'uridine triphosphate']
+h2o: ['water', 'dihydrogen monoxide']
+glx: ['glucose', 'd-glucose', 'blood sugar']
+
+Reason: All species are common metabolites or cofactors involved in carbohydrate metabolism, with standard biochemical names.

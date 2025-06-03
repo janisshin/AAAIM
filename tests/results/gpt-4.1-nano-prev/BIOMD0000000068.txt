@@ -1,0 +1,20 @@
+Model: BIOMD0000000068
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:35:45
+
+Synonyms:
+Phser: ['phosphohomoserine', 'O-phosphohomoserine', 'UNK']
+
+Reason: Phser is explicitly given as phosphohomoserine in the display names, a known biochemical intermediate.
+Thr: "threonine", "L-threonine", "UNK"
+Reason: Thr is labeled as threonine in the display names, a standard amino acid.
+Cystathionine: "cystathionine", "L-cystathionine", "UNK"
+Reason: Cystathionine is explicitly named, a known amino acid derivative.
+Hser: "homoserine", "L-homoserine", "UNK"
+Reason: Hser is given as homoserine, a known amino acid precursor.
+Phi: "inorganic phosphate", "phosphate", "orthophosphate"
+Reason: Phi is annotated as inorganic phosphate, a common chemical species.
+Cys: "cysteine", "L-cysteine", "UNK"
+Reason: Cys is labeled as cysteine, a standard amino acid.
+AdoMet: "S-adenosylmethionine", "SAM", "AdoMet"
+Reason: AdoMet is explicitly given as S-adenosylmethionine, a common methyl donor.

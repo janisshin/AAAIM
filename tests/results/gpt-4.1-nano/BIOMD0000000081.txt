@@ -1,0 +1,25 @@
+Model: BIOMD0000000081
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:52:12
+
+Synonyms:
+PIP2_M: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'PI(4,5)P2']
+GGDPbS_M: ['geranylgeranyl diphosphate sulfide', 'GGDP-S', 'geranylgeranyl pyrophosphate sulfur']
+Mg2_C: ['magnesium ion', 'Mg(2+)', 'magnesium cation']
+ATP_C: ['adenosine triphosphate', 'ATP', 'adenosinetriphosphate']
+oxoM_EX: ['oxo-membrane extract', 'oxidized membrane species', 'UNK']
+GDPbS_C: ['guanosine diphosphate sulfide', 'GDP-S', 'guanosine diphosphate sulfur']
+GGTPMg_M: ['geranylgeranyl transferase magnesium complex', 'GGT Mg', 'geranylgeranyl transferase with Mg']
+GDP_C: ['guanosine diphosphate', 'GDP', 'guanosine diphosphate']
+GTP_C: ['guanosine triphosphate', 'GTP', 'guanosine triphosphate']
+GGDPAlF4Mg_M: ['geranylgeranyl diphosphate with AlF4 and Mg', 'GGDP-AlF4-Mg', 'geranylgeranyl diphosphate analog complex']
+ip3_C: ['inositol 1,4,5-trisphosphate', 'IP3', 'inositol trisphosphate']
+AlF4_C: ['tetrafluoroaluminate', 'AlF4', 'aluminum tetrafluoride']
+GGTPgS_M: ['geranylgeranyl transferase with GSH', 'GGT GSH', 'geranylgeranyl transferase with glutathione']
+PI_M: ['phosphatidylinositol', 'PI', 'phosphatidylinositol']
+PIP_M: ['phosphatidylinositol 4-phosphate', 'PIP', 'PI(4)P']
+PIP2xKCNQ_M: ['PIP2 modulator of KCNQ channels', 'PIP2-KCNQ', 'PIP2 associated with KCNQ']
+GGTPgSMg_M: ['geranylgeranyl transferase with GSH and Mg', 'GGT GSH Mg', 'geranylgeranyl transferase with glutathione and Mg']
+GGDP_M: ['geranylgeranyl diphosphate', 'GGDP', 'geranylgeranyl pyrophosphate']
+
+Reason: The species are mostly lipids, nucleotides, or enzyme complexes involved in phosphoinositide signaling and prenylation pathways. Some species like oxoM_EX are ambiguous or not standard chemical entities, hence "UNK".

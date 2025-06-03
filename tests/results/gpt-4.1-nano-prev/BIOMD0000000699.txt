@@ -1,0 +1,23 @@
+Model: BIOMD0000000699
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:06:52
+
+Synonyms:
+Tem1GTP: ['Tem1 GTP', 'Tem1 GTPase', 'Tem1 guanosine triphosphate']
+Tem1GDP: ['Tem1 GDP', 'Tem1 guanosine diphosphate']
+T_Tem1GTP: ['Tem1 GTP', 'Tem1 GTPase', 'Tem1 guanosine triphosphate']
+T_Tem1GDP: ['Tem1 GDP', 'Tem1 guanosine diphosphate']
+B_Bfa1_Tem1GTP: ['Bfa1-Tem1 GTP complex', 'Bfa1-Tem1 GTP', 'Bfa1-Tem1 GTPase']
+B_Bfa1P4_Tem1GTP: ['Bfa1-P4-Tem1 GTP complex', 'Bfa1-P4-Tem1 GTP']
+B_Bfa1P5_Tem1GTP: ['Bfa1-P5-Tem1 GTP complex', 'Bfa1-P5-Tem1 GTP']
+B_Bfa1_Tem1GDP: ['Bfa1-Tem1 GDP complex', 'Bfa1-Tem1 GDP']
+B_Bfa1P4_Tem1GDP: ['Bfa1-P4-Tem1 GDP complex', 'Bfa1-P4-Tem1 GDP']
+B_Bfa1P5_Tem1GDP: ['Bfa1-P5-Tem1 GDP complex', 'Bfa1-P5-Tem1 GDP']
+Bfa1_Tem1GTP: ['Bfa1-Tem1 GTP', 'Bfa1-Tem1 GTPase']
+Bfa1P4_Tem1GTP: ['Bfa1-P4-Tem1 GTP']
+Bfa1P5_Tem1GTP: ['Bfa1-P5-Tem1 GTP']
+Bfa1_Tem1GDP: ['Bfa1-Tem1 GDP']
+Bfa1P4_Tem1GDP: ['Bfa1-P4-Tem1 GDP']
+Bfa1P5_Tem1GDP: ['Bfa1-P5-Tem1 GDP']
+
+Reason: These species represent complexes or states of the GTPase Tem1 and its regulators Bfa1, with standard names reflecting their molecular identities and nucleotide states. The model focuses on regulation of Tem1 by Bfa1 in yeast cell cycle checkpoint.

@@ -1,0 +1,20 @@
+Model: BIOMD0000000042
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:50:33
+
+Synonyms:
+ATP: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate']
+ADP: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate']
+AMP: ['adenosine monophosphate', 'AMP', 'adenosine monophosphate']
+GLC: ['glucose', 'D-glucose', 'glucose']
+FBP: ['fructose 1,6-bisphosphate', 'FBP', 'fructose 1,6-bisphosphate']
+GAP: ['glyceraldehyde 3-phosphate', 'G3P', 'glyceraldehyde 3-phosphate']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD', 'nicotinamide adenine dinucleotide']
+NADH: ['nicotinamide adenine dinucleotide, reduced form', 'NADH', 'reduced NAD']
+DPG: ['1,3-bisphosphoglycerate', '1,3-BPG', 'bisphosphoglycerate']
+PEP: ['phosphoenolpyruvate', 'PEP', 'phosphoenolpyruvate']
+PYR: ['pyruvate', 'pyruvic acid', 'pyruvate']
+ACA: ['acetyl-CoA', 'acetyl coenzyme A', 'acetyl-CoA']
+EtOH: ['ethanol', 'ethyl alcohol', 'ethanol']
+
+Reason: All species are common metabolites or cofactors in glycolysis, with standard biochemical names. DPG is 1,3-bisphosphoglycerate, and ACA is acetyl-CoA. The display names and reactions support their identities.

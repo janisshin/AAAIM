@@ -1,0 +1,12 @@
+Model: BIOMD0000000301
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:35
+
+Synonyms:
+taRNA: ['trans-acting RNA', 'small regulatory RNA', 'synthetic RNA']
+mT7cr: ['T7 promoter-reporter', 'T7-controlled construct', 'T7-driven gene']
+mGFPcr: ['GFP reporter', 'green fluorescent protein', 'GFP construct']
+ara: ['arabinose', 'L-arabinose', 'arabinose sugar']
+mT3cr: ['T3 promoter-reporter', 'T3-controlled construct', 'T3-driven gene']
+
+Reason: All species are synthetic or regulatory molecules used in genetic circuits; "ara" is a well-known sugar inducer. The others are engineered constructs or RNAs used in the model.

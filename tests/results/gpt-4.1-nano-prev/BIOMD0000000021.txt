@@ -1,0 +1,9 @@
+Model: BIOMD0000000021
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:28
+
+Synonyms:
+Mp: ['mRNA', 'messenger RNA', 'RNA']
+Mt: ['mRNA', 'messenger RNA', 'RNA']
+
+Reason: Both species are labeled as mRNA for clock proteins PER and TIM, which are messenger RNAs encoding these proteins. They are not proteins or small molecules, so chemical names are not applicable.

@@ -1,0 +1,32 @@
+Model: BIOMD0000000392
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:17:46
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'RuBP', 'ribulose 1,5-bisphosphate']
+PGA: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'phosphoglycerate']
+GAP: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde 3-phosphate']
+DHAP: ['dihydroxyacetone phosphate', 'DHAP', 'glycerone phosphate']
+FBP: ['fructose-1,6-bisphosphate', 'fructose 1,6-bisphosphate', 'FBP']
+F6P: ['fructose-6-phosphate', 'fructose 6-phosphate', 'F6P']
+Ru5P: ['ribulose-5-phosphate', 'Ru5P', 'ribulose 5-phosphate']
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+Pi: ['inorganic phosphate', 'phosphate', 'orthophosphate']
+CO2: ['carbon dioxide', 'CO2', 'carbonic acid']
+O2: ['oxygen', 'O2', 'dioxygen']
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'NADPH', 'reduced nicotinamide adenine dinucleotide phosphate']
+PGAc: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'phosphoglycerate']
+GAPc: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde 3-phosphate']
+DHAPc: ['dihydroxyacetone phosphate', 'DHAP', 'glycerone phosphate']
+FBPc: ['fructose-1,6-bisphosphate', 'fructose 1,6-bisphosphate', 'FBP']
+F6Pc: ['fructose-6-phosphate', 'fructose 6-phosphate', 'F6P']
+UTPc: ['uridine triphosphate', 'UTP', "uridine 5'-triphosphate"]
+UDPc: ['uridine diphosphate', 'UDP', "uridine 5'-diphosphate"]
+ATPc: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+ADPc: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+Succ: ['succinate', 'succinic acid', 'butanedioic acid']
+Pic: ['inorganic phosphate', 'phosphate', 'orthophosphate']
+Hc: ['hydrogen ion', 'proton', 'H+']
+
+Reason: The model is based on the Calvin-Benson cycle, which is a well-studied metabolic pathway. The species names are mostly standard biochemical abbreviations, and their corresponding standardized names or common synonyms can be easily identified. The 'c' suffix in some species names (e.g., PGAc, GAPc) likely indicates a different compartment or complex, but the underlying chemical entity remains the same. The species without a clear biochemical counterpart (e.g., ER, EPP, EPG) are not included in the output as their names do not match any known chemical entities.

@@ -1,0 +1,16 @@
+Model: BIOMD0000000638
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:28:30
+
+Synonyms:
+Gt: ['GTP', 'guanosine triphosphate', 'GTP(4-)']
+Gd: ['GDP', 'guanosine diphosphate', 'GDP(3-)']
+LRGt: ['heterotrimeric G protein alpha subunit-GTP', 'G alpha-GTP', 'Gs alpha-GTP']
+RGd: ['regulator of G protein signaling-GDP', 'RGS-GDP', 'GDP-bound RGS']
+RGt: ['regulator of G protein signaling-GTP', 'RGS-GTP', 'GTP-bound RGS']
+LRGd: ['heterotrimeric G protein alpha subunit-GDP', 'G alpha-GDP', 'Gs alpha-GDP']
+LRrgsGt: ['ligand-bound GPCR-RGS-GTP', 'G protein-coupled receptor-RGS-GTP', 'GPCR-RGS-GTP']
+RrgsGd: ['RGS-GDP', 'regulator of G protein signaling-GDP', 'GDP-bound RGS']
+LRrgsGd: ['ligand-bound GPCR-RGS-GDP', 'G protein-coupled receptor-RGS-GDP', 'GPCR-RGS-GDP']
+
+Reason: The model appears to be related to G-protein coupled receptor (GPCR) signaling, and the species names suggest involvement of GTP, GDP, and regulator of G protein signaling (RGS) proteins. The reactions and display names provide context for annotating the species with standardized names related to G-protein signaling.

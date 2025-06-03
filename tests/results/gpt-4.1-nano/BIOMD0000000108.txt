@@ -1,0 +1,11 @@
+Model: BIOMD0000000108
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:53:03
+
+Synonyms:
+species_0000001: ['oxygen molecule', 'O2', 'dioxygen']
+species_0000006: ['hydrogen peroxide', 'H2O2', 'peroxide']
+species_0000008: ['hydroxyl radical', 'HO*', 'hydroxyl free radical']
+species_0000009: ['lithium peroxide', 'LOOH', 'peroxide compound']
+
+Reason: species_0000001 is O2, a common molecular oxygen; species_0000006 is hydrogen peroxide, a well-known reactive oxygen species; species_0000008 is hydroxyl radical, a key reactive oxygen species; species_0000009 is lithium peroxide, a peroxide compound, matching the notation LOOH.

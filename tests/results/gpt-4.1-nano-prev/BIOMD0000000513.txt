@@ -1,0 +1,35 @@
+Model: BIOMD0000000513
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:00:25
+
+Synonyms:
+DHAP_c: ['dihydroxyacetone phosphate', 'DHAP', 'dihydroxyacetone phosphate (cytoplasmic)']
+ATP_g: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate (cytoplasmic)']
+DHAP_g: ['dihydroxyacetone phosphate', 'DHAP', 'dihydroxyacetone phosphate (glycolytic)']
+ADP_g: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate (glycolytic)']
+Glc6P_g: ['glucose-6-phosphate', 'G6P', 'glucose-6-phosphate (glycolytic)']
+ADP_c: ['adenosine diphosphate', 'ADP', 'adenosine diphosphate (cytoplasmic)']
+_3PGA_c: ['3-phosphoglycerate', '3-PGA', '3-phosphoglycerate (cytoplasmic)']
+Pi_g: ['inorganic phosphate', 'Pi', 'phosphate (cytoplasmic)']
+O2_c: ['oxygen', 'O2', 'molecular oxygen (cytoplasmic)']
+Gly_e: ['glycine', 'Gly', 'glycine (extracellular)']
+ATP_c: ['adenosine triphosphate', 'ATP', 'adenosine triphosphate (cytoplasmic)']
+Glc_c: ['glucose', 'Glc', 'glucose (cytoplasmic)']
+Glc_e: ['glucose', 'Glc', 'glucose (extracellular)']
+Glc_g: ['glucose', 'Glc', 'glucose (glycolytic)']
+Pyr_c: ['pyruvate', 'Pyr', 'pyruvate (cytoplasmic)']
+Pyr_e: ['pyruvate', 'Pyr', 'pyruvate (extracellular)']
+NAD_g: ['nicotinamide adenine dinucleotide', 'NAD', 'NAD (cytoplasmic)']
+Fru16BP_g: ['fructose-1,6-bisphosphate', 'F16BP', 'fructose-1,6-bisphosphate (glycolytic)']
+GA3P_g: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde-3-phosphate (glycolytic)']
+CO2_c: ['carbon dioxide', 'CO2', 'carbon dioxide (cytoplasmic)']
+CO2_g: ['carbon dioxide', 'CO2', 'carbon dioxide (glycolytic)']
+Gly3P_c: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde-3-phosphate (cytoplasmic)']
+Gly3P_g: ['glyceraldehyde-3-phosphate', 'G3P', 'glyceraldehyde-3-phosphate (glycolytic)']
+PEP_c: ['phosphoenolpyruvate', 'PEP', 'phosphoenolpyruvate (cytoplasmic)']
+AMP_g: ['adenosine monophosphate', 'AMP', 'AMP (cytoplasmic)']
+_3PGA_g: ['3-phosphoglycerate', '3-PGA', '3-phosphoglycerate (glycolytic)']
+AMP_c: ['adenosine monophosphate', 'AMP', 'AMP (cytoplasmic)']
+NADH_g: ['nicotinamide adenine dinucleotide, reduced', 'NADH', 'NADH (cytoplasmic)']
+
+Reason: All species are standard metabolites involved in glycolysis, energy transfer, or common extracellular/intracellular molecules. The names are well-established biochemical terms suitable for ontology lookup.

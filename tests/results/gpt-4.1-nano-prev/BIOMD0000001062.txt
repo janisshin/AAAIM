@@ -1,0 +1,37 @@
+Model: BIOMD0000001062
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:12:54
+
+Synonyms:
+M_cytd_c: ['cytidine triphosphate', 'cytidine diphosphate', 'cytidine monophosphate']
+
+Reason: The prefix "cytd" suggests cytidine derivatives involved in nucleotide metabolism.
+
+M_gtp_c: "guanosine triphosphate", "GTP", "guanosine triphosphate"
+Reason: "gtp" is a standard abbreviation for GTP, a common nucleotide.
+
+M_cmp_c: "cytidine monophosphate", "CMP", "cytidine monophosphate"
+Reason: "cmp" is a standard nucleotide abbreviation for cytidine monophosphate.
+
+M_gdp_c: "guanosine diphosphate", "GDP", "guanosine diphosphate"
+Reason: "gdp" is a common nucleotide abbreviation.
+
+M_h_c: "H+", "proton", "hydrogen ion"
+Reason: "h" typically denotes a proton in biochemical contexts.
+
+M_prpp_c: "phosphoribosyl pyrophosphate", "PRPP", "phosphoribosyl pyrophosphate"
+Reason: "prpp" is a well-known substrate in nucleotide biosynthesis.
+
+M_xan_c: "xanthine", "xanthine", "purine base"
+Reason: "xan" is a standard abbreviation for xanthine.
+
+M_ppi_c: "inorganic pyrophosphate", "PPi", "pyrophosphate"
+Reason: "ppi" commonly refers to inorganic pyrophosphate.
+
+M_xmp_c: "xanthosine monophosphate", "XMP", "xanthosine monophosphate"
+Reason: "xmp" is a nucleotide involved in purine metabolism.
+
+M_hxan_c: "hypoxanthine", "hypoxanthine", "purine derivative"
+Reason: "hxan" suggests hypoxanthine.
+
+Reason: All are standard nucleotide or metabolite names, well-mapped to biochemical entities.

@@ -1,0 +1,31 @@
+Model: BIOMD0000000512
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:16:54
+
+Synonyms:
+A_b: ['arachidonoyl ethanolamide', 'anandamide', 'AEA']
+O_b: ['oleoylethanolamide', 'OEA']
+P_b: ['palmitoylethanolamide', 'PEA']
+L_b: ['linoleoylethanolamide', 'LEA']
+NAPE_b: ['N-acyl phosphatidylethanolamine', 'NAPE']
+NOPE_b: ['N-oleoyl phosphatidylethanolamine', 'NOPE']
+NPPE_b: ['N-palmitoyl phosphatidylethanolamine', 'NPPE']
+NLPE_b: ['N-linoleoyl phosphatidylethanolamine', 'NLPE']
+A_r: ['arachidonoyl ethanolamide', 'anandamide']
+O_r: ['oleoylethanolamide', 'OEA']
+P_r: ['palmitoylethanolamide', 'PEA']
+L_r: ['linoleoylethanolamide', 'LEA']
+NAPE_r: ['N-acyl phosphatidylethanolamine', 'NAPE']
+NOPE_r: ['N-oleoyl phosphatidylethanolamine', 'NOPE']
+NPPE_r: ['N-palmitoyl phosphatidylethanolamine', 'NPPE']
+NLPE_r: ['N-linoleoyl phosphatidylethanolamine', 'NLPE']
+A_m: ['arachidonoyl ethanolamide', 'anandamide']
+O_m: ['oleoylethanolamide', 'OEA']
+P_m: ['palmitoylethanolamide', 'PEA']
+L_m: ['linoleoylethanolamide', 'LEA']
+A_p: ['arachidonoyl ethanolamide', 'anandamide']
+O_p: ['oleoylethanolamide', 'OEA']
+P_p: ['palmitoylethanolamide', 'PEA']
+L_p: ['linoleoylethanolamide', 'LEA']
+
+Reason: All species are related to fatty acid amides involved in endocannabinoid signaling, with common synonyms used in biochemical contexts.

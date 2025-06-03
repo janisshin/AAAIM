@@ -1,0 +1,13 @@
+Model: BIOMD0000000613
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 13:23:06
+
+Synonyms:
+B: ['calcitriol', '1,25-dihydroxyvitamin D3', '1,25-dihydroxycholecalciferol']
+P: ['calcium', 'calcium ion', 'Ca2+']
+T: ['calcium', 'calcium ion', 'Ca2+']
+R: ['calcium', 'calcium ion', 'Ca2+']
+Q: ['bone calcium', 'calcium in bone', 'bone Ca2+']
+Qbone: ['bone calcium', 'calcium in bone', 'bone Ca2+']
+
+Reason: The model is a calcium homeostasis and bone remodeling model, and the reactions and notes suggest that B is calcitriol, a hormone involved in calcium regulation. P, T, and R are likely calcium or calcium ions, given their involvement in calcium flux and absorption reactions. Q and Qbone are likely related to calcium in bone, given their involvement in bone-related reactions.

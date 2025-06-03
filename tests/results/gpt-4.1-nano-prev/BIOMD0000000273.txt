@@ -1,0 +1,17 @@
+Model: BIOMD0000000273
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:42:02
+
+Synonyms:
+cG_m: ['GTP', 'guanosine triphosphate', 'GTP molecule']
+cL_m: ['LUC', 'luciferase', 'luciferase enzyme']
+cNI: ['NI', 'night inhibitor', 'night-time inhibitor']
+cNI_m: ['NI mRNA', 'night inhibitor mRNA', 'night inhibitor transcript']
+cP7_m: ['PRR7 mRNA', 'PSEUDO-RESPONSE REGULATOR 7 mRNA', 'PRR7 transcript']
+cP9_m: ['PRR9 mRNA', 'PSEUDO-RESPONSE REGULATOR 9 mRNA', 'PRR9 transcript']
+cT_m: ['TOC1 mRNA', 'TIMING OF CAB EXPRESSION 1 mRNA', 'TOC1 transcript']
+cY: ['Y', 'unknown species Y', 'species Y']
+cY_m: ['Y mRNA', 'species Y transcript', 'Y transcript']
+
+Reason: 
+All species are likely gene transcripts or proteins involved in the plant circadian clock model. The m species are mRNA transcripts of respective genes, while others are gene or protein abbreviations. "cNI" and "cY" are likely gene or protein names, with "NI" referring to night inhibitor, and "Y" being an unspecified component.

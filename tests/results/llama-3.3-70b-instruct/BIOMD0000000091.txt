@@ -1,0 +1,9 @@
+Model: BIOMD0000000091
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 11:52:21
+
+Synonyms:
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+
+Reason: The species ATP and ADP are likely to be adenosine triphosphate and adenosine diphosphate, respectively, as they are commonly involved in energy transfer reactions in cellular processes, and their display names match their standard chemical names.

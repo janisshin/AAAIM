@@ -1,0 +1,15 @@
+Model: BIOMD0000000408
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-03 12:19:15
+
+Synonyms:
+ADPi: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+ATPi: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+Cri: ['creatine', 'creatinine', 'N-methylglycine']
+PCri: ['phosphocreatine', 'creatine phosphate', 'phosphocreatine ion']
+PCr: ['phosphocreatine', 'creatine phosphate', 'phosphocreatine ion']
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+Cr: ['creatine', 'creatinine', 'N-methylglycine']
+
+Reason: The model is based on the creatine kinase system, which involves the reaction of creatine (Cr) with ATP to form phosphocreatine (PCr) and ADP. The display names and the context of the model suggest that ADPi and ATPi are likely intracellular forms of ADP and ATP, while Cri and PCri are likely related to creatine and phosphocreatine. The standardized names are based on common biochemical nomenclature.

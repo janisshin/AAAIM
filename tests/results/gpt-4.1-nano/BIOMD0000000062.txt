@@ -1,0 +1,9 @@
+Model: BIOMD0000000062
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:51:09
+
+Synonyms:
+Ts: ['tryptophan', 'L-tryptophan', 'indole-3-pyruvic acid']
+Tt: ['total tryptophan', 'L-tryptophan', 'indole-3-pyruvic acid']
+
+Reason: Both species refer to tryptophan, with Tt indicating total (including synthesized) tryptophan, and Ts specifically the synthesized form. The model context suggests they are related to tryptophan molecules.

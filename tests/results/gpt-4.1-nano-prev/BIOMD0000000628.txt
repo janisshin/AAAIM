@@ -1,0 +1,30 @@
+Model: BIOMD0000000628
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:04:48
+
+Synonyms:
+Ca: ['calcium', 'Ca2+', 'calcium ion']
+CBPfastCa: ['CBP fast calcium complex', 'CBP calcium', 'calcium-bound CBP']
+CBPmediaCa: ['CBP media calcium complex', 'CBP calcium', 'calcium-bound CBP']
+CBPslowCa: ['CBP slow calcium complex', 'CBP calcium', 'calcium-bound CBP']
+CBPvslowCa: ['CBP very slow calcium complex', 'CBP calcium', 'calcium-bound CBP']
+CamR_Ca1_A: ['calcium-bound calmodulin', 'Ca2+-calmodulin', 'calcium-calmodulin complex']
+CamR_Ca2_AB: ['calcium-calmodulin complex', 'Ca2+-calmodulin', 'calcium-bound calmodulin']
+CamR_Ca3_ABC: ['calcium-calmodulin complex', 'Ca2+-calmodulin', 'calcium-bound calmodulin']
+CamR_Ca4_ABCD: ['calcium-calmodulin complex', 'Ca2+-calmodulin', 'calcium-bound calmodulin']
+CamT_Ca1_A: ['calcium-bound calmodulin', 'Ca2+-calmodulin', 'calcium-calmodulin complex']
+CamT_Ca2_AB: ['calcium-calmodulin complex', 'Ca2+-calmodulin', 'calcium-bound calmodulin']
+CamT_Ca3_ABC: ['calcium-calmodulin complex', 'Ca2+-calmodulin', 'calcium-bound calmodulin']
+CamT_Ca4_ABCD: ['calcium-calmodulin complex', 'Ca2+-calmodulin', 'calcium-bound calmodulin']
+CamR_CaMKII: ['calcium-calmodulin dependent kinase II', 'CaMKII', 'Ca2+-CaM kinase']
+CamR_Ca1_A_CaMKII: ['calcium-bound CaMKII', 'Ca2+-CaM kinase', 'CaMKII with calcium']
+CamR_Ca2_AB_CaMKII: ['calcium-bound CaMKII', 'Ca2+-CaM kinase', 'CaMKII with calcium']
+CamR_Ca3_ABC_CaMKII: ['calcium-bound CaMKII', 'Ca2+-CaM kinase', 'CaMKII with calcium']
+CamR_Ca4_ABCD_CaMKII: ['calcium-bound CaMKII', 'Ca2+-CaM kinase', 'CaMKII with calcium']
+CamR_Ca1_A_PP2B: ['PP2B (calcineurin) complex', 'PP2B with calcium', 'calcineurin-calcium']
+CamR_Ca2_AB_PP2B: ['PP2B with calcium', 'calcineurin-calcium complex', 'PP2B-calcium']
+CamR_Ca3_ABC_PP2B: ['PP2B with calcium', 'calcineurin-calcium complex', 'PP2B-calcium']
+CamR_Ca4_ABCD_PP2B: ['PP2B with calcium', 'calcineurin-calcium complex', 'PP2B-calcium']
+CamR_Ca1_A_CaMKIIp: ['phosphorylated CaMKII', 'Ca2+-CaM kinase phosphorylated', 'CaMKIIp']
+
+Reason: All species are related to calcium ions or calcium-bound complexes involved in signaling pathways, primarily calmodulin, CaMKII, and phosphatases.

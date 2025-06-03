@@ -1,0 +1,9 @@
+Model: BIOMD0000000201
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:55:21
+
+Synonyms:
+Rasa: ['active Ras', 'Ras', 'Ras protein']
+Rasi: ['inactive Ras', 'Ras', 'Ras protein']
+
+Reason: Both species are forms of Ras, a small GTPase involved in signaling pathways; "active Ras" and "inactive Ras" are common states, and "Ras" is the canonical name.

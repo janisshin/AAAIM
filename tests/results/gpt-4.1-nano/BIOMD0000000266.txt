@@ -1,0 +1,14 @@
+Model: BIOMD0000000266
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 22:57:39
+
+Synonyms:
+X0: ['glucose', 'd-glucose', 'blood sugar']
+X1: ['glucose', 'd-glucose', 'blood sugar']
+X2: ['glucose-6-phosphate', 'G6P', 'glucose 6-phosphate']
+X3: ['glucose-1-phosphate', 'G1P', 'glucose 1-phosphate']
+X4: ['uridine diphosphate glucose', 'UDP-glucose', 'UDP-glucose']
+X6: ['trehalose-6-phosphate', 'T6P', 'trehalose 6-phosphate']
+X7: ['trehalose', 'maltose', 'mycose']
+
+Reason: The model describes the trehalose cycle in yeast, with X0 and X1 as glucose, X2 and X3 as phosphorylated glucose intermediates, X4 as UDP-glucose, X6 as trehalose-6-phosphate, and X7 as trehalose.

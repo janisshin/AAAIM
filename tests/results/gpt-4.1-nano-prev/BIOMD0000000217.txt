@@ -1,0 +1,19 @@
+Model: BIOMD0000000217
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:40:04
+
+Synonyms:
+UTP: ['uridine triphosphate', 'UTP', "uridine 5'-triphosphate"]
+PPi: ['pyrophosphate', 'PPi', 'diphosphate']
+GLN: ['glutamine', 'L-glutamine', 'GLN']
+UMP: ['uridine monophosphate', 'UMP', "uridine 5'-monophosphate"]
+AMP: ['adenosine monophosphate', 'AMP', 'adenylate']
+NH4: ['ammonium', 'NH4+', 'ammonia']
+NADPH: ['nicotinamide adenine dinucleotide phosphate (reduced)', 'NADPH', 'reduced NADP']
+GLU: ['glutamate', 'L-glutamate', 'GLU']
+NADP: ['nicotinamide adenine dinucleotide phosphate', 'NADP', 'oxidized NADP']
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+P_i: ['inorganic phosphate', 'Pi', 'phosphate']
+
+Reason: All listed species are well-known biochemical entities involved in nucleotide and amino acid metabolism, with standard names and common synonyms available for ontology lookup.

@@ -1,0 +1,32 @@
+Model: BIOMD0000001046
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:24:29
+
+Synonyms:
+M_coenzyme_A: ['coenzyme A', 'CoA', 'UNK']
+M_ADP: ['ADP', 'adenosine diphosphate', 'UNK']
+M_acyl_carrier_protein: ['acyl carrier protein', 'ACP', 'UNK']
+M_biotin: ['biotin', 'vitamin B7', 'UNK']
+M_ATP: ['ATP', 'adenosine triphosphate', 'UNK']
+M_pyrophosphate: ['pyrophosphate', 'PPi', 'UNK']
+M_AMP: ['AMP', 'adenosine monophosphate', 'UNK']
+M_HCO3: ['bicarbonate', 'HCO3-', 'UNK']
+M_phosphate: ['phosphate', 'Pi', 'UNK']
+M_H: ['H+', 'proton', 'UNK']
+M_acetyl_coA: ['acetyl-CoA', 'acetyl coenzyme A', 'CoA']
+M_malonyl_coA: ['malonyl-CoA', 'malonyl coenzyme A', 'CoA']
+M_ACP_FAS: ['acyl carrier protein', 'ACP', 'UNK']
+M_C2_acyl_ACP_FAS: ['acetyl-ACP', 'C2-acyl-ACP', 'UNK']
+M_malonyl_C2_acyl_ACP_FAS: ['malonyl-ACP', 'malonyl-C2-ACP', 'UNK']
+M_beta_keto_C4_acyl_ACP_FAS: ['beta-keto-C4-ACP', 'beta-keto-ACP', 'UNK']
+M_CO2: ['carbon dioxide', 'CO2', 'UNK']
+M_NADPH: ['NADPH', 'nicotinamide adenine dinucleotide phosphate', 'UNK']
+M_D_3_hydroxy_C4_acyl_ACP_FAS: ['D-3-hydroxy-C4-ACP', '3-hydroxy-ACP', 'UNK']
+M_NADP: ['NADP+', 'nicotinamide adenine dinucleotide phosphate', 'UNK']
+M_trans_delta_2_enoyl_C4_acyl_ACP_FAS: ['trans-delta-2-enoyl-C4-ACP', 'trans-enoyl-ACP', 'UNK']
+M_H2O: ['water', 'H2O', 'UNK']
+M_NADH: ['NADH', 'reduced nicotinamide adenine dinucleotide', 'UNK']
+M_C4_acyl_ACP_FAS: ['butyryl-ACP', 'C4-acyl-ACP', 'UNK']
+
+Reason: All are standard biochemical names or common synonyms for these molecules, used in metabolic pathways and well recognized in biochemical ontologies.
+(Note: Only the first three synonyms are listed per species as per instruction.)

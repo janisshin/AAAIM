@@ -1,0 +1,14 @@
+Model: BIOMD0000000197
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:39:16
+
+Synonyms:
+x1: ['bile salt transporter substrate', 'bile acid conjugate', 'UNK']
+x2: ['bile salt bound', 'bile acid complex', 'UNK']
+x3: ['free intracellular bile salt', 'intracellular bile acid', 'UNK']
+x4: ['intracellular bound bile salt', 'bound intracellular bile acid', 'UNK']
+x5: ['apical bile salt', 'apical bile acid', 'UNK']
+BSP_tot: ['bile salt pool', 'total bile acids', 'UNK']
+BSP_cell: ['intracellular bile salt', 'intracellular bile acid', 'UNK']
+
+Reason: All species are related to bile salts or acids involved in transport processes; specific chemical identities are not provided, so generalized terms are used.

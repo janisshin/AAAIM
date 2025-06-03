@@ -1,0 +1,8 @@
+Model: BIOMD0000000779
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 23:23:23
+
+Synonyms:
+M_Chemotherapy_Drug: ['UNK']
+
+Reason: The species name is a generic placeholder without specific chemical identity or common synonyms; it likely represents an unspecified chemotherapeutic agent.

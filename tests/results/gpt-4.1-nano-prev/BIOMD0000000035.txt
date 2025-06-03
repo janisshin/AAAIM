@@ -1,0 +1,12 @@
+Model: BIOMD0000000035
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 17:34:36
+
+Synonyms:
+A: ['activator protein', 'transcription factor', 'gene activator']
+C: ['repressor protein', 'transcription repressor', 'gene repressor']
+MA: ['mRNA', 'messenger RNA', 'transcript']
+MR: ['mRNA', 'messenger RNA', 'transcript']
+R: ['repressor', 'repressor molecule', 'repressor protein']
+
+Reason: A and C are proteins involved in gene regulation, with A acting as an activator and C as a repressor. MA and MR are both mRNA transcripts produced by the genes. R is a repressor protein. The model describes a genetic oscillator based on transcription factors, not small molecules.

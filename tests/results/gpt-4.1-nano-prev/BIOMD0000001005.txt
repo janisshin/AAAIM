@@ -1,0 +1,12 @@
+Model: BIOMD0000001005
+LLM: gpt-4.1-nano
+Timestamp: 2025-06-02 18:09:49
+
+Synonyms:
+CRH: ['corticotropin-releasing hormone', 'CRH', 'corticotropin releasing hormone']
+ACTH: ['adrenocorticotropic hormone', 'ACTH', 'adrenocorticotropic hormone']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD', 'nicotinamide adenine dinucleotide (oxidized)']
+NMN: ['nicotinamide mononucleotide', 'NMN', 'nicotinamide mononucleotide']
+NAM: ['nicotinamide', 'NAM', 'nicotinamide (vitamin B3)']
+
+Reason: CRH and ACTH are peptide hormones, not small molecules; NAD, NMN, and NAM are well-known metabolic cofactors and precursors in NAD+ biosynthesis. Only NAD, NMN, and NAM are recognized as chemical entities suitable for ChEBI lookup.
