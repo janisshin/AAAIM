@@ -1,6 +1,6 @@
 # AAAIM (Auto-Annotator via AI for Modeling)
 
-AAAIM is a LLM-powered system for annotating biosimulation models with standardized ontology terms.
+AAAIM is a LLM-powered system for annotating biosimulation models with standardized ontology terms. It supports both chemical and gene entity annotation.
 
 ## Installation
 
@@ -27,7 +27,7 @@ export OPENROUTER_API_KEY="your-openrouter-key"
 
 ## Usage
 
-AAAIM currently provides two main workflows:
+AAAIM currently provides two main workflows for both chemical and gene annotation:
 
 ### 1. Annotation Workflow (for new models)
 
@@ -36,14 +36,36 @@ AAAIM currently provides two main workflows:
 - **Output**: Annotation recommendations for all species
 - **Metrics**: Accuracy is NA when no existing annotations available
 
+#### Chemical Annotation (ChEBI)
+
 ```python
 from core import annotate_model
 
-# Annotate all species in a model
-recommendations_df, metrics = annotate_model(model_file="path/to/model.xml")
+# Annotate all chemical species in a model
+recommendations_df, metrics = annotate_model(
+    model_file="path/to/model.xml",
+    entity_type="chemical",
+    database="chebi"
+)
 
 # Save results
-recommendations_df.to_csv("annotation_results.csv", index=False)
+recommendations_df.to_csv("chemical_annotation_results.csv", index=False)
+```
+
+#### Gene Annotation (NCBI Gene)
+
+```python
+from core import annotate_model
+
+# Annotate all gene species in a model
+recommendations_df, metrics = annotate_model(
+    model_file="path/to/model.xml",
+    entity_type="gene",
+    database="ncbigene"
+)
+
+# Save results
+recommendations_df.to_csv("gene_annotation_results.csv", index=False)
 ```
 
 ### 2. Curation Workflow (for models with existing annotations)
@@ -53,17 +75,36 @@ recommendations_df.to_csv("annotation_results.csv", index=False)
 - **Output**: Validation and improvement recommendations
 - **Metrics**: Accuracy calculated against existing annotations
 
+#### Chemical Curation
+
 ```python
 from core import curate_model
 
-# Curate existing annotations
-curations_df, metrics = curate_model(model_file="path/to/model.xml")
+# Curate existing chemical annotations
+curations_df, metrics = curate_model(
+    model_file="path/to/model.xml",
+    entity_type="chemical",
+    database="chebi"
+)
 
-print(f"Entities with existing annotations: {metrics['total_entities']}")
+print(f"Chemical entities with existing annotations: {metrics['total_entities']}")
 print(f"Accuracy: {metrics['accuracy']:.1%}")
+```
 
-# Save results
-curations_df.to_csv("curation_results.csv", index=False)
+#### Gene Curation
+
+```python
+from core import curate_model
+
+# Curate existing gene annotations
+curations_df, metrics = curate_model(
+    model_file="path/to/model.xml",
+    entity_type="gene",
+    database="ncbigene"
+)
+
+print(f"Gene entities with existing annotations: {metrics['total_entities']}")
+print(f"Accuracy: {metrics['accuracy']:.1%}")
 ```
 
 ### Advanced Usage
@@ -74,8 +115,8 @@ recommendations_df, metrics = annotate_model(
     model_file = "path/to/model.xml",
     llm_model = "meta-llama/llama-3.3-70b-instruct:free",       # the LLM model used to predict annotations
     max_entities = 100,					 # maximum number of entities to annotate (None for all)
-    entity_type = "chemical",				 # type of entities to annotate ("chemical", "gene", "protein")
-    database = "chebi",					 # database to use ("chebi", "ncbigene", "uniprot")
+    entity_type = "gene",				 # type of entities to annotate ("chemical", "gene")
+    database = "ncbigene",				 # database to use ("chebi", "ncbigene")
     method = "direct"					 # method used to find the ontology ID ("direct", "rag")
 )
 ```
@@ -104,17 +145,24 @@ cd data
 python load_data.py --model default --collection chebi_default
 ```
 
+Note: RAG is currently only supported for ChEBI. NCBI gene annotations use direct matching.
+
 ## Databases
 
 ### Currently Supported
 
 - **ChEBI**: Chemical Entities of Biological Interest
+  - **Entity Type**: `chemical`
   - **Direct**: Dictionary of standard names to ontology ID.
   - **RAG**: Embeddings of ontology terms.
 
+- **NCBI Gene**: Gene annotation
+  - **Entity Type**: `gene`
+  - **Direct**: Dictionary of gene names to NCBI gene IDs.
+  - **RAG**: Not yet implemented.
+
 ### Future Support
 
-- **NCBI Gene**: Gene annotation
 - **UniProt**: Protein annotation
 - **Rhea**: Reaction annotation
 - **GO**: Gene Ontology terms
@@ -128,6 +176,14 @@ python load_data.py --model default --collection chebi_default
   - `cleannames2chebi.lzma`: Mapping from clean names to ChEBI IDs
   - `chebi2label.lzma`: Mapping from ChEBI IDs to labels
 - **Source**: ChEBI ontology downloaded from https://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl.gz.
+
+### NCBI gene Data
+
+- **Location**: `data/ncbigene/`
+- **Files**:
+  - `names2ncbigene_bigg_organisms_protein-coding.lzma`: Mapping from names to NCBI gene IDs, only include protein-coding genes from 18 species covered in Bigg models for file size considerations
+  - `ncbigene2label_bigg_organisms_protein-coding.lzma`: Mapping from NCBI gene IDs to labels
+- **Source**: Data are obtained from the NCBI gene FTP site: https://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/.
 
 ## File Structure
 
@@ -144,11 +200,13 @@ aaaim/
 │   ├── constants.py
 │   ├── evaluation.py 		# functions for evaluation
 ├── examples/
-│   ├── simple_example.py    # Simple usage demo
+│   ├── simple_example.py    	# Simple usage demo
 ├── data/
-│   └── chebi/                   # ChEBI compressed dictionaries
+│   ├── chebi/                   # ChEBI compressed dictionaries
+│   ├── ncbigene/                # NCBIgene compressed dictionaries
+│   ├── chroma_storage/          # Database embeddings for RAG
 └── tests/
-    └── test_models     	 # Test models
+    ├── test_models     	 # Test models
     └── aaaim_evaluation.ipynb   # evaluation notebook
 ```
 
@@ -156,6 +214,6 @@ aaaim/
 
 ### Planned Features
 
-- **Multi-Database Support**: NCBI Gene, UniProt, GO, Rhea
-- **RAG improvement**: Reduce vector embedding size
+- **Multi-Database Support**: UniProt, GO, Rhea
+- **RAG for NCBI Gene**: Reduce vector embedding size and add RAG support for gene annotations
 - **Web Interface**: User-friendly annotation tool

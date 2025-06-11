@@ -2,7 +2,6 @@
 Evaluation Utilities for AAAIM
 
 Internal evaluation functions for testing and validation.
-Replicates the evaluation workflow from AMAS test_LLM_synonyms_plain.ipynb.
 """
 
 import os
@@ -20,9 +19,11 @@ from pathlib import Path
 import logging
 
 from core.curation_workflow import curate_model
-from core.model_info import find_species_with_chebi_annotations, extract_model_info, format_prompt
-from core.llm_interface import SYSTEM_PROMPT, query_llm, parse_llm_response
-from core.database_search import Recommendation, get_species_recommendations_direct, get_species_recommendations_rag, clear_chromadb_cache
+from core.model_info import find_species_with_chebi_annotations, extract_model_info, format_prompt, find_species_with_ncbigene_annotations
+from core.llm_interface import SYSTEM_PROMPT, query_llm, parse_llm_response, get_system_prompt
+from core.data_types import Recommendation
+from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, clear_chromadb_cache
+from utils.constants import REF_CHEBI2LABEL, REF_NCBIGENE2LABEL, REF_CHEBI2FORMULA
 
 logger = logging.getLogger(__name__)
 
@@ -117,6 +118,7 @@ def _configure_verbosity(verbose: bool = True):
 # Cache for loaded dictionaries
 _CHEBI_LABEL_DICT: Optional[Dict[str, str]] = None
 _CHEBI_FORMULA_DICT: Optional[Dict[str, str]] = None
+_NCBIGENE_LABEL_DICT: Optional[Dict[str, str]] = None
 
 def load_chebi_label_dict() -> Dict[str, str]:
     """
@@ -128,7 +130,7 @@ def load_chebi_label_dict() -> Dict[str, str]:
     global _CHEBI_LABEL_DICT
     
     if _CHEBI_LABEL_DICT is None:
-        data_file = Path(__file__).parent.parent / "data" / "chebi" / "chebi2label.lzma"
+        data_file = Path(__file__).parent.parent / "data" / "chebi" / REF_CHEBI2LABEL
         
         if not data_file.exists():
             raise FileNotFoundError(f"ChEBI label data file not found: {data_file}")
@@ -148,7 +150,7 @@ def load_chebi_formula_dict() -> Dict[str, str]:
     global _CHEBI_FORMULA_DICT
     
     if _CHEBI_FORMULA_DICT is None:
-        data_file = Path(__file__).parent.parent / "data" / "chebi" / "chebi_shortened_formula_comp.lzma"
+        data_file = Path(__file__).parent.parent / "data" / "chebi" / REF_CHEBI2FORMULA
         
         if not data_file.exists():
             raise FileNotFoundError(f"ChEBI formula data file not found: {data_file}")
@@ -157,6 +159,26 @@ def load_chebi_formula_dict() -> Dict[str, str]:
             _CHEBI_FORMULA_DICT = pickle.load(f)
     
     return _CHEBI_FORMULA_DICT
+
+def load_ncbigene_label_dict() -> Dict[str, str]:
+    """
+    Load the NCBI gene ID to label dictionary.
+    
+    Returns:
+        Dictionary mapping NCBI gene IDs to their labels
+    """
+    global _NCBIGENE_LABEL_DICT
+    
+    if _NCBIGENE_LABEL_DICT is None:
+        data_file = Path(__file__).parent.parent / "data" / "ncbigene" / REF_NCBIGENE2LABEL
+        
+        if not data_file.exists():
+            raise FileNotFoundError(f"NCBI gene label data file not found: {data_file}")
+        
+        with lzma.open(data_file, 'rb') as f:
+            _NCBIGENE_LABEL_DICT = pickle.load(f)
+    
+    return _NCBIGENE_LABEL_DICT
 
 def get_recall(ref: Dict[str, List[str]], pred: Dict[str, List[str]], mean: bool = True) -> float:
     """
@@ -224,7 +246,7 @@ def get_species_statistics(recommendations: List[Recommendation],
                           refs_chebi: Dict[str, List[str]], 
                           model_mean: bool = False) -> Dict[str, Any]:
     """
-    Calculate species statistics including formula and ChEBI-based metrics.
+    Calculate species statistics including formula and exact-based metrics.
     Replicates getSpeciesStatistics from AMAS test_LLM_synonyms_plain.ipynb
     
     Args:
@@ -254,14 +276,14 @@ def get_species_statistics(recommendations: List[Recommendation],
     # Calculate metrics
     recall_formula = get_recall(ref=refs_formula, pred=preds_formula, mean=model_mean)
     precision_formula = get_precision(ref=refs_formula, pred=preds_formula, mean=model_mean)
-    recall_chebi = get_recall(ref=refs_chebi, pred=preds_chebi, mean=model_mean)
-    precision_chebi = get_precision(ref=refs_chebi, pred=preds_chebi, mean=model_mean)
+    recall_exact = get_recall(ref=refs_chebi, pred=preds_chebi, mean=model_mean)
+    precision_exact = get_precision(ref=refs_chebi, pred=preds_chebi, mean=model_mean)
     
     return {
         'recall_formula': recall_formula, 
-        'recall_chebi': recall_chebi, 
+        'recall_exact': recall_exact, 
         'precision_formula': precision_formula, 
-        'precision_chebi': precision_chebi
+        'precision_exact': precision_exact
     }
 
 def find_species_with_formulas(model_file: str) -> Dict[str, List[str]]:
@@ -300,6 +322,25 @@ def find_species_with_formulas(model_file: str) -> Dict[str, List[str]]:
     
     return species_with_formulas
 
+def find_species_with_gene_annotations(model_file: str) -> Dict[str, List[str]]:
+    """
+    Find species with existing NCBI gene annotations.
+    
+    Args:
+        model_file: Path to the SBML model file
+        
+    Returns:
+        Dictionary mapping species IDs to their NCBI gene annotation IDs
+    """
+    # Get all species with NCBI gene annotations
+    existing_annotations = find_species_with_ncbigene_annotations(model_file)
+    
+    if not existing_annotations:
+        return {}
+    
+    # Return all species that have NCBI gene annotations
+    return existing_annotations
+
 def evaluate_single_model(model_file: str, 
                          llm_model: str = 'meta-llama/llama-3.3-70b-instruct:free',
                          method: str = "direct",
@@ -308,7 +349,8 @@ def evaluate_single_model(model_file: str,
                          database: str = "chebi",
                          save_llm_results: bool = True,
                          output_dir: str = './results/',
-                         verbose: bool = True) -> Optional[pd.DataFrame]:
+                         verbose: bool = True,
+                         tax_id: str = None) -> Optional[pd.DataFrame]:
     """
     Generate species evaluation statistics for one model.
     
@@ -322,6 +364,7 @@ def evaluate_single_model(model_file: str,
         save_llm_results: Whether to save LLM results to files
         output_dir: Directory to save results
         verbose: If True, show detailed logging. If False, minimize output.
+        tax_id: For gene/protein annotations, the organism's tax_id for species-specific lookup
         
     Returns:
         DataFrame with evaluation results or None if failed
@@ -333,18 +376,21 @@ def evaluate_single_model(model_file: str,
         model_name = Path(model_file).name
         if verbose:
             logger.info(f"Evaluating model: {model_name}")
+            if tax_id:
+                logger.info(f"Using organism-specific search for tax_id: {tax_id}")
         
         # Get existing annotations to determine entities to evaluate
         if entity_type == "chemical" and database == "chebi":
             existing_annotations = find_species_with_formulas(model_file)
+        elif entity_type == "gene" and database == "ncbigene":
+            existing_annotations = find_species_with_gene_annotations(model_file)
         else:
             if verbose:
                 logger.warning(f"Entity type {entity_type} with database {database} not yet supported")
             return None
-        
         if not existing_annotations:
             if verbose:
-                logger.warning(f"No existing annotations with formulas found in {model_name}")
+                logger.warning(f"No existing annotations found in {model_name}")
             return None
         
         # Limit entities if specified
@@ -358,12 +404,14 @@ def evaluate_single_model(model_file: str,
         # Run annotation with access to LLM results
     
         # Extract model context and query LLM
-        model_info = extract_model_info(model_file, specs_to_evaluate)
-        prompt = format_prompt(model_file, specs_to_evaluate)
+        model_info = extract_model_info(model_file, specs_to_evaluate, entity_type)
+        prompt = format_prompt(model_file, specs_to_evaluate, entity_type)
         
         # Query LLM and get response
         llm_start = time.time()
-        llm_response = query_llm(prompt, SYSTEM_PROMPT, model=llm_model)
+        # Get appropriate system prompt for entity type
+        system_prompt = get_system_prompt(entity_type)
+        llm_response = query_llm(prompt, system_prompt, model=llm_model, entity_type=entity_type)
         llm_time = time.time() - llm_start
         
         # Parse LLM response
@@ -373,9 +421,26 @@ def evaluate_single_model(model_file: str,
         search_start = time.time()
         with suppress_outputs(verbose):
             if method == "direct":
-                recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict)
+                if database == "chebi":
+                    recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi")
+                elif database == "ncbigene":
+                    recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
+                else:
+                    if verbose:
+                        logger.error(f"Database {database} not supported")
+                    return None
             elif method == "rag":
-                recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict)
+                if database == "chebi":
+                    recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi")
+                elif database == "ncbigene":
+                    # For now, NCBI gene only supports direct search
+                    if verbose:
+                        logger.warning("RAG method not yet implemented for NCBI gene, using direct method")
+                    recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
+                else:
+                    if verbose:
+                        logger.error(f"Database {database} not supported")
+                    return None
             else:
                 if verbose:
                     logger.error(f"Invalid method: {method}")
@@ -389,15 +454,15 @@ def evaluate_single_model(model_file: str,
                 logger.warning(f"No recommendations generated for {model_name}")
             return None
         
-        # Convert to AMAS-compatible format with LLM results
+        # Convert to evaluation format with LLM results
         result_df = _convert_format(
             recommendations, existing_annotations, model_name, 
-            synonyms_dict, reason, total_time, llm_time, search_time
+            synonyms_dict, reason, total_time, llm_time, search_time, entity_type, database
         )
         
         # Save LLM results if requested
         if save_llm_results:
-            _save_llm_results(model_file, llm_model, output_dir, synonyms_dict, reason)
+            _save_llm_results(model_file, llm_model, output_dir, synonyms_dict, reason, entity_type)
         
         return result_df
         
@@ -417,7 +482,8 @@ def evaluate_models_in_folder(model_dir: str,
                              output_dir: str = './results/',
                              output_file: str = 'evaluation_results.csv',
                              start_at: int = 1,
-                             verbose: bool = False) -> pd.DataFrame:
+                             verbose: bool = False,
+                             tax_id: str = None) -> pd.DataFrame:
     """
     Generate species evaluation statistics for multiple models in a directory.
     Replicates evaluate_models from AMAS test_LLM_synonyms_plain.ipynb
@@ -435,12 +501,16 @@ def evaluate_models_in_folder(model_dir: str,
         output_file: Name of output CSV file
         start_at: Model index to start at (1-based)
         verbose: If True, show detailed logging. If False, minimize output.
+        tax_id: For gene/protein annotations, the organism's tax_id for species-specific lookup
         
     Returns:
         Combined DataFrame with all evaluation results
     """
     # Configure verbosity
     _configure_verbosity(verbose)
+    
+    if tax_id:
+        logger.info(f"Using organism-specific search for tax_id: {tax_id}")
     
     # Clear any existing ChromaDB clients to avoid conflicts
     clear_chromadb_cache()
@@ -483,7 +553,8 @@ def evaluate_models_in_folder(model_dir: str,
             database=database,
             save_llm_results=save_llm_results,
             output_dir=output_dir,
-            verbose=verbose
+            verbose=verbose,
+            tax_id=tax_id
         )
         
         if result_df is not None:
@@ -519,9 +590,11 @@ def _convert_format(recommendations: List[Recommendation],
                                    reason: str,
                                    total_time: float,
                                    llm_time: float,
-                                   search_time: float) -> pd.DataFrame:
+                                   search_time: float,
+                                   entity_type: str = "chemical",
+                                   database: str = "chebi") -> pd.DataFrame:
     """
-    Convert AAAIM recommendations to AMAS evaluation format with LLM results.
+    Convert AAAIM recommendations to evaluation format with LLM results.
     
     Args:
         recommendations: List of Recommendation objects
@@ -532,28 +605,84 @@ def _convert_format(recommendations: List[Recommendation],
         total_time: Total processing time
         llm_time: LLM query time
         search_time: Database search time
+        entity_type: Type of entity being annotated
+        database: Database being used
         
     Returns:
-        DataFrame in AMAS evaluation format
+        DataFrame in evaluation format
     """
-    # Load required dictionaries
-    label_dict = load_chebi_label_dict()
-    formula_dict = load_chebi_formula_dict()
+    # Load required dictionaries based on database
+    if database == "chebi":
+        label_dict = load_chebi_label_dict()
+        formula_dict = load_chebi_formula_dict()
+        
+        # Prepare reference data for statistics calculation
+        refs_chebi = existing_annotations
+        refs_formula = {}
+        for species_id, chebi_ids in existing_annotations.items():
+            formulas = []
+            for chebi_id in chebi_ids:
+                if chebi_id in formula_dict:
+                    formula = formula_dict[chebi_id]
+                    if formula:
+                        formulas.append(formula)
+            refs_formula[species_id] = formulas
+        
+        # Calculate statistics
+        stats = get_species_statistics(recommendations, refs_formula, refs_chebi, model_mean=False)
+        
+        # Rename chebi metrics to exact metrics for consistency
+        stats['recall_exact'] = stats.pop('recall_chebi', {})
+        stats['precision_exact'] = stats.pop('precision_chebi', {})
     
-    # Prepare reference data for statistics calculation
-    refs_chebi = existing_annotations
-    refs_formula = {}
-    for species_id, chebi_ids in existing_annotations.items():
-        formulas = []
-        for chebi_id in chebi_ids:
-            if chebi_id in formula_dict:
-                formula = formula_dict[chebi_id]
-                if formula:
-                    formulas.append(formula)
-        refs_formula[species_id] = formulas
+    elif database == "ncbigene":
+        label_dict = load_ncbigene_label_dict()
+        
+        # For NCBI gene, we don't have formulas, so we use gene IDs directly
+        refs_gene = existing_annotations
+        refs_formula = {}  # Empty for gene annotations
+        
+        # Calculate statistics (simplified for genes)
+        stats = {
+            'recall_formula': {species_id: 0 for species_id in existing_annotations.keys()},
+            'precision_formula': {species_id: 0 for species_id in existing_annotations.keys()},
+            'recall_exact': {},  # Will be calculated below
+            'precision_exact': {}  # Will be calculated below
+        }
+        
+        # Calculate gene-based recall and precision
+        for species_id in existing_annotations.keys():
+            existing_ids = existing_annotations.get(species_id, [])
+            predicted_ids = []
+            for rec in recommendations:
+                if rec.id == species_id:
+                    predicted_ids = rec.candidates
+                    break
+            
+            if existing_ids:
+                matches = set(predicted_ids) & set(existing_ids)
+                recall = len(matches) / len(existing_ids) if existing_ids else 0
+            else:
+                recall = 0
+            
+            if predicted_ids:
+                matches = set(predicted_ids) & set(existing_ids)
+                precision = len(matches) / len(predicted_ids) if predicted_ids else 0
+            else:
+                precision = 0
+            
+            stats['recall_exact'][species_id] = recall
+            stats['precision_exact'][species_id] = precision
     
-    # Calculate statistics
-    stats = get_species_statistics(recommendations, refs_formula, refs_chebi, model_mean=False)
+    else:
+        # Default/unknown database
+        label_dict = {}
+        stats = {
+            'recall_formula': {species_id: 0 for species_id in existing_annotations.keys()},
+            'precision_formula': {species_id: 0 for species_id in existing_annotations.keys()},
+            'recall_exact': {species_id: 0 for species_id in existing_annotations.keys()},
+            'precision_exact': {species_id: 0 for species_id in existing_annotations.keys()}
+        }
     
     # Convert to AMAS format
     result_rows = []
@@ -562,7 +691,7 @@ def _convert_format(recommendations: List[Recommendation],
         
         # Get existing annotation names
         existing_ids = existing_annotations.get(species_id, [])
-        existing_names = [label_dict.get(chebi_id, chebi_id) for chebi_id in existing_ids]
+        existing_names = [label_dict.get(db_id, db_id) for db_id in existing_ids]
         exist_annotation_name = ', '.join(existing_names) if existing_names else 'NA'
         
         # Get LLM synonyms
@@ -570,7 +699,7 @@ def _convert_format(recommendations: List[Recommendation],
         
         # Get predictions and their names
         predictions = rec.candidates
-        prediction_names = [label_dict.get(chebi_id, chebi_id) for chebi_id in predictions]
+        prediction_names = [label_dict.get(db_id, db_id) for db_id in predictions]
         
         # Calculate match scores
         match_scores = []
@@ -582,11 +711,15 @@ def _convert_format(recommendations: List[Recommendation],
         # Get statistics for this species
         recall_formula = stats['recall_formula'].get(species_id, 0) if isinstance(stats['recall_formula'], dict) else 0
         precision_formula = stats['precision_formula'].get(species_id, 0) if isinstance(stats['precision_formula'], dict) else 0
-        recall_chebi = stats['recall_chebi'].get(species_id, 0) if isinstance(stats['recall_chebi'], dict) else 0
-        precision_chebi = stats['precision_chebi'].get(species_id, 0) if isinstance(stats['precision_chebi'], dict) else 0
+        recall_exact = stats['recall_exact'].get(species_id, 0) if isinstance(stats['recall_exact'], dict) else 0
+        precision_exact = stats['precision_exact'].get(species_id, 0) if isinstance(stats['precision_exact'], dict) else 0
 
-        # Calculate accuracy (1 if recall_formula > 0, 0 otherwise)
-        accuracy = 1 if recall_formula > 0 else 0
+        # Calculate accuracy (1 if recall > 0, 0 otherwise)
+        # For chemical entities, use recall_formula; for gene entities, use recall_exact
+        if entity_type == "chemical":
+            accuracy = 1 if recall_formula > 0 else 0
+        else:  # gene or other entity types
+            accuracy = 1 if recall_exact > 0 else 0
         
         # Create row in AMAS format
         row = {
@@ -595,15 +728,15 @@ def _convert_format(recommendations: List[Recommendation],
             'display_name': rec.synonyms[0] if rec.synonyms else species_id,  # Use first synonym as display name
             'synonyms_LLM': llm_synonyms,
             'reason': reason,
-            'exist_annotation_chebi': existing_ids,
+            'exist_annotation_id': existing_ids,
             'exist_annotation_name': exist_annotation_name,
             'predictions': predictions,
             'predictions_names': prediction_names,
             'match_score': match_scores,
             'recall_formula': recall_formula,
             'precision_formula': precision_formula,
-            'recall_chebi': recall_chebi,
-            'precision_chebi': precision_chebi,
+            'recall_exact': recall_exact,
+            'precision_exact': precision_exact,
             'accuracy': accuracy,
             'total_time': total_time,
             'llm_time': llm_time,
@@ -614,7 +747,7 @@ def _convert_format(recommendations: List[Recommendation],
     return pd.DataFrame(result_rows)
 
 def _save_llm_results(model_file: str, llm_model: str, output_dir: str, 
-                     synonyms_dict: Dict[str, List[str]], reason: str):
+                     synonyms_dict: Dict[str, List[str]], reason: str, entity_type: str):
     """
     Save LLM results to file.
     
@@ -624,6 +757,7 @@ def _save_llm_results(model_file: str, llm_model: str, output_dir: str,
         output_dir: Output directory
         synonyms_dict: LLM-generated synonyms
         reason: LLM reasoning
+        entity_type: Type of entity being annotated
     """
     model_name = Path(model_file).stem
     if llm_model == "meta-llama/llama-3.3-70b-instruct:free":
@@ -633,7 +767,7 @@ def _save_llm_results(model_file: str, llm_model: str, output_dir: str,
     else:
         llm_name = llm_model
 
-    output_dir = output_dir+llm_name
+    output_dir = output_dir+llm_name+'/'+entity_type
     if not os.path.exists(output_dir):
         os.makedirs(output_dir, exist_ok=True)
     output_file = Path(output_dir) / f"{model_name}.txt"
@@ -741,8 +875,8 @@ def calculate_species_statistics(recommendations: List[Recommendation],
             precision = 0
         
         stats[species_id] = {
-            'recall_chebi': recall,
-            'precision_chebi': precision,
+            'recall_exact': recall,
+            'precision_exact': precision,
             'recall_formula': 0,  # Not implemented
             'precision_formula': 0  # Not implemented
         }
@@ -753,6 +887,8 @@ def process_saved_llm_responses(response_folder: str,
                                model_dir: str, 
                                prev_results_csv: str, 
                                method: str = "direct",
+                               entity_type: str = "chemical",
+                               database: str = "chebi",
                                output_dir: str = './results/', 
                                output_file: str = 'reprocessed_results.csv',
                                verbose: bool = False) -> pd.DataFrame:
@@ -765,6 +901,8 @@ def process_saved_llm_responses(response_folder: str,
         model_dir: Path to directory containing the original model files
         prev_results_csv: Path to previous results CSV from evaluate_models
         method: Method to use for database search ("direct", "rag")
+        entity_type: Type of entity being annotated
+        database: Database being used
         output_dir: Path to directory where results should be saved
         output_file: Name of the output CSV file
         verbose: If True, show detailed logging. If False, minimize output.
@@ -798,7 +936,7 @@ def process_saved_llm_responses(response_folder: str,
             species_id = row['species_id']
             model_data[model_name]['species_info'][species_id] = {
                 'display_name': row['display_name'],
-                'exist_annotation_chebi': row['exist_annotation_chebi'],
+                'exist_annotation_id': row['exist_annotation_id'],
                 'exist_annotation_name': row['exist_annotation_name']
             }
     
@@ -865,9 +1003,23 @@ def process_saved_llm_responses(response_folder: str,
             query_start_time = time.time()
             with suppress_outputs(verbose):
                 if method == "direct":
-                    recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict)
+                    if database == "chebi":
+                        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi")
+                    elif database == "ncbigene":
+                        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene")
+                    else:
+                        print(f"Database {database} not supported")
+                        return None
                 elif method == "rag":
-                    recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict)
+                    if database == "chebi":
+                        recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi")
+                    elif database == "ncbigene":
+                        # For now, NCBI gene only supports direct search
+                        print("RAG method not yet implemented for NCBI gene, using direct method")
+                        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene")
+                    else:
+                        print(f"Database {database} not supported")
+                        return None
                 else:
                     print(f"Invalid method: {method}")
                     return None
@@ -875,7 +1027,12 @@ def process_saved_llm_responses(response_folder: str,
             dict_search_time = query_end_time - query_start_time
             
             # Get existing annotations for statistics calculation
-            existing_annotations = find_species_with_formulas(model_file)
+            if entity_type == "chemical" and database == "chebi":
+                existing_annotations = find_species_with_formulas(model_file)
+            elif entity_type == "gene" and database == "ncbigene":
+                existing_annotations = find_species_with_gene_annotations(model_file)
+            else:
+                existing_annotations = {}
             
             # Previous LLM time from original run
             previous_llm_time = model_data[model_name]['llm_time']
@@ -884,7 +1041,7 @@ def process_saved_llm_responses(response_folder: str,
             result_df = _convert_format(
                 recommendations, existing_annotations, model_name, 
                 synonyms_dict, reason, previous_llm_time + dict_search_time, 
-                previous_llm_time, dict_search_time
+                previous_llm_time, dict_search_time, entity_type, database
             )
             
             if not result_df.empty:
@@ -920,8 +1077,6 @@ def process_saved_llm_responses(response_folder: str,
     else:
         print("No results generated for any models")
         return pd.DataFrame()
-
-
 
 def compare_results(*csv_paths: str) -> dict:
     """

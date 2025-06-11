@@ -1,7 +1,5 @@
 """
 AAAIM Utilities Module
-
-Contains utility functions and constants used throughout AAAIM.
 """
 
 from .constants import (
@@ -13,16 +11,14 @@ from .constants import (
     ENTITY_DATABASE_MAPPING,
     DEFAULT_CONFIDENCE_THRESHOLD,
     HIGH_CONFIDENCE_THRESHOLD,
-    LOW_CONFIDENCE_THRESHOLD
-)
-
-from .evaluation import (
-    evaluate_single_model,
-    evaluate_models_in_folder,
-    print_evaluation_results,
-    calculate_species_statistics,
-    compare_results,
-    process_saved_llm_responses
+    LOW_CONFIDENCE_THRESHOLD,
+    REF_CHEBI2LABEL,
+    REF_NAMES2CHEBI,
+    REF_NCBIGENE2LABEL,
+    REF_NAMES2NCBIGENE,
+    MODEL_FORMAT_PLUGINS,
+    NCBIGENE_URI_PATTERNS,
+    CHEBI_URI_PATTERNS
 )
 
 __all__ = [
@@ -36,12 +32,11 @@ __all__ = [
     'DEFAULT_CONFIDENCE_THRESHOLD',
     'HIGH_CONFIDENCE_THRESHOLD',
     'LOW_CONFIDENCE_THRESHOLD',
-    
-    # Evaluation functions (for internal testing)
-    'evaluate_single_model',
-    'evaluate_models_in_folder',
-    'print_evaluation_results',
-    'calculate_species_statistics',
-    'compare_with_amas_results',
-    'process_saved_llm_responses'
+    'REF_CHEBI2LABEL',
+    'REF_NAMES2CHEBI',
+    'REF_NCBIGENE2LABEL',
+    'REF_NAMES2NCBIGENE',
+    'MODEL_FORMAT_PLUGINS',
+    'NCBIGENE_URI_PATTERNS',
+    'CHEBI_URI_PATTERNS',
 ] 

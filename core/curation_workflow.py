@@ -12,9 +12,10 @@ from typing import Dict, List, Optional, Tuple, Any
 from pathlib import Path
 import logging
 
-from .model_info import find_species_with_chebi_annotations, extract_model_info, format_prompt
-from .llm_interface import SYSTEM_PROMPT, query_llm, parse_llm_response
-from .database_search import Recommendation, get_species_recommendations_direct, get_species_recommendations_rag
+from core.model_info import find_species_with_chebi_annotations, find_species_with_ncbigene_annotations, extract_model_info, format_prompt
+from core.llm_interface import get_system_prompt, query_llm, parse_llm_response
+from core.data_types import Recommendation
+from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +24,8 @@ def curate_single_model(model_file: str,
                   method: str = "direct",
                   max_entities: int = None,
                   entity_type: str = "chemical",
-                  database: str = "chebi") -> Tuple[pd.DataFrame, Dict[str, Any]]:
+                  database: str = "chebi",
+                  tax_id: str = None) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """
     This is the main function users will call to get curation recommendations
     for a model that already has existing annotations.
@@ -35,6 +37,7 @@ def curate_single_model(model_file: str,
         max_entities: Maximum number of entities to annotate (None for all)
         entity_type: Type of entities to annotate ("chemical", "gene", "protein")
         database: Target database ("chebi", "ncbigene", "uniprot")
+        tax_id: For gene/protein annotations, the organism's tax_id for species-specific lookup
         
     Returns:
         Tuple of (recommendations_df, metrics_dict)
@@ -47,13 +50,17 @@ def curate_single_model(model_file: str,
     logger.info(f"Using LLM model: {llm_model}")
     logger.info(f"Using method: {method} for database search")
     logger.info(f"Entity type: {entity_type}, Database: {database}")
+    if tax_id:
+        logger.info(f"Using organism-specific search for tax_id: {tax_id}")
     
     # Step 1: Find existing annotations
     logger.info("Step 1: Finding existing annotations...")
     if entity_type == "chemical" and database == "chebi":
         existing_annotations = find_species_with_chebi_annotations(model_file)
         logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
-
+    elif entity_type == "gene" and database == "ncbigene":
+        existing_annotations = find_species_with_ncbigene_annotations(model_file)
+        logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
     else:
         # Future: support other entity types and databases
         logger.warning(f"Entity type {entity_type} with database {database} not yet supported")
@@ -73,7 +80,7 @@ def curate_single_model(model_file: str,
     
     # Step 3: Extract model context
     logger.info("Step 3: Extracting model context...")
-    model_info = extract_model_info(model_file, specs_to_evaluate)
+    model_info = extract_model_info(model_file, specs_to_evaluate, entity_type)
     
     if not model_info:
         logger.error("Failed to extract model context")
@@ -83,7 +90,7 @@ def curate_single_model(model_file: str,
     
     # Step 4: Format prompt for LLM
     logger.info("Step 4: Formatting LLM prompt...")
-    prompt = format_prompt(model_file, specs_to_evaluate)
+    prompt = format_prompt(model_file, specs_to_evaluate, entity_type)
     
     if not prompt:
         logger.error("Failed to format prompt")
@@ -94,7 +101,9 @@ def curate_single_model(model_file: str,
     llm_start = time.time()
     
     try:
-        result = query_llm(prompt, SYSTEM_PROMPT, model=llm_model)
+        # Get appropriate system prompt for entity type
+        system_prompt = get_system_prompt(entity_type)
+        result = query_llm(prompt, system_prompt, model=llm_model, entity_type=entity_type)
         llm_time = time.time() - llm_start
         
         if not result:
@@ -123,9 +132,19 @@ def curate_single_model(model_file: str,
     
     if database == "chebi":
         if method == "direct":
-            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict)
+            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi")
         elif method == "rag":
-            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict)
+            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi")
+        else:
+            logger.error(f"Invalid method: {method}")
+            return pd.DataFrame(), {"error": f"Invalid method: {method}"}
+    elif database == "ncbigene":
+        if method == "direct":
+            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
+        elif method == "rag":
+            # For now, NCBI gene only supports direct search
+            logger.warning("RAG method not yet implemented for NCBI gene, using direct method")
+            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
@@ -140,7 +159,7 @@ def curate_single_model(model_file: str,
     # Step 8: Generate recommendation table
     logger.info("Step 8: Generating recommendation table...")
     recommendations_df = _generate_recommendation_table(
-        model_file, recommendations, existing_annotations, model_info
+        model_file, recommendations, existing_annotations, model_info, entity_type
     )
     
     # Step 9: Calculate metrics
@@ -157,7 +176,8 @@ def curate_single_model(model_file: str,
 def _generate_recommendation_table(model_file: str, 
                                  recommendations: List[Recommendation],
                                  existing_annotations: Dict[str, List[str]],
-                                 model_info: Dict[str, Any]) -> pd.DataFrame:
+                                 model_info: Dict[str, Any],
+                                 entity_type: str = "chemical") -> pd.DataFrame:
     """
     Generate AMAS-compatible recommendation table.
     
@@ -166,6 +186,7 @@ def _generate_recommendation_table(model_file: str,
         recommendations: List of Recommendation objects
         existing_annotations: Dictionary of existing annotations
         model_info: Model information dictionary
+        entity_type: Type of entity being annotated
         
     Returns:
         DataFrame in AMAS format
@@ -178,7 +199,7 @@ def _generate_recommendation_table(model_file: str,
             # No candidates found
             row = {
                 'file': filename,
-                'type': 'chemical',  # Currently only supporting chemicals
+                'type': entity_type,
                 'id': rec.id,
                 'display_name': model_info["display_names"].get(rec.id, rec.id),
                 'annotation': '',
@@ -206,7 +227,7 @@ def _generate_recommendation_table(model_file: str,
             
             row = {
                 'file': filename,
-                'type': 'chemical',
+                'type': entity_type,
                 'id': rec.id,
                 'display_name': model_info["display_names"].get(rec.id, rec.id),
                 'annotation': candidate,
