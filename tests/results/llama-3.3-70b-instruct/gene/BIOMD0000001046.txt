@@ -1,0 +1,32 @@
+Model: BIOMD0000001046
+LLM: meta-llama/llama-3.3-70b-instruct
+Timestamp: 2025-06-09 17:23:12
+
+Synonyms:
+G_accA3: ['accA', 'ACACA', 'ACACB']
+G_accD3: ['accD', 'ACCD', 'ACC']
+G_accD4: ['accD', 'ACCD', 'ACC']
+G_accD5: ['accD', 'ACCD', 'ACC']
+G_acpS: ['acpS', 'ACP', 'ACPS']
+G_cmaA2: ['cmaA2', 'CMA1', 'CMA2']
+G_desA1: ['desA', 'DES', 'DESA']
+G_desA2: ['desA', 'DES', 'DESA']
+G_desA3: ['desA', 'DES', 'DESA']
+G_fabD: ['fabD', 'FABD', 'FADB']
+G_fabG1_mabA: ['fabG', 'FABG', 'MABA']
+G_fabG2: ['fabG', 'FABG', 'FADB']
+G_fabG4: ['fabG', 'FABG', 'FADB']
+G_fabH: ['fabH', 'FABH', 'FADB']
+G_fadD32: ['fadD', 'FADD', 'FAD']
+G_fas: ['fas', 'FAS', 'FASN']
+G_inhA: ['inhA', 'INHA', 'INH']
+G_kasB: ['kasB', 'KASB', 'KAS']
+G_kasA: ['kasA', 'KASA', 'KAS']
+G_mmaA1: ['mmaA', 'MMAA', 'MMAS']
+G_mmaA2: ['mmaA', 'MMAA', 'MMAS']
+G_mmaA3: ['mmaA', 'MMAA', 'MMAS']
+G_mmaA4: ['mmaA', 'MMAA', 'MMAS']
+G_pcaA: ['pcaA', 'PCAA', 'PCA']
+G_pks13: ['pks13', 'PKS13', 'PKS1']
+
+Reason: The provided genes appear to be involved in various metabolic pathways, including fatty acid synthesis (fabD, fabG, fabH, fas), acetyl-CoA carboxylase (accA, accD), and polyketide synthesis (pks13). The standardized names are based on common gene symbols and synonyms from NCBI Gene and other databases. The likelihood of each synonym is ranked based on the similarity of the gene name to known gene symbols and the relevance of the gene to the specified model "M_MAP".
