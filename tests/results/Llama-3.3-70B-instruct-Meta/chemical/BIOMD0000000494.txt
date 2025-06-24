@@ -1,0 +1,9 @@
+Model: BIOMD0000000494
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:52:16
+
+Synonyms:
+E2: ['estradiol', 'oestradiol', '17β-estradiol']
+P4: ['progesterone', 'pregn-4-ene-3,20-dione', 'pregnenedione']
+
+Reason: E2 and P4 are likely to be estradiol and progesterone, respectively, as they are mentioned in the model notes and article abstract as hormones involved in the menstrual cycle, with E2 being produced and degraded in reactions re65 and re66, and P4 being produced and degraded in reactions re67 and re71.

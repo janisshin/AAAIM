@@ -1,0 +1,10 @@
+Model: BIOMD0000000341
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:43:36
+
+Synonyms:
+G: ['glucose', 'D-glucose', 'blood glucose']
+I: ['insulin', 'human insulin', 'insulin hormone']
+B: ['beta-cell mass', 'pancreatic beta-cell mass', 'islet cell mass']
+
+Reason: G is annotated as "glucose" based on the display name and the context of the model, which is related to glucose kinetics and diabetes. I is annotated as "insulin" based on the display name and its role in the model as a hormone. B is annotated as "beta-cell mass" based on the display name and the context of the model, which describes the dynamics of beta-cell mass in relation to glucose and insulin.

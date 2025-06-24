@@ -1,0 +1,19 @@
+Model: BIOMD0000000217
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:41:11
+
+Synonyms:
+UTP: ["uridine 5'-triphosphate", 'UTP', 'uridine triphosphate']
+PPi: ['diphosphate', 'pyrophosphate', 'inorganic diphosphate']
+GLN: ['glutamine', 'L-glutamine', 'glutamic acid amide']
+UMP: ["uridine 5'-monophosphate", 'uridine monophosphate', 'UMP']
+AMP: ['adenosine monophosphate', 'AMP', "adenosine 5'-monophosphate"]
+NH4: ['ammonium', 'ammonium ion', 'NH4+']
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'NADPH', 'reduced nicotinamide adenine dinucleotide phosphate']
+GLU: ['glutamate', 'L-glutamate', 'glutamic acid']
+NADP: ['nicotinamide adenine dinucleotide phosphate', 'NADP+', 'oxidized nicotinamide adenine dinucleotide phosphate']
+ATP: ["adenosine 5'-triphosphate", 'ATP', 'adenosine triphosphate']
+ADP: ["adenosine 5'-diphosphate", 'ADP', 'adenosine diphosphate']
+P_i: ['inorganic phosphate', 'phosphate', 'orthophosphate']
+
+Reason: The model is related to ammonium assimilation in Escherichia coli, and the species are all related to energy transfer, nitrogen metabolism, or nucleotide synthesis, so the standardized names are based on common biochemical nomenclature. The likelihood of each name is ranked based on the frequency of use in biochemical literature and databases such as ChEBI.

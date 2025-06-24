@@ -1,0 +1,18 @@
+Model: BIOMD0000000190
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:40:28
+
+Synonyms:
+SAM: ['S-adenosylmethionine', 'AdoMet', 'SAMe']
+A: ['decarboxylated S-adenosylmethionine', 'S-adenosylmethioninamine', 'dcAdoMet']
+P: ['putrescine', '1,4-diaminobutane', 'butane-1,4-diamine']
+S: ['spermine', "N,N'-bis(3-aminopropyl)butane-1,4-diamine", 'spermin']
+D: ['spermidine', 'N-(3-aminopropyl)butane-1,4-diamine', 'spermidin']
+aS: ['N1-acetylspermine', 'acetylspermine', 'N-acetylspermine']
+aD: ['N1-acetylspermidine', 'acetylspermidine', 'N-acetylspermidine']
+Met: ['methionine', 'L-methionine', '2-amino-4-(methylthio)butanoic acid']
+ORN: ['ornithine', 'L-ornithine', '2,5-diaminopentanoic acid']
+AcCoA: ['acetyl-CoA', 'acetyl coenzyme A', 'CoA-SH']
+CoA: ['coenzyme A', 'CoA-SH', "3'-phosphoadenosine-5'-diphosphate"]
+
+Reason: The species were annotated based on their display names and roles in the polyamine metabolism model, with SAM, A, P, S, D, aS, and aD being directly annotated from their display names. Met, ORN, AcCoA, and CoA were annotated based on their common biochemical names. The reactions and model context were used to confirm the annotations, but were not necessary for the annotation process itself, as the display names provided sufficient information.

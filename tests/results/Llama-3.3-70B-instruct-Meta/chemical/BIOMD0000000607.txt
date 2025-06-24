@@ -1,0 +1,20 @@
+Model: BIOMD0000000607
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:58:27
+
+Synonyms:
+glycerol_i: ['glycerol', 'glycerin', 'propane-1,2,3-triol']
+glucose_i: ['glucose', 'D-glucose', 'blood sugar']
+G6P: ['glucose-6-phosphate', 'D-glucose-6-phosphate', 'G6P']
+trehalose: ['trehalose', 'mycose', 'trehalose dihydrate']
+F16DP: ['fructose-1,6-bisphosphate', 'D-fructose-1,6-bisphosphate', 'F1,6BP']
+pyruvate: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+acetate_i: ['acetic acid', 'acetate', 'ethanoic acid']
+ethanol_i: ['ethanol', 'ethyl alcohol', 'alcohol']
+glycerol_e: ['glycerol', 'glycerin', 'propane-1,2,3-triol']
+glucose_e: ['glucose', 'D-glucose', 'blood sugar']
+acetate_e: ['acetic acid', 'acetate', 'ethanoic acid']
+ethanol_e: ['ethanol', 'ethyl alcohol', 'alcohol']
+trehalose_e: ['trehalose', 'mycose', 'trehalose dihydrate']
+
+Reason: The species names were matched to their corresponding display names and reactions in the model, and then standardized names or common synonyms were found based on the biochemical context, with glycerol_i and glycerol_e, glucose_i and glucose_e, acetate_i and acetate_e, ethanol_i and ethanol_e, and trehalose and trehalose_e being likely the same chemical entities but with different compartmental locations (intracellular "_i" and extracellular "_e").

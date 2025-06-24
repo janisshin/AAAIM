@@ -1,0 +1,10 @@
+Model: BIOMD0000000822
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 16:01:57
+
+Synonyms:
+Cytosolic_Rapamycin: ['sirolimus', 'rapamycin', 'AY-22989']
+mTOR_Rapamycin: ['UNK']
+mTORC1_Rapamycin: ['UNK']
+
+Reason: Cytosolic_Rapamycin is likely to be the chemical entity "rapamycin" or its synonyms, as it is formed from the absorption of rapamycin and has a display name "Cytosolic Rapamycin". mTOR_Rapamycin and mTORC1_Rapamycin are not chemical entities, but rather complexes or proteins bound to rapamycin, so they are annotated as "UNK".

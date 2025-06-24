@@ -1,0 +1,9 @@
+Model: BIOMD0000000124
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:39:05
+
+Synonyms:
+c: ['calcium', 'Ca2+', 'calcium ion']
+cer: ['calcium', 'Ca2+', 'calcium ion']
+
+Reason: Both 'c' and 'cer' are annotated with 'ca concentration', indicating they represent calcium ion concentrations in different cellular locations, namely the cytosol and endoplasmic reticulum, respectively.

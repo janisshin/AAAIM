@@ -1,0 +1,35 @@
+Model: BIOMD0000000428
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:45:22
+
+Synonyms:
+ATP_g: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+ATP_c: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+Pyr_c: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+DHAP_c: ['dihydroxyacetone phosphate', 'DHAP', '3-hydroxy-2-oxopropyl phosphate']
+Pyr_e: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+Gly3P_c: ['glyceraldehyde 3-phosphate', 'G3P', '3-phosphoglyceraldehyde']
+DHAP_g: ['dihydroxyacetone phosphate', 'DHAP', '3-hydroxy-2-oxopropyl phosphate']
+Glc6P_g: ['glucose 6-phosphate', 'G6P', 'D-glucose 6-phosphate']
+Fru16BP_g: ['fructose 1,6-bisphosphate', 'F1,6BP', 'D-fructose 1,6-bisphosphate']
+ADP_c: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+_3PGA_c: ['3-phosphoglyceric acid', '3-PGA', '3-phosphoglycerate']
+Gly_g: ['glycerol', 'glycerin', '1,2,3-propanetriol']
+Fru6P_g: ['fructose 6-phosphate', 'F6P', 'D-fructose 6-phosphate']
+Gly_e: ['glycerol', 'glycerin', '1,2,3-propanetriol']
+_3PGA_g: ['3-phosphoglyceric acid', '3-PGA', '3-phosphoglycerate']
+Gly_c: ['glycerol', 'glycerin', '1,2,3-propanetriol']
+Pi_g: ['phosphate', 'inorganic phosphate', 'orthophosphate']
+AMP_c: ['adenosine monophosphate', 'AMP', "adenosine 5'-monophosphate"]
+O2_c: ['oxygen', 'dioxygen', 'molecular oxygen']
+GA3P_g: ['glyceraldehyde 3-phosphate', 'G3P', '3-phosphoglyceraldehyde']
+Gly3P_g: ['glyceraldehyde 3-phosphate', 'G3P', '3-phosphoglyceraldehyde']
+ADP_g: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+PEP_c: ['phosphoenolpyruvic acid', 'PEP', '2-phosphoenolpyruvate']
+AMP_g: ['adenosine monophosphate', 'AMP', "adenosine 5'-monophosphate"]
+Glc_c: ['glucose', 'D-glucose', 'blood sugar']
+Glc_e: ['glucose', 'D-glucose', 'blood sugar']
+Glc_g: ['glucose', 'D-glucose', 'blood sugar']
+NADH_g: ['reduced nicotinamide adenine dinucleotide', 'NADH', 'nicotinamide adenine dinucleotide (reduced)']
+
+Reason: The model is a glycolysis model in Trypanosoma brucei, and the species names are based on common biochemical nomenclature. The suffixes _g, _c, and _e likely refer to different cellular compartments (e.g., cytosol, compartment, or extracellular), but do not affect the chemical identity of the species. The names are standardized based on common synonyms and ChEBI names.

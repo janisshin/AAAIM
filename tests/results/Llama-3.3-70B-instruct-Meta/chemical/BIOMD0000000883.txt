@@ -1,0 +1,10 @@
+Model: BIOMD0000000883
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 16:02:14
+
+Synonyms:
+PIP3Active: ['phosphatidylinositol 3,4,5-trisphosphate', 'PIP3', 'phosphatidylinositol(3,4,5)-trisphosphate']
+PIP3Inactive: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'phosphatidylinositol(4,5)-bisphosphate']
+PLX4032: ['vemurafenib', 'PLX4032', 'RG7204']
+
+Reason: PIP3Active and PIP3Inactive are annotated based on their display names and known biochemical roles. PLX4032 is identified as vemurafenib, a known drug, based on the model notes and its involvement in the degradation reaction.

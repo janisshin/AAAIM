@@ -1,0 +1,8 @@
+Model: BIOMD0000000396
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:44:43
+
+Synonyms:
+s4: ['fucose', 'L-fucose', '6-deoxy-L-galactose']
+
+Reason: s4 is annotated as "fucose" in the display names, and L-fucose and 6-deoxy-L-galactose are standardized names and common synonyms for fucose, a monosaccharide.

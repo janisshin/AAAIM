@@ -1,0 +1,26 @@
+Model: BIOMD0000000478
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:52:00
+
+Synonyms:
+Ras2_GDP: ['Ras protein, GDP-bound', 'Ras-GDP', 'GDP-bound Ras']
+Ras2_GDP_Cdc25: ['UNK']
+GDP: ['guanosine diphosphate', 'GDP', "guanosine 5'-diphosphate"]
+GTP: ['guanosine triphosphate', 'GTP', "guanosine 5'-triphosphate"]
+Ras2_GTP_Cdc25: ['UNK']
+Ras2_GTP: ['Ras protein, GTP-bound', 'Ras-GTP', 'GTP-bound Ras']
+Ras2_GTP_Ira2: ['UNK']
+Ras2_GTP_CYR1: ['UNK']
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+cAMP: ['cyclic adenosine monophosphate', 'cAMP', 'cyclic AMP']
+cAMP_PKA: ['cAMP-protein kinase A complex', 'cAMP-PKA', 'protein kinase A-cAMP complex']
+IIcAMP_PKA: ['UNK']
+IIIcAMP_PKA: ['UNK']
+IVcAMP_PKA: ['UNK']
+R_2cAMP: ['UNK']
+cAMP_Pde1f: ['cAMP-phosphodiesterase 1f complex', 'cAMP-Pde1f', 'phosphodiesterase 1f-cAMP complex']
+cAMP_Pde2: ['cAMP-phosphodiesterase 2 complex', 'cAMP-Pde2', 'phosphodiesterase 2-cAMP complex']
+AMP: ['adenosine monophosphate', 'AMP', "adenosine 5'-monophosphate"]
+Ras2_GTP_Ira2P: ['UNK']
+
+Reason: Most species are annotated based on their names and the context of the Ras/cAMP/PKA pathway. Ras2_GDP and Ras2_GTP are likely Ras proteins bound to GDP or GTP, respectively. GDP, GTP, and ATP are standard nucleotides. cAMP is a well-known second messenger. cAMP_PKA, cAMP_Pde1f, and cAMP_Pde2 are likely complexes of cAMP with protein kinase A, phosphodiesterase 1f, and phosphodiesterase 2, respectively. AMP is a standard nucleotide. Species with "_UNK" are not annotated due to lack of information or unclear names.

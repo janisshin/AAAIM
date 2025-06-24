@@ -1,0 +1,8 @@
+Model: BIOMD0000000659
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 16:00:49
+
+Synonyms:
+Ca: ['calcium', 'calcium ion', 'Ca2+']
+
+Reason: The model notes and article abstract mention "calcium signaling" as a key component, and the display name 'Ca' is a common abbreviation for calcium.

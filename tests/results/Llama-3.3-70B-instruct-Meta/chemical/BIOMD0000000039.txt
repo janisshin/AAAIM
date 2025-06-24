@@ -1,0 +1,11 @@
+Model: BIOMD0000000039
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:36:52
+
+Synonyms:
+Ca_cyt: ['calcium(2+)', 'Ca2+', 'calcium ion']
+CaER: ['calcium', 'Ca(2+)', 'calcium ion in endoplasmic reticulum']
+CaM: ['calmodulin', 'calcium-modulated protein', 'calcium-binding protein']
+CaPr: ['calcium-protein complex', 'calcium-bound protein', 'UNK']
+
+Reason: Ca_cyt is likely calcium ion in the cytosol, CaER is calcium in the endoplasmic reticulum, CaM is likely calmodulin due to its role in calcium signaling, and CaPr is uncertain but may be a calcium-protein complex due to its reaction with Pr and Ca_cyt.

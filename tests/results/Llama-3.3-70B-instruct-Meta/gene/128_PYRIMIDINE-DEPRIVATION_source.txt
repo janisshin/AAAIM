@@ -1,0 +1,33 @@
+Model: 128_PYRIMIDINE-DEPRIVATION_source
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-18 19:49:49
+
+Synonyms:
+csa1: ['MB21D1', 'cGAS', 'GAS']
+csa5: ['TMEM173', 'STING', 'MPYS']
+csa24: ['MRE11A', 'MRE11', 'ATLD']
+csa10: ['MRE11A', 'MRE11', 'ATLD']
+sa80: ['TBK1', 'TANK-binding kinase 1', 'NAK']
+sa78: ['MB21D1', 'cGAS', 'GAS']
+sa93: ['WIPI2', 'WD repeat-containing protein interacting with PHK1 2', 'WIP12']
+sa90: ['IFNA1', 'Interferon alpha-1', 'IFN-alpha-1']
+sa92: ['SAR1A', 'SAR1 gene homolog A', 'SAR1']
+sa87: ['IFNB1', 'Interferon beta-1', 'IFN-beta-1']
+sa89: ['IFNB1', 'Interferon beta-1', 'IFN-beta-1']
+sa91: ['IFNB1', 'Interferon beta-1', 'IFN-beta-1']
+sa88: ['IFNA1', 'Interferon alpha-1', 'IFN-alpha-1']
+sa86: ['IFNA1', 'Interferon alpha-1', 'IFN-alpha-1']
+sa85: ['IRF3', 'Interferon regulatory factor 3', 'IRF-3']
+sa22: ['DHODH', 'Dihydroorotate dehydrogenase', 'DHOdehase']
+sa19: ['CAD', 'Carbamoyl-phosphate synthetase 2, aspartate transcarbamylase, and dihydroorotase', 'CARBAS']
+sa25: ['UMPS', 'Uridine monophosphate synthetase', 'UMPS']
+sa32: ['CDA', 'Cytidine deaminase', 'CDD']
+sa96: ['MRE11A', 'MRE11', 'ATLD']
+sa28: ['CAD', 'Carbamoyl-phosphate synthetase 2, aspartate transcarbamylase, and dihydroorotase', 'CARBAS']
+sa100: ['TMEM173', 'STING', 'MPYS']
+sa176: ['IFNB1', 'Interferon beta-1', 'IFN-beta-1']
+sa177: ['WIPI2', 'WD repeat-containing protein interacting with PHK1 2', 'WIP12']
+sa178: ['IFNB1', 'Interferon beta-1', 'IFN-beta-1']
+sa175: ['IFNB1', 'Interferon beta-1', 'IFN-beta-1']
+
+Reason: The provided model appears to be related to the interferon signaling pathway, specifically the cGAS-STING pathway, which is involved in the detection of cytosolic DNA and the activation of interferon responses. The species are annotated based on their display names and the reactions they participate in. cGAS (csa1, sa78) is a cytosolic DNA sensor that activates the STING (csa5, sa100) pathway, leading to the production of interferons (sa87, sa89, sa91, sa88, sa86). Other species, such as TBK1 (sa80), IRF3 (sa85), and MRE11 (sa96), are also involved in this pathway. The UMPS (sa25) and CAD (sa19, sa28) species are related to nucleotide metabolism. The WIPI2 (sa93) species is involved in autophagy. The SAR1A (sa92) species is involved in vesicle transport. The DHODH (sa22) species is involved in pyrimidine biosynthesis. The CDA (sa32) species is involved in nucleotide metabolism.

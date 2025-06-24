@@ -1,0 +1,9 @@
+Model: BIOMD0000000321
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:43:16
+
+Synonyms:
+A_dopa: ['levodopa', 'L-dopa', '3,4-dihydroxyphenylalanine']
+C_dopa: ['3-O-methyldopa', '3-OMD', '3-methoxytyrosine']
+
+Reason: A_dopa is likely "levodopa" due to the model name "L Dopa PK model" and the context of the article, which mentions "L-dopa" as the main subject. C_dopa is likely "3-O-methyldopa" because the reaction "COMT_clearance: C_dopa => C_OMD" suggests a relationship with catechol-O-methyltransferase (COMT), an enzyme involved in the metabolism of L-dopa to 3-O-methyldopa.

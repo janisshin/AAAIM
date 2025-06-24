@@ -1,0 +1,15 @@
+Model: BIOMD0000000439
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:45:34
+
+Synonyms:
+GaGTP: ['GTP', 'guanosine triphosphate', 'GTP(4-)']
+RGSGaGTP: ['RGS-GTP complex', 'regulator of G protein signaling-GTP complex', 'UNK']
+GaGDPP: ['GDP', 'guanosine diphosphate', 'GDP(3-)']
+GaGTPEffector: ['GTP-effector complex', 'G protein-effector complex', 'UNK']
+inertGaGTP: ['inactive GTP-bound state', 'GTP-inactive state', 'UNK']
+RGSinertGaGTP: ['RGS-inactive GTP-bound state', 'RGS-GTP-inactive complex', 'UNK']
+GaGDP: ['GDP', 'guanosine diphosphate', 'GDP(3-)']
+P: ['phosphate', 'inorganic phosphate', 'Pi']
+
+Reason: The species names are annotated based on the context of the model, which describes the GTP hydrolysis cycle and the interaction of G proteins with effectors and RGS proteins. The annotations are made by matching the species names with known biochemical entities and their common synonyms. The "UNK" annotations are used when the species name does not match a known biochemical entity or when the annotation is uncertain. GaGTP and GaGDP are matched with GTP and GDP, respectively, as they are key molecules in the GTP hydrolysis cycle. The other species are annotated based on their interactions and roles in the model, but with lower confidence due to the complexity of the system and the uncertainty of the species names.

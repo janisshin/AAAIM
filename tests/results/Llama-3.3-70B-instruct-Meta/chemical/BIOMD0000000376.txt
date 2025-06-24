@@ -1,0 +1,15 @@
+Model: BIOMD0000000376
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:44:00
+
+Synonyms:
+G6P: ['glucose-6-phosphate', 'D-glucose 6-phosphate', 'G6P']
+FBP: ['fructose-1,6-bisphosphate', 'D-fructose 1,6-bisphosphate', 'FBP']
+NADHm: ['NADH', 'nicotinamide adenine dinucleotide + hydrogen', 'reduced nicotinamide adenine dinucleotide']
+Cam: ['calcium', 'Ca2+', 'calcium ion']
+ADPm: ['ADP', 'adenosine diphosphate', "adenosine 5'-diphosphate"]
+adp: ['ADP', 'adenosine diphosphate', "adenosine 5'-diphosphate"]
+c: ['calcium', 'Ca2+', 'calcium ion']
+Caer: ['calcium', 'Ca2+', 'calcium ion']
+
+Reason: G6P and FBP are likely glucose-6-phosphate and fructose-1,6-bisphosphate due to their involvement in glycolysis. NADHm is likely NADH due to its role in mitochondrial respiration. Cam, c, and Caer are likely calcium or calcium ions due to their involvement in calcium-related reactions. ADPm and adp are likely ADP due to their involvement in energy transfer reactions.

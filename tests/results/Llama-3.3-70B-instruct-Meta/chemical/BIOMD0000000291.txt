@@ -1,0 +1,13 @@
+Model: BIOMD0000000291
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:42:58
+
+Synonyms:
+x2: ['bilirubin', 'bilirubin albumin complex']
+x3: ['albumin bilirubin complex', 'bilirubin albumin complex']
+x6: ['carbon', 'activated carbon', 'carbon pyropolymer']
+x7: ['UNK']
+B0: ['UNK']
+C0: ['UNK']
+
+Reason: x2 and x3 are likely related to bilirubin and albumin bilirubin complex due to the model name and context. x6 is likely carbon due to the mention of carbon pyropolymer in the model and article. x7, B0, and C0 are unknown as there is no clear information about their chemical identity in the provided context.

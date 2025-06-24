@@ -1,0 +1,16 @@
+Model: BIOMD0000000246
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:42:00
+
+Synonyms:
+Ca_in: ['calcium ion', 'calcium(2+)', 'Ca2+']
+Ca_store: ['calcium ion', 'calcium(2+)', 'Ca2+']
+Ca_ex: ['calcium ion', 'calcium(2+)', 'Ca2+']
+Cl_ex: ['chloride ion', 'chloride', 'Cl-']
+Cl_o: ['chloride ion', 'chloride', 'Cl-']
+GABA: ['gamma-aminobutyric acid', 'GABA', '4-aminobutanoic acid']
+GABA_o: ['gamma-aminobutyric acid', 'GABA', '4-aminobutanoic acid']
+K_in: ['potassium ion', 'potassium', 'K+']
+K_ex: ['potassium ion', 'potassium', 'K+']
+
+Reason: The species names are likely referring to ions and neurotransmitters commonly involved in neuronal electrophysiology, as indicated by the model's context and the article's discussion of ion conductances, membrane voltage, and neurotransmitters like GABA. The "_in", "_ex", and "_store" suffixes suggest intracellular, extracellular, and stored forms of the ions, respectively. The "_o" suffix for GABA may indicate an outside or extracellular form.

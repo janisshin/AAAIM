@@ -1,0 +1,10 @@
+Model: BIOMD0000000325
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:43:17
+
+Synonyms:
+L: ['ligand', 'signaling molecule', 'signaling ligand']
+C: ['ligand-receptor complex', 'receptor-ligand complex', 'signal complex']
+X: ['transcription factor complex', 'inactive transcription factor complex', 'protein complex']
+
+Reason: L is likely a signaling molecule or ligand based on the model description and notes. C is a ligand-receptor complex as defined in the nomenclature. X is a complex of the ligand-receptor complex bound to an inactive transcription factor, hence the suggested names.

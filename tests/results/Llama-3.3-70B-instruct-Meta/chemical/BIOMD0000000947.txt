@@ -1,0 +1,16 @@
+Model: BIOMD0000000947
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 16:02:21
+
+Synonyms:
+C_para_Apical: ['paracetamol', 'acetaminophen', 'N-acetyl-p-aminophenol']
+C_para_Caco_2: ['paracetamol', 'acetaminophen', 'N-acetyl-p-aminophenol']
+C_para__Basolateral___HepG2_: ['paracetamol', 'acetaminophen', 'N-acetyl-p-aminophenol']
+C_sulf_Apical: ['paracetamol sulfate', 'acetaminophen sulfate', 'p-acetylaminophenol sulfate']
+C_sulf_Caco_2: ['paracetamol sulfate', 'acetaminophen sulfate', 'p-acetylaminophenol sulfate']
+C_sulf__Basolateral___HepG2_: ['paracetamol sulfate', 'acetaminophen sulfate', 'p-acetylaminophenol sulfate']
+C_glu_Apical: ['paracetamol glucuronide', 'acetaminophen glucuronide', 'N-acetyl-p-aminophenol glucuronide']
+C_glu_Caco_2: ['paracetamol glucuronide', 'acetaminophen glucuronide', 'N-acetyl-p-aminophenol glucuronide']
+C_glu__Basolateral___HepG2_: ['paracetamol glucuronide', 'acetaminophen glucuronide', 'N-acetyl-p-aminophenol glucuronide']
+
+Reason: The model is a first-pass metabolism PK model for paracetamol, and the display names suggest that C_para is the parent compound (paracetamol), while C_sulf and C_glu are its sulfate and glucuronide metabolites, respectively. The suffixes "_Apical", "_Caco_2", and "_Basolateral___HepG2_" likely refer to different compartments in the model, but do not affect the chemical identity of the species.

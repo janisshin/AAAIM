@@ -1,0 +1,12 @@
+Model: BIOMD0000000067
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:37:46
+
+Synonyms:
+AcCoA: ['acetyl-CoA', 'acetyl coenzyme A', 'CoA-acetyl']
+AcP: ['acetyl phosphate', 'acetylphosphate', 'AcP']
+OAc: ['acetate', 'acetic acid', 'acetate ion']
+HOAc: ['acetic acid', 'ethanoic acid', 'protonated acetate']
+HOAc_E: ['UNK']
+
+Reason: AcCoA, AcP, OAc, and HOAc are identified based on their display names and reaction involvement, which match known biochemical compounds. HOAc_E is marked as "UNK" because it represents "acetate export", which is a process or a location rather than a specific chemical entity.

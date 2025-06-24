@@ -1,0 +1,18 @@
+Model: BIOMD0000000222
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:41:24
+
+Synonyms:
+aca: ['acetyl-CoA', 'acetyl coenzyme A', 'acetic acid']
+oaa: ['oxaloacetate', 'oxaloacetic acid', '2-oxosuccinate']
+coa: ['coenzyme A', 'CoA', "3'-phosphoadenosine-5'-diphosphate"]
+cit: ['citric acid', 'citrate', 'sodium citrate']
+icit: ['isocitrate', 'isocitric acid', 'DL-isocitric acid']
+akg: ['alpha-ketoglutarate', '2-oxoglutarate', 'α-ketoglutaric acid']
+sca: ['succinyl-CoA', 'succinyl coenzyme A', 'butanedioyl-CoA']
+suc: ['succinate', 'succinic acid', 'butanedioic acid']
+fa: ['fumarate', 'fumaric acid', 'trans-butenedioic acid']
+mal: ['malate', 'malic acid', 'hydroxysuccinic acid']
+gly: ['glyoxylate', 'glyoxylic acid', 'hydroxyacetic acid']
+
+Reason: The species names are likely to be metabolites in the tricarboxylic acid cycle (TCA cycle) and glyoxylate bypass, which are biochemical pathways. The standardized names are based on common synonyms and chemical names for these metabolites, with the most likely names listed first. The model is from a kinetic modeling study of the TCA cycle and glyoxylate bypass in Mycobacterium tuberculosis, which suggests that the species names are related to these pathways.

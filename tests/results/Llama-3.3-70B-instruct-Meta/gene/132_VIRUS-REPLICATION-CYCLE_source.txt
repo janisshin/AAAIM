@@ -1,0 +1,11 @@
+Model: 132_VIRUS-REPLICATION-CYCLE_source
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-18 19:49:51
+
+Synonyms:
+sa1962: ['ORF1a', 'ORF1ab', 'nsp1']
+sa2326: ['ORF3a', 'ORF3', 'SARS-CoV-2 ORF3a']
+sa2327: ['S', 'Spike', 'SARS-CoV-2 S']
+sa2353: ['N', 'Nucleocapsid', 'SARS-CoV-2 N']
+
+Reason: These genes appear to be related to SARS-CoV-2, with sa1962 likely being the ORF1a gene, sa2326 being the ORF3a gene, sa2327 being the Spike gene, and sa2353 being the Nucleocapsid gene, based on their display names and Boolean transitions, which suggest a model of SARS-CoV-2 replication and transcription.

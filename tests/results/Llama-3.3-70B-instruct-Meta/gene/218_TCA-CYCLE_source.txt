@@ -1,0 +1,31 @@
+Model: 218_TCA-CYCLE_source
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-18 19:51:18
+
+Synonyms:
+csa1916: ['SUCLG1', 'SUCLG2', 'SUCLA2']
+csa1897: ['MDH2', 'MDH1', 'MDH1B']
+csa1919: ['FH', 'Fumarase', 'FH1']
+csa1898: ['PDP2', 'PDK2', 'PDP1']
+csa1902: ['IDH2', 'IDH3A', 'IDH3B']
+csa1899: ['SUCLG1', 'SUCLG2', 'SUCLA2']
+csa1914: ['SLC25A11', 'SLC25A22', 'SLC25A23']
+csa1949: ['PDHA1', 'PDHB', 'PDHX']
+csa1901: ['PDP1', 'PDK1', 'PDP2']
+csa1921: ['PDK1', 'PDK2', 'PDK3']
+csa1895: ['PDHA1', 'PDHB', 'PDHX']
+csa1896: ['IDH2', 'IDH3A', 'IDH3B']
+sa11962: ['GLUD1', 'GLUD2', 'GLUL']
+sa12216: ['L2HGDH', 'D2HGDH', 'HYI']
+sa11979: ['PC', 'PCCB', 'PCCA']
+sa11955: ['ACO2', 'ACO1', 'IRP1']
+sa11950: ['CS', 'CSTB', 'CSTA']
+sa11901: ['ACSS1', 'ACSS2', 'ACSS3']
+sa11987: ['ADHFE1', 'ADH1A', 'ADH1B']
+sa11881: ['D2HGDH', 'L2HGDH', 'HYI']
+sa11944: ['ALDH2', 'ALDH1A1', 'ALDH1B1']
+sa11964: ['ACLY', 'ACSS1', 'ACSS2']
+sa12293: ['NUDT2', 'NUDT1', 'NUDT5']
+sa11867: ['SIRT3', 'SIRT1', 'SIRT2']
+
+Reason: The provided model appears to be a metabolic network, with species names corresponding to enzymes, proteins, and metabolites. The standardized names were determined based on the display names and the context of the model, using knowledge of biochemical pathways and gene functions. For example, csa1916 is likely "SUCLG1" (Succinyl-CoA ligase, GDP-forming, alpha subunit) due to its display name "Succinyl-CoA_space_ligase_complex_mitochondrial_space_matrix". Similarly, sa11962 is likely "GLUD1" (Glutamate dehydrogenase 1) due to its display name and its role in the model.

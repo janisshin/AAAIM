@@ -1,0 +1,11 @@
+Model: 132_VIRUS-REPLICATION-CYCLE_source
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-17 13:00:00
+
+Synonyms:
+sa1962: ['N', 'Nucleocapsid', 'Nsp9']
+sa2326: ['E', 'Envelope', 'Spike']
+sa2327: ['M', 'Membrane', 'Mpro']
+sa2353: ['N', 'Nucleocapsid', 'ORF9b']
+
+Reason: The model appears to describe the life cycle of a coronavirus, with sa1962 representing the nucleocapsid protein, sa2326 representing the envelope protein, sa2327 representing the membrane protein, and sa2353 representing another nucleocapsid-related protein, based on their display names and Boolean transitions.

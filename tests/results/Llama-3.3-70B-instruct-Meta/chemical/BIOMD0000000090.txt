@@ -1,0 +1,29 @@
+Model: BIOMD0000000090
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:38:42
+
+Synonyms:
+sul_ex: ['sulfate', 'sulfuric acid', 'sulfate ion']
+eth_ex: ['ethanol', 'ethyl alcohol', 'alcohol']
+oxy_ex: ['oxygen', 'dioxygen', 'O2']
+oxy: ['oxygen', 'dioxygen', 'O2']
+H2O: ['water', 'dihydrogen monoxide', 'H2O']
+A3c: ['ATP', 'adenosine triphosphate', "adenosine 5'-triphosphate"]
+aps: ["adenosine 5'-phosphosulfate", 'APS', "5'-adenylyl sulfate"]
+PPi: ['diphosphate', 'pyrophosphate', 'inorganic diphosphate']
+pap: ["3'-phosphoadenosine 5'-phosphosulfate", 'PAPS', 'phosphoadenosine phosphosulfate']
+sul: ['sulfate', 'sulfuric acid', 'sulfate ion']
+eth: ['ethanol', 'ethyl alcohol', 'alcohol']
+A2c: ['ADP', 'adenosine diphosphate', "adenosine 5'-diphosphate"]
+hyd: ['hydrogen sulfide', 'H2S', 'sulfane']
+cys: ['cysteine', 'L-cysteine', '3-mercaptopropanoic acid']
+N2: ['NADH', 'nicotinamide adenine dinucleotide', 'reduced nicotinamide adenine dinucleotide']
+N1: ['NAD', 'nicotinamide adenine dinucleotide', 'oxidized nicotinamide adenine dinucleotide']
+aco: ['acetyl-CoA', 'acetyl coenzyme A', 'S-acetyl-CoA']
+oah: ['acetate', 'acetic acid', 'ethanoic acid']
+A2m: ['ADP', 'adenosine diphosphate', "adenosine 5'-diphosphate"]
+A3m: ['ATP', 'adenosine triphosphate', "adenosine 5'-triphosphate"]
+Ho: ['UNK']
+Hm: ['UNK']
+
+Reason: The species were annotated based on their display names and the reactions they participate in. sul_ex, eth_ex, oxy_ex, and oxy were matched to their respective common names. A3c, A2c, A3m, and A2m were matched to ATP and ADP. aps, PPi, pap, sul, eth, hyd, cys, N2, N1, aco, and oah were matched to their respective biochemical names. Ho and Hm were left as UNK due to lack of information about their chemical structure or function.

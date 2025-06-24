@@ -1,0 +1,20 @@
+Model: BIOMD0000000422
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:45:05
+
+Synonyms:
+s1: ['gibberellin A4', 'GA4', 'gibberellic acid']
+s23: ['gibberellin A12', 'GA12', 'gibberellin A12 aldehyde']
+s24: ['gibberellin A15', 'GA15', 'gibberellin 15']
+s25: ['gibberellin A24', 'GA24', 'gibberellin 24']
+s26: ['gibberellin A9', 'GA9', 'gibberellin 9']
+s65: ['GA4-GID complex', 'gibberellin A4-GID1 complex', 'GA4-GID1']
+s29: ['gibberellin A9-GA3ox', 'GA9-GA3ox', 'gibberellin 9-GA3 oxidase']
+s30: ['gibberellin A24-GA20ox', 'GA24-GA20ox', 'gibberellin 24-GA20 oxidase']
+s31: ['gibberellin A15-GA20ox', 'GA15-GA20ox', 'gibberellin 15-GA20 oxidase']
+s32: ['gibberellin A12-GA20ox', 'GA12-GA20ox', 'gibberellin 12-GA20 oxidase']
+s62: ['GA4-GID-closed', 'gibberellin A4-GID1-closed', 'GA4-GID1-closed']
+s36: ['GA4-GID-DELLA2', 'gibberellin A4-GID1-DELLA2', 'GA4-GID1-DELLA2']
+s45: ['GA4-GID-DELLA1', 'gibberellin A4-GID1-DELLA1', 'GA4-GID1-DELLA1']
+
+Reason: The species names were matched to gibberellin-related compounds and complexes based on the display names and reaction equations provided in the model. The likelihood of each match was ranked based on the specificity of the display name and the reaction equations. Species s1, s23, s24, s25, and s26 were matched to specific gibberellin compounds, while species s65, s29, s30, s31, s32, s62, s36, and s45 were matched to complexes or conjugates of gibberellin compounds with other molecules.

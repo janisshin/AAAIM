@@ -1,0 +1,11 @@
+Model: BIOMD0000000052
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:37:18
+
+Synonyms:
+Glu: ['glutamic acid', 'glutamate', 'L-glutamic acid']
+Formic_acid: ['formic acid', 'methanoic acid', 'hydrogen carboxylic acid']
+Acetic_acid: ['acetic acid', 'ethanoic acid', 'acetate']
+lys_R: ['UNK']
+
+Reason: Glu is likely glutamic acid due to its involvement in reactions with other sugars and compounds, Formic_acid and Acetic_acid are directly named and match common chemical names, lys_R has no clear display name or reaction information to determine its chemical identity.

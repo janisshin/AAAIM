@@ -1,0 +1,9 @@
+Model: BIOMD0000000344
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:43:38
+
+Synonyms:
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+
+Reason: The species ATP and ADP are identified as adenosine triphosphate and adenosine diphosphate, respectively, based on their common biochemical roles and the context of the model, which involves energy transfer and protein homeostasis.

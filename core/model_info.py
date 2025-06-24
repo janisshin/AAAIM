@@ -241,7 +241,7 @@ def get_all_species_ids(model_file: str, entity_type: str = "chemical") -> List[
 
 def extract_qual_transitions(model_file: str, species_ids: List[str]) -> List[str]:
     """
-    Extract boolean transitions from SBML-qual models using biolqm and pyboolnet.
+    Extract boolean transitions from SBML-qual models.
     Self loops are ignored.
     
     Args:
@@ -249,45 +249,62 @@ def extract_qual_transitions(model_file: str, species_ids: List[str]) -> List[st
         species_ids: List of species IDs to filter transitions for
         
     Returns:
-        List of transition strings in the format "target, rule"
+        List of transition strings in the format "target = rule"
     """
     if not QUAL_SUPPORT:
         logger.warning("biolqm/pyboolnet not available - cannot extract qual transitions")
         return []
     
-    try:
-        # Load model with biolqm
-        model_lqm = biolqm.load(model_file)
-        
-        # Convert to pyboolnet format and get primes
-        primes = biolqm.to_pyboolnet(model_lqm)
-        
-        # Convert primes to boolean network format
-        bnet_string = pyboolnet.file_exchange.primes2bnet(primes)
-        
-        # Parse the bnet string to extract transitions
-        transitions = []
-        for line in bnet_string.strip().split('\n'):
-            line = line.strip()
-            if line and ',' in line:
-                target, rule = line.split(',', 1)
-                target = target.strip()
-                rule = rule.strip()
+    # Open the SBML file and get the qualitative_model model
+    reader = libsbml.SBMLReader()
+    document = reader.readSBML(model_file)
+    model = document.getModel()  # Check whether a model exists
+    qualitative_model = model.getPlugin("qual")  # Get the qualitative_model part of the model.
+    if qualitative_model is None:  # Check whether a Qual model exists.
+        logger.warning("Error loading SBML file: no Qual plugin found")
+        return None
 
-                # Remove self loops: skip if left_side and right_side are the same (ignoring whitespace)
-                if target.strip() == rule.strip():
-                    # print(f"Skipping self loop: {target.strip()} = {rule.strip()}")
-                    continue
-                
-                # Check if this transition involves any of our target species
-                if target in species_ids or any(species_id in rule for species_id in species_ids):
-                    transitions.append(f"{target} = {rule}")
+    # STEP: read the formulas from transitions and convert them to bnet format.
+    transitions = []
+    for transition in qualitative_model.getListOfTransitions():  # Scan all the transitions.
+        # Get the output variable
+        output = transition.getListOfOutputs()
+        if len(output) > 1:  # check whether there is a single output
+            logger.warning(f"Multiple outputs assigned. List of outputs: {output}")
+            return None
+        else:
+            target = output[0].getQualitativeSpecies()
+
+        # Get the formula
+        logic_terms = transition.getListOfFunctionTerms()
+
+        if len(logic_terms) == 0:  # Empty transition in SBML file, skip it.
+            continue
+
+        if len(logic_terms) > 1:  # check whether there exists a single formula only, error otherwise
+            errmsg("Multiple logic terms present. Number of terms", len(logic_terms), kind="WARNING")
+            return None
+        else:  # Get the SBML QUAL formula
+            formula = libsbml.formulaToL3String(logic_terms[0].getMath())
+
+        # Convert the SBML QUAL formula into bnet syntax before parsing it.
+        rule = re.sub(r'\|\|', '|', formula)  # convert || to |
+        rule = re.sub(r'&&', '&', rule)  # convert && to &
+        # convert (<var> == 1) or <var> == 1 to <var>
+        rule = re.sub(r'\(?(\w+)\s*==\s*1\)?', r'\1', rule)
+        # convert (<var> == 0) or <var> == 0 to ! <var>
+        rule = re.sub(r'\(?(\w+)\s*==\s*0\)?', r'!\1', rule)
+
+        # Remove self loops: skip if left_side and right_side are the same (ignoring whitespace)
+        if target.strip() == rule.strip():
+            # print(f"Skipping self loop: {target.strip()} = {rule.strip()}")
+            continue
         
-        return transitions
-        
-    except Exception as e:
-        logger.error(f"Error extracting qual transitions: {e}")
-        return []
+        # Check if this transition involves any of our target species
+        if target in species_ids or any(species_id in rule for species_id in species_ids):
+            transitions.append(f"{target} = {rule}")
+    
+    return transitions
 
 def extract_model_info(model_file: str, species_ids: List[str], entity_type: str = "chemical") -> Dict[str, Any]:
     """

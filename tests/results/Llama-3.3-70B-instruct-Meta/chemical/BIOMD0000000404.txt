@@ -1,0 +1,18 @@
+Model: BIOMD0000000404
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:44:55
+
+Synonyms:
+asp: ['aspartic acid', 'aspartate', 'L-aspartic acid']
+ni: ['UNK']
+Tasp: ['UNK']
+Tni: ['UNK']
+Tasp_W: ['UNK']
+Tni_W: ['UNK']
+Tasp_A: ['UNK']
+Tni_A: ['UNK']
+Tasp_WA: ['UNK']
+Tni_WA: ['UNK']
+species_1: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+
+Reason: asp is likely aspartic acid or aspartate due to the model context of chemotaxis and the mention of aspartate in the notes, while species_1 is clearly ATP from the display name, and the rest are unknown due to lack of clear chemical identification in the provided information.

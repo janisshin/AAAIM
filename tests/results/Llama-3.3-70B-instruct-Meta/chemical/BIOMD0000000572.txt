@@ -1,0 +1,32 @@
+Model: BIOMD0000000572
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:56:49
+
+Synonyms:
+G6P: ['glucose-6-phosphate', 'D-glucose 6-phosphate', 'G6P']
+ATP: ["adenosine 5'-triphosphate", 'ATP', 'adenosine triphosphate']
+ADP: ["adenosine 5'-diphosphate", 'ADP', 'adenosine diphosphate']
+Pint: ['inorganic phosphate', 'phosphate', 'Pi']
+F6P: ['fructose-6-phosphate', 'D-fructose 6-phosphate', 'F6P']
+FBP: ['fructose-1,6-bisphosphate', 'D-fructose 1,6-bisphosphate', 'FBP']
+G3P: ['glyceraldehyde-3-phosphate', 'D-glyceraldehyde 3-phosphate', 'G3P']
+BPG: ['1,3-bisphosphoglycerate', '1,3-bisphosphoglyceric acid', 'BPG']
+PEP: ['phosphoenolpyruvate', 'PEP', '2-phosphoenolpyruvate']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+', 'NAD']
+NADH: ['nicotinamide adenine dinucleotide reduced', 'NADH', 'reduced NAD']
+PYR: ['pyruvate', 'pyruvic acid', 'PYR']
+AcetCoA: ['acetyl-CoA', 'acetyl coenzyme A', 'AcetCoA']
+Acetoin: ['acetoin', '3-hydroxy-2-butanone', 'Acetoin']
+Mannitol: ['mannitol', 'D-mannitol', 'Mannitol']
+Mannitol1Phosphate: ['mannitol 1-phosphate', 'D-mannitol 1-phosphate', 'Mannitol1Phosphate']
+CoA: ['coenzyme A', 'CoA', 'CoASH']
+Pext: ['external phosphate', 'extracellular phosphate', 'Pext']
+Lactate: ['lactic acid', 'lactate', 'L-lactate']
+Ethanol: ['ethanol', 'ethyl alcohol', 'EtOH']
+Acetate: ['acetate', 'acetic acid', 'Acetate']
+Glucose: ['glucose', 'D-glucose', 'Glucose']
+Acetoin_Ext: ['extracellular acetoin', 'external acetoin', 'Acetoin_Ext']
+Mannitol_Ext: ['extracellular mannitol', 'external mannitol', 'Mannitol_Ext']
+Formate: ['formate', 'formic acid', 'HCOOH']
+
+Reason: The species were identified based on their display names and roles in the reactions. G6P, F6P, FBP, G3P, BPG, and PEP are intermediates in glycolysis. ATP, ADP, and Pint are involved in energy transfer. NAD and NADH are electron carriers. PYR is the end product of glycolysis. AcetCoA is a key intermediate in various metabolic pathways. Acetoin, Mannitol, and their derivatives are related to the production pathways included in the model. CoA is a cofactor. Lactate, Ethanol, and Acetate are end products of fermentation. Glucose is the primary carbon source. Formate is a possible byproduct. The external species (Pext, Acetoin_Ext, Mannitol_Ext) are likely related to transport or exchange reactions.

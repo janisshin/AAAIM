@@ -1,0 +1,9 @@
+Model: BIOMD0000000113
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:38:58
+
+Synonyms:
+Z: ['protein', 'phosphoprotein', 'phosphorylated protein']
+Y: ['phosphorylated protein', 'protein', 'phosphate group']
+
+Reason: The model is named "Dupont1992_Ca_dpt_protein_phospho" and reproduces a figure related to protein phosphorylation, suggesting that Z and Y are related to protein and its phosphorylated form. The reactions also indicate a cycle of phosphorylation and dephosphorylation between Z and Y.

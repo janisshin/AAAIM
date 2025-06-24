@@ -1,0 +1,9 @@
+Model: 124_NSP9-PROTEIN_source
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-18 19:49:42
+
+Synonyms:
+sa1006: ['EDN1', 'END1', 'PROEDN']
+sa1189: ['RdRp', 'NSP12', 'NSP12_SARS2']
+
+Reason: sa1006 is annotated as "EDN1_rna", suggesting it refers to the EDN1 gene, which encodes for the endothelin 1 protein. sa1189 is annotated as "RdRpassembled_rna", indicating it is related to the RNA-dependent RNA polymerase (RdRp) of a virus, likely SARS-CoV-2, given the context of remdesivir and favipiravir, which are antiviral drugs. The Boolean transitions and display names support these annotations, with sa1006 being regulated by sa983 (DCAF7) and sa1189 being involved in the assembly of the Nsp7812 complex.

@@ -1,0 +1,17 @@
+Model: 116_HMOX1-PATHWAY_source
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-17 12:59:44
+
+Synonyms:
+sa44: ['BACH1', 'BACH2', 'BACH']
+sa48: ['MIR155', 'miR-155', 'MICRORNA155']
+sa50: ['HMOX1', 'HO1', 'HMOX']
+sa140: ['SLC40A1', 'FPN1', 'FERROPORTIN']
+sa144: ['FTH1', 'FTL', 'FERRITIN']
+sa145: ['FTL', 'FERRITIN', 'FTL1']
+sa147: ['FECH', 'ECH', 'FERROCHELATASE']
+sa150: ['BLVRA', 'Biliverdin reductase', 'BLVR']
+sa151: ['BLVRA', 'Biliverdin reductase', 'BLVR']
+sa367: ['NLRP3', 'NALP3', 'CIAS1']
+
+Reason: The annotations are based on the provided display names and boolean transitions, which suggest the involvement of various genes in heme metabolism, iron regulation, and inflammation. sa44 is annotated as BACH1 due to its direct display name, while sa48 is identified as MIR155 based on its display name "miRNA-155_rna". The other genes are annotated based on their display names and relationships with other genes in the model.

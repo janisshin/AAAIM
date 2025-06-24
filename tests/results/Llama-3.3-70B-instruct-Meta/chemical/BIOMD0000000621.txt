@@ -1,0 +1,8 @@
+Model: BIOMD0000000621
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:58:39
+
+Synonyms:
+Glucose: ['glucose', 'D-glucose', 'blood glucose']
+
+Reason: Glucose is a well-known chemical entity, and its display name is empty, but based on the model context, which is related to type 2 diabetes mellitus and glucose metabolism, it can be inferred that the species refers to the common biological molecule glucose.

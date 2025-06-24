@@ -1,0 +1,13 @@
+Model: BIOMD0000000547
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:56:07
+
+Synonyms:
+species_6: ['arsenite', 'arsenic(III)', 'arsenous acid']
+species_4: ['arsenite glutathione conjugate', 'arsenic triglutathione', 'vAsGS3']
+species_3: ['arsenite glutathione conjugate', 'arsenic triglutathione', 'AsGS3']
+species_1: ['arsenite', 'arsenic(III)', 'arsenous acid']
+species_2: ['protein-bound arsenite', 'arsenite protein complex', 'AsIIIprot']
+species_7: ['glutathione', 'GSH', 'L-gamma-glutamyl-L-cysteinylglycine']
+
+Reason: The species are annotated based on their display names and the context of the model, which describes arsenic toxicity and detoxification mechanisms in yeast. The display names provide direct clues for species_3 (AsGS3), species_1 (AsIIIin), species_7 (GSH), species_4 (vAsGS3), and species_2 (AsIIIProt), while species_6 (AsIIIex) is likely referring to extracellular arsenite. The reactions and notes in the model support these annotations, describing the transport, distribution, and detoxification of arsenic in yeast.

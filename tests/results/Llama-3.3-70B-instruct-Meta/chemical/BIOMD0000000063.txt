@@ -1,0 +1,15 @@
+Model: BIOMD0000000063
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:37:34
+
+Synonyms:
+Glci: ['glucose', 'D-glucose', 'blood sugar']
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+G6P: ['glucose-6-phosphate', 'D-glucose-6-phosphate', 'G6P']
+FDP: ['fructose-1,6-bisphosphate', 'fructose 1,6-diphosphate', 'FBP']
+PEP: ['phosphoenolpyruvate', 'PEP', '2-phosphoenolpyruvate']
+Gly: ['glycerol', '1,2,3-propanetriol', 'glycerin']
+EtOH: ['ethanol', 'ethyl alcohol', 'alcohol']
+Carbo: ['glycogen', 'trehalose', 'starch']
+
+Reason: The display names provided in the model are used to determine the standardized names, and common synonyms are added based on general biochemical knowledge. Glci and Glco are distinguished as glucose inside and outside the cell, but since Glco is not in the list, Glci is assumed to be glucose in general. Carbo is annotated as glycogen, trehalose, or starch, as it represents "Glycogen and Trehalose" in the display names, but the exact composition is unclear.

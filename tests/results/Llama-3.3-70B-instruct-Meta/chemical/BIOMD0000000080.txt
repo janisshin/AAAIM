@@ -1,0 +1,13 @@
+Model: BIOMD0000000080
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:38:12
+
+Synonyms:
+DRG_GDP: ['guanosine diphosphate', 'GDP', "guanosine 5'-diphosphate"]
+G_GDP: ['guanosine diphosphate', 'GDP', "guanosine 5'-diphosphate"]
+GDP: ['guanosine diphosphate', 'GDP', "guanosine 5'-diphosphate"]
+DRG_GTP: ['guanosine triphosphate', 'GTP', "guanosine 5'-triphosphate"]
+G_GTP: ['guanosine triphosphate', 'GTP', "guanosine 5'-triphosphate"]
+GTP: ['guanosine triphosphate', 'GTP', "guanosine 5'-triphosphate"]
+
+Reason: The species names suggest a relation to guanosine nucleotides, and the reactions indicate a cycle between GDP and GTP forms, which is consistent with G-protein signaling. The prefixes "DRG" and "G" likely indicate protein or complex binding, but do not affect the underlying chemical identity.

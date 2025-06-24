@@ -1,0 +1,13 @@
+Model: BIOMD0000000633
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:59:13
+
+Synonyms:
+glc_ext: ['glucose', 'D-glucose', 'blood glucose']
+lac_ext: ['lactate', 'lactic acid', 'L-lactate']
+glc: ['glucose', 'D-glucose', 'glucose molecule']
+bpg13: ['UNK']
+lac: ['lactate', 'lactic acid', 'L-lactate']
+glc_er: ['glucose', 'endoplasmic reticulum glucose', 'glucose in endoplasmic reticulum']
+
+Reason: glc_ext, lac_ext, glc, and lac can be inferred from the model name and notes as glucose and lactate, which are key components in hepatic glucose metabolism. bpg13 has no clear relation to known biochemical entities in the given context, hence "UNK". glc_er is likely glucose in the endoplasmic reticulum, given the "_er" suffix.

@@ -1,0 +1,10 @@
+Model: 120_KYNURENINE-PATHWAY_source
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-18 19:49:37
+
+Synonyms:
+sa59: ['NOS2', 'iNOS', 'NOSS2']
+sa65: ['IDO1', 'INDO', 'IDOL']
+sa341: ['HMOX1', 'HO1', 'HSP32']
+
+Reason: sa59 is annotated as "iNOS_rna", which corresponds to the gene NOS2, encoding inducible nitric oxide synthase. sa65 is annotated as "IDO1_rna", which corresponds to the gene IDO1, encoding indoleamine 2,3-dioxygenase 1. sa341 is annotated as "HMOX1_rna", which corresponds to the gene HMOX1, encoding heme oxygenase 1.

@@ -1,0 +1,9 @@
+Model: BIOMD0000000099
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:38:45
+
+Synonyms:
+species_0: ['cAMP', 'cyclic adenosine monophosphate', 'cyclic AMP']
+species_1: ['cAMP', 'cyclic adenosine monophosphate', 'cyclic AMP']
+
+Reason: Both species_0 and species_1 are annotated as "cAMP" (cyclic adenosine monophosphate) due to their display names "Ex_cAMP" and "In_cAMP", which likely refer to extracellular and intracellular cyclic adenosine monophosphate, respectively.

@@ -1,0 +1,8 @@
+Model: BIOMD0000000617
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:58:37
+
+Synonyms:
+v: ['gamma-secretase activity', 'amyloid precursor protein cleavage activity', 'gamma-secretase enzyme activity']
+
+Reason: The model is described as "Inhibition kinetics of DAPT on APP Cleavage" and mentions "?-secretase" which is likely a typo for "γ-secretase", an enzyme involved in APP cleavage. The species 'v' is likely related to the activity of this enzyme.

@@ -1,0 +1,34 @@
+Model: BIOMD0000000211
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:41:00
+
+Synonyms:
+species_1: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+species_2: ['ADP', 'adenosine diphosphate', 'adp']
+species_3: ['ATP', 'adenosine triphosphate', 'atp']
+species_4: ['phosphoenolpyruvate', 'pep', '2-phosphoenolpyruvate']
+species_5: ['2-phosphoglycerate', '2pg', 'phosphoglyceric acid']
+species_6: ['AMP', 'adenosine monophosphate', 'amp']
+species_7: ['3-phosphoglycerate', '3pg', 'phosphoglyceric acid']
+species_8: ['dihydroxyacetone phosphate', 'dhap', '3-phosphoglycerate']
+species_9: ['glycerol-3-phosphate', 'g3p', 'sn-glycerol 3-phosphate']
+species_10: ['glucose', 'd-glucose', 'blood sugar']
+species_11: ['ATP', 'adenosine triphosphate', 'atp']
+species_12: ['ADP', 'adenosine diphosphate', 'adp']
+species_13: ['AMP', 'adenosine monophosphate', 'amp']
+species_14: ['glucose-6-phosphate', 'g6p', 'd-glucose 6-phosphate']
+species_15: ['fructose-6-phosphate', 'f6p', 'd-fructose 6-phosphate']
+species_16: ['fructose-1,6-bisphosphate', 'f1,6bp', 'd-fructose 1,6-bisphosphate']
+species_17: ['dihydroxyacetone phosphate', 'dhap', '3-phosphoglycerate']
+species_18: ['glyceraldehyde-3-phosphate', 'g3p', 'd-glyceraldehyde 3-phosphate']
+species_19: ['NAD', 'nicotinamide adenine dinucleotide', 'nad']
+species_20: ['NADH', 'nicotinamide adenine dinucleotide + hydrogen', 'nad + h']
+species_21: ['2,3-bisphosphoglycerate', '2,3bpg', '2,3-diphosphoglycerate']
+species_22: ['glycerol-3-phosphate', 'g3p', 'sn-glycerol 3-phosphate']
+species_23: ['3-phosphoglycerate', '3pg', 'phosphoglyceric acid']
+species_24: ['glycerol', 'gol', 'propane-1,2,3-triol']
+species_25: ['glucose', 'd-glucose', 'blood sugar']
+species_26: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+species_27: ['glycerol', 'gol', 'propane-1,2,3-triol']
+
+Reason: The species were identified based on their display names and the context of the glycolysis model. The display names provided a clear indication of the species' identities, and the model's reactions and notes supported these identifications. For species without clear display names, the reactions and notes were used to infer their identities. In some cases, multiple possible identities were possible, and these were listed as alternatives.

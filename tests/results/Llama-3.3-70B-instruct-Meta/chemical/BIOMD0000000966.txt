@@ -1,0 +1,8 @@
+Model: BIOMD0000000966
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 16:02:50
+
+Synonyms:
+Zn_2: ['zinc(2+)', 'zinc ion', 'Zn²⁺']
+
+Reason: Zn_2 is likely to represent zinc ions with a +2 charge, given the context of zinc homeostasis and the display name 'Zn^2'. The reactions and notes also support this interpretation, mentioning zinc influx and efflux, as well as the involvement of zinc-responsive regulators.

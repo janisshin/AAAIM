@@ -1,0 +1,23 @@
+Model: BIOMD0000000701
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 16:01:27
+
+Synonyms:
+Tem1GTP: ['guanosine triphosphate', 'GTP', "guanosine 5'-triphosphate"]
+Tem1GDP: ['guanosine diphosphate', 'GDP', "guanosine 5'-diphosphate"]
+T_Tem1GTP: ['UNK']
+T_Tem1GDP: ['UNK']
+B_Bfa1_Tem1GTP: ['UNK']
+B_Bfa1P4_Tem1GTP: ['UNK']
+B_Bfa1P5_Tem1GTP: ['UNK']
+B_Bfa1_Tem1GDP: ['UNK']
+B_Bfa1P4_Tem1GDP: ['UNK']
+B_Bfa1P5_Tem1GDP: ['UNK']
+Bfa1_Tem1GTP: ['UNK']
+Bfa1P4_Tem1GTP: ['UNK']
+Bfa1P5_Tem1GTP: ['UNK']
+Bfa1_Tem1GDP: ['UNK']
+Bfa1P4_Tem1GDP: ['UNK']
+Bfa1P5_Tem1GDP: ['UNK']
+
+Reason: The Tem1GTP and Tem1GDP species can be identified as guanosine triphosphate (GTP) and guanosine diphosphate (GDP) respectively, as they are common biochemical molecules involved in GTPase activity. The other species are protein complexes or modifications, and their names do not directly correspond to standardized chemical names, so they are marked as "UNK".

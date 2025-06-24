@@ -1,0 +1,9 @@
+Model: BIOMD0000000264
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:42:28
+
+Synonyms:
+EGFR_i: ['epidermal growth factor receptor', 'EGF receptor', 'ERBB1']
+EGF_EGFR_i: ['UNK']
+
+Reason: EGFR_i is likely the epidermal growth factor receptor due to the model name and description, while EGF_EGFR_i has no clear display name or reaction information to determine its standardized name.

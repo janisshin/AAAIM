@@ -1,0 +1,33 @@
+Model: BIOMD0000000177
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:40:00
+
+Synonyms:
+GLCi: ['glucose', 'D-glucose', 'blood sugar']
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+G6P: ['glucose-6-phosphate', 'D-glucose-6-phosphate', 'glucose 6-phosphate']
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+F6P: ['fructose-6-phosphate', 'D-fructose-6-phosphate', 'fructose 6-phosphate']
+F16bP: ['fructose-1,6-bisphosphate', 'D-fructose-1,6-bisphosphate', 'fructose 1,6-bisphosphate']
+F26bP: ['fructose-2,6-bisphosphate', 'D-fructose-2,6-bisphosphate', 'fructose 2,6-bisphosphate']
+AMP: ['adenosine monophosphate', 'AMP', "adenosine 5'-monophosphate"]
+DHAP: ['dihydroxyacetone phosphate', 'DHAP', 'glycerone phosphate']
+GAP: ['glyceraldehyde-3-phosphate', 'D-glyceraldehyde-3-phosphate', 'glyceraldehyde 3-phosphate']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD', 'nicotinamide adenine dinucleotide (oxidized)']
+BPG: ['1,3-bisphosphoglycerate', '1,3-bisphosphoglyceric acid', '1,3-bisphosphoglycerate']
+NADH: ['nicotinamide adenine dinucleotide (reduced)', 'NADH', 'reduced nicotinamide adenine dinucleotide']
+P3G: ['3-phosphoglycerate', '3-phosphoglyceric acid', '3-phosphoglycerate']
+P2G: ['2-phosphoglycerate', '2-phosphoglyceric acid', '2-phosphoglycerate']
+PEP: ['phosphoenolpyruvate', 'PEP', 'phosphoenolpyruvic acid']
+PYR: ['pyruvate', 'pyruvic acid', '2-oxopropanoic acid']
+PYRmito: ['pyruvate', 'pyruvic acid', '2-oxopropanoic acid']
+AcAld: ['acetaldehyde', 'ethanal', 'acetaldehyde']
+GLCo: ['glucose', 'D-glucose', 'blood sugar']
+CO2: ['carbon dioxide', 'CO2', 'carbonic acid']
+EtOH: ['ethanol', 'ethyl alcohol', 'ethanol']
+Glycerol: ['glycerol', 'glycerin', 'propane-1,2,3-triol']
+Trehalose: ['trehalose', 'mycose', 'α,α-trehalose']
+Succinate: ['succinic acid', 'succinate', 'butanedioic acid']
+CO2mito: ['carbon dioxide', 'CO2', 'carbonic acid']
+
+Reason: The species names were matched to their corresponding standardized names or common synonyms based on their display names and reaction equations in the model. For example, GLCi was matched to "glucose" due to its involvement in glycolysis, while F16bP was matched to "fructose-1,6-bisphosphate" based on its reaction with ATP and F6P. Species with unclear or missing display names, such as PYRmito, were matched to their likely corresponding species based on the reaction equations and the context of the model.

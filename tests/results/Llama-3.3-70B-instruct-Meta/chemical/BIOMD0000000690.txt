@@ -1,0 +1,18 @@
+Model: BIOMD0000000690
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 16:01:16
+
+Synonyms:
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+AMP: ['adenosine monophosphate', 'AMP', "adenosine 5'-monophosphate"]
+p_ABA: ['4-amino-4-deoxypterin', 'p-aminobenzoic acid', 'p-ABA']
+H2_Pteroate: ['pterotic acid', '4-[(2-amino-4-hydroxy-6-pteridinyl)methyl]benzoic acid', 'H2-Pteroate']
+L_Glutamate: ['glutamic acid', 'L-glutamate', 'L-glutamic acid']
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+DHF: ['7,8-dihydrofolate', 'DHF', '7,8-dihydrofolic acid']
+L_serine: ['serine', 'L-serine', 'L-ser']
+Glycine: ['glycine', 'aminoacetic acid', '2-aminoethanoic acid']
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'NADPH', 'reduced nicotinamide adenine dinucleotide phosphate']
+CH2_THF: ['5,10-methylenetetrahydrofolate', 'CH2-THF', '5,10-methylene-THF']
+
+Reason: The species names were matched to their corresponding standardized names or common synonyms based on their display names and the context of the folate pathway model. The reactions and notes provided in the model helped to confirm the identities of the species. For example, ATP, ADP, and AMP are all related to adenosine phosphates, while p_ABA is related to p-aminobenzoic acid. The folate-related species, such as DHF, CH2_THF, and H2_Pteroate, were matched to their corresponding folate derivatives. The amino acids, such as L_Glutamate, L_serine, and Glycine, were matched to their standard names. NADPH was matched to its full name, nicotinamide adenine dinucleotide phosphate.

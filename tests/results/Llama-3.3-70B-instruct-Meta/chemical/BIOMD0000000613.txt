@@ -1,0 +1,13 @@
+Model: BIOMD0000000613
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:58:36
+
+Synonyms:
+B: ['calcitriol', '1,25-dihydroxyvitamin D3', '1,25-dihydroxycholecalciferol']
+P: ['calcium', 'calcium ion', 'Ca2+']
+T: ['calcium', 'dietary calcium', 'ingested calcium']
+R: ['calcium', 'intestinal calcium', 'luminal calcium']
+Q: ['bone calcium', 'calcium in bone', 'bone mineral']
+Qbone: ['bone', 'bone tissue', 'osseous tissue']
+
+Reason: The annotations are based on the reaction names and the model description. B is likely calcitriol due to the "Calcitriol_production" and "Calcitriol_degradation" reactions. P is likely calcium due to the "Ca_flux_from_Bone" and "Ca_flux_to_Bone" reactions. T is likely dietary calcium due to the "Ca_oral_intake" and "Ca_absorption" reactions. R is likely intestinal calcium due to the "Intestinal_calcium_in" and "Intestinal_calcium_out" reactions. Q is likely bone calcium due to the "Ca_flux_from_Bone" and "Ca_flux_to_Bone" reactions. Qbone is likely bone tissue due to the "Ca_to_intracellular_transfer" and "Ca_to_extracellular_transfer" reactions, which suggest a distinction between bone tissue and the calcium it contains.

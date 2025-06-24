@@ -1,0 +1,10 @@
+Model: BIOMD0000000128
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:39:06
+
+Synonyms:
+c: ['calcium', 'calcium ion', 'Ca2+']
+cer: ['calcium', 'calcium ion', 'Ca2+']
+cAMP: ['cyclic AMP', "adenosine 3',5'-cyclic monophosphate", 'cAMP']
+
+Reason: c and cer are annotated as calcium concentrations, so they are likely referring to calcium ions. cAMP is a well-known molecule with a standardized name, and its display name matches this.

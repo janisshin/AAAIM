@@ -1,0 +1,11 @@
+Model: BIOMD0000000231
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:41:31
+
+Synonyms:
+ATP: ['adenosine triphosphate', "adenosine 5'-triphosphate", 'ATP']
+AMP: ['adenosine monophosphate', "adenosine 5'-monophosphate", 'AMP']
+ADP: ['adenosine diphosphate', "adenosine 5'-diphosphate", 'ADP']
+NADH: ['nicotinamide adenine dinucleotide + hydrogen', 'reduced nicotinamide adenine dinucleotide', 'NADH']
+
+Reason: The model is a kinetic study of a ternary cycle between adenine nucleotides, and the display names match the common names for these nucleotides, making the standardized names highly likely. NADH is also a well-known coenzyme, and its presence in the model suggests it is being used as a common synonym.

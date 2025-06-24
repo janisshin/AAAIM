@@ -1,0 +1,12 @@
+Model: BIOMD0000000355
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:43:52
+
+Synonyms:
+CaI: ['calcium ion', 'Ca2+', 'calcium(2+)']
+IP3: ['inositol 1,4,5-trisphosphate', 'D-myo-inositol 1,4,5-trisphosphate', 'IP3']
+mwd6b792d8_c983_42c1_b3bc_2494d6a3363e: ['calcium oxide', 'calcium(2+) ion', 'UNK']
+mw013a7c64_a9ec_483c_b3b8_ed658337ee95: ['calmodulin', 'calcium-modulated protein', 'CaM']
+CaS: ['calcium ion', 'Ca2+', 'calcium(2+)']
+
+Reason: CaI and CaS are likely calcium ions due to their involvement in calcium signaling and the reactions they participate in. IP3 is a well-known second messenger in calcium signaling. mwd6b792d8_c983_42c1_b3bc_2494d6a3363e is annotated as CaO, but this is unclear without further context, and calcium oxide is not typically involved in biological signaling. mw013a7c64_a9ec_483c_b3b8_ed658337ee95 is annotated as CaM, which is a common abbreviation for calmodulin, a calcium-binding protein.

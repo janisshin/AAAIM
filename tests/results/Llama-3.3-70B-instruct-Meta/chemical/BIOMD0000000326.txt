@@ -1,0 +1,28 @@
+Model: BIOMD0000000326
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:43:20
+
+Synonyms:
+Ca2_buff: ['calcium ion', 'calcium(2+)', 'Ca(2+)']
+Ca2_free: ['calcium ion', 'calcium(2+)', 'Ca(2+)']
+G_GTP: ["guanosine 5'-triphosphate", 'GTP', 'guanosine triphosphate']
+Ga_GDP: ['GDP', "guanosine 5'-diphosphate", 'guanosine diphosphate']
+Ga_GTP: ['GTP', "guanosine 5'-triphosphate", 'guanosine triphosphate']
+Ga_GTP_PDE_a_Ga_GTP: ['UNK']
+Ga_GTP_a_PDE_a_Ga_GTP: ['UNK']
+Ops_G_GTP: ['UNK']
+PDE_Ga_GTP: ['UNK']
+PDE_a_Ga_GTP: ['UNK']
+R0_G_GTP: ['UNK']
+R1_G_GTP: ['UNK']
+R2_G_GTP: ['UNK']
+R3_G_GTP: ['UNK']
+R4_G_GTP: ['UNK']
+R5_G_GTP: ['UNK']
+R6_G_GTP: ['UNK']
+RGS_Ga_GTP_a_PDE_a_Ga_GTP: ['UNK']
+RGS_PDE_a_Ga_GTP: ['UNK']
+Rec_wCa2_RK: ['UNK']
+cGMP: ['cyclic GMP', "guanosine 3',5'-cyclic monophosphate", 'cGMP']
+
+Reason: The species with standardized names are identified based on their display names and reaction equations. Ca2_buff and Ca2_free are likely to be calcium ions, G_GTP and Ga_GTP are likely to be guanosine 5'-triphosphate, and Ga_GDP is likely to be guanosine 5'-diphosphate. cGMP is a well-known molecule with a standardized name. The other species do not have sufficient information to determine their standardized names, so they are labeled as "UNK".

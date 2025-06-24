@@ -1,0 +1,18 @@
+Model: BIOMD0000000467
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:46:52
+
+Synonyms:
+s3: ['calcium ion', 'calcium(2+)', 'Ca2']
+s45: ['eNOS-CaM-Ca4 complex', 'endothelial nitric oxide synthase-calmodulin-calcium complex', 'eNOS-CaM complex']
+s47: ['calmodulin-Ca4 complex', 'calmodulin-calcium complex', 'CaM-Ca4']
+s48: ['calmodulin-Ca2 complex', 'calmodulin-calcium complex', 'CaM-Ca2']
+s50: ['eNOS-CaM-Ca2 complex', 'endothelial nitric oxide synthase-calmodulin-calcium complex', 'eNOS-CaM complex']
+s58: ['Hsp90-eNOS-CaM-Ca4 complex', 'heat shock protein 90-endothelial nitric oxide synthase-calmodulin-calcium complex', 'Hsp90-eNOS complex']
+s60: ['Hsp90-p-eNOS-CaM-Ca4 complex', 'heat shock protein 90-phosphorylated endothelial nitric oxide synthase-calmodulin-calcium complex', 'Hsp90-p-eNOS complex']
+s61: ['Hsp90-eNOS-CaM-Ca2 complex', 'heat shock protein 90-endothelial nitric oxide synthase-calmodulin-calcium complex', 'Hsp90-eNOS complex']
+s62: ['Hsp90-p-eNOS-CaM-Ca2 complex', 'heat shock protein 90-phosphorylated endothelial nitric oxide synthase-calmodulin-calcium complex', 'Hsp90-p-eNOS complex']
+s63: ['L-arginine', 'arginine', 'L-Arg']
+s64: ['nitric oxide', 'NO', 'nitrogen monoxide']
+
+Reason: s3 is likely calcium ion due to its display name "Ca_c". s45, s47, s48, s50, s58, s60, s61, and s62 are complexes involving calmodulin, endothelial nitric oxide synthase, and calcium, based on their display names and reaction involvement. s63 is L-arginine, a substrate for nitric oxide production. s64 is nitric oxide, a product of the reaction involving s63.

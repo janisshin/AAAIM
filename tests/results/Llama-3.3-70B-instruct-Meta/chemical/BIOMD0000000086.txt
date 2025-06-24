@@ -1,0 +1,18 @@
+Model: BIOMD0000000086
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:38:25
+
+Synonyms:
+species_3: ['threonine', 'T residue', 'threonine residue']
+species_5: ['GTP', 'guanosine triphosphate', 'GTP molecule']
+species_6: ['GDP', 'guanosine diphosphate', 'GDP molecule']
+species_7: ['inorganic phosphate', 'phosphate ion', 'Pi']
+species_8: ['GAP', 'GTPase-activating protein', 'GAP protein']
+species_10: ['active GTP-bound state', 'GTP-bound Ras', 'Ras-GTP']
+species_11: ['GTP-bound state', 'G*AT complex', 'GTP-AT complex']
+species_12: ['GDP-bound state', 'GAD complex', 'GDP-AD complex']
+species_13: ['arginine-glycine-aspartate', 'RGD motif', 'RGD sequence']
+species_15: ['active GTP-bound complex', 'RG*AT complex', 'Ras-GTP-AT complex']
+species_16: ['arginine-glycine-aspartic acid', 'RGAD motif', 'RGAD sequence']
+
+Reason: The annotations are based on the display names and the context of the GTPase cycle model, where species_3 is likely threonine due to its single-letter representation, species_5 and species_6 are GTP and GDP respectively due to their roles in the GTPase cycle, species_7 is inorganic phosphate due to its representation as "Pi", and the other species are annotated based on their display names and the components of the GTPase cycle module.

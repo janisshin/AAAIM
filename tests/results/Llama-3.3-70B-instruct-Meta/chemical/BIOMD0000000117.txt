@@ -1,0 +1,9 @@
+Model: BIOMD0000000117
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:39:01
+
+Synonyms:
+z: ['calcium', 'calcium ion', 'Ca2+']
+y: ['calcium', 'calcium ion', 'Ca2+']
+
+Reason: Both z and y are related to calcium in the model, with z being "Ca in the cytosol" and y being "Ca in the InsP3-insensitive pool", indicating they represent different pools of calcium ions in the cell.

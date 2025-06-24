@@ -1,0 +1,15 @@
+Model: BIOMD0000000327
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:43:22
+
+Synonyms:
+bb: ['bicarbonate', 'hydrogen carbonate', 'HCO3-']
+cb: ['chloride', 'chloride ion', 'Cl-']
+nb: ['sodium', 'sodium ion', 'Na+']
+bi: ['bicarbonate', 'hydrogen carbonate', 'HCO3-']
+ci: ['chloride', 'chloride ion', 'Cl-']
+ni: ['sodium', 'sodium ion', 'Na+']
+bl: ['bicarbonate', 'hydrogen carbonate', 'HCO3-']
+cl: ['chloride', 'chloride ion', 'Cl-']
+
+Reason: The display names provided in the model directly map to the standardized names, with bb, bi, and bl corresponding to bicarbonate, cb, ci, and cl corresponding to chloride, and nb and ni corresponding to sodium.

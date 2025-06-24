@@ -1,0 +1,13 @@
+Model: BIOMD0000000338
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:43:30
+
+Synonyms:
+ATIII_Heparin: ['antithrombin III-heparin complex', 'antithrombin-heparin complex', 'ATIII-heparin']
+Xa_ATIII_Heparin: ['factor Xa-antithrombin III-heparin complex', 'Xa-ATIII-heparin complex', 'factor Xa-heparin-antithrombin complex']
+C_warf: ['UNK']
+IIa_ATIII_Heparin: ['factor IIa-antithrombin III-heparin complex', 'thrombin-antithrombin III-heparin complex', 'IIa-ATIII-heparin complex']
+A_warf: ['UNK']
+IXa_ATIII_Heparin: ['factor IXa-antithrombin III-heparin complex', 'IXa-ATIII-heparin complex', 'factor IXa-heparin-antithrombin complex']
+
+Reason: The species with "_warf" suffix (C_warf, A_warf) are likely related to warfarin, but without more context, their exact chemical identity is unclear, hence "UNK". The other species are complexes of coagulation factors (IIa, Xa, IXa) with antithrombin III and heparin, which are well-known components of the blood coagulation cascade.

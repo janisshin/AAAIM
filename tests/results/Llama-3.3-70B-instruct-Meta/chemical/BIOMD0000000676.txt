@@ -1,0 +1,21 @@
+Model: BIOMD0000000676
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 16:01:08
+
+Synonyms:
+Arg: ['arginine', 'L-arginine', 'arginine amino acid']
+Fe3__enos: ['ferric ion', 'iron(3+) ion', 'Fe3+']
+Fe3__Arg: ['arginine-ferric complex', 'Fe3+-arginine', 'UNK']
+Fe2: ['ferrous ion', 'iron(2+) ion', 'Fe2+']
+Fe2__Arg: ['arginine-ferrous complex', 'Fe2+-arginine', 'UNK']
+Fe3__NO: ['nitric oxide-ferric complex', 'Fe3+-NO', 'UNK']
+NO: ['nitric oxide', 'nitrogen monoxide', 'NO']
+Fe2__NO: ['nitric oxide-ferrous complex', 'Fe2+-NO', 'UNK']
+Fe3__NOHA: ['UNK', 'UNK', 'UNK']
+Fe2__NOHA: ['UNK', 'UNK', 'UNK']
+O2: ['oxygen', 'dioxygen', 'O2 molecule']
+Fe3__O2__Arg: ['arginine-ferric-oxygen complex', 'Fe3+-O2-arginine', 'UNK']
+Fe3__O2__NOHA: ['UNK', 'UNK', 'UNK']
+Citrulline: ['citrulline', 'L-citrulline', 'citrulline amino acid']
+
+Reason: The species names are annotated based on their display names and the context of the model, which is related to nitric oxide release from endothelial cells. The annotations for Fe3__Arg, Fe2__Arg, Fe3__NO, Fe2__NO, Fe3__NOHA, Fe2__NOHA, Fe3__O2__Arg, and Fe3__O2__NOHA are uncertain due to the lack of clear information about their chemical structures, and are therefore marked as "UNK" or given possible complex names. The annotations for Arg, Fe3__enos, Fe2, NO, O2, and Citrulline are more confident due to their clear display names and common usage in biochemistry.

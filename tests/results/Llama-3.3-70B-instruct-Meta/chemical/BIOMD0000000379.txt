@@ -1,0 +1,12 @@
+Model: BIOMD0000000379
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:44:03
+
+Synonyms:
+G_p: ['glucose', 'blood glucose', 'plasma glucose']
+G_t: ['glucose', 'tissue glucose', 'interstitial glucose']
+Q_sto1: ['glucose', 'stomach glucose', 'ingested glucose']
+Q_gut: ['glucose', 'gut glucose', 'intestinal glucose']
+Q_sto2: ['glucose', 'stomach glucose', 'ingested glucose']
+
+Reason: The model is a simulation of the glucose-insulin system, and the species names suggest glucose concentrations in different compartments (plasma, tissue, stomach, gut). The reactions also support this interpretation, with terms like "EGP" (endogenous glucose production) and "Ra" (rate of appearance), which are common in glucose metabolism models. The lack of specific display names for Q_sto1, Q_gut, and Q_sto2 makes it difficult to assign more specific names, but based on the context, they are likely related to glucose in different stages of digestion or absorption.

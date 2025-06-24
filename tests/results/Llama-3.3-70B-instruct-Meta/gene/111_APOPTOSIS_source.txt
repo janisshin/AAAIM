@@ -1,0 +1,40 @@
+Model: 111_APOPTOSIS_source
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-18 19:49:30
+
+Synonyms:
+csa11: ['BCL2', 'MCL1', 'BCL2L1']
+csa2: ['FASLG', 'FAS', 'TNFRSF6']
+csa1: ['TNF', 'TNFRSF1A', 'TNFSF1A']
+csa3: ['BAX', 'BBC3', 'BCL2L11']
+csa6: ['TRADD', 'FADD', 'TRAF2']
+csa5: ['APAF1', 'CYCS', 'CASP9']
+sa29: ['AKT1', 'V-akt murine thymoma viral oncogene homolog 1', 'RAC']
+sa10: ['FADD', 'Fas-associated via death domain', 'GIG3']
+sa79: ['BAD', 'Bcl-2-associated death promoter', 'BBC6']
+sa31: ['BAX', 'Bcl-2-associated X protein', 'BAX1']
+sa50: ['MAPK14', 'Mitogen-activated protein kinase 14', 'CSBP']
+sa25: ['CYCS', 'Cytochrome c', 'CYC']
+sa40: ['CASP7', 'CASPASE-7', 'MCH3']
+sa19: ['CASP9', 'Caspase-9', 'MCH6']
+sa17: ['CASP3', 'Caspase-3', 'CPP32']
+sa14: ['CASP8', 'Caspase-8', 'MCH5']
+sa41: ['Apoptosis', 'Not a gene', 'is a process']
+sa89: ['BID', 'BH3-interacting domain death agonist', 'TP53BP']
+sa2: ['FASLG', 'FASL', 'TNFSF6']
+sa44: ['TRADD', 'TNFRSF1A-associated via death domain', 'Hs.89792']
+sa47: ['CASP9', 'CASPASE-9', 'MCH6']
+sa27: ['APAF1', 'Apoptotic protease activating factor 1', 'KIAA0413']
+sa77: ['ORF9b', 'SARS-CoV-2 ORF9b', 'Uncharacterized protein']
+sa74: ['N', 'Nucleocapsid', 'SARS-CoV-2 N']
+sa3: ['TNF', 'Tumor necrosis factor', 'TNFA']
+sa72: ['ORF3b', 'SARS-CoV-2 ORF3b', 'Uncharacterized protein']
+sa43: ['ORF7a', 'SARS-CoV-2 ORF7a', 'Uncharacterized protein']
+sa48: ['ORF3a', 'SARS-CoV-2 ORF3a', 'Uncharacterized protein']
+sa75: ['ORF6', 'SARS-CoV-2 ORF6', 'Uncharacterized protein']
+sa76: ['S', 'Spike', 'SARS-CoV-2 S']
+sa42: ['M', 'Membrane', 'SARS-CoV-2 M']
+sa73: ['ORF8a', 'SARS-CoV-2 ORF8a', 'Uncharacterized protein']
+sa69: ['E', 'Envelope', 'SARS-CoV-2 E']
+
+Reason: The given model appears to be related to apoptosis and the SARS-CoV-2 virus. Many of the genes are involved in the apoptotic pathway, such as CASP3, CASP8, and CASP9, while others are related to the SARS-CoV-2 virus, such as ORF3a, ORF6, and ORF9b. The csa and sa genes are likely complexes or proteins involved in these pathways. The standardized names were determined based on the display names and the context of the model.

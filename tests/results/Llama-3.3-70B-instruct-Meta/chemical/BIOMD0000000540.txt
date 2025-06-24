@@ -1,0 +1,16 @@
+Model: BIOMD0000000540
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:56:00
+
+Synonyms:
+s3: ['fructose-6-phosphate', 'D-fructose-6-phosphate', 'F6P']
+s4: ['fructose-1,6-bisphosphate', 'D-fructose-1,6-bisphosphate', 'F1,6BP']
+s5: ['phosphoenolpyruvate', 'PEP', '2-phosphoenolpyruvate']
+s6: ['isocitrate', 'isocitric acid', 'three-Ds-isocitrate']
+s7: ['2-oxoglutarate', 'alpha-ketoglutarate', '2-oxoglutaric acid']
+s8: ['malate', 'malic acid', 'L-malate']
+s9: ['fructose-2,6-bisphosphate', 'D-fructose-2,6-bisphosphate', 'F2,6BP']
+s10: ['citrate', 'citric acid', 'citrate(4−)']
+s22: ['fructose-6-phosphate', 'D-fructose-6-phosphate', 'F6P']
+
+Reason: The display names provided in the model directly correspond to common chemical names or synonyms, allowing for straightforward annotation. s3, s4, s5, s6, s7, s8, s9, s10 have clear display names that match known chemical entities. s22 is annotated as "F6P_proxy", but based on the reaction with s4 (F1,6BP), it is likely representing fructose-6-phosphate, similar to s3.

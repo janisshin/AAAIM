@@ -1,0 +1,11 @@
+Model: BIOMD0000000986
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 16:02:52
+
+Synonyms:
+Pyranine_single_compartment_model: ['8-hydroxypyrene-1,3,6-trisulfonic acid', 'Pyranine', 'HPTS']
+Pyranine_three_compartment_model_compartment_1: ['8-hydroxypyrene-1,3,6-trisulfonic acid', 'Pyranine', 'HPTS']
+Pyranine_three_compartment_model_compartment_2: ['8-hydroxypyrene-1,3,6-trisulfonic acid', 'Pyranine', 'HPTS']
+Pyranine_three_compartment_model_compartment_3: ['8-hydroxypyrene-1,3,6-trisulfonic acid', 'Pyranine', 'HPTS']
+
+Reason: All species are likely to be Pyranine (8-hydroxypyrene-1,3,6-trisulfonic acid), a fluorescent dye used in biological studies, as the model is about fluid-phase endocytosis kinetics and Pyranine is used as a marker in similar experiments, although the display names do not provide direct information, the context of the model and the reactions suggest that all compartments are related to Pyranine.

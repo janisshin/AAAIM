@@ -1,0 +1,11 @@
+Model: BIOMD0000000254
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:42:13
+
+Synonyms:
+G1: ['glucose', 'D-glucose', 'blood sugar']
+T1: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+G2: ['glucose', 'D-glucose', 'blood sugar']
+T2: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+
+Reason: The model is a glycolytic oscillation model, and the display names 'Glucose_1' and 'Glucose_2' suggest that G1 and G2 are glucose, while 'ATP_1' and 'ATP_2' indicate that T1 and T2 are ATP, with the numbers likely referring to different cellular compartments or phases.

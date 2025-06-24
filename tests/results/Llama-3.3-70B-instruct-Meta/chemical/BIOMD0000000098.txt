@@ -1,0 +1,9 @@
+Model: BIOMD0000000098
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:38:44
+
+Synonyms:
+Z: ['calcium(2+)', 'calcium ion', 'Ca2+']
+Y: ['UNK']
+
+Reason: The model is a calcium spike model and Z is produced and consumed in multiple reactions, suggesting it is a key species, likely calcium. Y is unknown because it has no display name and its reactions do not provide enough information to determine its identity.

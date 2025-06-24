@@ -1,0 +1,13 @@
+Model: BIOMD0000000340
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:43:35
+
+Synonyms:
+ATIII_Heparin: ['antithrombin III', 'antithrombin', 'heparin-antithrombin complex']
+Xa_ATIII_Heparin: ['factor Xa-antithrombin complex', 'Xa-antithrombin III', 'factor Xa-inhibitor complex']
+C_warf: ['UNK']
+IIa_ATIII_Heparin: ['thrombin-antithrombin complex', 'factor IIa-antithrombin complex', 'thrombin-inhibitor complex']
+IXa_ATIII_Heparin: ['factor IXa-antithrombin complex', 'factor IXa-inhibitor complex', 'IXa-antithrombin III']
+A_warf: ['UNK']
+
+Reason: ATIII_Heparin, Xa_ATIII_Heparin, IIa_ATIII_Heparin, and IXa_ATIII_Heparin are annotated based on their display names and reaction equations, which suggest they are complexes of antithrombin III with heparin and various coagulation factors. C_warf and A_warf are unknown as their display names do not provide clear information about their chemical identities.

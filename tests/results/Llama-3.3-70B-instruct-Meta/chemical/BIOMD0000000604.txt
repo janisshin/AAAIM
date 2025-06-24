@@ -1,0 +1,20 @@
+Model: BIOMD0000000604
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:58:16
+
+Synonyms:
+glycerol_i: ['glycerol', 'glycerin', 'propane-1,2,3-triol']
+glucose_i: ['glucose', 'D-glucose', 'blood sugar']
+G6P: ['glucose-6-phosphate', 'D-glucose-6-phosphate', 'G6P']
+trehalose: ['trehalose', 'mycose', 'trehalose dihydrate']
+F16DP: ['fructose-1,6-bisphosphate', 'D-fructose-1,6-bisphosphate', 'F1,6BP']
+pyruvate: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+acetate_i: ['acetic acid', 'acetate', 'ethanoic acid']
+ethanol_i: ['ethanol', 'ethyl alcohol', 'alcohol']
+glycerol_e: ['glycerol', 'glycerin', 'propane-1,2,3-triol']
+glucose_e: ['glucose', 'D-glucose', 'blood sugar']
+acetate_e: ['acetic acid', 'acetate', 'ethanoic acid']
+ethanol_e: ['ethanol', 'ethyl alcohol', 'alcohol']
+trehalose_e: ['trehalose', 'mycose', 'trehalose dihydrate']
+
+Reason: The species names were matched to their corresponding standardized names based on the display names and reaction equations provided in the model. The reactions suggest a glycolytic pathway, where glucose is converted to pyruvate, and then to acetate, ethanol, and other products. The species with "_i" and "_e" suffixes are likely intracellular and extracellular forms of the same compound, respectively. The names were chosen based on common biochemical nomenclature and synonyms.

@@ -1,0 +1,11 @@
+Model: BIOMD0000000174
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:39:46
+
+Synonyms:
+r5: ['GDP-bound Ras-related protein 5', 'Rab5 GDP', 'Ras-related protein 5']
+R5: ['GTP-bound Ras-related protein 5', 'Rab5 GTP', 'Ras-related protein 5 GTP']
+r7: ['GDP-bound Ras-related protein 7', 'Rab7 GDP', 'Ras-related protein 7']
+R7: ['GTP-bound Ras-related protein 7', 'Rab7 GTP', 'Ras-related protein 7 GTP']
+
+Reason: The display names provided in the model directly map to the standardized names, with 'r5' and 'R5' corresponding to Rab5 in its GDP and GTP bound states, and 'r7' and 'R7' corresponding to Rab7 in its GDP and GTP bound states, based on the provided display names and the context of the model focusing on Rab5 and Rab7 transition.

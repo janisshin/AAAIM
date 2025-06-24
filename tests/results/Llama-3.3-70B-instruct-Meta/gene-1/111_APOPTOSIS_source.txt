@@ -1,0 +1,40 @@
+Model: 111_APOPTOSIS_source
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-17 12:59:41
+
+Synonyms:
+csa11: ['BCL2', 'MCL1', 'BCL2L1']
+csa2: ['FAS', 'FASLG', 'TNFRSF6']
+csa1: ['TNF', 'TNFRSF1A', 'TNFSF2']
+csa3: ['BAD', 'BBC3', 'BCL2L11']
+csa6: ['TRADD', 'FADD', 'TRAF2']
+csa5: ['APAF1', 'CASP9', 'CYCS']
+sa29: ['AKT1', 'AKT2', 'AKT3']
+sa27: ['APAF1', 'CASP9', 'CYC1']
+sa48: ['ORF3A', 'ORF3B', 'ACE2']
+sa40: ['CASP7', 'CASP3', 'CASP8']
+sa76: ['SARS-CoV-2', 'S', 'SPIKE']
+sa74: ['N', 'NUCLEOCAPSID', 'NPRO']
+sa77: ['ORF9B', 'ORF9', 'NIRF']
+sa41: ['Apoptosis', 'Cell_death', 'Phenotype']
+sa69: ['E', 'ENVELOPE', 'PROTEIN']
+sa72: ['ORF3B', 'ORF3A', 'PROTEIN3B']
+sa14: ['CASP8', 'CASP3', 'FADD']
+sa10: ['FADD', 'FAS', 'TNFRSF6']
+sa3: ['TNF', 'TNFRSF1A', 'TNFSF2']
+sa50: ['MAPK14', 'MAPK8', 'MAPK9']
+sa31: ['BAX', 'BCL2', 'BCL2L1']
+sa44: ['TRADD', 'FADD', 'TRAF2']
+sa75: ['ORF6', 'ORF3A', 'PROTEIN6']
+sa19: ['CASP9', 'CASP3', 'CASP8']
+sa47: ['CASP9', 'CASP3', 'CASP8']
+sa73: ['ORF8A', 'ORF3A', 'PROTEIN8A']
+sa79: ['BAD', 'BBC3', 'BCL2L11']
+sa25: ['CYCS', 'CYC1', 'CYCLIN_C']
+sa43: ['ORF7A', 'ORF3A', 'PROTEIN7A']
+sa2: ['FASLG', 'FAS', 'TNFRSF6']
+sa89: ['BID', 'BH3', 'BCL2L11']
+sa17: ['CASP3', 'CASP8', 'CASP9']
+sa42: ['M', 'MATRIX', 'PROTEIN']
+
+Reason: The given model appears to be related to apoptosis and cell death, with many genes involved in the NF-κB signaling pathway, TNF signaling pathway, and intrinsic and extrinsic apoptosis pathways. The ORF genes (e.g., ORF3A, ORF6, ORF7A) are likely related to SARS-CoV-2. The provided display names and Boolean transitions were used to infer the standardized names for each gene.

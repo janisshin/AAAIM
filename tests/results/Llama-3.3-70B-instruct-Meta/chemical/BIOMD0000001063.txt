@@ -1,0 +1,7 @@
+Model: BIOMD0000001063
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 16:07:53
+
+Synonyms:
+
+Reason: 

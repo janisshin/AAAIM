@@ -9,7 +9,7 @@ import os
 import re
 import lzma
 import pickle
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 from pathlib import Path
 from dataclasses import dataclass
 import logging
@@ -186,7 +186,7 @@ def remove_symbols(text: str) -> str:
     """
     return re.sub(r'[^a-zA-Z0-9]', '', text)
 
-def get_species_recommendations_direct(species_ids: List[str], synonyms_dict, database: str = "chebi", tax_id: str = None) -> List[Recommendation]:
+def get_species_recommendations_direct(species_ids: List[str], synonyms_dict, database: str = "chebi", tax_id: Any = None) -> List[Recommendation]:
     """
     Find recommendations by directly matching against database synonyms.
     
@@ -194,7 +194,7 @@ def get_species_recommendations_direct(species_ids: List[str], synonyms_dict, da
     - species_ids (list): List of species IDs to evaluate.
     - synonyms_dict (dict): Mapping of species IDs to synonyms.
     - database (str): Database to search ("chebi", "ncbigene")
-    - tax_id (str): For ncbigene database, the organism's tax_id for organism-specific lookup
+    - tax_id (str/list): For ncbigene database, the organism's tax_id for organism-specific lookup. If list, search all tax_ids for each species.
     
     Returns:
     - list: List of Recommendation objects with candidates and names.
@@ -275,20 +275,16 @@ def _get_chebi_recommendations_direct(species_ids: List[str], synonyms_dict) -> 
     
     return recommendations
 
-def _get_ncbigene_recommendations_direct(species_ids: List[str], synonyms_dict, tax_id: str = None) -> List[Recommendation]:
+def _get_ncbigene_recommendations_direct(species_ids: List[str], synonyms_dict, tax_id: Any = None) -> List[Recommendation]:
     """
     Find NCBI gene recommendations by directly matching against NCBI gene synonyms.
-    
     Args:
         species_ids: List of species IDs to evaluate
         synonyms_dict: Mapping of species IDs to synonyms
-        tax_id: Organism's tax_id for organism-specific gene lookup
+        tax_id: Organism's tax_id for each species (str, list). If list, search all tax_ids for each species.
     """
-    names_dict = load_ncbigene_names_dict(tax_id=tax_id)
     label_dict = load_ncbigene_label_dict()
-    
     recommendations = []
-    
     for spec_id in species_ids:
         # Get synonyms for this species ID
         if isinstance(synonyms_dict, dict):
@@ -298,7 +294,6 @@ def _get_ncbigene_recommendations_direct(species_ids: List[str], synonyms_dict, 
             synonyms = synonyms_dict[0].get(spec_id, [spec_id])
         else:
             synonyms = [spec_id]
-        
         # Skip if only 'UNK' synonym
         if synonyms == ['UNK'] or (len(synonyms) == 1 and synonyms[0] == 'UNK'):
             # Create empty recommendation for UNK
@@ -311,28 +306,33 @@ def _get_ncbigene_recommendations_direct(species_ids: List[str], synonyms_dict, 
             )
             recommendations.append(recommendation)
             continue
-        
         all_candidates = []
         all_candidate_names = []
-        hit_count = {}  # Dictionary to track how many times each candidate appears
-        
-        # Query for each synonym
+        hit_count = {}
+        # Determine which tax_ids to search
+        if isinstance(tax_id, list):
+            tax_ids_to_search = tax_id
+        else:
+            tax_ids_to_search = [tax_id]
+        # Query for each synonym and each tax_id
         for synonym in synonyms:
             norm_synonym = remove_symbols(synonym.lower())
-            # Check all entries in names dict for matches
-            for ref_name, gene_ids in names_dict.items():
-                if norm_synonym == ref_name.lower():
-                    for gene_id in gene_ids:
-                        gene_name = label_dict.get(gene_id, gene_id)
-                        
-                        if gene_id not in all_candidates:
-                            all_candidates.append(gene_id)
-                            all_candidate_names.append(gene_name)
-                            hit_count[gene_id] = 1
-                        else:
-                            hit_count[gene_id] += 1
-        
-        # Calculate normalized match scores (hit_count / number_of_synonyms)
+            for tid in tax_ids_to_search:
+                try:
+                    names_dict = load_ncbigene_names_dict(tax_id=tid)
+                except Exception:
+                    logger.warning(f"Error loading NCBI gene names for tax_id {tid}: {e}")
+                    continue
+                for ref_name, gene_ids in names_dict.items():
+                    if norm_synonym == ref_name.lower():
+                        for gene_id in gene_ids:
+                            gene_name = label_dict.get(gene_id, gene_id)
+                            if gene_id not in all_candidates:
+                                all_candidates.append(gene_id)
+                                all_candidate_names.append(gene_name)
+                                hit_count[gene_id] = 1
+                            else:
+                                hit_count[gene_id] += 1
         num_synonyms = len(synonyms)
         match_score_list = [hit_count.get(candidate, 0) / num_synonyms for candidate in all_candidates]
         
@@ -345,7 +345,6 @@ def _get_ncbigene_recommendations_direct(species_ids: List[str], synonyms_dict, 
             match_score=match_score_list
         )
         recommendations.append(recommendation)
-    
     return recommendations
 
 def get_embedding_function(model_type: str = "default"):
@@ -452,7 +451,7 @@ def get_species_recommendations_rag(
     model_type: str = "default",
     persist_directory: str = "chroma_storage",
     collection_name: str = None,
-    top_k: int = 5,
+    top_k: int = 3,
     database: str = "chebi",
     tax_id: str = None
 ) -> List[Recommendation]:
@@ -462,60 +461,113 @@ def get_species_recommendations_rag(
     Parameters:
     - species_ids (list): List of species IDs to evaluate.
     - synonyms_dict (dict): Mapping of species IDs to synonyms.
-    - collection_name (str): ChromaDB collection name. If None, will be set to "chebi_default_numonly" for chebi and "ncbigene_default" for ncbigene.
+    - collection_name (str): ChromaDB collection name. If None, will be set to default collection name.
     - model_type (str): Type of embedding model ("default", "openai").
     - persist_directory (str): ChromaDB storage directory.
     - top_k (int): Number of top candidates to retrieve per species.
     - database (str): Database to search ("chebi", "ncbigene").
-    - tax_id (str): For ncbigene database, the organism's tax_id for organism-specific lookup.
+    - tax_id (str/list): For ncbigene database, the organism's tax_id for organism-specific lookup. Use 9606 by default. If list, search all tax_ids for each species.
     
     Returns:
     - list: List of Recommendation objects with candidates and similarity scores.
     """
     persist_directory = os.path.join(get_data_dir(), persist_directory)
-    
-    # For organism-specific gene searches, modify collection name to include tax_id
-    if database == "ncbigene" and tax_id:
+    recommendations = []
+    # Helper to get collection for a given tax_id
+    def get_collection_for_taxid(tid):
+        cname = f"ncbigene_default_tax{tid}"
+        client, collection = get_chromadb_client(persist_directory, cname, model_type)
+        return collection
+    # If database is ncbigene and tax_id is a list, aggregate results
+    if database == "ncbigene" and isinstance(tax_id, list):
+        for spec_id in species_ids:
+            if isinstance(synonyms_dict, dict):
+                synonyms = synonyms_dict.get(spec_id, [spec_id])
+            elif isinstance(synonyms_dict, tuple) and len(synonyms_dict) == 2:
+                synonyms = synonyms_dict[0].get(spec_id, [spec_id])
+            else:
+                synonyms = [spec_id]
+            if synonyms == ['UNK'] or (len(synonyms) == 1 and synonyms[0] == 'UNK'):
+                recommendation = Recommendation(
+                    id=spec_id,
+                    synonyms=synonyms,
+                    candidates=[],
+                    candidate_names=[],
+                    match_score=[]
+                )
+                recommendations.append(recommendation)
+                continue
+            agg_candidates = {}
+            agg_names = {}
+            for tid in tax_id:
+                try:
+                    collection = get_collection_for_taxid(tid)
+                except Exception as e:
+                    logger.warning(f"Could not access NCBI gene RAG collection for tax_id {tid}: {e}")
+                    continue
+                for synonym in synonyms:
+                    try:
+                        results = collection.query(
+                            query_texts=[synonym],
+                            n_results=top_k,
+                            include=["metadatas", "distances"]
+                        )
+                        for metadata, distance in zip(results['metadatas'][0], results['distances'][0]):
+                            db_id = metadata.get('ncbigene_id', 'Unknown')
+                            db_name = metadata.get('name', 'Unknown')
+                            similarity_score = round(1 - distance, 3)
+                            if db_id not in agg_candidates or similarity_score > agg_candidates[db_id]:
+                                agg_candidates[db_id] = similarity_score
+                                agg_names[db_id] = db_name
+                    except Exception as e:
+                        logger.warning(f"Error querying synonym '{synonym}' for species '{spec_id}' in tax_id {tid}: {e}")
+                        continue
+            # Sort and select top_k
+            sorted_candidates = sorted(agg_candidates.items(), key=lambda x: x[1], reverse=True)[:top_k]
+            all_candidates = [db_id for db_id, _ in sorted_candidates]
+            all_candidate_names = [agg_names[db_id] for db_id, _ in sorted_candidates]
+            match_score_list = [agg_candidates[db_id] for db_id, _ in sorted_candidates]
+            recommendation = Recommendation(
+                id=spec_id,
+                synonyms=synonyms,
+                candidates=all_candidates,
+                candidate_names=all_candidate_names,
+                match_score=match_score_list
+            )
+            recommendations.append(recommendation)
+        return recommendations
+    # If database is ncbigene and tax_id is a str or None (single organism)
+    if database == "ncbigene":
+        if not tax_id:
+            logger.warning("No tax_id provided for ncbigene RAG search. Using default tax_id 9606.")
+            tax_id = 9606
         if collection_name is None:
-            collection_name = "ncbigene_default"
-            collection_name = f"{collection_name}_tax{tax_id}"
-
-        # If organism-specific collection doesn't exist, fall back to original
+            collection_name = f"ncbigene_default_tax{tax_id}"
         try:
             client, collection = get_chromadb_client(persist_directory, collection_name, model_type)
-        except:
-            logger.warning(f"Organism-specific collection {collection_name} not found, falling back to {original_collection_name}")
-            collection_name = original_collection_name
-            client, collection = get_chromadb_client(persist_directory, collection_name, model_type)
+        except Exception as e:
+            logger.error(f"Could not access NCBI gene RAG collection '{collection_name}': {e}")
+            raise
     elif database == "chebi":
         if collection_name is None:
             collection_name = "chebi_default_numonly"
-
         try:
             client, collection = get_chromadb_client(persist_directory, collection_name, model_type)
-        except:
-            logger.warning(f"Organism-specific collection {collection_name} not found, falling back to {original_collection_name}")
-            collection_name = original_collection_name
-            client, collection = get_chromadb_client(persist_directory, collection_name, model_type)
+        except Exception as e:
+            logger.error(f"Could not access ChEBI RAG collection '{collection_name}': {e}")
+            raise
     else:
         logger.error(f"Database {database} not supported for RAG search")
         return []
-    
-    recommendations = []
-    
+    # Standard single-collection logic
     for spec_id in species_ids:
-        # Get synonyms for this species ID
         if isinstance(synonyms_dict, dict):
             synonyms = synonyms_dict.get(spec_id, [spec_id])
         elif isinstance(synonyms_dict, tuple) and len(synonyms_dict) == 2:
-            # If it's a tuple with two items (dict and reason)
             synonyms = synonyms_dict[0].get(spec_id, [spec_id])
         else:
             synonyms = [spec_id]
-        
-        # Skip if only 'UNK' synonym
         if synonyms == ['UNK'] or (len(synonyms) == 1 and synonyms[0] == 'UNK'):
-            # Create empty recommendation for UNK
             recommendation = Recommendation(
                 id=spec_id,
                 synonyms=synonyms,
@@ -525,22 +577,16 @@ def get_species_recommendations_rag(
             )
             recommendations.append(recommendation)
             continue
-        
         all_candidates = []
         all_candidate_names = []
-        candidate_scores = {}  # Dictionary to track best score for each candidate
-        
-        # Query embeddings for each synonym
+        candidate_scores = {}
         for synonym in synonyms:
             try:
-                # Query the collection
                 results = collection.query(
                     query_texts=[synonym],
                     n_results=top_k,
                     include=["metadatas", "distances"]
                 )
-                
-                # Process results based on database type
                 for metadata, distance in zip(results['metadatas'][0], results['distances'][0]):
                     if database == "chebi":
                         db_id = metadata.get('chebi_id', 'Unknown')
@@ -548,33 +594,24 @@ def get_species_recommendations_rag(
                         db_id = metadata.get('ncbigene_id', 'Unknown')
                     else:
                         db_id = metadata.get('id', 'Unknown')
-                    
                     db_name = metadata.get('name', 'Unknown')
-                    similarity_score = round(1 - distance, 3)  # Convert distance to similarity and only keep 3 decimal places
-                    
+                    similarity_score = round(1 - distance, 3)
                     if db_id not in candidate_scores:
                         all_candidates.append(db_id)
                         all_candidate_names.append(db_name)
                         candidate_scores[db_id] = similarity_score
                     else:
-                        # Keep the best (highest) similarity score for this candidate
                         candidate_scores[db_id] = max(candidate_scores[db_id], similarity_score)
-            
-                # Only keep the top_k candidate for each species
+                # Only keep the top_k candidates
                 if len(candidate_scores) > top_k:
                     sorted_candidates = sorted(candidate_scores.items(), key=lambda x: x[1], reverse=True)[:top_k]
                     all_candidates = [db_id for db_id, _ in sorted_candidates]
                     all_candidate_names = [all_candidate_names[all_candidates.index(db_id)] for db_id, _ in sorted_candidates if db_id in all_candidates]
                     candidate_scores = dict(sorted_candidates)
-
             except Exception as e:
                 logger.warning(f"Error querying synonym '{synonym}' for species '{spec_id}': {e}")
                 continue
-        
-        # Convert candidate_scores dict to list in the same order as candidates
         match_score_list = [candidate_scores.get(candidate, 0.0) for candidate in all_candidates]
-        
-        # Create recommendation object
         recommendation = Recommendation(
             id=spec_id,
             synonyms=synonyms,
@@ -583,7 +620,6 @@ def get_species_recommendations_rag(
             match_score=match_score_list
         )
         recommendations.append(recommendation)
-    
     return recommendations
 
 def search_database(entity_name: str, 

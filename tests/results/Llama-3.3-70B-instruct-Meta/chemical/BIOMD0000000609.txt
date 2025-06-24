@@ -1,0 +1,9 @@
+Model: BIOMD0000000609
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:58:28
+
+Synonyms:
+Sulphate__PAPS: ["3'-phosphoadenosine-5'-phosphosulfate", 'PAPS', 'phosphoadenosine phosphosulfate']
+GSH: ['glutathione', 'reduced glutathione', 'GSH']
+
+Reason: Sulphate__PAPS is likely 3'-phosphoadenosine-5'-phosphosulfate, a common biochemical donor of sulfate groups, given its involvement in the reaction with Paracetamol_APAP. GSH is likely glutathione, a well-known antioxidant, given its reaction with NAPQI, a toxic metabolite of acetaminophen.

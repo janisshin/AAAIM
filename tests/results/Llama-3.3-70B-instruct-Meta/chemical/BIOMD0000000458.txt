@@ -1,0 +1,11 @@
+Model: BIOMD0000000458
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:46:39
+
+Synonyms:
+p3g: ['3-phosphoglyceric acid', '3-phosphoglycerate', 'glycerate 3-phosphate']
+php: ['phosphohydroxypyruvate', 'hydroxypyruvate phosphate', '3-phosphohydroxypyruvate']
+pser: ['phosphoserine', 'O-phosphoserine', 'L-phosphoserine']
+ser: ['serine', 'L-serine', 'amino acid serine']
+
+Reason: The display names provided in the model directly map to standardized names, and the model is specifically focused on serine biosynthesis, making the given names highly likely to be correct.

@@ -1,0 +1,12 @@
+Model: BIOMD0000000373
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:43:55
+
+Synonyms:
+c: ['calcium', 'calcium ion', 'Ca2+']
+cer: ['ceramide', 'sphingosine', 'ceramide molecule']
+g6p: ['glucose-6-phosphate', 'D-glucose-6-phosphate', 'G6P']
+fbp: ['fructose-1,6-bisphosphate', 'D-fructose-1,6-bisphosphate', 'FBP']
+adp: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+
+Reason: The model is a pancreatic beta-cell model that includes calcium and glycolytic oscillations, so 'c' is likely calcium, 'cer' is possibly ceramide but its role is unclear, 'g6p' and 'fbp' are intermediates in glycolysis, and 'adp' is a common energy transfer molecule in cells.

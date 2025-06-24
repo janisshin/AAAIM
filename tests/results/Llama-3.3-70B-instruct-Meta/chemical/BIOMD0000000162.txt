@@ -1,0 +1,21 @@
+Model: BIOMD0000000162
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:39:32
+
+Synonyms:
+PABCa_D_Cytosol: ['calcium', 'Ca2+', 'calcium ion']
+Ca_D_ER: ['calcium', 'Ca2+', 'calcium ion']
+PABMg_D_Cytosol: ['magnesium', 'Mg2+', 'magnesium ion']
+PABCa_Cytosol: ['calcium', 'Ca2+', 'calcium ion']
+Mg_Cytosol: ['magnesium', 'Mg2+', 'magnesium ion']
+Ca_ER: ['calcium', 'Ca2+', 'calcium ion']
+Ca_D_Cytosol: ['calcium', 'Ca2+', 'calcium ion']
+PABMg_Cytosol: ['magnesium', 'Mg2+', 'magnesium ion']
+IP3_Cytosol: ['inositol trisphosphate', 'IP3', 'myo-inositol 1,4,5-trisphosphate']
+Ca_Extracellular: ['calcium', 'Ca2+', 'calcium ion']
+IP3_D_Cytosol: ['inositol trisphosphate', 'IP3', 'myo-inositol 1,4,5-trisphosphate']
+Mg_D_Cytosol: ['magnesium', 'Mg2+', 'magnesium ion']
+Ca_Cytosol: ['calcium', 'Ca2+', 'calcium ion']
+Ca_D_Extracellular: ['calcium', 'Ca2+', 'calcium ion']
+
+Reason: The model is focused on calcium signaling, and the species names contain "Ca" or "Mg" which are common abbreviations for calcium and magnesium ions, respectively. The "PAB" prefix likely refers to a protein or binding site, and "IP3" is a well-known abbreviation for inositol trisphosphate. The species locations (_Cytosol, _ER, _Extracellular) provide additional context for the likely chemical entities.

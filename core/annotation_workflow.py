@@ -58,8 +58,8 @@ def annotate_single_model(model_file: str,
     if tax_id:
         logger.info(f"Using organism-specific search for tax_id: {tax_id}")
     
-    # Step 1: Get all species from model
-    logger.info("Step 1: Getting all species from model...")
+    # Step 1: Get species from model
+    logger.info(">>>Step 1: Getting species from model...<<<")
     all_species_ids = get_all_species_ids(model_file, entity_type)
     
     if not all_species_ids:
@@ -68,7 +68,7 @@ def annotate_single_model(model_file: str,
     
     logger.info(f"Found {len(all_species_ids)} species in model")
     
-    # Step 2: Check for existing annotations (for metrics calculation)
+    # Check for existing annotations (for metrics calculation)
     existing_annotations = {}
     if entity_type == "chemical" and database == "chebi":
         existing_annotations = find_species_with_chebi_annotations(model_file)
@@ -80,7 +80,7 @@ def annotate_single_model(model_file: str,
         # Future: support other entity types and databases
         logger.warning(f"Entity type {entity_type} with database {database} not yet supported")
     
-    # Step 3: Select entities to evaluate (limit if needed)
+    # Select entities to evaluate (limit if needed)
     if max_entities:
         specs_to_evaluate = all_species_ids[:max_entities]
         logger.info(f"Selected {max_entities} entities for annotation")
@@ -88,8 +88,8 @@ def annotate_single_model(model_file: str,
         specs_to_evaluate = all_species_ids
         logger.info(f"Annotate all {len(specs_to_evaluate)} entities")
     
-    # Step 4: Extract model context
-    logger.info("Step 4: Extracting model context...")
+    # Step 2: Extract model context
+    logger.info(">>>Step 2: Extracting model context...<<<")
     model_info = extract_model_info(model_file, specs_to_evaluate, entity_type)
     
     if not model_info:
@@ -98,18 +98,15 @@ def annotate_single_model(model_file: str,
     
     logger.info(f"Extracted context for model: {model_info['model_name']}")
     
-    # Step 5: Format prompt for LLM
-    logger.info("Step 5: Formatting LLM prompt...")
+    # Format prompt for LLM
+    logger.info(f">>>Step 3: Querying LLM ({llm_model})...<<<")
     prompt = format_prompt(model_file, specs_to_evaluate, entity_type)
     
     if not prompt:
         logger.error("Failed to format prompt")
         return pd.DataFrame(), {"error": "Failed to format prompt"}
     
-    # Step 6: Query LLM
-    logger.info(f"Step 6: Querying LLM ({llm_model})...")
     llm_start = time.time()
-    
     try:
         # Get appropriate system prompt for entity type
         system_prompt = get_system_prompt(entity_type)
@@ -126,8 +123,7 @@ def annotate_single_model(model_file: str,
         logger.error(f"LLM query failed: {e}")
         return pd.DataFrame(), {"error": f"LLM query failed: {e}"}
     
-    # Step 7: Parse LLM response
-    logger.info("Step 7: Parsing LLM response...")
+    # Parse LLM response
     synonyms_dict, reason = parse_llm_response(result)
     
     if not synonyms_dict:
@@ -136,8 +132,8 @@ def annotate_single_model(model_file: str,
     
     logger.info(f"Parsed synonyms for {len(synonyms_dict)} entities")
     
-    # Step 8: Search database
-    logger.info(f"Step 8: Searching {database} database...")
+    # Step 4: Search database
+    logger.info(f">>>Step 4: Searching {database} database...<<<")
     search_start = time.time()
     
     if database == "chebi":
@@ -152,9 +148,7 @@ def annotate_single_model(model_file: str,
         if method == "direct":
             recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
         elif method == "rag":
-            # For now, NCBI gene only supports direct search
-            logger.warning("RAG method not yet implemented for NCBI gene, using direct method")
-            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
+            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
@@ -165,10 +159,10 @@ def annotate_single_model(model_file: str,
     search_time = time.time() - search_start
     logger.info(f"Database search completed in {search_time:.2f}s")
     
-    # Step 9: Generate recommendation table
-    logger.info("Step 9: Generating recommendation table...")
+    # Generate recommendation table
+    logger.info(">>>Step 5: Generating recommendation table...<<<")
     recommendations_df = _generate_recommendation_table(
-        model_file, recommendations, existing_annotations, model_info, entity_type
+        model_file, recommendations, existing_annotations, model_info, entity_type, database
     )
     
     # Step 10: Calculate metrics
@@ -225,9 +219,9 @@ def _generate_recommendation_table(model_file: str,
         # Add row for each candidate
         for i, candidate in enumerate(rec.candidates):
             if database == "chebi":
-                candidate = f"CHEBI:{candidate}"
+                candidate_display = f"CHEBI:{candidate}"
             elif database == "ncbigene":
-                candidate = f"NCBIGENE:{candidate}"
+                candidate_display = f"NCBIGENE:{candidate}"
 
             # Determine if this is an existing annotation
             existing = 1 if candidate in existing_annotations.get(rec.id, []) else 0
@@ -248,7 +242,7 @@ def _generate_recommendation_table(model_file: str,
                 'type': entity_type,
                 'id': rec.id,
                 'display_name': model_info["display_names"].get(rec.id, rec.id),
-                'annotation': candidate,
+                'annotation': candidate_display,
                 'annotation_label': rec.candidate_names[i],
                 'match_score': match_score,
                 'existing': existing,

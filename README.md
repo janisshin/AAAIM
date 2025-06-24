@@ -142,21 +142,23 @@ To use RAG, create embeddings of the ontology first:
 
 ```bash
 cd data
-python load_data.py --model default --collection chebi_default
+# for ChEBI:
+python load_data.py --database chebi --model default
+# for NCBI gene, specify the taxnomy id:
+python load_data.py --database ncbigene --model default --tax_id 9606
 ```
-
-Note: RAG is currently only supported for ChEBI. NCBI gene annotations use direct matching.
 
 ## Databases
 
 ### Currently Supported
 
 - **ChEBI**: Chemical Entities of Biological Interest
+
   - **Entity Type**: `chemical`
   - **Direct**: Dictionary of standard names to ontology ID.
   - **RAG**: Embeddings of ontology terms.
-
 - **NCBI Gene**: Gene annotation
+
   - **Entity Type**: `gene`
   - **Direct**: Dictionary of gene names to NCBI gene IDs.
   - **RAG**: Not yet implemented.
@@ -175,6 +177,7 @@ Note: RAG is currently only supported for ChEBI. NCBI gene annotations use direc
 - **Files**:
   - `cleannames2chebi.lzma`: Mapping from clean names to ChEBI IDs
   - `chebi2label.lzma`: Mapping from ChEBI IDs to labels
+  - `chebi2names.lzma`: ChEBI synonyms used for RAG approach
 - **Source**: ChEBI ontology downloaded from https://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl.gz.
 
 ### NCBI gene Data
@@ -183,6 +186,7 @@ Note: RAG is currently only supported for ChEBI. NCBI gene annotations use direc
 - **Files**:
   - `names2ncbigene_bigg_organisms_protein-coding.lzma`: Mapping from names to NCBI gene IDs, only include protein-coding genes from 18 species covered in Bigg models for file size considerations
   - `ncbigene2label_bigg_organisms_protein-coding.lzma`: Mapping from NCBI gene IDs to labels
+  - `ncbigene2names_tax{tax_id}_protein-coding.lzma`: NCBI gene synonyms for tax_id used for RAG approach
 - **Source**: Data are obtained from the NCBI gene FTP site: https://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/.
 
 ## File Structure

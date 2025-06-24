@@ -1,0 +1,17 @@
+Model: 116_HMOX1-PATHWAY_source
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-18 19:49:34
+
+Synonyms:
+sa44: ['BACH1', 'BTBD3', 'BACH2']
+sa48: ['MIR155', 'miR-155', 'MICRORNA155']
+sa50: ['HMOX1', 'HO1', 'HMOX']
+sa140: ['SLC40A1', 'FPN1', 'FERROPORTIN']
+sa144: ['FTH1', 'FTL', 'FERRITIN']
+sa145: ['FTL', 'FTH1', 'FERRITIN']
+sa147: ['FECH', 'ECH', 'FERROCHELATASE']
+sa150: ['BLVRA', 'Biliverdin reductase', 'BLVR']
+sa151: ['BLVRB', 'Biliverdin reductase B', 'FLVR']
+sa367: ['NLRP3', 'NALP3', 'CIAS1']
+
+Reason: The annotations are based on the display names and boolean transitions provided in the model. sa44 is annotated as BACH1 due to its direct display name. sa48 is annotated as MIR155 due to its display name "miRNA-155_rna". sa50 is annotated as HMOX1 due to its display name "HMOX1_rna" and its relationship with sa29. The other genes are annotated based on their display names and relationships with other genes, such as sa140 being annotated as SLC40A1 due to its display name "SLC40A1_rna" and its relationship with csa12. sa367 is annotated as NLRP3 due to its display name "NLRP3_rna" and its relationship with csa72 and csa101.

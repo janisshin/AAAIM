@@ -1,0 +1,14 @@
+Model: BIOMD0000000197
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:40:33
+
+Synonyms:
+x1: ['bromosulfophthalein', 'sulfobromophthalein', 'BSP']
+x2: ['bromosulfophthalein', 'sulfobromophthalein', 'BSP']
+x3: ['bromosulfophthalein', 'sulfobromophthalein', 'BSP']
+x4: ['bromosulfophthalein', 'sulfobromophthalein', 'BSP']
+x5: ['bromosulfophthalein', 'sulfobromophthalein', 'BSP']
+BSP_tot: ['bromosulfophthalein', 'sulfobromophthalein', 'BSP']
+BSP_cell: ['bromosulfophthalein', 'sulfobromophthalein', 'BSP']
+
+Reason: All species are related to BSP (bromosulfophthalein or sulfobromophthalein) as indicated by their display names and the model context, with different species representing different locations or binding states of BSP.

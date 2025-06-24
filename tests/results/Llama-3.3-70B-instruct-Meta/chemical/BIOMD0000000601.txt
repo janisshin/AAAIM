@@ -1,0 +1,12 @@
+Model: BIOMD0000000601
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:57:58
+
+Synonyms:
+mwd805cc43_4a96_472f_a894_c119a6aa895f: ['calcium', 'Ca2+', 'calcium ion']
+mw447078ee_8bc8_4358_abcd_ade10dba93b0: ['calcium', 'Ca2+', 'calcium ion']
+mw40a96ef6_32da_46d1_9712_4f53f60bad43: ['calcium', 'Ca2+', 'calcium ion']
+mwe1a0a651_d2d5_4f75_8d45_9336c60eb9a6: ['calcium', 'Ca2+', 'calcium ion']
+mw168e0d8a_b9f7_4d4c_b437_a81206c5d381: ['caffeine', '1,3,7-trimethylxanthine', 'theobromine']
+
+Reason: The species are identified based on their display names and the context of the model, which is related to calcium release and caffeine-induced luminal SR calcium changes. The display names "Ca_i_Total", "Ca_SR_Total", "Ca_i", and "Ca_SR" suggest that the corresponding species are related to calcium, while "caff" is likely caffeine.

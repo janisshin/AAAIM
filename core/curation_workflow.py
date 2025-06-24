@@ -54,7 +54,7 @@ def curate_single_model(model_file: str,
         logger.info(f"Using organism-specific search for tax_id: {tax_id}")
     
     # Step 1: Find existing annotations
-    logger.info("Step 1: Finding existing annotations...")
+    logger.info(">>>Step 1: Finding existing annotations...<<<")
     if entity_type == "chemical" and database == "chebi":
         existing_annotations = find_species_with_chebi_annotations(model_file)
         logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
@@ -70,7 +70,7 @@ def curate_single_model(model_file: str,
         logger.warning("No existing annotations found in model")
         return pd.DataFrame(), {"error": "No existing annotations found"}
     
-    # Step 2: Select entities to evaluate
+    # Select entities to evaluate
     if max_entities:
         specs_to_evaluate = list(existing_annotations.keys())[:max_entities]
         logger.info(f"Selected {len(specs_to_evaluate)} entities for curation")
@@ -78,8 +78,8 @@ def curate_single_model(model_file: str,
         specs_to_evaluate = list(existing_annotations.keys())
         logger.info(f"Curation all {len(specs_to_evaluate)} entities")
     
-    # Step 3: Extract model context
-    logger.info("Step 3: Extracting model context...")
+    # Extract model context
+    logger.info(">>>Step 2: Extracting model context...<<<")
     model_info = extract_model_info(model_file, specs_to_evaluate, entity_type)
     
     if not model_info:
@@ -88,16 +88,15 @@ def curate_single_model(model_file: str,
     
     logger.info(f"Extracted context for model: {model_info['model_name']}")
     
-    # Step 4: Format prompt for LLM
-    logger.info("Step 4: Formatting LLM prompt...")
+    # Format prompt for LLM
+    logger.info(">>>Step 3: Querying LLM ({llm_model})...<<<")
     prompt = format_prompt(model_file, specs_to_evaluate, entity_type)
     
     if not prompt:
         logger.error("Failed to format prompt")
         return pd.DataFrame(), {"error": "Failed to format prompt"}
     
-    # Step 5: Query LLM
-    logger.info(f"Step 5: Querying LLM ({llm_model})...")
+    # Query LLM
     llm_start = time.time()
     
     try:
@@ -116,8 +115,7 @@ def curate_single_model(model_file: str,
         logger.error(f"LLM query failed: {e}")
         return pd.DataFrame(), {"error": f"LLM query failed: {e}"}
     
-    # Step 6: Parse LLM response
-    logger.info("Step 6: Parsing LLM response...")
+    # Parse LLM response
     synonyms_dict, reason = parse_llm_response(result)
     
     if not synonyms_dict:
@@ -126,8 +124,8 @@ def curate_single_model(model_file: str,
     
     logger.info(f"Parsed synonyms for {len(synonyms_dict)} entities")
     
-    # Step 7: Search database
-    logger.info(f"Step 7: Searching {database} database...")
+    # Search database
+    logger.info(f">>>Step 4: Searching {database} database...<<<")
     search_start = time.time()
     
     if database == "chebi":
@@ -142,9 +140,7 @@ def curate_single_model(model_file: str,
         if method == "direct":
             recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
         elif method == "rag":
-            # For now, NCBI gene only supports direct search
-            logger.warning("RAG method not yet implemented for NCBI gene, using direct method")
-            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
+            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
@@ -156,8 +152,8 @@ def curate_single_model(model_file: str,
     search_time = time.time() - search_start
     logger.info(f"Database search completed in {search_time:.2f}s")
     
-    # Step 8: Generate recommendation table
-    logger.info("Step 8: Generating recommendation table...")
+    # Generate recommendation table
+    logger.info(">>>Step 5: Generating recommendation table...<<<")
     recommendations_df = _generate_recommendation_table(
         model_file, recommendations, existing_annotations, model_info, entity_type
     )
@@ -177,7 +173,8 @@ def _generate_recommendation_table(model_file: str,
                                  recommendations: List[Recommendation],
                                  existing_annotations: Dict[str, List[str]],
                                  model_info: Dict[str, Any],
-                                 entity_type: str = "chemical") -> pd.DataFrame:
+                                 entity_type: str = "chemical",
+                                 database: str = "chebi") -> pd.DataFrame:
     """
     Generate AMAS-compatible recommendation table.
     
@@ -194,9 +191,10 @@ def _generate_recommendation_table(model_file: str,
     rows = []
     filename = Path(model_file).name
     
+    # Track which (species_id, annotation) pairs are already in the table
+    seen_pairs = set()
     for rec in recommendations:
         if not rec.candidates:
-            # No candidates found
             row = {
                 'file': filename,
                 'type': entity_type,
@@ -210,34 +208,52 @@ def _generate_recommendation_table(model_file: str,
             }
             rows.append(row)
             continue
-        
-        # Add row for each candidate
         for i, candidate in enumerate(rec.candidates):
-            # Determine if this is an existing annotation
+            if database == "chebi":
+                candidate_display = f"CHEBI:{candidate}"
+            elif database == "ncbigene":
+                candidate_display = f"NCBIGENE:{candidate}"
             existing = 1 if candidate in existing_annotations.get(rec.id, []) else 0
-            
-            # match score
             match_score = rec.match_score[i]
-            
-            # Determine update action
             if existing:
                 update_action = 'keep'
             else:
-                update_action = 'ignore'  # For now, don't auto-add new annotations
-            
+                update_action = 'ignore'
             row = {
                 'file': filename,
                 'type': entity_type,
                 'id': rec.id,
                 'display_name': model_info["display_names"].get(rec.id, rec.id),
-                'annotation': candidate,
+                'annotation': candidate_display,
                 'annotation_label': rec.candidate_names[i],
                 'match_score': match_score,
                 'existing': existing,
                 'update_annotation': update_action
             }
             rows.append(row)
-    
+            seen_pairs.add((rec.id, candidate))
+    # Add rows for existing annotations not predicted
+    for species_id, ann_list in existing_annotations.items():
+        for ann in ann_list:
+            if (species_id, ann) not in seen_pairs:
+                if database == "chebi":
+                    candidate_display = f"CHEBI:{ann}"
+                elif database == "ncbigene":
+                    candidate_display = f"NCBIGENE:{ann}"
+                else:
+                    candidate_display = ann
+                row = {
+                    'file': filename,
+                    'type': entity_type,
+                    'id': species_id,
+                    'display_name': model_info["display_names"].get(species_id, species_id),
+                    'annotation': candidate_display,
+                    'annotation_label': '',
+                    'match_score': None,
+                    'existing': 1,
+                    'update_annotation': 'keep'
+                }
+                rows.append(row)
     return pd.DataFrame(rows)
 
 def _calculate_metrics(recommendations_df: pd.DataFrame,

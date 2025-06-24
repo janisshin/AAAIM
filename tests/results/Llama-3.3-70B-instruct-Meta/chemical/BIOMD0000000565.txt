@@ -1,0 +1,32 @@
+Model: BIOMD0000000565
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:56:33
+
+Synonyms:
+cpep: ['phosphoenolpyruvate', 'phosphoenolpyruvic acid', 'PEP']
+cglcex: ['glucose', 'D-glucose', 'blood sugar']
+cg6p: ['glucose-6-phosphate', 'D-glucose-6-phosphate', 'G6P']
+cpyr: ['pyruvate', 'pyruvic acid', '2-oxopropanoic acid']
+cg1p: ['glucose-1-phosphate', 'D-glucose-1-phosphate', 'G1P']
+cpg: ['6-phosphogluconate', '6-phosphogluconic acid', '6PG']
+cfdp: ['fructose-1,6-bisphosphate', 'fructose-1,6-diphosphate', 'FBP']
+csed7p: ['sedoheptulose-7-phosphate', 'sedoheptulose-7-phosphoric acid', 'S7P']
+cgap: ['glyceraldehyde-3-phosphate', 'glyceraldehyde-3-phosphoric acid', 'G3P']
+ce4p: ['erythrose-4-phosphate', 'erythrose-4-phosphoric acid', 'E4P']
+cxyl5p: ['xylulose-5-phosphate', 'xylulose-5-phosphoric acid', 'X5P']
+crib5p: ['ribose-5-phosphate', 'ribose-5-phosphoric acid', 'R5P']
+cdhap: ['dihydroxyacetonephosphate', 'dihydroxyacetone phosphate', 'DHAP']
+cpg3: ['3-phosphoglycerate', '3-phosphoglyceric acid', '3PG']
+cpg2: ['2-phosphoglycerate', '2-phosphoglyceric acid', '2PG']
+cribu5p: ['ribulose-5-phosphate', 'ribulose-5-phosphoric acid', 'Ru5P']
+accoa: ['acetyl-CoA', 'acetyl coenzyme A', 'AcCoA']
+malcoa: ['malonyl-CoA', 'malonyl coenzyme A', 'MalCoA']
+fer: ['ferulic acid', 'ferulic acid', 'FA']
+fer_ext: ['UNK']
+fercoa: ['feruloyl-CoA', 'feruloyl coenzyme A', 'FerCoA']
+ferdicoa: ['dihydroferuloyl-CoA', 'dihydroferuloyl coenzyme A', 'DHFerCoA']
+cur: ['curcumin', 'diferuloylmethane', 'CUR']
+cur_ext: ['UNK']
+cg2p: ['UNK']
+
+Reason: The species with display names were matched to their corresponding chemical names. For species without display names, their involvement in reactions and the model context were used to infer their identities. fer, fercoa, ferdicoa, and cur were identified based on their roles in the curcumin production pathway. fer_ext and cur_ext were marked as unknown since they represent external species and their chemical identities are not explicitly stated in the model. cg2p is not present in the model, so it was marked as unknown.

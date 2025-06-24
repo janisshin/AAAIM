@@ -1,0 +1,18 @@
+Model: BIOMD0000000479
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:52:04
+
+Synonyms:
+GaGTP: ['guanosine triphosphate', 'GTP', "guanosine 5'-triphosphate"]
+GaGTPEffector: ['GTP-bound effector protein', 'G-protein effector complex', 'GTP-effector complex']
+RGSmGaGTP: ['RGS-Gα-GTP complex', 'regulator of G-protein signaling-Gα-GTP complex', 'RGS-Gα complex']
+GaGTPEffectorOFF: ['GDP-bound effector protein', 'G-protein effector complex (inactive)', 'GDP-effector complex']
+RGSmGaGTPEffectorOFF: ['RGS-Gα-GDP-effector complex', 'regulator of G-protein signaling-Gα-GDP-effector complex', 'RGS-Gα-effector complex (inactive)']
+GaGDPP: ['guanosine diphosphate', 'GDP', "guanosine 5'-diphosphate"]
+LRRGSmGaGTP: ['leucine-rich repeat RGS-Gα-GTP complex', 'LRR-RGS-Gα-GTP complex', 'LRR-RGS-Gα complex']
+RRGSmGaGTP: ['RGS-Gα-GTP complex (RR variant)', 'regulator of G-protein signaling-Gα-GTP complex (RR variant)', 'RGS-Gα complex (RR variant)']
+LRRGSmGaGTPEffectorOFF: ['leucine-rich repeat RGS-Gα-GDP-effector complex', 'LRR-RGS-Gα-GDP-effector complex', 'LRR-RGS-Gα-effector complex (inactive)']
+GaGDP: ['guanosine diphosphate', 'GDP', "guanosine 5'-diphosphate"]
+P: ['phosphate', 'inorganic phosphate', 'orthophosphate']
+
+Reason: The species names were matched to their corresponding biochemical entities based on the context of the GPCR-RGS interaction model, with a focus on G-protein signaling and guanosine nucleotide binding. The standardized names and common synonyms were selected based on their relevance to the biochemical processes described in the model.

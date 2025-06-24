@@ -1,0 +1,12 @@
+Model: BIOMD0000000050
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:37:12
+
+Synonyms:
+Gly: ['glycine', 'aminoacetic acid', 'aminoethanoic acid']
+FA: ['formic acid', 'methanoic acid', 'hydrogen carboxylic acid']
+AA: ['acetic acid', 'ethanoic acid', 'methanecarboxylic acid']
+Glu: ['glucose', 'D-glucose', 'dextrose']
+MG: ['methylglyoxal', 'pyruvaldehyde', '2-oxopropanal']
+
+Reason: The species names can be matched to common biochemical compounds based on the context of the Amadori degradation model and the reactions provided. Gly is likely glycine due to its involvement in the degradation of DFG (N-(1-deoxy-D-fructos-1-yl)-glycine). FA and AA are likely formic acid and acetic acid, respectively, as they are mentioned in the abstract as degradation products. Glu is likely glucose, given its relationship to mannose and other carbohydrate fragments in the model. MG is likely methylglyoxal, as it is mentioned in the abstract as a compound formed during the reaction.

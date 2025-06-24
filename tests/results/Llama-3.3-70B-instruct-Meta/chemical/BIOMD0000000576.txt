@@ -1,0 +1,27 @@
+Model: BIOMD0000000576
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:57:07
+
+Synonyms:
+s114: ['cortisol', 'hydrocortisone', 'cortisone']
+s84: ['glucocorticoid receptor', 'GR', 'nuclear receptor subfamily 3 group C member 1']
+s165: ['cytochrome P450', 'CYP', 'cytochrome P450 enzyme']
+s109: ['pregnane X receptor', 'PXR', 'nuclear receptor subfamily 1 group I member 2']
+s87: ['glucocorticoid receptor protein', 'GR protein', 'glucocorticoid receptor']
+s119: ['pregnane X receptor protein', 'PXR protein', 'pregnane X receptor']
+s183: ['tyrosine aminotransferase', 'TAT', 'tyrosine transaminase']
+Cortisone: ['cortisone', '11-dehydro-17-hydrocortisone', '17-deoxy-11-dehydrocortisol']
+DEX: ['dexamethasone', 'decadron', 'hexadrol']
+GRprot_DEX: ['glucocorticoid receptor protein dexamethasone', 'GR protein dexamethasone', 'glucocorticoid receptor dexamethasone complex']
+PXRprot_DEX: ['pregnane X receptor protein dexamethasone', 'PXR protein dexamethasone', 'pregnane X receptor dexamethasone complex']
+CYPgene_PXRprot_DEX: ['cytochrome P450 gene pregnane X receptor protein dexamethasone', 'CYP gene PXR protein dexamethasone', 'cytochrome P450 gene PXR dexamethasone complex']
+PXRgene_GRprot_DEX: ['pregnane X receptor gene glucocorticoid receptor protein dexamethasone', 'PXR gene GR protein dexamethasone', 'pregnane X receptor gene GR dexamethasone complex']
+GRgene_GRprot_DEX: ['glucocorticoid receptor gene glucocorticoid receptor protein dexamethasone', 'GR gene GR protein dexamethasone', 'glucocorticoid receptor gene GR dexamethasone complex']
+TATgene_GRprot_DEX: ['tyrosine aminotransferase gene glucocorticoid receptor protein dexamethasone', 'TAT gene GR protein dexamethasone', 'tyrosine aminotransferase gene GR dexamethasone complex']
+s2: ['cortisol output', 'cortisol level', 'hydrocortisone output']
+DEXout: ['dexamethasone output', 'dexamethasone level', 'decadron output']
+CBG_CortOUT: ['corticosteroid-binding globulin cortisol output', 'CBG cortisol level', 'transcortin cortisol output']
+Alb_CortOUT: ['albumin cortisol output', 'albumin cortisol level', 'albumin-bound cortisol output']
+CortAdded: ['cortisol added', 'hydrocortisone added', 'cortisone added']
+
+Reason: The species names were matched to their corresponding display names and reactions in the model, and then standardized names or common synonyms were found based on the context of the nuclear receptor-mediated cortisol signalling network. The model describes the interaction of cortisol with its two nuclear receptors, the glucocorticoid receptor and the pregnane X-receptor, and the species names were matched accordingly. For example, s114 was matched to "cortisol" based on its display name "Cort" and its reaction with s87, which is the glucocorticoid receptor protein. Similarly, DEX was matched to "dexamethasone" based on its display name and its reactions with GRprot_DEX and PXRprot_DEX. The species with no clear display names or reactions, such as s165, were matched to more general terms based on the context of the model.

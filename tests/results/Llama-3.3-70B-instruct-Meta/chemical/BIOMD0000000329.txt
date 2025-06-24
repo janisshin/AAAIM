@@ -1,0 +1,8 @@
+Model: BIOMD0000000329
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:43:26
+
+Synonyms:
+c: ['calcium', 'calcium ion', 'Ca2+']
+
+Reason: The display name for 'c' is 'Calcium', and based on the model description, it is clear that 'c' represents calcium ions, which are commonly referred to as "calcium" or "Ca2+" in biochemical contexts.

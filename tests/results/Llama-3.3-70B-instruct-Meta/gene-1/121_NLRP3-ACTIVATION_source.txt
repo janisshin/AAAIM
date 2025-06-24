@@ -1,0 +1,9 @@
+Model: 121_NLRP3-ACTIVATION_source
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-17 12:59:50
+
+Synonyms:
+sa93: ['IL18', 'IL-18', 'Interleukin 18']
+sa94: ['IL1B', 'IL-1B', 'Interleukin 1 beta']
+
+Reason: sa93 is annotated as 'proIL-18_rna', indicating it is the RNA form of proIL-18, which is a precursor to the cytokine IL-18. sa94 is annotated as 'proIL-1B_rna', indicating it is the RNA form of proIL-1B, which is a precursor to the cytokine IL-1B. The Boolean transitions also support these annotations, as they are regulated by the Nf-KB Complex, which is known to regulate the expression of these cytokines.

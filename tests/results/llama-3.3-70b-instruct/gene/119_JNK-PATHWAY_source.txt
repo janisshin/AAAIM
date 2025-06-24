@@ -1,0 +1,12 @@
+Model: 119_JNK-PATHWAY_source
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-13 11:55:06
+
+Synonyms:
+sa4: ['MAP2K4', 'MKK4', 'SEK1']
+sa5: ['MAP2K7', 'MKK7', 'MEK7']
+sa12: ['BCL2', 'BCL2L1', 'BCL2L2']
+sa33: ['ATF2', 'CREBP1', 'HB16']
+sa34: ['TP53', 'P53', 'TUMOR SUPPRESSOR P53']
+
+Reason: The annotations are based on the display names provided, where sa4 is MAP2K4_phosphorylated, sa5 is MAP2K7_phosphorylated, sa12 is BCL2_phosphorylated, sa33 is ATF2_phosphorylated, and sa34 is TP53_phosphorylated, which directly correspond to the standardized gene names.

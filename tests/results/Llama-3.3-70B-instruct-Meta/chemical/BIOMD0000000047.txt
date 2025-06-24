@@ -1,0 +1,9 @@
+Model: BIOMD0000000047
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:37:07
+
+Synonyms:
+CaER: ['calcium(2+)', 'Ca2+', 'calcium ion']
+Ca_Cyt: ['calcium(2+)', 'Ca2+', 'calcium ion']
+
+Reason: CaER and Ca_Cyt are likely referring to calcium ions in the endoplasmic reticulum and cytosol, respectively, based on the context of the model name "Oxhamre2005_Ca_oscillation" and the reaction equations, which suggest calcium ion movement between these compartments.

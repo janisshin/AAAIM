@@ -1,0 +1,12 @@
+Model: BIOMD0000000165
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:39:38
+
+Synonyms:
+Gsa_gdp_cell: ['Guanine nucleotide-binding protein G(s) subunit, GDP-bound', 'G protein subunit alpha s, GDP-bound']
+Gsa_gtp_cell: ['Guanine nucleotide-binding protein G(s) subunit, GTP-bound', 'G protein subunit alpha s, GTP-bound']
+ATP_cell: ["adenosine 5'-triphosphate", 'ATP', 'adenosine triphosphate']
+cAMP_cell: ['cyclic adenosine monophosphate', 'cAMP', 'cyclic AMP']
+DMNB_cAMP_cell: ['UNK']
+
+Reason: Gsa_gdp_cell and Gsa_gtp_cell are annotated based on their display names and the context of the G protein signaling pathway. ATP_cell and cAMP_cell are well-known biochemical compounds with standardized names. DMNB_cAMP_cell is unknown due to the lack of information about "DMNB" in the provided context.

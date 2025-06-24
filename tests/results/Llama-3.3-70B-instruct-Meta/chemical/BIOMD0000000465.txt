@@ -1,0 +1,8 @@
+Model: BIOMD0000000465
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:46:46
+
+Synonyms:
+s19: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'phosphatidylinositol(4,5)-bisphosphate']
+
+Reason: s19 is annotated as 'PIP2' in the display names, which is a common synonym for phosphatidylinositol 4,5-bisphosphate, a phospholipid that plays a key role in cell signaling pathways, including the PI3K/AKT pathway, which is relevant to the model "Koo2013 - Shear stress induced AKT and eNOS phosphorylation - Model 2".

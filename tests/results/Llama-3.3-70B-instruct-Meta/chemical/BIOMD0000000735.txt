@@ -1,0 +1,28 @@
+Model: BIOMD0000000735
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 16:01:41
+
+Synonyms:
+FeDuo: ['iron', 'ferric ion', 'ferrous ion']
+FeDuo_0: ['iron', 'ferric ion', 'ferrous ion']
+FeRBC: ['hemin', 'iron(III) heme', 'ferric heme']
+FeRBC_0: ['hemin', 'iron(III) heme', 'ferric heme']
+FeSpleen: ['hemosiderin iron', 'ferric ion', 'non-transferrin-bound iron']
+FeSpleen_0: ['hemosiderin iron', 'ferric ion', 'non-transferrin-bound iron']
+FeLiver: ['ferritin iron', 'hemosiderin iron', 'ferric ion']
+FeLiver_0: ['ferritin iron', 'hemosiderin iron', 'ferric ion']
+Fe2Tf: ['diferric transferrin', 'holotransferrin', 'iron-transferrin complex']
+Fe2Tf_0: ['diferric transferrin', 'holotransferrin', 'iron-transferrin complex']
+NTBI: ['non-transferrin-bound iron', 'labile plasma iron', 'free iron']
+NTBI_0: ['non-transferrin-bound iron', 'labile plasma iron', 'free iron']
+Fe1Tf: ['monoferric transferrin', 'apotransferrin', 'iron-transferrin complex']
+Fe1Tf_0: ['monoferric transferrin', 'apotransferrin', 'iron-transferrin complex']
+Fe2Tf_: ['diferric transferrin', 'holotransferrin', 'iron-transferrin complex']
+FeRest: ['ferric ion', 'iron', 'non-heme iron']
+FeRest_0: ['ferric ion', 'iron', 'non-heme iron']
+FeOutside: ['iron', 'ferric ion', 'ferrous ion']
+FeOutside_0: ['iron', 'ferric ion', 'ferrous ion']
+FeBM: ['hemin', 'iron(III) heme', 'ferric heme']
+FeBM_0: ['hemin', 'iron(III) heme', 'ferric heme']
+
+Reason: The species names were annotated based on their roles in the iron distribution model, with FeDuo and FeDuo_0 representing iron in the duo form, FeRBC and FeRBC_0 representing iron in red blood cells, FeSpleen and FeSpleen_0 representing iron in the spleen, FeLiver and FeLiver_0 representing iron in the liver, Fe2Tf and Fe2Tf_0 representing diferric transferrin, NTBI and NTBI_0 representing non-transferrin-bound iron, Fe1Tf and Fe1Tf_0 representing monoferric transferrin, FeRest and FeRest_0 representing iron in the rest of the body, FeOutside and FeOutside_0 representing iron outside the body, and FeBM and FeBM_0 representing iron in the bone marrow. The annotations were made based on the reaction equations and the display names provided in the model.

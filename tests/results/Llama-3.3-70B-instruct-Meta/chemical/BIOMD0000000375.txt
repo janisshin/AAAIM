@@ -1,0 +1,9 @@
+Model: BIOMD0000000375
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:43:57
+
+Synonyms:
+Ca_er_Ca_equations: ['calcium', 'Ca2+', 'calcium ion']
+Ca_i: ['calcium', 'Ca2+', 'calcium ion']
+
+Reason: Both Ca_er_Ca_equations and Ca_i are likely referring to calcium, as the model is about calcium release-activated current in pancreatic beta-cells and the species names contain "Ca", which is a common abbreviation for calcium.

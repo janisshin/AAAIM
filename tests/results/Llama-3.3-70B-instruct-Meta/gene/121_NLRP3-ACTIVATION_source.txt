@@ -1,0 +1,9 @@
+Model: 121_NLRP3-ACTIVATION_source
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-18 19:49:39
+
+Synonyms:
+sa93: ['IL18', 'IL-18', 'Interleukin-18']
+sa94: ['IL1B', 'IL-1B', 'Interleukin-1 beta']
+
+Reason: sa93 is annotated as 'proIL-18_rna' and sa94 as 'proIL-1B_rna', indicating they represent the RNA transcripts of proIL-18 and proIL-1B, respectively, which are precursors to the interleukin proteins.

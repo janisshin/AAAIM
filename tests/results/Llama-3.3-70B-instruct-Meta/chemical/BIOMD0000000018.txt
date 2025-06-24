@@ -1,0 +1,25 @@
+Model: BIOMD0000000018
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:36:42
+
+Synonyms:
+FH2f: ['dihydrofolate', 'folic acid', 'dihydrofolic acid']
+FH2b: ['dihydrofolate', 'folic acid', 'dihydrofolic acid']
+FH4: ['tetrahydrofolate', 'tetrahydrofolic acid', 'THF']
+CH2FH4: ['5,10-methylenetetrahydrofolate', '5,10-methylene-THF', 'methylenetetrahydrofolate']
+CH3FH4: ['5-methyltetrahydrofolate', '5-methyl-THF', 'methyltetrahydrofolate']
+CHOFH4: ['10-formyltetrahydrofolate', '10-formyl-THF', 'formyltetrahydrofolate']
+FFH2: ['10-formyldihydrofolate', '10-formyl-DHF', 'formyldihydrofolate']
+HCHO: ['formaldehyde', 'methanal', 'HCHO']
+AICAR: ['5-amino-4-imidazolecarboxamide ribonucleotide', 'AICAR', 'ZMP']
+dUMP: ['deoxyuridine monophosphate', 'dUMP', 'deoxyuridylate']
+serine: ['serine', 'L-serine', '2-amino-3-hydroxypropanoic acid']
+formate: ['formate', 'formic acid', 'methanoate']
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+glutamine: ['glutamine', 'L-glutamine', '2-amino-4-carbamoylbutanoic acid']
+glycine: ['glycine', '2-aminoacetic acid', 'aminoacetic acid']
+NADP: ['nicotinamide adenine dinucleotide phosphate', 'NADP+', 'NADP']
+NADPH: ['nicotinamide adenine dinucleotide phosphate (reduced)', 'NADPH', 'NADP reduced']
+homocysteine: ['homocysteine', 'L-homocysteine', '2-amino-4-mercapto-butanoic acid']
+
+Reason: The standardized names and common synonyms were determined based on the display names provided in the model and the chemical structures implied by the reaction equations. For species without display names, the names were inferred from the reaction equations and the context of the folate cycle. The ranking of the names is based on the likelihood of each name being correct, with the most likely name first.

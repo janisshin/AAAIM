@@ -1,0 +1,23 @@
+Model: BIOMD0000000702
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 16:01:30
+
+Synonyms:
+Tem1GTP: ['GTP', 'guanosine triphosphate', "guanosine 5'-triphosphate"]
+Tem1GDP: ['GDP', 'guanosine diphosphate', "guanosine 5'-diphosphate"]
+T_Tem1GTP: ['GTP', 'guanosine triphosphate', "guanosine 5'-triphosphate"]
+T_Tem1GDP: ['GDP', 'guanosine diphosphate', "guanosine 5'-diphosphate"]
+B_Bfa1_Tem1GTP: ['UNK']
+B_Bfa1P4_Tem1GTP: ['UNK']
+B_Bfa1P5_Tem1GTP: ['UNK']
+B_Bfa1_Tem1GDP: ['UNK']
+B_Bfa1P4_Tem1GDP: ['UNK']
+B_Bfa1P5_Tem1GDP: ['UNK']
+Bfa1_Tem1GTP: ['UNK']
+Bfa1P4_Tem1GTP: ['UNK']
+Bfa1P5_Tem1GTP: ['UNK']
+Bfa1_Tem1GDP: ['UNK']
+Bfa1P4_Tem1GDP: ['UNK']
+Bfa1P5_Tem1GDP: ['UNK']
+
+Reason: The Tem1GTP and Tem1GDP species can be annotated with GTP and GDP respectively, as they are likely referring to the guanosine triphosphate and guanosine diphosphate forms of the Tem1 protein. The other species are annotated as "UNK" because they appear to be protein complexes or modified forms of the Tem1 and Bfa1 proteins, and do not have direct chemical equivalents in the ChEBI database.

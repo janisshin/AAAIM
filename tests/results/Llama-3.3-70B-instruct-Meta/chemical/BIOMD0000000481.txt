@@ -1,0 +1,11 @@
+Model: BIOMD0000000481
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:52:05
+
+Synonyms:
+E2: ['estradiol', '17beta-estradiol', 'oestradiol']
+P4: ['progesterone']
+OT: ['UNK']
+PGF: ['prostaglandin F2alpha', 'dinoprost', 'prostaglandin F2α']
+
+Reason: E2 is likely estradiol due to its involvement in the bovine estrous cycle. P4 is likely progesterone, a key hormone in the estrous cycle. OT has no clear mapping to a known chemical entity. PGF is likely prostaglandin F2alpha due to the model name mentioning synchronization with prostaglandin F2α.

@@ -1,0 +1,11 @@
+Model: BIOMD0000000509
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:55:05
+
+Synonyms:
+ip3: ['inositol trisphosphate', 'myo-inositol 1,4,5-trisphosphate', 'D-myo-inositol 1,4,5-trisphosphate']
+atp: ['adenosine triphosphate', "adenosine 5'-triphosphate", 'ATP']
+y: ['UNK']
+ca: ['calcium', 'calcium ion', 'Ca2+']
+
+Reason: ip3 is likely inositol trisphosphate due to its involvement in calcium signaling, atp is a common energy currency in cells, y has no display name or reaction information to determine its identity, and ca is likely calcium due to its role in calcium-cell cycle coupling and intracellular calcium release.

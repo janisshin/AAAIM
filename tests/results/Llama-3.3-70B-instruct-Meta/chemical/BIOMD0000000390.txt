@@ -1,0 +1,14 @@
+Model: BIOMD0000000390
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:44:25
+
+Synonyms:
+RuBP: ['ribulose-1,5-bisphosphate', 'ribulose 1,5-biphosphate', 'RuBP']
+PGA: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'glycerate 3-phosphate']
+Ru5P: ['ribulose-5-phosphate', 'ribulose 5-phosphate', 'Ru-5-P']
+Pi: ['phosphate', 'inorganic phosphate', 'orthophosphate']
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+Pic: ['UNK']
+
+Reason: The model is based on the Calvin-Benson cycle, and the reactions provided match the known biochemical pathways. RuBP, PGA, Ru5P, Pi, ATP, and ADP are all well-known intermediates in the cycle. Pic is not defined in the display names or reactions, so it is unknown.

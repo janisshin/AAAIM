@@ -1,0 +1,9 @@
+Model: 124_NSP9-PROTEIN_source
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-17 12:59:52
+
+Synonyms:
+sa1006: ['EDN1', 'PROEDN', 'PREPROEDN']
+sa1189: ['UNK']
+
+Reason: sa1006 is annotated as "EDN1_rna" which corresponds to the Endothelin 1 gene (EDN1), a protein-coding gene. sa1189 is annotated as "RdRpassembled_rna" which does not correspond to a known gene symbol or name, hence it is annotated as "UNK".

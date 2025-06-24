@@ -1,0 +1,16 @@
+Model: BIOMD0000000248
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:42:09
+
+Synonyms:
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+PCr: ['phosphocreatine', 'creatine phosphate', 'phosphocreatine ion']
+Cr: ['creatine', 'creatinine', 'methylguanidineacetic acid']
+Pi: ['inorganic phosphate', 'phosphate ion', 'orthophosphate']
+CTcap: ['UNK']
+CTtis: ['UNK']
+CFcap: ['UNK']
+CFtis: ['UNK']
+
+Reason: ATP, ADP, PCr, Cr, and Pi are well-known biochemical compounds with established standardized names, while CTcap, CTtis, CFcap, and CFtis appear to be model-specific variables representing concentrations of oxygen in blood and tissue, and do not have direct chemical counterparts.

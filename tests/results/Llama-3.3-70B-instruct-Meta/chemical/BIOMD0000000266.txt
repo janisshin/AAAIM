@@ -1,0 +1,14 @@
+Model: BIOMD0000000266
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:42:31
+
+Synonyms:
+X0: ['glucose', 'D-glucose', 'blood sugar']
+X1: ['glucose', 'D-glucose', 'blood sugar']
+X2: ['glucose-6-phosphate', 'D-glucose-6-phosphate', 'G6P']
+X3: ['glucose-1-phosphate', 'D-glucose-1-phosphate', 'G1P']
+X4: ['uridine diphosphate glucose', 'UDP-glucose', 'UDPG']
+X6: ['trehalose-6-phosphate', 'T6P', 'trehalose phosphate']
+X7: ['trehalose', 'mycose', 'trehalose dihydrate']
+
+Reason: The display names and the context of the trehalose cycle model provide clear indications of the species' identities. X0 and X1 are both labeled as 'glucose', X2 as 'G6P' which is a common abbreviation for glucose-6-phosphate, X3 as 'G1P' indicating glucose-1-phosphate, X4 as 'UDPG' which stands for uridine diphosphate glucose, X6 as 'T6P' suggesting trehalose-6-phosphate, and X7 is directly named 'trehalose'. The model's description and the biochemical context support these identifications.

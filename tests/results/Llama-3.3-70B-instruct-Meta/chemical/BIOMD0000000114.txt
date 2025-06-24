@@ -1,0 +1,9 @@
+Model: BIOMD0000000114
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:38:59
+
+Synonyms:
+x: ['calcium ion', 'Ca(2+)', 'calcium']
+y: ['calcium ion', 'Ca(2+)', 'calcium']
+
+Reason: The model is about calcium oscillations, and the display names 'Ca_Cyt' and 'Ca_ER' suggest that x and y represent calcium ions in different locations (cytosol and endoplasmic reticulum, respectively), so the standardized names are related to calcium ion.

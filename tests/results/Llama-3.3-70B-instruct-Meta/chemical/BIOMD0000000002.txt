@@ -1,0 +1,8 @@
+Model: BIOMD0000000002
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:36:21
+
+Synonyms:
+L: ['acetylcholine', 'ACh', 'acetylcholine ion']
+
+Reason: The display name for L is 'ACh', which is a common abbreviation for acetylcholine, a neurotransmitter. The model is also described as "EPSP ACh species", further supporting this identification.

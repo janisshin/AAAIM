@@ -1,0 +1,15 @@
+Model: BIOMD0000000589
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:57:52
+
+Synonyms:
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'NADPH', 'reduced nicotinamide adenine dinucleotide phosphate']
+NADPplus: ['nicotinamide adenine dinucleotide phosphate', 'NADP+', 'oxidized nicotinamide adenine dinucleotide phosphate']
+GSH: ['glutathione', 'reduced glutathione', 'GSH']
+GSSG: ['glutathione disulfide', 'oxidized glutathione', 'GSSG']
+DHA: ['dehydroascorbic acid', 'DHA', 'dehydroascorbate']
+MDA: ['monodehydroascorbate', 'MDA', 'monodehydroascorbic acid']
+H2O2: ['hydrogen peroxide', 'H2O2', 'peroxide']
+O2neg: ['superoxide', 'O2-', 'superoxide anion']
+
+Reason: The model is described as the Ascorbate-Glutathione cycle, which involves the reduction and oxidation of glutathione and ascorbate, producing and consuming NADPH and NADP+. The reaction equations and display names suggest the involvement of common biochemical compounds, allowing for the identification of standardized names and synonyms.

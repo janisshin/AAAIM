@@ -1,0 +1,11 @@
+Model: BIOMD0000000304
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:43:11
+
+Synonyms:
+h1: ['hydrogen ion', 'proton', 'H+']
+x1: ['UNK']
+n1: ['sodium ion', 'Na+', 'sodium']
+c: ['calcium ion', 'Ca2+', 'calcium']
+
+Reason: h1 is likely "hydrogen ion" or "proton" due to its involvement in a nerve cell model, where ion channels and pumps are crucial. n1 is likely "sodium ion" due to its common role in nerve cell signaling. c is likely "calcium ion" due to its involvement in the model and its importance in cellular signaling, particularly in nerve cells. x1 is unknown as it lacks a clear display name or reaction context that would allow for a confident identification.

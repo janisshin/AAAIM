@@ -1,0 +1,10 @@
+Model: BIOMD0000000202
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:40:42
+
+Synonyms:
+Ca_Cyt: ['calcium(2+)', 'Ca2+', 'calcium ion']
+IP3_Cyt: ['inositol 1,4,5-trisphosphate', 'IP3', 'D-myo-inositol 1,4,5-trisphosphate']
+Ca_ER: ['calcium(2+)', 'Ca2+', 'calcium ion']
+
+Reason: Ca_Cyt and Ca_ER are likely referring to calcium ions in the cytosol and endoplasmic reticulum, respectively, based on the reaction names and the model context. IP3_Cyt is likely referring to inositol 1,4,5-trisphosphate, a common second messenger, based on the reaction involving PLC, which is often associated with IP3 production.

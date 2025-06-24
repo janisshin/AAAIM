@@ -1,0 +1,11 @@
+Model: BIOMD0000000948
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 16:02:22
+
+Synonyms:
+AR_A1: ['alkylresorcinol', 'resorcinol', '4-butylresorcinol']
+AR_A2: ['alkylresorcinol', 'resorcinol', '4-butylresorcinol']
+AR_Central: ['alkylresorcinol', 'resorcinol', '4-butylresorcinol']
+AR_Dose: ['UNK']
+
+Reason: All species except AR_Dose are annotated as "AR" which likely stands for alkylresorcinol, a common chemical entity. AR_Dose is unknown as it is not directly related to a specific chemical entity, but rather seems to represent a dose of alkylresorcinol.

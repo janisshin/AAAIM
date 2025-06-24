@@ -88,8 +88,8 @@ MAX_CACHE_SIZE_MB = 1000
 REF_CHEBI2LABEL = "chebi2label.lzma"
 REF_NAMES2CHEBI = "cleannames2chebi.lzma"
 REF_CHEBI2FORMULA = "chebi_shortened_formula.lzma"
-REF_NCBIGENE2LABEL = "ncbigene2label_bigg_organisms_protein-coding_updated.lzma"
-REF_NAMES2NCBIGENE = "names2ncbigene_bigg_organisms_protein-coding_updated.lzma"
+REF_NCBIGENE2LABEL = "ncbigene2label_bigg_organisms_protein-coding_added.lzma"
+REF_NAMES2NCBIGENE = "names2ncbigene_bigg_organisms_protein-coding.lzma"
 
 # Model Format Detection
 MODEL_FORMAT_PLUGINS = {

@@ -1,0 +1,15 @@
+Model: BIOMD0000000408
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:44:57
+
+Synonyms:
+ADPi: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+ATPi: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+Cri: ['creatine', 'creatinine', 'methylguanidine']
+PCri: ['phosphocreatine', 'creatine phosphate', 'phosphocreatine ion']
+PCr: ['phosphocreatine', 'creatine phosphate', 'phosphocreatine ion']
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+Cr: ['creatine', 'creatinine', 'methylguanidine']
+
+Reason: The model "Hettling2011_CreatineKinase" and the article description provide context for the creatine kinase system, allowing for the identification of species as related to energy transport and buffering in muscle cells, with ADP and ATP being adenosine nucleotides, Cr and PCr being creatine and phosphocreatine, and the 'i' suffix likely indicating intracellular or ionic forms.

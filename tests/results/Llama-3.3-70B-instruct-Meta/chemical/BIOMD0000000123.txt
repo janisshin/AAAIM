@@ -1,0 +1,9 @@
+Model: BIOMD0000000123
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:39:04
+
+Synonyms:
+Ca_Nuc: ['calcium ion', 'calcium(2+)', 'Ca2+']
+Ca_Cyt: ['calcium ion', 'calcium(2+)', 'Ca2+']
+
+Reason: Both Ca_Nuc and Ca_Cyt refer to calcium ions in different cellular locations (nucleus and cytosol), so the standardized names are the same, with the location implied by the species name rather than the chemical entity itself.

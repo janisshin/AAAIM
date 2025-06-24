@@ -1,0 +1,8 @@
+Model: BIOMD0000000879
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 16:02:12
+
+Synonyms:
+Q: ['chemotherapy', 'anticancer agent', 'antineoplastic agent']
+
+Reason: Q is likely a chemotherapy agent due to its involvement in the "Chemotherapy_Decay" and "Chemotherapy" reactions, and the model's context of chemoimmunotherapy for chronic lymphocytic leukemia.

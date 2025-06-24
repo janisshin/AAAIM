@@ -1,0 +1,13 @@
+Model: BIOMD0000000624
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:58:41
+
+Synonyms:
+APAP: ['acetaminophen', 'paracetamol', 'acetylaminophen']
+NAPQI: ['N-acetyl-p-benzoquinone imine', 'N-acetyl-p-quinoneimine', 'p-benzoquinone imine']
+GSH: ['glutathione', 'L-glutathione', 'gamma-glutamylcysteinylglycine']
+NAPQIGSH: ['N-acetyl-p-benzoquinone imine glutathione conjugate', 'NAPQI-GSH conjugate', 'UNK']
+APAPconj_Glu: ['acetaminophen glucuronide', 'APAP-glucuronide', 'paracetamol glucuronide']
+APAPconj_Sul: ['acetaminophen sulfate', 'APAP-sulfate', 'paracetamol sulfate']
+
+Reason: APAP, NAPQI, GSH, APAPconj_Glu, and APAPconj_Sul are identified based on their display names and the context of the acetaminophen metabolism model, while NAPQIGSH is less certain due to limited information about its structure, but it is likely a conjugate of NAPQI and GSH.

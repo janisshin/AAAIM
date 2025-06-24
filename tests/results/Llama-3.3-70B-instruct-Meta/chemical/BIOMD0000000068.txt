@@ -1,0 +1,14 @@
+Model: BIOMD0000000068
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:37:48
+
+Synonyms:
+Phser: ['phosphohomoserine', 'O-phosphohomoserine', 'L-phosphohomoserine']
+Thr: ['threonine', 'L-threonine', '2-amino-3-hydroxypropanoic acid']
+Cystathionine: ['cystathionine', 'L-cystathionine', '3-(2-amino-2-carboxyethylthio)propanoic acid']
+Hser: ['homoserine', 'L-homoserine', '2-amino-4-hydroxybutanoic acid']
+Phi: ['inorganic phosphate', 'phosphate', 'orthophosphate']
+Cys: ['cysteine', 'L-cysteine', '2-amino-3-mercaptopropanoic acid']
+AdoMet: ['S-adenosylmethionine', 'adenosylmethionine', 'SAM']
+
+Reason: The display names provided in the model directly map to standardized chemical names, allowing for straightforward annotation. The reactions and model context confirm the involvement of these species in methionine and threonine biosynthesis pathways, supporting the chosen annotations.

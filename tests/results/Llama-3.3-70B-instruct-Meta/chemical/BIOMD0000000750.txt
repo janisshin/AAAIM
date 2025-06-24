@@ -1,0 +1,9 @@
+Model: BIOMD0000000750
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 16:01:51
+
+Synonyms:
+Nn: ['norepinephrine', 'noradrenaline', 'l-norepinephrine']
+Na: ['acetylcholine', 'ACh', 'acetylcholine chloride']
+
+Reason: Nn is likely norepinephrine due to the reactions involving norepinephrine_source, norepinephrine_by_SNC, and norepinephrine_decay, which all involve Nn. Na is likely acetylcholine due to the reactions involving ACh_source, ACh_by_PNC, and ACh_decay, which all involve Na, and ACh is a common abbreviation for acetylcholine.

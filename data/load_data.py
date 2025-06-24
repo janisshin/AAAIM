@@ -8,15 +8,15 @@ both default sentence transformer models and OpenAI embedding models.
 
 Usage:
     python load_data.py --help
-    python load_data.py --model default --collection chebi_default
-    python load_data.py --model openai --collection chebi_openai
+    python load_data.py --database chebi --model default --collection chebi_default
+    python load_data.py --database ncbigene --model default --tax_id 9606
 """
 
 import os
 import argparse
 import logging
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 import compress_pickle
 from tqdm import tqdm
 import sys
@@ -37,76 +37,51 @@ def chunk_list(lst: List, size: int):
         yield lst[i:i + size]
 
 
-def load_chebi_data(ref_data_path: str) -> Dict[str, List[str]]:
+def load_reference_data(ref_data_path: str) -> Dict[str, List[str]]:
     """
-    Load ChEBI reference data from compressed pickle file.
-    
-    Args:
-        ref_data_path: Path to the reference file
-        
-    Returns:
-        Dictionary mapping IDs to lists of names/synonyms
+    Load reference data (ChEBI or gene) from compressed pickle file.
     """
     logger.info(f"Loading data from {ref_data_path}")
-    
     if not os.path.exists(ref_data_path):
         raise FileNotFoundError(f"Data file not found: {ref_data_path}")
-    
     try:
         with open(ref_data_path, 'rb') as handle:
-            chebi_data = compress_pickle.load(handle, compression="lzma")
-        
-        logger.info(f"Loaded {len(chebi_data)} entries")
-        return chebi_data
-    
+            data = compress_pickle.load(handle, compression="lzma")
+        logger.info(f"Loaded {len(data)} entries")
+        return data
     except Exception as e:
-        logger.error(f"Error loading ChEBI data: {e}")
+        logger.error(f"Error loading reference data: {e}")
         raise
 
 
-def prepare_documents_for_indexing(chebi_data: Dict[str, List[str]]) -> tuple[List[str], List[str], List[Dict[str, Any]]]:
+def prepare_documents_for_indexing(ref_data: Dict[str, List[str]], database: str) -> tuple[list, list, list]:
     """
-    Convert ChEBI data into documents suitable for ChromaDB indexing.
-    
-    Each ChEBI entry becomes multiple documents - one for each name/synonym.
-    This allows for better retrieval when searching for chemical names.
-    
-    Args:
-        chebi_data: Dictionary mapping ChEBI IDs to lists of names/synonyms
-        
-    Returns:
-        Tuple of (ids, documents, metadatas)
+    Convert reference data into documents for ChromaDB indexing.
+    For ChEBI: chebi_id, for gene: ncbigene_id.
     """
     logger.info("Preparing documents for indexing...")
-    
     ids = []
     documents = []
     metadatas = []
     doc_id = 0
-    
-    for chebi_id, names in tqdm(chebi_data.items(), desc="Processing ChEBI entries"):
-        if not names:  # Skip entries with no names
+    for entry_id, names in tqdm(ref_data.items(), desc="Processing entries"):
+        if not names:
             continue
-            
-        # Create a document for each name/synonym
         for name in names:
-            if not name or name.strip() == "":  # Skip empty names
+            if not name or name.strip() == "":
                 continue
-                
-            # Clean the name
             cleaned_name = name.strip()
-            
-            # Simple metadata - just essential information
-            metadata = {
-                "chebi_id": chebi_id,
-                "name": cleaned_name
-            }
-            
-            ids.append(f"{chebi_id}_{doc_id}")
-            documents.append(cleaned_name)  # Use the name directly as document
+            if database == "chebi":
+                metadata = {"chebi_id": entry_id, "name": cleaned_name}
+                ids.append(f"{entry_id}_{doc_id}")
+            elif database == "ncbigene":
+                metadata = {"ncbigene_id": entry_id, "name": cleaned_name}
+                ids.append(f"{entry_id}_{doc_id}")
+            else:
+                raise ValueError(f"Unsupported database: {database}")
+            documents.append(cleaned_name)
             metadatas.append(metadata)
             doc_id += 1
-    
     logger.info(f"Prepared {len(documents)} documents for indexing")
     return ids, documents, metadatas
 
@@ -211,63 +186,53 @@ def test_search(
     collection_name: str,
     model_type: str = "default",
     persist_directory: str = "chroma_storage",
-    test_queries: List[str] = None
+    test_queries: Optional[list] = None,
+    database: str = "chebi"
 ) -> None:
     """
     Test the created embeddings with sample queries.
-    
-    Args:
-        collection_name: Name of the ChromaDB collection
-        model_type: Type of embedding model used
-        persist_directory: Directory where ChromaDB database is stored
-        test_queries: List of test chemical names to search for
     """
     if test_queries is None:
-        test_queries = [
-            "glucose",
-            "caffeine", 
-            "aspirin",
-            "water",
-            "ethanol"
-        ]
-    
+        if database == "chebi":
+            test_queries = ["glucose", "D-glucose", "blood sugar"]
+        elif database == "ncbigene":
+            test_queries = ["TP53", "BRCA1", "RAS"]
+        else:
+            test_queries = ["test"]
     logger.info("Testing the embeddings with sample queries...")
-    
-    # Initialize client and get collection
     client = chromadb.PersistentClient(path=persist_directory)
     embedding_function = get_embedding_function(model_type)
-    
     try:
         collection = client.get_collection(
             name=collection_name,
             embedding_function=embedding_function
         )
-        
-        # Test each query
         for query in test_queries:
             logger.info(f"\nSearching for: '{query}'")
-            
             try:
                 results = collection.query(
                     query_texts=[query],
-                    n_results=5,
-                    include=["metadatas", "distances", "documents"]
+                    n_results=3,
+                    include=["embeddings","metadatas", "distances", "documents"]
                 )
-                
-                print(f"\nTop 5 results for '{query}':")
-                for i, (metadata, distance, document) in enumerate(zip(
+                print(f"\nTop 3 results for '{query}':")
+                for i, (embedding, metadata, distance, document) in enumerate(zip(
+                    results['embeddings'][0],
                     results['metadatas'][0], 
                     results['distances'][0], 
                     results['documents'][0]
                 )):
-                    chebi_id = metadata.get('chebi_id', 'Unknown')
+                    if database == "chebi":
+                        entry_id = metadata.get('chebi_id', 'Unknown')
+                    elif database == "ncbigene":
+                        entry_id = metadata.get('ncbigene_id', 'Unknown')
+                    else:
+                        entry_id = metadata.get('id', 'Unknown')
                     name = metadata.get('name', 'Unknown')
                     similarity = 1 - distance
-                    print(f"  {i+1}. {chebi_id}: {name} (similarity: {similarity:.3f})")
-                    
+                    print(f"  {i+1}. {entry_id}: {name} (similarity: {similarity:.3f})")
             except Exception as e:
                 logger.error(f"Error searching for '{query}': {e}")
-                
     except Exception as e:
         logger.error(f"Error accessing collection '{collection_name}': {e}")
         logger.error("Make sure the collection exists and was created with the same model type")
@@ -275,23 +240,33 @@ def test_search(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Load ChEBI reference data and create embeddings for RAG-based entity linking"
+        description="Load reference data and create embeddings for RAG-based entity linking (ChEBI or NCBI gene)"
     )
-    
+    parser.add_argument(
+        "--database",
+        type=str,
+        choices=["chebi", "ncbigene"],
+        default="chebi",
+        help="Database to use: 'chebi' or 'ncbigene' (default: chebi)"
+    )
+    parser.add_argument(
+        "--tax_id",
+        type=str,
+        default=None,
+        help="Taxonomy ID for gene database (required for ncbigene)"
+    )
     parser.add_argument(
         "--ref_data_path",
         type=str,
-        default="chebi/chebi2names.lzma",
-        help="Path to the reference file (default: chebi/chebi2names.lzma)"
+        default=None,
+        help="Path to the reference file (default: auto for selected database)"
     )
-    
     parser.add_argument(
         "--collection",
         type=str,
-        default="chebi_default",
-        help="Name for the ChromaDB collection (default: chebi_default)"
+        default=None,
+        help="Name for the ChromaDB collection (default: auto for selected database)"
     )
-    
     parser.add_argument(
         "--model",
         type=str,
@@ -299,47 +274,49 @@ def main():
         default="default",
         help="Embedding model type (default: default)"
     )
-    
     parser.add_argument(
         "--persist_directory",
         type=str,
         default="chroma_storage",
         help="Directory to store ChromaDB database (default: chroma_storage)"
     )
-    
     parser.add_argument(
         "--batch_size",
         type=int,
         default=500,
         help="Batch size for indexing (default: 500)"
     )
-    
     parser.add_argument(
         "--test",
         action="store_true",
         help="Run test queries after creating embeddings"
     )
-    
     parser.add_argument(
         "--test_only",
         action="store_true",
         help="Only run test queries (skip embedding creation)"
     )
-    
     args = parser.parse_args()
-    
-    # Ensure the persist directory exists
+    # Determine defaults for ref_data_path and collection
+    if args.ref_data_path is None:
+        if args.database == "chebi":
+            args.ref_data_path = str(Path("chebi/chebi2names.lzma"))
+        elif args.database == "ncbigene":
+            if not args.tax_id:
+                raise ValueError("--tax_id is required for ncbigene database")
+            args.ref_data_path = str(Path(f"ncbigene/ncbigene2names_tax{args.tax_id}_protein-coding.lzma"))
+    if args.collection is None:
+        if args.database == "chebi":
+            args.collection = "chebi_default_numonly"
+        elif args.database == "ncbigene":
+            if not args.tax_id:
+                raise ValueError("--tax_id is required for ncbigene database")
+            args.collection = f"ncbigene_default_tax{args.tax_id}"
     os.makedirs(args.persist_directory, exist_ok=True)
-    
     try:
         if not args.test_only:
-            # Load ChEBI data
-            chebi_data = load_chebi_data(args.ref_data_path)
-            
-            # Prepare documents for indexing
-            ids, documents, metadatas = prepare_documents_for_indexing(chebi_data)
-            
-            # Create embeddings
+            ref_data = load_reference_data(args.ref_data_path)
+            ids, documents, metadatas = prepare_documents_for_indexing(ref_data, args.database)
             create_embeddings(
                 ids=ids,
                 documents=documents,
@@ -349,17 +326,14 @@ def main():
                 persist_directory=args.persist_directory,
                 batch_size=args.batch_size
             )
-        
-        # Run tests if requested
         if args.test or args.test_only:
             test_search(
                 collection_name=args.collection,
                 model_type=args.model,
-                persist_directory=args.persist_directory
+                persist_directory=args.persist_directory,
+                database=args.database
             )
-            
         logger.info("Process completed successfully!")
-        
     except Exception as e:
         logger.error(f"Process failed: {e}")
         sys.exit(1)

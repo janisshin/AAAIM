@@ -1,0 +1,35 @@
+Model: BIOMD0000000426
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:45:15
+
+Synonyms:
+species_1: ['glucose', 'D-glucose', 'blood sugar']
+species_2: ['glucose-6-phosphate', 'D-glucose-6-phosphate', 'G6P']
+species_3: ['adenosine diphosphate', 'ADP', "5'-adenylic acid"]
+species_4: ['adenosine triphosphate', 'ATP', "5'-adenosine triphosphate"]
+species_5: ['fructose-6-phosphate', 'D-fructose-6-phosphate', 'F6P']
+species_6: ['fructose-1,6-bisphosphate', 'D-fructose-1,6-bisphosphate', 'F16P']
+species_7: ['erythrose-4-phosphate', 'D-erythrose-4-phosphate', 'E4P']
+species_8: ['2-phosphoglycerate', '3-phosphoglycerate', 'phosphoglyceric acid']
+species_9: ['glucose (extracellular)', 'D-glucose (extracellular)', 'blood glucose']
+species_11: ['nicotinamide adenine dinucleotide phosphate (reduced)', 'NADPH', "2'-O-phospho-5'-adenylyl-(8,13)-nicotinamide"]
+species_13: ['ribulose-5-phosphate', 'D-ribulose-5-phosphate', 'RU5P']
+species_14: ['xylulose-5-phosphate', 'D-xylulose-5-phosphate', 'X5P']
+species_15: ['ribose-5-phosphate', 'D-ribose-5-phosphate', 'R5P']
+species_16: ['glyceraldehyde-3-phosphate', 'D-glyceraldehyde-3-phosphate', 'GAP']
+species_17: ['sedoheptulose-7-phosphate', 'D-sedoheptulose-7-phosphate', 'S7P']
+species_18: ['nicotinamide adenine dinucleotide (reduced)', 'NADH', "2'-O-phospho-5'-adenylyl-(8,13)-nicotinamide"]
+species_20: ['adenosine monophosphate', 'AMP', "5'-adenylic acid"]
+species_22: ['glucose-1-phosphate', 'D-glucose-1-phosphate', 'G1P']
+species_23: ['inorganic phosphate', 'phosphate ion', 'Pi']
+species_25: ['citrate', 'citric acid', '2-hydroxy-1,2,3-propanetricarboxylic acid']
+species_27: ['dihydroxyacetone phosphate', 'D-dihydroxyacetone phosphate', 'DHAP']
+species_28: ['3-phosphoglycerate', 'phosphoglyceric acid', '3-PGA']
+species_29: ['2-phosphoglycerate', 'phosphoglyceric acid', '2-PGA']
+species_30: ['phosphoenolpyruvate', 'PEP', '2-phosphoenolpyruvate']
+species_31: ['pyruvate', 'pyruvic acid', '2-oxopropanoic acid']
+species_32: ['lactic acid', 'lactate', '2-hydroxypropanoic acid']
+species_33: ['carbon dioxide', 'CO2', 'carbonic anhydride']
+species_34: ['oxygen', 'dioxygen', 'O2']
+
+Reason: The species were identified based on their display names and the context of the model, which describes central carbon metabolism regulated by AKT. The standardized names and common synonyms were chosen based on their relevance to the biochemical pathways involved, including glycolysis, the pentose phosphate pathway, and cellular respiration.

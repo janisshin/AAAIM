@@ -1,0 +1,11 @@
+Model: BIOMD0000000108
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:38:56
+
+Synonyms:
+species_0000001: ['superoxide', 'superoxide anion', 'O2*-']
+species_0000006: ['hydrogen peroxide', 'H2O2', 'dihydrogen dioxide']
+species_0000008: ['hydroxyl radical', 'HO*', 'hydroxyl']
+species_0000009: ['lipid hydroperoxide', 'LOOH', 'alkyl hydroperoxide']
+
+Reason: The annotations are based on the display names provided in the model and the reactions they are involved in. species_0000001 is likely superoxide due to its involvement in reactions typical of superoxide dismutase activity. species_0000006 is clearly hydrogen peroxide based on its display name and reaction participation. species_0000008 is identified as the hydroxyl radical from its display name and role in reactions. species_0000009 is annotated as lipid hydroperoxide based on its display name and the context of lipid oxidation reactions.

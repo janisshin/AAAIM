@@ -1,0 +1,10 @@
+Model: BIOMD0000000137
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:39:08
+
+Synonyms:
+x13: ['phosphatidylinositol 3,4,5-trisphosphate', 'PIP3', 'inositol 3,4,5-trisphosphate']
+x14: ['phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'inositol 4,5-bisphosphate']
+x15: ['phosphatidylinositol 3,4-bisphosphate', 'PIP2(3,4)', 'inositol 3,4-bisphosphate']
+
+Reason: The display names provided match common abbreviations for phosphatidylinositol phosphates, which are key molecules in the insulin signaling pathway, allowing for straightforward mapping to standardized names.

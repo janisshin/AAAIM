@@ -1,0 +1,43 @@
+Model: BIOMD0000000205
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:40:51
+
+Synonyms:
+species_17: ['Ras GDP', 'Ras guanosine diphosphate', 'Ras-GDP']
+species_18: ['EGF-pEGFR-2-pShc-Grb2-SOS-RasGDP', 'UNKN', 'UNKN']
+species_19: ['Ras GTP', 'Ras guanosine triphosphate', 'Ras-GTP']
+species_22: ['EGF-pEGFR-2-Grb2-SOS-RasGDP', 'UNKN', 'UNKN']
+species_24: ['Raf-RasGTP', 'UNKN', 'UNKN']
+species_55: ['Phosphatidylinositol 4,5-bisphosphate', 'PIP2', 'Phosphatidylinositol-4,5-bisphosphate']
+species_56: ['pPI3K-PIP2', 'UNKN', 'UNKN']
+species_57: ['Phosphatidylinositol 3,4,5-trisphosphate', 'PIP3', 'Phosphatidylinositol-3,4,5-trisphosphate']
+species_59: ['Akt-PIP3', 'UNKN', 'UNKN']
+species_61: ['Akt-PIP3-PDK1', 'UNKN', 'UNKN']
+species_62: ['pAkt-PIP3', 'UNKN', 'UNKN']
+species_65: ['pAkt-PIP3-Takt', 'UNKN', 'UNKN']
+species_66: ['pRaf-pAkt-PIP3', 'UNKN', 'UNKN']
+species_72: ['pPTEN-PIP3', 'UNKN', 'UNKN']
+species_74: ['PIP3-RacGEF', 'UNKN', 'UNKN']
+species_75: ['Rac GDP', 'Rac guanosine diphosphate', 'Rac-GDP']
+species_76: ['PIP3-RacGEF-RacGDP', 'UNKN', 'UNKN']
+species_77: ['Rac GTP', 'Rac guanosine triphosphate', 'Rac-GTP']
+species_79: ['RhoGDI-RacGDP', 'UNKN', 'UNKN']
+species_81: ['RacGTP-RacGAP', 'UNKN', 'UNKN']
+species_86: ['Rho GTP', 'Rho guanosine triphosphate', 'Rho-GTP']
+species_88: ['EGF-pEGFR-2-RasGAP-RasGTP', 'UNKN', 'UNKN']
+species_148: ['EGF-pEGFR-2-pShc-Grb2-MEKK1abcdefRasGTP', 'UNKN', 'UNKN']
+species_149: ['EGF-pEGFR-2-pShc-Grb2-MEKK1abMEKcdefRasGTP', 'UNKN', 'UNKN']
+species_150: ['EGF-pEGFR-2-pShc-Grb2-MEKK1abpMEKcdefRasGTP', 'UNKN', 'UNKN']
+species_151: ['EGF-pEGFR-2-pShc-Grb2-MEKK1abppMEKcdefRasGTP', 'UNKN', 'UNKN']
+species_152: ['EGF-pEGFR-2-Grb2-MEKK1abcdefRasGTP', 'UNKN', 'UNKN']
+species_153: ['EGF-pEGFR-2-Grb2-MEKK1abMEKcdefRasGTP', 'UNKN', 'UNKN']
+species_154: ['EGF-pEGFR-2-Grb2-MEKK1abpMEKcdefRasGTP', 'UNKN', 'UNKN']
+species_155: ['EGF-pEGFR-2-Grb2-MEKK1abppMEKcdefRasGTP', 'UNKN', 'UNKN']
+species_156: ['EGF-pEGFR-2-pShc-Grb2-MEKK1abppMEKcERKdefRasGTP', 'UNKN', 'UNKN']
+species_157: ['EGF-pEGFR-2-pShc-Grb2-MEKK1abppMEKcpERKdefRasGTP', 'UNKN', 'UNKN']
+species_158: ['EGF-pEGFR-2-pShc-Grb2-MEKK1abppMEKcppERKdefRasGTP', 'UNKN', 'UNKN']
+species_159: ['EGF-pEGFR-2-Grb2-MEKK1abppMEKcERKdefRasGTP', 'UNKN', 'UNKN']
+species_160: ['EGF-pEGFR-2-Grb2-MEKK1abppMEKcpERKdefRasGTP', 'UNKN', 'UNKN']
+species_161: ['EGF-pEGFR-2-Grb2-MEKK1abppMEKcppERKdefRasGTP', 'UNKN', 'UNKN']
+
+Reason: Most species names are not directly recognizable as chemical entities, but some can be matched to known biochemical compounds or proteins based on their display names or reaction contexts. For example, species_57 is matched to "Phosphatidylinositol 3,4,5-trisphosphate" (PIP3) due to its display name, while species_75 is matched to "Rac GDP" based on its display name and reaction context. Many species, however, are complex protein or protein complex names and cannot be directly mapped to standardized chemical names without more specific information about their composition or function.

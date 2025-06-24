@@ -1,0 +1,30 @@
+Model: 218_TCA-CYCLE_source
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-17 13:01:31
+
+Synonyms:
+csa1916: ['SUCLG1', 'SUCLG2', 'SUCLA2']
+csa1897: ['MDH2', 'MDH1', 'MDH1B']
+csa1919: ['FH', 'FH1', 'FUMH']
+csa1898: ['PDP1', 'PDP2', 'PPM1K']
+csa1902: ['IDH3A', 'IDH3B', 'IDH3G']
+csa1899: ['SUCLG1', 'SUCLG2', 'SUCLA2']
+csa1914: ['SLC25A19', 'SLC25A11', 'SLC25A22']
+csa1949: ['PDHA1', 'PDHB', 'PDHX']
+csa1901: ['PDP1', 'PDP2', 'PPM1K']
+csa1921: ['PDK1', 'PDK2', 'PDK3']
+csa1895: ['PDHA1', 'PDHB', 'PDHX']
+csa1896: ['IDH3A', 'IDH3B', 'IDH3G']
+sa11962: ['GLUD1', 'GLUD2', 'GLUL']
+sa12216: ['L2HGDH', 'D2HGDH', 'HGDH']
+sa11979: ['PC', 'PCCB', 'PCCA']
+sa11955: ['ACO2', 'ACO1', 'IRP1']
+sa11881: ['D2HGDH', 'L2HGDH', 'HGDH']
+sa11901: ['ACSS1', 'ACSS2', 'ACSS3']
+sa11950: ['CS', 'CSE', 'CSS1']
+sa11987: ['ADHFE1', 'ADH1', 'ADH4']
+sa11867: ['SIRT3', 'SIRT1', 'SIRT2']
+sa12293: ['NUDT2', 'NUDT1', 'NUDT5']
+sa11944: ['ALDH2', 'ALDH1A1', 'ALDH1B1']
+
+Reason: The provided model appears to be a metabolic pathway model, with species names corresponding to enzymes, transporters, and other proteins involved in various biochemical reactions. The standardized names were determined based on the display names and boolean transitions, which suggest the involvement of specific enzymes and proteins in the model. For example, csa1916 is likely "SUCLG1" due to its involvement in the succinyl-CoA ligase complex, while sa11962 is likely "GLUD1" due to its identification as "GLUD1" in the display names. Similarly, sa11867 is likely "SIRT3" due to its identification as "SIRT3" in the display names, and its involvement in the regulation of various metabolic pathways.

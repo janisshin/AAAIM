@@ -1,0 +1,18 @@
+Model: BIOMD0000000689
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 16:01:12
+
+Synonyms:
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+AMP: ['adenosine monophosphate', 'AMP', "adenosine 5'-monophosphate"]
+p_ABA: ['4-amino-4-deoxypterin', 'p-aminobenzoic acid', '4-aminobenzoic acid']
+H2_Pteroate: ['pterotic acid', '4-[(2-amino-4-hydroxy-6-pteridinyl)methyl]benzoic acid', 'pteroylglutamic acid precursor']
+L_Glutamate: ['glutamic acid', 'L-glutamate', 'glutamate']
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+DHF: ['dihydrofolate', '7,8-dihydrofolate', 'DHF']
+L_serine: ['serine', 'L-serine', '2-amino-3-hydroxypropanoic acid']
+Glycine: ['glycine', 'aminoacetic acid', '2-aminoethanoic acid']
+NADPH: ['nicotinamide adenine dinucleotide phosphate', 'NADPH', 'reduced nicotinamide adenine dinucleotide phosphate']
+CH2_THF: ['5,10-methylenetetrahydrofolate', '5,10-CH2-THF', 'methylenetetrahydrofolate']
+
+Reason: The standardized names and common synonyms for each species were determined based on their display names and roles in the folate pathway model, with ATP, ADP, and AMP being well-known energy transfer molecules, p_ABA being a precursor to folate, H2_Pteroate being a pterin derivative, L_Glutamate and Glycine being amino acids, DHF being a folate intermediate, L_serine being an amino acid involved in folate metabolism, NADPH being a reducing agent, and CH2_THF being a key intermediate in the folate pathway.

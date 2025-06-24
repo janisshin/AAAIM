@@ -1,0 +1,21 @@
+Model: BIOMD0000000232
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:41:35
+
+Synonyms:
+ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+H: ['hydrogen ion', 'proton', 'H+']
+He: ['UNK']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+', 'nicotinamide adenine dinucleotide (oxidized form)']
+NADH: ['nicotinamide adenine dinucleotide (reduced form)', 'NADH', 'dihydronicotinamide adenine dinucleotide']
+AcCoA: ['acetyl-CoA', 'acetyl coenzyme A', 'acetyl-S-coenzyme A']
+KG: ['alpha-ketoglutaric acid', '2-oxoglutarate', 'alpha-ketoglutarate']
+Cit: ['citric acid', 'citrate', 'citrate(4-)']
+OAA: ['oxaloacetic acid', 'oxaloacetate', '2-oxosuccinate']
+O2: ['oxygen', 'dioxygen', 'molecular oxygen']
+iP: ['phosphate', 'inorganic phosphate', 'orthophosphate']
+Pyr: ['pyruvic acid', 'pyruvate', '2-oxopropanoic acid']
+H2O: ['water', 'dihydrogen oxide', 'oxidane']
+
+Reason: The species were annotated based on their display names and roles in the TCA cycle and ATP production model. He was annotated as "UNK" because its display name "H+" is already assigned to species H, and its reaction vleak: $He => $H suggests it might be an error or a duplicate, rather than a distinct chemical entity.

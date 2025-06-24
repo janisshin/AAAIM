@@ -1,0 +1,37 @@
+Model: BIOMD0000000247
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:42:07
+
+Synonyms:
+P: ['high-energy phosphate', 'phosphate group', 'energy-rich phosphate']
+G6P: ['glucose 6-phosphate', 'D-glucose 6-phosphate', 'glucose-6-phosphate']
+F6P: ['fructose 6-phosphate', 'D-fructose 6-phosphate', 'fructose-6-phosphate']
+F16P: ['fructose-1,6-bisphosphate', 'D-fructose-1,6-bisphosphate', 'fructose 1,6-diphosphate']
+NADH: ['nicotinamide adenine dinucleotide + hydrogen', 'reduced nicotinamide adenine dinucleotide', 'NADH']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+', 'diphosphopyridine nucleotide']
+BPG: ['1,3-bisphosphoglycerate', '1,3-bisphosphoglyceric acid', 'glycerate 1,3-bisphosphate']
+P3G: ['3-phosphoglycerate', '3-phosphoglyceric acid', 'glycerate 3-phosphate']
+P2G: ['2-phosphoglycerate', '2-phosphoglyceric acid', 'glycerate 2-phosphate']
+PEP: ['phosphoenolpyruvate', 'phosphoenolpyruvic acid', '2-phosphoenolpyruvate']
+PYR: ['pyruvate', 'pyruvic acid', '2-oxopropanoic acid']
+ACE: ['acetaldehyde', 'ethanal', 'acetic aldehyde']
+CO2: ['carbon dioxide', 'carbonic acid', 'CO2']
+ETOH: ['ethanol', 'ethyl alcohol', 'alcohol']
+SUCC: ['succinate', 'succinic acid', 'butanedioic acid']
+GA3P: ['glyceraldehyde 3-phosphate', 'D-glyceraldehyde 3-phosphate', 'glyceraldehyde-3-phosphate']
+DHAP: ['dihydroxyacetone phosphate', 'D-dihydroxyacetone phosphate', 'dihydroxyacetonephosphate']
+GLY: ['glycerol', 'glycerin', 'propane-1,2,3-triol']
+D6PGluconoLactone: ['6-phosphoglucono-1,5-lactone', '6-phosphogluconolactone', 'gluconolactone 6-phosphate']
+D6PGluconate: ['6-phosphogluconate', '6-phosphogluconic acid', 'gluconate 6-phosphate']
+NADP: ['nicotinamide adenine dinucleotide phosphate', 'NADP+', 'TPN']
+NADPH: ['nicotinamide adenine dinucleotide phosphate + hydrogen', 'reduced nicotinamide adenine dinucleotide phosphate', 'NADPH']
+Ribulose5P: ['ribulose 5-phosphate', 'D-ribulose 5-phosphate', 'ribulose-5-phosphate']
+Ribose5P: ['ribose 5-phosphate', 'D-ribose 5-phosphate', 'ribose-5-phosphate']
+Xyl5P: ['xylulose 5-phosphate', 'D-xylulose 5-phosphate', 'xylulose-5-phosphate']
+Seduhept7P: ['sedoheptulose 7-phosphate', 'D-sedoheptulose 7-phosphate', 'sedoheptulose-7-phosphate']
+Erythrose4P: ['erythrose 4-phosphate', 'D-erythrose 4-phosphate', 'erythrose-4-phosphate']
+GLCo: ['glucose', 'D-glucose', 'blood sugar']
+GLCi: ['glucose', 'D-glucose', 'cytosolic glucose']
+F26BP: ['fructose-2,6-bisphosphate', 'D-fructose-2,6-bisphosphate', 'fructose 2,6-diphosphate']
+
+Reason: The given model is a biochemical model of carbohydrate rerouting in response to oxidative stress, and the display names and reactions provide sufficient information to identify the species as common biochemical compounds. The standardized names and synonyms are based on common usage in biochemistry and are ranked by likelihood based on the context of the model.

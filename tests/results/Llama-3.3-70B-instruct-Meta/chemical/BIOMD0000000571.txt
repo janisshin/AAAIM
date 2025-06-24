@@ -1,0 +1,26 @@
+Model: BIOMD0000000571
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:56:43
+
+Synonyms:
+CRP_cAMP: ['cyclic AMP receptor protein', 'cAMP receptor protein', 'CRP']
+CRP_cAMP_CRPsiteI_crp: ['UNK']
+CRP_cAMP_CRPsiteII_crp: ['UNK']
+CRP_cAMP_CRPsite_cyaA: ['UNK']
+CRP_cAMP_CRPsite_genome: ['UNK']
+CRP_cAMP_CRPsite_ptsGp1: ['UNK']
+CRP_cAMP_CRPsite_ptsGp2: ['UNK']
+CRP_cAMP_CRPsite_ptsHp0: ['UNK']
+CRP_cAMP_CRPsite_ptsHp1: ['UNK']
+CRP_cAMP_CRPsite_ptsIp0: ['UNK']
+CRP_cAMP_CRPsite_ptsIp1: ['UNK']
+CRP_cAMP_CRPsite_mlcp1: ['UNK']
+CRP_cAMP_CRPsite_mlcp2: ['UNK']
+cAMP: ['cyclic adenosine monophosphate', 'cyclic AMP', "adenosine 3',5'-cyclic monophosphate"]
+Pyr: ['pyruvate', 'pyruvic acid', '2-oxopropanoic acid']
+PEP: ['phosphoenolpyruvate', 'phosphoenolpyruvic acid', '2-phosphoenolpyruvate']
+Glc6P: ['glucose-6-phosphate', 'D-glucose-6-phosphate', 'glucose 6-phosphate']
+Glucose: ['glucose', 'D-glucose', 'blood sugar']
+ATP: ['adenosine triphosphate', "adenosine 5'-triphosphate", 'ATP']
+
+Reason: The CRP_cAMP and its variants are likely related to the cAMP receptor protein, but the specific sites are unknown without more context. cAMP is a well-known molecule, Pyr is likely pyruvate, PEP is phosphoenolpyruvate, Glc6P is glucose-6-phosphate, Glucose is a common sugar, and ATP is adenosine triphosphate. The other species are unknown due to lack of information.

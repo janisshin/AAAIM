@@ -1,0 +1,8 @@
+Model: BIOMD0000000569
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:56:34
+
+Synonyms:
+glu: ['glutamate', 'glutamic acid', 'L-glutamate']
+
+Reason: The model is related to AMPA receptors, which are glutamate receptors, and the reactions involve glu as a ligand, suggesting that glu represents glutamate, a common neurotransmitter in the central nervous system.

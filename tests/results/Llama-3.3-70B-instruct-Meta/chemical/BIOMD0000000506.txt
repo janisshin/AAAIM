@@ -1,0 +1,39 @@
+Model: BIOMD0000000506
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:55:00
+
+Synonyms:
+C16AcylCoAMAT: ['palmitoyl-CoA', 'hexadecanoyl-CoA', 'palmitoyl coenzyme A']
+C16EnoylCoAMAT: ['hexadecenoyl-CoA', 'palmitoleoyl-CoA', 'hexadec-2-enoyl-CoA']
+C16KetoacylCoAMAT: ['hexadecanoyl-CoA(3-oxo-)', '3-oxopalmitoyl-CoA', 'hexadec-3-onyl-CoA']
+C14AcylCoAMAT: ['myristoyl-CoA', 'tetradecanoyl-CoA', 'myristoyl coenzyme A']
+C14EnoylCoAMAT: ['myristoleoyl-CoA', 'tetradec-2-enoyl-CoA', 'myrist-5-enoyl-CoA']
+C14KetoacylCoAMAT: ['tetradecanoyl-CoA(3-oxo-)', '3-oxomyristoyl-CoA', 'tetradec-3-onyl-CoA']
+C12AcylCoAMAT: ['dodecanoyl-CoA', 'lauroyl-CoA', 'lauroyl coenzyme A']
+C12EnoylCoAMAT: ['lauroleoyl-CoA', 'dodec-2-enoyl-CoA', 'lauro-3-enoyl-CoA']
+C12KetoacylCoAMAT: ['dodecanoyl-CoA(3-oxo-)', '3-oxolauroyl-CoA', 'dodec-3-onyl-CoA']
+C10AcylCoAMAT: ['decanoyl-CoA', 'caprinoyl-CoA', 'decanoyl coenzyme A']
+C10EnoylCoAMAT: ['dec-2-enoyl-CoA', 'caprinoyleoyl-CoA', 'dec-3-enoyl-CoA']
+C10KetoacylCoAMAT: ['decanoyl-CoA(3-oxo-)', '3-oxodecanoyl-CoA', 'dec-3-onyl-CoA']
+C8AcylCoAMAT: ['octanoyl-CoA', 'capryloyl-CoA', 'octanoyl coenzyme A']
+C8EnoylCoAMAT: ['oct-2-enoyl-CoA', 'capryoleoyl-CoA', 'oct-3-enoyl-CoA']
+C8KetoacylCoAMAT: ['octanoyl-CoA(3-oxo-)', '3-oxooctanoyl-CoA', 'oct-3-onyl-CoA']
+C6AcylCoAMAT: ['hexanoyl-CoA', 'caproyl-CoA', 'hexanoyl coenzyme A']
+C6EnoylCoAMAT: ['hex-2-enoyl-CoA', 'caproleoyl-CoA', 'hex-3-enoyl-CoA']
+C6KetoacylCoAMAT: ['hexanoyl-CoA(3-oxo-)', '3-oxohexanoyl-CoA', 'hex-3-onyl-CoA']
+C4AcylCoAMAT: ['butanoyl-CoA', 'butyryl-CoA', 'butyryl coenzyme A']
+C4EnoylCoAMAT: ['but-2-enoyl-CoA', 'crotonyl-CoA', 'but-2-enoyl coenzyme A']
+C4AcetoacylCoAMAT: ['acetoacetyl-CoA', 'acetoacetyl coenzyme A', '3-oxobutanoyl-CoA']
+AcetylCoAMAT: ['acetyl-CoA', 'acetyl coenzyme A', 'ethanoyl-CoA']
+FADHMAT: ['FADH2', 'flavin adenine dinucleotide (reduced)', 'dihydroflavin adenine dinucleotide']
+NADHMAT: ['NADH', 'nicotinamide adenine dinucleotide (reduced)', 'dihydronicotinamide adenine dinucleotide']
+CoAMAT: ['CoA', 'coenzyme A', "3'-phosphoadenosine-5'-diphosphate"]
+C16AcylCoACYT: ['palmitoyl-carnitine', 'hexadecanoyl-carnitine', 'palmitoyl-L-carnitine']
+CarCYT: ['L-carnitine', 'carnitine', '3-hydroxy-4-(trimethylammonio)butyrate']
+CoACYT: ['acetyl-carnitine', 'acetylcarnitine', 'O-acetylcarnitine']
+MalCoACYT: ['malonyl-carnitine', 'malonyl-L-carnitine', '3-oxopropanoyl-L-carnitine']
+CarMAT: ['UNK']
+FADtMAT: ['UNK']
+CoAMATt: ['UNK']
+
+Reason: The model is related to fatty acid β-oxidation, and most of the species can be identified as intermediates in this pathway. The species with "CoAMAT" suffix are likely CoA esters, and those with "CoACYT" suffix are likely carnitine esters. The species without display names or reactions are annotated as "UNK". The annotations are based on the names and the context of the model, and the likelihood of each annotation is ranked based on the similarity between the species name and the standardized name.

@@ -17,9 +17,11 @@ import sys
 from typing import Dict, List, Optional, Tuple, Any
 from pathlib import Path
 import logging
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_distances
 
 from core.curation_workflow import curate_model
-from core.model_info import find_species_with_chebi_annotations, extract_model_info, format_prompt, find_species_with_ncbigene_annotations
+from core.model_info import find_species_with_chebi_annotations, extract_model_info, format_prompt, find_species_with_ncbigene_annotations, get_species_display_names
 from core.llm_interface import SYSTEM_PROMPT, query_llm, parse_llm_response, get_system_prompt
 from core.data_types import Recommendation
 from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, clear_chromadb_cache
@@ -243,7 +245,7 @@ def get_precision(ref: Dict[str, List[str]], pred: Dict[str, List[str]], mean: b
 
 def get_species_statistics(recommendations: List[Recommendation], 
                           refs_formula: Dict[str, List[str]], 
-                          refs_chebi: Dict[str, List[str]], 
+                          refs_exact: Dict[str, List[str]], 
                           model_mean: bool = False) -> Dict[str, Any]:
     """
     Calculate species statistics including formula and exact-based metrics.
@@ -252,21 +254,21 @@ def get_species_statistics(recommendations: List[Recommendation],
     Args:
         recommendations: List of Recommendation objects
         refs_formula: Reference formulas {id: [formulas]}
-        refs_chebi: Reference ChEBI IDs {id: [chebi_ids]}
+        refs_exact: Reference ChEBI IDs {id: [chebi_ids]}
         model_mean: If True, return model-level averages
         
     Returns:
         Dictionary with recall and precision statistics
     """
     # Convert recommendations to prediction dictionaries
-    preds_chebi = {val.id: [k for k in val.candidates] for val in recommendations}
+    preds_exact = {val.id: [k for k in val.candidates] for val in recommendations}
     
     # Convert ChEBI predictions to formulas
     formula_dict = load_chebi_formula_dict()
     preds_formula = {}
-    for k in preds_chebi.keys():
+    for k in preds_exact.keys():
         formulas = []
-        for chebi_id in preds_chebi[k]:
+        for chebi_id in preds_exact[k]:
             if chebi_id in formula_dict:
                 formula = formula_dict[chebi_id]
                 if formula:  # Only add non-empty formulas
@@ -276,13 +278,13 @@ def get_species_statistics(recommendations: List[Recommendation],
     # Calculate metrics
     recall_formula = get_recall(ref=refs_formula, pred=preds_formula, mean=model_mean)
     precision_formula = get_precision(ref=refs_formula, pred=preds_formula, mean=model_mean)
-    recall_exact = get_recall(ref=refs_chebi, pred=preds_chebi, mean=model_mean)
-    precision_exact = get_precision(ref=refs_chebi, pred=preds_chebi, mean=model_mean)
+    recall_exact = get_recall(ref=refs_exact, pred=preds_exact, mean=model_mean)
+    precision_exact = get_precision(ref=refs_exact, pred=preds_exact, mean=model_mean)
     
     return {
         'recall_formula': recall_formula, 
-        'recall_exact': recall_exact, 
         'precision_formula': precision_formula, 
+        'recall_exact': recall_exact, 
         'precision_exact': precision_exact
     }
 
@@ -344,13 +346,15 @@ def find_species_with_gene_annotations(model_file: str) -> Dict[str, List[str]]:
 def evaluate_single_model(model_file: str, 
                          llm_model: str = 'meta-llama/llama-3.3-70b-instruct:free',
                          method: str = "direct",
+                         top_k: int = 3,
                          max_entities: int = None,
                          entity_type: str = "chemical",
                          database: str = "chebi",
                          save_llm_results: bool = True,
                          output_dir: str = './results/',
                          verbose: bool = True,
-                         tax_id: str = None) -> Optional[pd.DataFrame]:
+                         tax_id: str = None,
+                         tax_name: str = None) -> Optional[pd.DataFrame]:
     """
     Generate species evaluation statistics for one model.
     
@@ -358,6 +362,7 @@ def evaluate_single_model(model_file: str,
         model_file: Path to SBML model file
         llm_model: LLM model to use
         method: Method to use for database search ("direct", "rag")
+        top_k: Number of top candidates to retrieve per species for RAG search
         max_entities: Maximum number of entities to evaluate (None for all)
         entity_type: Type of entities to annotate
         database: Target database
@@ -365,7 +370,8 @@ def evaluate_single_model(model_file: str,
         output_dir: Directory to save results
         verbose: If True, show detailed logging. If False, minimize output.
         tax_id: For gene/protein annotations, the organism's tax_id for species-specific lookup
-        
+        tax_name: For gene/protein annotations, the organism's tax_name for species-specific lookup
+
     Returns:
         DataFrame with evaluation results or None if failed
     """
@@ -431,12 +437,9 @@ def evaluate_single_model(model_file: str,
                     return None
             elif method == "rag":
                 if database == "chebi":
-                    recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi")
+                    recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
                 elif database == "ncbigene":
-                    # For now, NCBI gene only supports direct search
-                    if verbose:
-                        logger.warning("RAG method not yet implemented for NCBI gene, using direct method")
-                    recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
+                    recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
                 else:
                     if verbose:
                         logger.error(f"Database {database} not supported")
@@ -457,7 +460,7 @@ def evaluate_single_model(model_file: str,
         # Convert to evaluation format with LLM results
         result_df = _convert_format(
             recommendations, existing_annotations, model_name, 
-            synonyms_dict, reason, total_time, llm_time, search_time, entity_type, database
+            synonyms_dict, reason, total_time, llm_time, search_time, entity_type, database, tax_id, tax_name, model_file
         )
         
         # Save LLM results if requested
@@ -471,10 +474,22 @@ def evaluate_single_model(model_file: str,
             logger.error(f"Failed to evaluate model {model_file}: {e}")
         return None
 
+def get_model_taxonomy(model_file, tax_dict_file):
+    tax_dict_df = pd.read_csv(tax_dict_file)
+    model_file_id = model_file.replace('.xml', '')
+    if model_file_id in tax_dict_df['id'].values:
+        tax_id = tax_dict_df[tax_dict_df['id'] == model_file_id]['tax_id'].values[0]
+        tax_name = tax_dict_df[tax_dict_df['id'] == model_file_id]['organism'].values[0]
+    else:
+        tax_id = None
+        tax_name = None
+    return tax_id, tax_name
+
 def evaluate_models_in_folder(model_dir: str,
                              num_models: str = 'all',
                              llm_model: str = 'meta-llama/llama-3.3-70b-instruct:free',
                              method: str = "direct",
+                             top_k: int = 3,
                              max_entities: int = None,
                              entity_type: str = "chemical",
                              database: str = "chebi",
@@ -483,7 +498,8 @@ def evaluate_models_in_folder(model_dir: str,
                              output_file: str = 'evaluation_results.csv',
                              start_at: int = 1,
                              verbose: bool = False,
-                             tax_id: str = None) -> pd.DataFrame:
+                             tax_id: str = None,
+                             tax_dict_file: str = None) -> pd.DataFrame:
     """
     Generate species evaluation statistics for multiple models in a directory.
     Replicates evaluate_models from AMAS test_LLM_synonyms_plain.ipynb
@@ -493,6 +509,7 @@ def evaluate_models_in_folder(model_dir: str,
         num_models: Number of models to evaluate ('all' or integer)
         llm_model: LLM model to use
         method: Method to use for database search ("direct", "rag")
+        top_k: Number of top candidates to retrieve per species for RAG search
         max_entities: Maximum entities per model (None for all)
         entity_type: Type of entities to annotate
         database: Target database
@@ -502,6 +519,7 @@ def evaluate_models_in_folder(model_dir: str,
         start_at: Model index to start at (1-based)
         verbose: If True, show detailed logging. If False, minimize output.
         tax_id: For gene/protein annotations, the organism's tax_id for species-specific lookup
+        tax_dict_file: File containing taxonomy information for model files
         
     Returns:
         Combined DataFrame with all evaluation results
@@ -516,7 +534,7 @@ def evaluate_models_in_folder(model_dir: str,
     clear_chromadb_cache()
     
     # Get model files
-    model_files = [f for f in os.listdir(model_dir) if f.endswith('.xml')]
+    model_files = [f for f in os.listdir(model_dir) if f.endswith('.xml') or f.endswith('.sbml')]
     model_files.sort()  # Ensure consistent ordering
     
     # Determine which models to evaluate
@@ -542,19 +560,33 @@ def evaluate_models_in_folder(model_dir: str,
         print(f"Evaluating {actual_idx}/{start_at + len(model_files) - 1}: {model_file}")
         
         model_path = os.path.join(model_dir, model_file)
+        tax_name = None
+        if tax_id == 9606:
+            tax_name = "Homo sapiens"
+        elif tax_id == 511145:
+            tax_name = "Escherichia coli"
+        elif tax_id == 10090:
+            tax_name = "Mus musculus"
+        if tax_dict_file:
+            tax_id, tax_name = get_model_taxonomy(model_file, tax_dict_file)
+            if not tax_id:
+                logger.warning(f"No tax_id found for {model_file}")
+                continue
         
         # Evaluate single model
         result_df = evaluate_single_model(
             model_file=model_path,
             llm_model=llm_model,
             method=method,
+            top_k=top_k,
             max_entities=max_entities,
             entity_type=entity_type,
             database=database,
             save_llm_results=save_llm_results,
             output_dir=output_dir,
             verbose=verbose,
-            tax_id=tax_id
+            tax_id=tax_id,
+            tax_name=tax_name
         )
         
         if result_df is not None:
@@ -592,7 +624,10 @@ def _convert_format(recommendations: List[Recommendation],
                                    llm_time: float,
                                    search_time: float,
                                    entity_type: str = "chemical",
-                                   database: str = "chebi") -> pd.DataFrame:
+                                   database: str = "chebi",
+                                   tax_id: str = None,
+                                   tax_name: str = None,
+                                   model_file: str = None) -> pd.DataFrame:
     """
     Convert AAAIM recommendations to evaluation format with LLM results.
     
@@ -607,7 +642,10 @@ def _convert_format(recommendations: List[Recommendation],
         search_time: Database search time
         entity_type: Type of entity being annotated
         database: Database being used
-        
+        tax_id: For gene/protein annotations, the organism's tax_id
+        tax_name: For gene/protein annotations, the organism's tax_name
+        model_file: Path to the model file (optional)
+
     Returns:
         DataFrame in evaluation format
     """
@@ -630,10 +668,6 @@ def _convert_format(recommendations: List[Recommendation],
         
         # Calculate statistics
         stats = get_species_statistics(recommendations, refs_formula, refs_chebi, model_mean=False)
-        
-        # Rename chebi metrics to exact metrics for consistency
-        stats['recall_exact'] = stats.pop('recall_chebi', {})
-        stats['precision_exact'] = stats.pop('precision_chebi', {})
     
     elif database == "ncbigene":
         label_dict = load_ncbigene_label_dict()
@@ -684,6 +718,11 @@ def _convert_format(recommendations: List[Recommendation],
             'precision_exact': {species_id: 0 for species_id in existing_annotations.keys()}
         }
     
+    # Get display names from the model file if available
+    display_names = {}
+    if model_file is not None:
+        display_names = get_species_display_names(model_file, entity_type)
+    
     # Convert to AMAS format
     result_rows = []
     for rec in recommendations:
@@ -721,11 +760,14 @@ def _convert_format(recommendations: List[Recommendation],
         else:  # gene or other entity types
             accuracy = 1 if recall_exact > 0 else 0
         
+        # Use display name from SBML if available, else fallback to synonym or species_id
+        display_name = display_names.get(species_id, rec.synonyms[0] if rec.synonyms else species_id)
+        
         # Create row in AMAS format
         row = {
             'model': model_name,
             'species_id': species_id,
-            'display_name': rec.synonyms[0] if rec.synonyms else species_id,  # Use first synonym as display name
+            'display_name': display_name,
             'synonyms_LLM': llm_synonyms,
             'reason': reason,
             'exist_annotation_id': existing_ids,
@@ -740,7 +782,9 @@ def _convert_format(recommendations: List[Recommendation],
             'accuracy': accuracy,
             'total_time': total_time,
             'llm_time': llm_time,
-            'query_time': search_time
+            'query_time': search_time,
+            'tax_id': tax_id,
+            'tax_name': tax_name
         }
         result_rows.append(row)
     
@@ -764,6 +808,10 @@ def _save_llm_results(model_file: str, llm_model: str, output_dir: str,
         llm_name = "llama-3.3-70b-instruct"
     elif llm_model == "meta-llama/llama-3.3-70b-instruct":
         llm_name = "llama-3.3-70b-instruct"
+    elif llm_model == "Llama-3.3-70B-Instruct":
+        llm_name = "Llama-3.3-70B-instruct-Meta"
+    elif llm_model == "Llama-4-Maverick-17B-128E-Instruct-FP8":
+        llm_name = "llama-4-maverick-17b-128e-instruct-fp8"
     else:
         llm_name = llm_model
 
@@ -807,13 +855,43 @@ def print_evaluation_results(results_csv: str):
     model_accuracy = df.groupby('model')['accuracy'].mean().mean()
     print("Average accuracy (per model): %.02f" % model_accuracy)
     
+    recall_formula = df.groupby('model')['recall_formula'].mean().mean()
+    print("Ave. recall (formula): %.02f" % recall_formula)
+    
+    precision_formula = df.groupby('model')['precision_formula'].mean().mean()
+    print("Ave. precision (formula): %.02f" % precision_formula)
+    
+    recall_exact = df.groupby('model')['recall_exact'].mean().mean()
+    print("Ave. recall (exact): %.02f" % recall_exact)
+    
+    precision_exact = df.groupby('model')['precision_exact'].mean().mean()
+    print("Ave. precision (exact): %.02f" % precision_exact)
+    
+    # Calculate per-species averages
+    species_accuracy = df['accuracy'].mean()
+    print("Average accuracy (per species): %.02f" % species_accuracy)
+    
+    species_recall_formula = df['recall_formula'].mean()
+    print("Ave. recall (formula, per species): %.02f" % species_recall_formula)
+    
+    species_precision_formula = df['precision_formula'].mean()
+    print("Ave. precision (formula, per species): %.02f" % species_precision_formula)
+    
+    species_recall_exact = df['recall_exact'].mean()
+    print("Ave. recall (exact, per species): %.02f" % species_recall_exact)
+    
+    species_precision_exact = df['precision_exact'].mean()
+    print("Ave. precision (exact, per species): %.02f" % species_precision_exact)
+
+    # Total time
     mean_processing_time = df.groupby('model')['total_time'].first().mean()
     print("Ave. total time (per model): %.02f" % mean_processing_time)
     
+    # Total time per element
     num_elements = df.groupby('model').size().mean()
     mean_processing_time_per_element = mean_processing_time / num_elements if num_elements > 0 else 0
     print("Ave. total time (per element, per model): %.02f" % mean_processing_time_per_element)
-    
+
     # LLM time
     mean_llm_time = df.groupby('model')['llm_time'].first().mean()
     print("Ave. LLM time (per model): %.02f" % mean_llm_time)
@@ -887,8 +965,10 @@ def process_saved_llm_responses(response_folder: str,
                                model_dir: str, 
                                prev_results_csv: str, 
                                method: str = "direct",
+                               top_k: int = 3,
                                entity_type: str = "chemical",
                                database: str = "chebi",
+                               tax_id: str = None,
                                output_dir: str = './results/', 
                                output_file: str = 'reprocessed_results.csv',
                                verbose: bool = False) -> pd.DataFrame:
@@ -901,8 +981,10 @@ def process_saved_llm_responses(response_folder: str,
         model_dir: Path to directory containing the original model files
         prev_results_csv: Path to previous results CSV from evaluate_models
         method: Method to use for database search ("direct", "rag")
+        top_k: Number of top candidates to retrieve per species for RAG search
         entity_type: Type of entity being annotated
         database: Database being used
+        tax_id: Taxonomy ID for NCBI gene search, list or string
         output_dir: Path to directory where results should be saved
         output_file: Name of the output CSV file
         verbose: If True, show detailed logging. If False, minimize output.
@@ -953,9 +1035,7 @@ def process_saved_llm_responses(response_folder: str,
         
         # Extract model name from filename (remove .txt extension but keep .xml)
         model_name = response_file.replace('.txt', '.xml')
-        # The model file path in model_dir  
-        model_file = os.path.join(model_dir, model_name)
-        
+
         # Read response file
         with open(os.path.join(response_folder, response_file), 'r') as f:
             content = f.read()
@@ -982,10 +1062,14 @@ def process_saved_llm_responses(response_folder: str,
         
         # Find the model name as it appears in the previous results
         if model_name not in model_data:
-            print(f"Model {model_name} not found in previous results, skipping")
-            parse_errors.append(f"{response_file}: Model not found in previous results")
-            continue
-            
+            # try .sbml
+            model_name = model_name.replace('.xml', '.sbml')
+            if model_name not in model_data:
+                print(f"Model {model_name} not found in previous results, skipping")
+                parse_errors.append(f"{response_file}: Model not found in previous results")
+                continue
+        model_file = os.path.join(model_dir, model_name)
+
         # Parse the LLM response
         try:
             synonyms_dict, reason = parse_llm_response(result)
@@ -1006,17 +1090,15 @@ def process_saved_llm_responses(response_folder: str,
                     if database == "chebi":
                         recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi")
                     elif database == "ncbigene":
-                        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene")
+                        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
                     else:
                         print(f"Database {database} not supported")
                         return None
                 elif method == "rag":
                     if database == "chebi":
-                        recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi")
+                        recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
                     elif database == "ncbigene":
-                        # For now, NCBI gene only supports direct search
-                        print("RAG method not yet implemented for NCBI gene, using direct method")
-                        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene")
+                        recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="ncbigene", top_k=top_k, tax_id=tax_id)
                     else:
                         print(f"Database {database} not supported")
                         return None
@@ -1041,7 +1123,7 @@ def process_saved_llm_responses(response_folder: str,
             result_df = _convert_format(
                 recommendations, existing_annotations, model_name, 
                 synonyms_dict, reason, previous_llm_time + dict_search_time, 
-                previous_llm_time, dict_search_time, entity_type, database
+                previous_llm_time, dict_search_time, entity_type, database, tax_id, model_file=model_file
             )
             
             if not result_df.empty:
@@ -1152,14 +1234,38 @@ def compare_results(*csv_paths: str) -> dict:
         n_models_with_preds = filtered_df[filtered_df['predictions'] != '[]']['model'].nunique()
         print(f"Number of models assessed: {n_models}")
         print(f"Number of models with predictions: {n_models_with_preds}")
+        print(f"Number of species tested: {filtered_df['species_id'].nunique()}")
 
         # Per-model averages
         if 'accuracy' in filtered_df.columns:
             model_accuracy = filtered_df.groupby('model')['accuracy'].mean().mean()
             print(f"Average accuracy (per model): {model_accuracy:.2f}")
+            print(f"Average accuracy (per species): {filtered_df['accuracy'].mean():.2f}")
         else:
             model_accuracy = None
-
+        if 'recall_formula' in filtered_df.columns:
+            recall_formula = filtered_df.groupby('model')['recall_formula'].mean().mean()
+            print(f"Average recall (formula) (per model): {recall_formula:.2f}")
+        else:
+            recall_formula = None
+        if 'precision_formula' in filtered_df.columns:
+            precision_formula = filtered_df.groupby('model')['precision_formula'].mean().mean()
+            print(f"Average precision (formula) (per model): {precision_formula:.2f}")
+        else:
+            precision_formula = None
+        if 'recall_exact' in filtered_df.columns:
+            recall_exact = filtered_df.groupby('model')['recall_exact'].mean().mean()
+            print(f"Average recall (exact) (per model): {recall_exact:.2f}")
+            print(f"Average recall (exact) (per species): {filtered_df['recall_exact'].mean():.2f}")
+        else:
+            recall_exact = None
+        if 'precision_exact' in filtered_df.columns:
+            precision_exact = filtered_df.groupby('model')['precision_exact'].mean().mean()
+            print(f"Average precision (exact) (per model): {precision_exact:.2f}")
+            print(f"Average precision (exact) (per species): {filtered_df['precision_exact'].mean():.2f}")
+        else:
+            precision_exact = None
+        # Total time
         if 'total_time' in filtered_df.columns:
             mean_processing_time = filtered_df.groupby('model')['total_time'].first().mean()
             print(f"Ave. total time (per model): {mean_processing_time:.2f}")
@@ -1189,6 +1295,8 @@ def compare_results(*csv_paths: str) -> dict:
             'CSV': csv_path,
             'Models Assessed': n_models,
             'Average Accuracy': model_accuracy,
+            'Average Recall (Formula)': recall_formula,
+            'Average Precision (Formula)': precision_formula,
             'Average Total Time': mean_processing_time,
             'Average LLM Time': mean_llm_time,
             'Avg Predictions per Species': avg_preds_per_species
@@ -1204,3 +1312,58 @@ def compare_results(*csv_paths: str) -> dict:
 
     # Return dictionary of filtered DataFrames
     # return {csv_path: filtered_df for csv_path, filtered_df in zip(csv_paths, filtered_dfs)}
+
+def add_distance_columns_to_results(results_csv: str, output_csv: str = None, model_name: str = 'all-MiniLM-L6-v2'):
+    """
+    Add 'distance_string' and 'distance_embedding' columns to a results CSV.
+    - distance_string: normalized character difference between exist_annotation_name and predictions_names
+    - distance_embedding: cosine distance between the embedding of the existing annotation name and the prediction name
+    Args:
+        results_csv: Path to the input results CSV
+        output_csv: Path to save the new CSV (optional)
+        model_name: SentenceTransformer model to use for embeddings
+    Returns:
+        DataFrame with new columns
+    """
+    import ast
+    df = pd.read_csv(results_csv)
+    model = SentenceTransformer(model_name)
+    def norm_char_dist(a, b):
+        if not isinstance(a, str) or not isinstance(b, str) or not a or not b:
+            return 1.0
+        return abs(len(a) - len(b)) / max(len(a), len(b)) if max(len(a), len(b)) > 0 else 0.0
+    def get_first(lst):
+        if isinstance(lst, list) and lst:
+            return lst[0]
+        if isinstance(lst, str):
+            try:
+                val = ast.literal_eval(lst)
+                if isinstance(val, list) and val:
+                    return val[0]
+            except Exception:
+                return lst
+        return ''
+    distance_strings = []
+    distance_embeddings = []
+    for idx, row in df.iterrows():
+        exist_name = get_first(row.get('exist_annotation_name', ''))
+        pred_name = get_first(row.get('predictions_names', ''))
+        # String distance
+        dist_str = norm_char_dist(str(exist_name), str(pred_name))
+        distance_strings.append(dist_str)
+        # Embedding distance
+        if exist_name and pred_name:
+            try:
+                emb_exist = model.encode(str(exist_name), convert_to_numpy=True)
+                emb_pred = model.encode(str(pred_name), convert_to_numpy=True)
+                dist_emb = float(cosine_distances([emb_exist], [emb_pred])[0][0])
+            except Exception:
+                dist_emb = 1.0
+        else:
+            dist_emb = 1.0
+        distance_embeddings.append(dist_emb)
+    df['distance_string'] = distance_strings
+    df['distance_embedding'] = distance_embeddings
+    if output_csv:
+        df.to_csv(output_csv, index=False)
+    return df

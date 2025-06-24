@@ -1,0 +1,10 @@
+Model: BIOMD0000000397
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:44:46
+
+Synonyms:
+s32: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
+s33: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
+s304: ["6-bromoindirubin-3'-oxime", "6-bromo-3'-oxoindirubin", 'BIO']
+
+Reason: s32 and s33 are directly annotated with display names 'ATP' and 'ADP' respectively, which are standard names for these molecules. s304 is annotated with a display name that matches a known chemical compound, 6-bromoindirubin-3'-oxime, which is a GSK-3 inhibitor used in the Wnt signaling pathway.

@@ -1,0 +1,9 @@
+Model: BIOMD0000000229
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 15:41:29
+
+Synonyms:
+incAMP: ['cyclic AMP', 'cAMP', "adenosine 3',5'-cyclic monophosphate"]
+excAMP: ['cyclic AMP', 'cAMP', "adenosine 3',5'-cyclic monophosphate"]
+
+Reason: incAMP and excAMP are likely referring to cyclic AMP (cAMP), a common secondary messenger in cellular biology, with "inc" and "exc" possibly indicating intracellular and extracellular concentrations, respectively.

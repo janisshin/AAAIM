@@ -1,0 +1,10 @@
+Model: BIOMD0000001005
+LLM: Llama-3.3-70B-Instruct
+Timestamp: 2025-06-15 16:02:54
+
+Synonyms:
+ACTH: ['adrenocorticotropic hormone', 'corticotropin', 'adrenocorticotropin']
+NAD: ['nicotinamide adenine dinucleotide', 'NAD+', 'diphosphopyridine nucleotide']
+NAM: ['nicotinamide', 'niacinamide', 'vitamin B3']
+
+Reason: ACTH is a hormone involved in the regulation of cortisol, NAD is a coenzyme found in all living cells, and NAM is a form of vitamin B3, all of which are relevant to the context of the model describing hepatic gluconeogenesis and circadian rhythms.

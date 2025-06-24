@@ -83,7 +83,7 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
     Args:
         prompt: The formatted prompt to send to the LLM
         developer_prompt: The system prompt (if None, will use appropriate prompt for entity_type)
-        model: The model to use for the LLM, "gpt-4o-mini", "gpt-4.1-nano", or "meta-llama/llama-3.3-70b-instruct:free"
+        model: The model to use for the LLM, e.g., "meta-llama/llama-3.3-70b-instruct:free"
         entity_type: Type of entity for prompt selection if developer_prompt is None
 
     Returns:
@@ -93,7 +93,7 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
         developer_prompt = get_system_prompt(entity_type)
     
     response = None
-    if model in ["gpt-4o-mini", "gpt-4.1-nano"]:
+    if model.startswith("gpt"):
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         try:
             response = client.chat.completions.create(
@@ -108,7 +108,7 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
         except Exception as e:
             print(f"Error querying OpenAI: {e}")
             return ""
-    elif model in ["meta-llama/llama-3.3-70b-instruct:free", "meta-llama/llama-3.3-70b-instruct"]:
+    elif model.startswith("meta-llama"):
         client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.getenv("OPENROUTER_API_KEY"))
         try:
             response = client.chat.completions.create(
@@ -122,6 +122,21 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
             )
         except Exception as e:
             print(f"Error querying OpenRouter: {e}")
+            return ""
+    elif model.startswith("Llama"):
+        client = OpenAI(base_url="https://api.llama.com/compat/v1", api_key=os.getenv("LLAMA_API_KEY"))
+        try:
+            response = client.chat.completions.create(
+                model=model,
+                messages=[
+                    {"role": "system", "content": developer_prompt},
+                    {"role": "user", "content": prompt}
+                ],
+                # max_tokens=10000,
+                temperature=0.2
+            )
+        except Exception as e:
+            print(f"Error querying Llama: {e}")
             return ""
     else:
         raise ValueError(f"Model {model} not supported")
