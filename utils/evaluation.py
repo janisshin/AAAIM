@@ -21,11 +21,13 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_distances
 
 from core.curation_workflow import curate_model
-from core.model_info import find_species_with_chebi_annotations, extract_model_info, format_prompt, find_species_with_ncbigene_annotations, get_species_display_names
+from core.model_info import find_species_with_chebi_annotations, extract_model_info, format_prompt, find_species_with_ncbigene_annotations, get_species_display_names, detect_model_format
 from core.llm_interface import SYSTEM_PROMPT, query_llm, parse_llm_response, get_system_prompt
 from core.data_types import Recommendation
 from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, clear_chromadb_cache
-from utils.constants import REF_CHEBI2LABEL, REF_NCBIGENE2LABEL, REF_CHEBI2FORMULA
+from utils.constants import REF_CHEBI2LABEL, REF_NCBIGENE2LABEL, REF_CHEBI2FORMULA, CHEBI_URI_PATTERNS, NCBIGENE_URI_PATTERNS, UNIPROT_URI_PATTERNS, ModelType
+
+REF_RESULTS = "/Users/luna/Desktop/CRBM/AMAS_proj/Results/biomd_species_accuracy_AMAS.csv"
 
 logger = logging.getLogger(__name__)
 
@@ -288,19 +290,20 @@ def get_species_statistics(recommendations: List[Recommendation],
         'precision_exact': precision_exact
     }
 
-def find_species_with_formulas(model_file: str) -> Dict[str, List[str]]:
+def find_species_with_formulas(model_file: str, bqbiol_qualifiers: list = None) -> Dict[str, List[str]]:
     """
     Find species with existing ChEBI annotations that have chemical formulas.
     Replicates the logic from AMAS species_annotation.py exist_annotation_formula.
     
     Args:
         model_file: Path to the SBML model file
-        
+        bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
+
     Returns:
         Dictionary mapping species IDs to their ChEBI annotation IDs (only for species with formulas)
     """
     # Get all species with ChEBI annotations
-    existing_annotations = find_species_with_chebi_annotations(model_file)
+    existing_annotations = find_species_with_chebi_annotations(model_file, bqbiol_qualifiers)
     
     if not existing_annotations:
         return {}
@@ -324,18 +327,18 @@ def find_species_with_formulas(model_file: str) -> Dict[str, List[str]]:
     
     return species_with_formulas
 
-def find_species_with_gene_annotations(model_file: str) -> Dict[str, List[str]]:
+def find_species_with_gene_annotations(model_file: str, bqbiol_qualifiers: list = None) -> Dict[str, List[str]]:
     """
     Find species with existing NCBI gene annotations.
     
     Args:
         model_file: Path to the SBML model file
-        
+        bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
     Returns:
         Dictionary mapping species IDs to their NCBI gene annotation IDs
     """
     # Get all species with NCBI gene annotations
-    existing_annotations = find_species_with_ncbigene_annotations(model_file)
+    existing_annotations = find_species_with_ncbigene_annotations(model_file, bqbiol_qualifiers)
     
     if not existing_annotations:
         return {}
@@ -351,10 +354,12 @@ def evaluate_single_model(model_file: str,
                          entity_type: str = "chemical",
                          database: str = "chebi",
                          save_llm_results: bool = True,
+                         save_llm_results_folder: str = None,
                          output_dir: str = './results/',
                          verbose: bool = True,
                          tax_id: str = None,
-                         tax_name: str = None) -> Optional[pd.DataFrame]:
+                         tax_name: str = None,
+                         bqbiol_qualifiers: list = None) -> Optional[pd.DataFrame]:
     """
     Generate species evaluation statistics for one model.
     
@@ -362,15 +367,17 @@ def evaluate_single_model(model_file: str,
         model_file: Path to SBML model file
         llm_model: LLM model to use
         method: Method to use for database search ("direct", "rag")
-        top_k: Number of top candidates to retrieve per species for RAG search
+        top_k: Number of top candidates to return per species
         max_entities: Maximum number of entities to evaluate (None for all)
         entity_type: Type of entities to annotate
         database: Target database
         save_llm_results: Whether to save LLM results to files
+        save_llm_results_folder: Custom folder name for LLM results. If None, uses timestamp.
         output_dir: Directory to save results
         verbose: If True, show detailed logging. If False, minimize output.
         tax_id: For gene/protein annotations, the organism's tax_id for species-specific lookup
         tax_name: For gene/protein annotations, the organism's tax_name for species-specific lookup
+        bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
 
     Returns:
         DataFrame with evaluation results or None if failed
@@ -387,9 +394,9 @@ def evaluate_single_model(model_file: str,
         
         # Get existing annotations to determine entities to evaluate
         if entity_type == "chemical" and database == "chebi":
-            existing_annotations = find_species_with_formulas(model_file)
+            existing_annotations = find_species_with_formulas(model_file, bqbiol_qualifiers)
         elif entity_type == "gene" and database == "ncbigene":
-            existing_annotations = find_species_with_gene_annotations(model_file)
+            existing_annotations = find_species_with_gene_annotations(model_file, bqbiol_qualifiers)
         else:
             if verbose:
                 logger.warning(f"Entity type {entity_type} with database {database} not yet supported")
@@ -428,9 +435,9 @@ def evaluate_single_model(model_file: str,
         with suppress_outputs(verbose):
             if method == "direct":
                 if database == "chebi":
-                    recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi")
+                    recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
                 elif database == "ncbigene":
-                    recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
+                    recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
                 else:
                     if verbose:
                         logger.error(f"Database {database} not supported")
@@ -465,7 +472,7 @@ def evaluate_single_model(model_file: str,
         
         # Save LLM results if requested
         if save_llm_results:
-            _save_llm_results(model_file, llm_model, output_dir, synonyms_dict, reason, entity_type)
+            _save_llm_results(model_file, llm_model, output_dir, synonyms_dict, reason, entity_type, save_llm_results_folder)
         
         return result_df
         
@@ -494,12 +501,14 @@ def evaluate_models_in_folder(model_dir: str,
                              entity_type: str = "chemical",
                              database: str = "chebi",
                              save_llm_results: bool = True,
+                             save_llm_results_folder: str = None,
                              output_dir: str = './results/',
                              output_file: str = 'evaluation_results.csv',
                              start_at: int = 1,
                              verbose: bool = False,
                              tax_id: str = None,
-                             tax_dict_file: str = None) -> pd.DataFrame:
+                             tax_dict_file: str = None,
+                             bqbiol_qualifiers: list = None) -> pd.DataFrame:
     """
     Generate species evaluation statistics for multiple models in a directory.
     Replicates evaluate_models from AMAS test_LLM_synonyms_plain.ipynb
@@ -509,17 +518,19 @@ def evaluate_models_in_folder(model_dir: str,
         num_models: Number of models to evaluate ('all' or integer)
         llm_model: LLM model to use
         method: Method to use for database search ("direct", "rag")
-        top_k: Number of top candidates to retrieve per species for RAG search
+        top_k: Number of top candidates to return per species
         max_entities: Maximum entities per model (None for all)
         entity_type: Type of entities to annotate
         database: Target database
         save_llm_results: Whether to save LLM results
+        save_llm_results_folder: Custom folder name for LLM results. If None, uses timestamp.
         output_dir: Directory to save results
         output_file: Name of output CSV file
         start_at: Model index to start at (1-based)
         verbose: If True, show detailed logging. If False, minimize output.
         tax_id: For gene/protein annotations, the organism's tax_id for species-specific lookup
         tax_dict_file: File containing taxonomy information for model files
+        bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
         
     Returns:
         Combined DataFrame with all evaluation results
@@ -554,6 +565,24 @@ def evaluate_models_in_folder(model_dir: str,
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
     
+    if llm_model == "meta-llama/llama-3.3-70b-instruct:free":
+        llm_name = "llama-3.3-70b-instruct"
+    elif llm_model == "meta-llama/llama-3.3-70b-instruct":
+        llm_name = "llama-3.3-70b-instruct"
+    elif llm_model == "Llama-3.3-70B-Instruct":
+        llm_name = "Llama-3.3-70B-instruct-Meta"
+    elif llm_model == "Llama-4-Maverick-17B-128E-Instruct-FP8":
+        llm_name = "llama-4-maverick-17b-128e-instruct-fp8"
+    else:
+        llm_name = llm_model
+
+    # Use custom folder name or timestamp-based folder name
+    if not save_llm_results_folder:
+        timestamp = time.strftime('%Y%m%d_%H%M')
+        save_llm_results_folder = f"{llm_name}/{entity_type}/{timestamp}"
+
+    print(f"LLM results will be saved to: {output_dir + save_llm_results_folder}")
+
     # Evaluate each model
     for idx, model_file in enumerate(model_files):
         actual_idx = idx + start_at
@@ -583,10 +612,12 @@ def evaluate_models_in_folder(model_dir: str,
             entity_type=entity_type,
             database=database,
             save_llm_results=save_llm_results,
+            save_llm_results_folder=save_llm_results_folder,
             output_dir=output_dir,
             verbose=verbose,
             tax_id=tax_id,
-            tax_name=tax_name
+            tax_name=tax_name,
+            bqbiol_qualifiers=bqbiol_qualifiers
         )
         
         if result_df is not None:
@@ -760,8 +791,8 @@ def _convert_format(recommendations: List[Recommendation],
         else:  # gene or other entity types
             accuracy = 1 if recall_exact > 0 else 0
         
-        # Use display name from SBML if available, else fallback to synonym or species_id
-        display_name = display_names.get(species_id, rec.synonyms[0] if rec.synonyms else species_id)
+        # Use display name from SBML if available
+        display_name = display_names.get(species_id, '')
         
         # Create row in AMAS format
         row = {
@@ -791,7 +822,8 @@ def _convert_format(recommendations: List[Recommendation],
     return pd.DataFrame(result_rows)
 
 def _save_llm_results(model_file: str, llm_model: str, output_dir: str, 
-                     synonyms_dict: Dict[str, List[str]], reason: str, entity_type: str):
+                     synonyms_dict: Dict[str, List[str]], reason: str, entity_type: str, 
+                     save_llm_results_folder: str = None):
     """
     Save LLM results to file.
     
@@ -802,6 +834,7 @@ def _save_llm_results(model_file: str, llm_model: str, output_dir: str,
         synonyms_dict: LLM-generated synonyms
         reason: LLM reasoning
         entity_type: Type of entity being annotated
+        save_llm_results_folder: Custom folder name for LLM results. If None, uses timestamp.
     """
     model_name = Path(model_file).stem
     if llm_model == "meta-llama/llama-3.3-70b-instruct:free":
@@ -815,7 +848,14 @@ def _save_llm_results(model_file: str, llm_model: str, output_dir: str,
     else:
         llm_name = llm_model
 
-    output_dir = output_dir+llm_name+'/'+entity_type
+    # Use custom folder name or timestamp-based folder name
+    if save_llm_results_folder:
+        output_dir = output_dir + save_llm_results_folder
+    else:
+        # Generate timestamp-based folder name
+        timestamp = time.strftime('%Y%m%d_%H%M%S')
+        output_dir = output_dir + f"{llm_name}/{entity_type}/{timestamp}"
+
     if not os.path.exists(output_dir):
         os.makedirs(output_dir, exist_ok=True)
     output_file = Path(output_dir) / f"{model_name}.txt"
@@ -830,13 +870,14 @@ def _save_llm_results(model_file: str, llm_model: str, output_dir: str,
         f.write(f"\nReason: {reason}\n")
     print(f"LLM results saved to: {output_file}")
 
-def print_evaluation_results(results_csv: str):
+def print_evaluation_results(results_csv: str, ref_results_csv = REF_RESULTS):
     """
     Print evaluation results summary.
     Replicates print_results from AMAS test_LLM_synonyms_plain.ipynb
     
     Args:
         results_csv: Path to results CSV file
+        ref_results_csv: Path to reference results CSV file to filter against
     """
     if not os.path.exists(results_csv):
         print(f"Results file not found: {results_csv}")
@@ -848,9 +889,29 @@ def print_evaluation_results(results_csv: str):
         print("No results to display")
         return
     
+    # Filter by reference results if provided
+    if ref_results_csv:
+        ref_df = pd.read_csv(ref_results_csv)
+        if not ref_df.empty:
+            # Create a set of (model, species_id) pairs from reference
+            ref_pairs = set(zip(ref_df['model'], ref_df['species_id']))
+            # Filter current results to only include pairs that exist in reference
+            mask = df.apply(lambda row: (row['model'], row['species_id']) in ref_pairs, axis=1)
+            df = df[mask]
+            
+            if df.empty:
+                print("No overlapping results found between current results and reference")
+                return
+            
+            print(f"Filtered results to {len(df)} entries that exist in reference: {ref_results_csv}")
+        else:
+            print(f"Reference file is empty: {ref_results_csv}")
+    else:
+        print(f"Showing all results")
+    
     print("Number of models assessed: %d" % df['model'].nunique())
     print("Number of models with predictions: %d" % df[df['predictions'] != '[]']['model'].nunique())
-    
+    print("Number of annotations evaluated: %d" % len(df))    
     # Calculate per-model averages
     model_accuracy = df.groupby('model')['accuracy'].mean().mean()
     print("Average accuracy (per model): %.02f" % model_accuracy)
@@ -981,7 +1042,7 @@ def process_saved_llm_responses(response_folder: str,
         model_dir: Path to directory containing the original model files
         prev_results_csv: Path to previous results CSV from evaluate_models
         method: Method to use for database search ("direct", "rag")
-        top_k: Number of top candidates to retrieve per species for RAG search
+        top_k: Number of top candidates to retrieve per species
         entity_type: Type of entity being annotated
         database: Database being used
         tax_id: Taxonomy ID for NCBI gene search, list or string
@@ -1040,25 +1101,25 @@ def process_saved_llm_responses(response_folder: str,
         with open(os.path.join(response_folder, response_file), 'r') as f:
             content = f.read()
         
-        # Extract response part
-        # First try format with "RESULT:"
-        result_match = re.search(r'RESULT:\s*([\s\S]*)', content)
-        if result_match:
-            result = result_match.group(1).strip()
-        else:
-            # Try format with "Synonyms:" section
-            synonyms_match = re.search(r'Synonyms:\s*([\s\S]*?)(?=Reason:|$)', content)
-            reason_match = re.search(r'Reason:\s*([\s\S]*)', content)
-            
-            if synonyms_match:
-                synonyms_text = synonyms_match.group(1).strip()
-                reason_text = reason_match.group(1).strip() if reason_match else ""
-                # Reconstruct the result in the format expected by parse_llm_response
-                result = synonyms_text + '\nReason: ' + reason_text
-            else:
-                print(f"Could not find parseable content in {response_file}, skipping")
-                parse_errors.append(f"{response_file}: Could not find parseable content")
-                continue
+        # # Extract response part
+        # # First try format with "RESULT:"
+        # result_match = re.search(r'RESULT:\s*([\s\S]*)', content)
+        # if result_match:
+        #     result = result_match.group(1).strip()
+        # else:
+        #     # Try format with "Synonyms:" section
+        #     synonyms_match = re.search(r'Synonyms:\s*([\s\S]*?)(?=Reason:|$)', content)
+        #     reason_match = re.search(r'Reason:\s*([\s\S]*)', content)
+             
+        #     if synonyms_match:
+        #         synonyms_text = synonyms_match.group(1).strip()
+        #         reason_text = reason_match.group(1).strip() if reason_match else ""
+        #         # Reconstruct the result in the format expected by parse_llm_response
+        #         result = synonyms_text + '\nReason: ' + reason_text
+        #     else:
+        #         print(f"Could not find parseable content in {response_file}, skipping")
+        #         parse_errors.append(f"{response_file}: Could not find parseable content")
+        #         continue
         
         # Find the model name as it appears in the previous results
         if model_name not in model_data:
@@ -1072,25 +1133,36 @@ def process_saved_llm_responses(response_folder: str,
 
         # Parse the LLM response
         try:
-            synonyms_dict, reason = parse_llm_response(result)
+            # synonyms_dict, reason = parse_llm_response(result)
+            synonyms_dict, reason = parse_llm_response(content)
         except Exception as e:
             logger.error(f"Error parsing LLM response for {response_file}: {e}")
             parse_errors.append(f"{response_file}: Error parsing LLM response - {str(e)}")
             continue
         
         try:
-            # Get species from previous results
-            species_info = model_data[model_name]['species_info']
-            specs_to_evaluate = list(species_info.keys())
+            # Only evaluate species that exist in BOTH the previous results AND the LLM response
+            species_from_prev_results = set(model_data[model_name]['species_info'].keys())
+            species_with_llm_synonyms = set(synonyms_dict.keys())
+            
+            # Find intersection - only species that have both previous results AND LLM synonyms
+            specs_to_evaluate = list(species_from_prev_results & species_with_llm_synonyms)
+            
+            if not specs_to_evaluate:
+                print(f"No overlapping species between previous results and LLM response for {model_name}, skipping")
+                parse_errors.append(f"{response_file}: No overlapping species found")
+                continue
+            
+            # print(f"Evaluating {len(specs_to_evaluate)} species for {model_name} (intersection of {len(species_from_prev_results)} prev and {len(species_with_llm_synonyms)} LLM)")
             
             # Time the ChEBI dictionary search
             query_start_time = time.time()
             with suppress_outputs(verbose):
                 if method == "direct":
                     if database == "chebi":
-                        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi")
+                        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
                     elif database == "ncbigene":
-                        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
+                        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
                     else:
                         print(f"Database {database} not supported")
                         return None
@@ -1098,7 +1170,7 @@ def process_saved_llm_responses(response_folder: str,
                     if database == "chebi":
                         recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
                     elif database == "ncbigene":
-                        recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="ncbigene", top_k=top_k, tax_id=tax_id)
+                        recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
                     else:
                         print(f"Database {database} not supported")
                         return None
@@ -1115,6 +1187,11 @@ def process_saved_llm_responses(response_folder: str,
                 existing_annotations = find_species_with_gene_annotations(model_file)
             else:
                 existing_annotations = {}
+            
+            # Filter existing_annotations to match the species we're actually evaluating
+            existing_annotations = {species_id: existing_annotations[species_id] 
+                                    for species_id in specs_to_evaluate 
+                                    if species_id in existing_annotations}
             
             # Previous LLM time from original run
             previous_llm_time = model_data[model_name]['llm_time']
@@ -1160,13 +1237,14 @@ def process_saved_llm_responses(response_folder: str,
         print("No results generated for any models")
         return pd.DataFrame()
 
-def compare_results(*csv_paths: str) -> dict:
+def compare_results(*csv_paths: str, ref_results_csv: str = REF_RESULTS) -> dict:
     """
     Compare results from multiple CSVs by filtering to only include common models and species.
     Prints detailed statistics for each CSV and a summary comparison table.
     
     Args:
         *csv_paths: Paths to result CSVs (must be at least 2)
+        ref_results_csv: Path to reference results CSV file to filter against
         
     Returns:
         Dictionary mapping CSV path to filtered DataFrame (only common models/species)
@@ -1193,39 +1271,58 @@ def compare_results(*csv_paths: str) -> dict:
             raise FileNotFoundError(f"Results file not found: {path}")
         dfs.append(pd.read_csv(path))
 
-    # Find common models and species_ids across all DataFrames
-    model_sets = [set(df['model'].unique()) for df in dfs]
-    common_models = set.intersection(*model_sets)
+    # Filter by reference results if provided
+    if ref_results_csv:
+        ref_df = pd.read_csv(ref_results_csv)
+        if not ref_df.empty:
+            # Create a set of (model, species_id) pairs from reference
+            ref_pairs = set(zip(ref_df['model'], ref_df['species_id']))
+            
+            # Filter each DataFrame to only include pairs that exist in reference
+            filtered_dfs = []
+            for df in dfs:
+                mask = df.apply(lambda row: (row['model'], row['species_id']) in ref_pairs, axis=1)
+                filtered_df = df[mask]
+                filtered_dfs.append(filtered_df)
+            print(f"Filtered all results to only include entries that exist in reference: {ref_results_csv}")
+        else:
+            print(f"Reference file is empty: {ref_results_csv}")
+    else:
+        print(f"Showing all results, filtering to common models/species in models")
 
-    # For each model, find common species_ids across all DataFrames
-    common_model_species = {}
-    for model in common_models:
-        species_sets = []
+        # Find common models and species_ids across all DataFrames
+        model_sets = [set(df['model'].unique()) for df in dfs]
+        common_models = set.intersection(*model_sets)
+
+        # For each model, find common species_ids across all DataFrames
+        common_model_species = {}
+        for model in common_models:
+            species_sets = []
+            for df in dfs:
+                species_sets.append(set(df[df['model'] == model]['species_id'].unique()))
+            common_species = set.intersection(*species_sets)
+            if common_species:
+                common_model_species[model] = common_species
+
+        # Flatten to set of (model, species_id) pairs
+        common_pairs = set()
+        for model, species_set in common_model_species.items():
+            for species_id in species_set:
+                common_pairs.add((model, species_id))
+
+        if not common_pairs:
+            print("No common models and species found across all results.")
+            return {}
+
+        # Filter each DataFrame to only include common (model, species_id) pairs
+        filtered_dfs = []
         for df in dfs:
-            species_sets.append(set(df[df['model'] == model]['species_id'].unique()))
-        common_species = set.intersection(*species_sets)
-        if common_species:
-            common_model_species[model] = common_species
-
-    # Flatten to set of (model, species_id) pairs
-    common_pairs = set()
-    for model, species_set in common_model_species.items():
-        for species_id in species_set:
-            common_pairs.add((model, species_id))
-
-    if not common_pairs:
-        print("No common models and species found across all results.")
-        return {}
-
-    # Filter each DataFrame to only include common (model, species_id) pairs
-    filtered_dfs = []
-    for df in dfs:
-        filtered = df[df.apply(lambda row: (row['model'], row['species_id']) in common_pairs, axis=1)].copy()
-        filtered_dfs.append(filtered)
+            filtered = df[df.apply(lambda row: (row['model'], row['species_id']) in common_pairs, axis=1)].copy()
+            filtered_dfs.append(filtered)
 
     # Print stats for each filtered DataFrame
     print("="*70)
-    print("COMPARISON OF RESULTS (filtered to common models/species)")
+    print("COMPARISON OF RESULTS")
     print("="*70)
     stats = []
     for csv_path, filtered_df in zip(csv_paths, filtered_dfs):
@@ -1367,3 +1464,761 @@ def add_distance_columns_to_results(results_csv: str, output_csv: str = None, mo
     if output_csv:
         df.to_csv(output_csv, index=False)
     return df
+
+def debug_evaluation_differences(original_csv: str, processed_csv: str, 
+                                response_folder: str, model_dir: str,
+                                specific_models: List[str] = None,
+                                specific_species: List[str] = None) -> pd.DataFrame:
+    """
+    Debug function to identify exact differences between evaluate_models_in_folder 
+    and process_saved_llm_responses results.
+    
+    Args:
+        original_csv: Path to original results
+        processed_csv: Path to processed results  
+        response_folder: Path to LLM response files
+        model_dir: Path to model directory
+        specific_models: List of specific models to debug (optional)
+        specific_species: List of specific species to debug (optional)
+        
+    Returns:
+        DataFrame with detailed comparison
+    """
+    orig_df = pd.read_csv(original_csv)
+    proc_df = pd.read_csv(processed_csv)
+    
+    print("=== DEBUGGING EVALUATION DIFFERENCES ===")
+    
+    # Find models/species with different accuracy
+    merged = orig_df.merge(proc_df, on=['model', 'species_id'], suffixes=('_orig', '_proc'))
+    differences = merged[merged['accuracy_orig'] != merged['accuracy_proc']]
+    
+    if specific_models:
+        differences = differences[differences['model'].isin(specific_models)]
+    if specific_species:
+        differences = differences[differences['species_id'].isin(specific_species)]
+    
+    print(f"Found {len(differences)} species with different accuracy scores")
+    
+    debug_results = []
+    
+    for _, row in differences.head(10).iterrows():  # Debug first 10 differences
+        model_name = row['model']
+        species_id = row['species_id']
+        
+        print(f"\n=== DEBUGGING: {model_name} - {species_id} ===")
+        print(f"Original accuracy: {row['accuracy_orig']}, Processed accuracy: {row['accuracy_proc']}")
+        
+        # Load and parse LLM response
+        response_file = model_name.replace('.xml', '.txt').replace('.sbml', '.txt')
+        response_path = os.path.join(response_folder, response_file)
+        
+        if os.path.exists(response_path):
+            with open(response_path, 'r') as f:
+                content = f.read()
+            
+            try:
+                synonyms_dict, reason = parse_llm_response(content)
+                synonyms_for_species = synonyms_dict.get(species_id, [])
+                print(f"LLM synonyms for {species_id}: {synonyms_for_species}")
+            except Exception as e:
+                print(f"Error parsing LLM response: {e}")
+                synonyms_for_species = []
+        else:
+            print(f"Response file not found: {response_path}")
+            synonyms_for_species = []
+        
+        # Get existing annotations
+        model_file = os.path.join(model_dir, model_name)
+        if os.path.exists(model_file):
+            existing_annotations = find_species_with_formulas(model_file)
+            existing_for_species = existing_annotations.get(species_id, [])
+            print(f"Existing annotations for {species_id}: {existing_for_species}")
+        else:
+            print(f"Model file not found: {model_file}")
+            existing_for_species = []
+        
+        # Compare predictions
+        orig_preds = row['predictions_orig']
+        proc_preds = row['predictions_proc']
+        print(f"Original predictions: {orig_preds}")
+        print(f"Processed predictions: {proc_preds}")
+        
+        # Compare recall/precision
+        print(f"Original recall_formula: {row['recall_formula_orig']}, precision: {row['precision_formula_orig']}")
+        print(f"Processed recall_formula: {row['recall_formula_proc']}, precision: {row['precision_formula_proc']}")
+        
+        debug_results.append({
+            'model': model_name,
+            'species_id': species_id,
+            'accuracy_orig': row['accuracy_orig'],
+            'accuracy_proc': row['accuracy_proc'],
+            'synonyms_llm': synonyms_for_species,
+            'existing_annotations': existing_for_species,
+            'predictions_orig': orig_preds,
+            'predictions_proc': proc_preds,
+            'recall_formula_orig': row['recall_formula_orig'],
+            'recall_formula_proc': row['recall_formula_proc']
+        })
+    
+    return pd.DataFrame(debug_results)
+
+def evaluate_llm_synergy(*csv_results: str, 
+                        output_file: str = 'llm_synergy_analysis.csv',
+                        analysis_level: str = 'model') -> pd.DataFrame:
+    """
+    Evaluate LLM synergy by analyzing how different LLMs perform on different models or species.
+    This function identifies where different LLMs excel and quantifies potential gains from combining them.
+    
+    Args:
+        *csv_results: Paths to CSV files containing results from different LLMs
+        output_file: Path to save the synergy analysis results
+        analysis_level: 'model' for per-model analysis, 'species' for per-species analysis
+        
+    Returns:
+        DataFrame with synergy analysis results (per-model or per-species statistics)
+    """
+    if len(csv_results) < 2:
+        raise ValueError("Need at least 2 LLM result files to evaluate synergy")
+    
+    if analysis_level not in ['model', 'species']:
+        raise ValueError("analysis_level must be 'model' or 'species'")
+    
+    # Load all result files
+    llm_dfs = []
+    llm_names = []
+    
+    for csv_path in csv_results:
+        if not os.path.exists(csv_path):
+            raise FileNotFoundError(f"Results file not found: {csv_path}")
+        
+        df = pd.read_csv(csv_path)
+        llm_dfs.append(df)
+        
+        # Extract LLM name from filename or model column
+        llm_name = Path(csv_path).stem
+        if 'llm_model' in df.columns:
+            llm_name = df['llm_model'].iloc[0] if not df['llm_model'].isnull().all() else llm_name
+        llm_names.append(llm_name)
+    
+    print(f"Analyzing synergy between {len(llm_names)} LLMs: {', '.join(llm_names)}")
+    print(f"Analysis level: {analysis_level}")
+    
+    # Create a combined analysis
+    synergy_results = []
+    
+    if analysis_level == 'model':
+        # Get all unique models
+        all_models = set()
+        for df in llm_dfs:
+            all_models.update(df['model'].unique())
+        
+        # Analyze each model
+        for model_name in all_models:
+            model_results = {}
+            
+            # Get results for this model from each LLM (aggregate across species)
+            llm_model_performances = {}
+            for i, (llm_name, df) in enumerate(zip(llm_names, llm_dfs)):
+                model_data = df[df['model'] == model_name]
+                
+                if not model_data.empty:
+                    # Calculate model-level aggregated metrics
+                    llm_model_performances[llm_name] = {
+                        'avg_recall_exact': model_data['recall_exact'].mean(),
+                        'avg_precision_exact': model_data['precision_exact'].mean(),
+                        'avg_recall_formula': model_data['recall_formula'].mean(),
+                        'avg_precision_formula': model_data['precision_formula'].mean(),
+                        'avg_accuracy': model_data['accuracy'].mean(),
+                        'num_species': len(model_data),
+                        'total_predictions': len(model_data[model_data['predictions'].notna()]),
+                        'llm_time': model_data['llm_time'].iloc[0] if 'llm_time' in model_data.columns else 0,
+                        'all_predictions': set(),  # Will collect all unique predictions
+                        'all_existing': set()  # Will collect all unique existing annotations
+                    }
+                    
+                    # Collect all predictions and existing annotations for oracle calculation
+                    for _, row in model_data.iterrows():
+                        # Handle predictions
+                        preds = row.get('predictions', [])
+                        if isinstance(preds, str):
+                            try:
+                                import ast
+                                preds = ast.literal_eval(preds)
+                            except:
+                                preds = []
+                        if isinstance(preds, list):
+                            llm_model_performances[llm_name]['all_predictions'].update(preds)
+                        
+                        # Handle existing annotations
+                        existing = row.get('exist_annotation_id', [])
+                        if isinstance(existing, str):
+                            try:
+                                import ast
+                                existing = ast.literal_eval(existing)
+                            except:
+                                existing = []
+                        if isinstance(existing, list):
+                            llm_model_performances[llm_name]['all_existing'].update(existing)
+            
+            if len(llm_model_performances) < 2:
+                continue  # Skip if not enough LLMs have data for this model
+            
+            # Calculate synergy metrics for this model
+            model_results['model'] = model_name
+            model_results['num_species'] = list(llm_model_performances.values())[0]['num_species']
+            
+            # Individual LLM performances
+            for llm_name in llm_names:
+                if llm_name in llm_model_performances:
+                    model_results[f'{llm_name}_avg_recall_formula'] = llm_model_performances[llm_name]['avg_recall_formula']
+                    model_results[f'{llm_name}_avg_precision_formula'] = llm_model_performances[llm_name]['avg_precision_formula']
+                    model_results[f'{llm_name}_avg_accuracy'] = llm_model_performances[llm_name]['avg_accuracy']
+                    model_results[f'{llm_name}_llm_time'] = llm_model_performances[llm_name]['llm_time']
+                else:
+                    model_results[f'{llm_name}_avg_recall_formula'] = 0
+                    model_results[f'{llm_name}_avg_precision_formula'] = 0
+                    model_results[f'{llm_name}_avg_accuracy'] = 0
+                    model_results[f'{llm_name}_llm_time'] = 0
+            
+            # Best individual performance across LLMs
+            best_recall = max([llm_model_performances[llm]['avg_recall_formula'] for llm in llm_model_performances])
+            best_precision = max([llm_model_performances[llm]['avg_precision_formula'] for llm in llm_model_performances])
+            best_accuracy = max([llm_model_performances[llm]['avg_accuracy'] for llm in llm_model_performances])
+            
+            model_results['best_individual_recall'] = best_recall
+            model_results['best_individual_precision'] = best_precision
+            model_results['best_individual_accuracy'] = best_accuracy
+            
+            # Oracle combination (union of all predictions)
+            all_predictions = set()
+            all_existing = set()
+            for llm_name in llm_model_performances:
+                all_predictions.update(llm_model_performances[llm_name]['all_predictions'])
+                all_existing.update(llm_model_performances[llm_name]['all_existing'])
+            
+            # Calculate oracle performance
+            if all_existing:
+                oracle_matches = all_predictions & all_existing
+                oracle_recall = len(oracle_matches) / len(all_existing) if all_existing else 0
+                oracle_precision = len(oracle_matches) / len(all_predictions) if all_predictions else 0
+                oracle_accuracy = 1 if oracle_recall > 0 else 0
+            else:
+                oracle_recall = 0
+                oracle_precision = 0
+                oracle_accuracy = 0
+            
+            model_results['oracle_recall'] = oracle_recall
+            model_results['oracle_precision'] = oracle_precision
+            model_results['oracle_accuracy'] = oracle_accuracy
+            
+            # Synergy potential (improvement over best individual)
+            model_results['synergy_recall_gain'] = oracle_recall - best_recall
+            model_results['synergy_precision_gain'] = oracle_precision - best_precision
+            model_results['synergy_accuracy_gain'] = oracle_accuracy - best_accuracy
+            
+            # Performance complementarity (how much LLMs differ on this model)
+            recall_values = [llm_model_performances[llm]['avg_recall_formula'] for llm in llm_model_performances]
+            precision_values = [llm_model_performances[llm]['avg_precision_formula'] for llm in llm_model_performances]
+            accuracy_values = [llm_model_performances[llm]['avg_accuracy'] for llm in llm_model_performances]
+            
+            model_results['recall_std'] = np.std(recall_values)
+            model_results['precision_std'] = np.std(precision_values)
+            model_results['accuracy_std'] = np.std(accuracy_values)
+            
+            # Which LLM performed best for this model
+            best_llm_recall = max(llm_model_performances.keys(), key=lambda x: llm_model_performances[x]['avg_recall_formula'])
+            best_llm_precision = max(llm_model_performances.keys(), key=lambda x: llm_model_performances[x]['avg_precision_formula'])
+            best_llm_accuracy = max(llm_model_performances.keys(), key=lambda x: llm_model_performances[x]['avg_accuracy'])
+            
+            model_results['best_llm_recall'] = best_llm_recall
+            model_results['best_llm_precision'] = best_llm_precision
+            model_results['best_llm_accuracy'] = best_llm_accuracy
+            
+            synergy_results.append(model_results)
+    
+    else:  # species level
+        # Get all unique (model, species_id) pairs
+        all_species_pairs = set()
+        for df in llm_dfs:
+            pairs = list(zip(df['model'], df['species_id']))
+            all_species_pairs.update(pairs)
+        
+        # Analyze each species
+        for model_name, species_id in all_species_pairs:
+            species_results = {}
+            
+            # Get results for this species from each LLM
+            llm_species_performances = {}
+            for llm_name, df in zip(llm_names, llm_dfs):
+                species_data = df[(df['model'] == model_name) & (df['species_id'] == species_id)]
+                
+                if not species_data.empty:
+                    row = species_data.iloc[0]
+                    
+                    # Get predictions and existing annotations
+                    preds = row.get('predictions', [])
+                    if isinstance(preds, str):
+                        try:
+                            import ast
+                            preds = ast.literal_eval(preds)
+                        except:
+                            preds = []
+                    
+                    existing = row.get('exist_annotation_id', [])
+                    if isinstance(existing, str):
+                        try:
+                            import ast
+                            existing = ast.literal_eval(existing)
+                        except:
+                            existing = []
+                    
+                    llm_species_performances[llm_name] = {
+                        'recall_exact': row['recall_exact'],
+                        'precision_exact': row['precision_exact'],
+                        'recall_formula': row['recall_formula'],
+                        'precision_formula': row['precision_formula'],
+                        'accuracy': row['accuracy'],
+                        'predictions': set(preds) if isinstance(preds, list) else set(),
+                        'existing': set(existing) if isinstance(existing, list) else set()
+                    }
+            
+            if len(llm_species_performances) < 2:
+                continue  # Skip if not enough LLMs have data for this species
+            
+            # Calculate synergy metrics for this species
+            species_results['model'] = model_name
+            species_results['species_id'] = species_id
+            
+            # Individual LLM performances
+            for llm_name in llm_names:
+                if llm_name in llm_species_performances:
+                    species_results[f'{llm_name}_recall_formula'] = llm_species_performances[llm_name]['recall_formula']
+                    species_results[f'{llm_name}_precision_formula'] = llm_species_performances[llm_name]['precision_formula']
+                    species_results[f'{llm_name}_accuracy'] = llm_species_performances[llm_name]['accuracy']
+                else:
+                    species_results[f'{llm_name}_recall_formula'] = 0
+                    species_results[f'{llm_name}_precision_formula'] = 0
+                    species_results[f'{llm_name}_accuracy'] = 0
+            
+            # Best individual performance across LLMs
+            best_recall = max([llm_species_performances[llm]['recall_formula'] for llm in llm_species_performances])
+            best_precision = max([llm_species_performances[llm]['precision_formula'] for llm in llm_species_performances])
+            best_accuracy = max([llm_species_performances[llm]['accuracy'] for llm in llm_species_performances])
+            
+            species_results['best_individual_recall'] = best_recall
+            species_results['best_individual_precision'] = best_precision
+            species_results['best_individual_accuracy'] = best_accuracy
+            
+            # Oracle combination (union of all predictions)
+            all_predictions = set()
+            all_existing = set()
+            for llm_name in llm_species_performances:
+                all_predictions.update(llm_species_performances[llm_name]['predictions'])
+                all_existing.update(llm_species_performances[llm_name]['existing'])
+            
+            # Calculate oracle performance
+            if all_existing:
+                oracle_matches = all_predictions & all_existing
+                oracle_recall = len(oracle_matches) / len(all_existing) if all_existing else 0
+                oracle_precision = len(oracle_matches) / len(all_predictions) if all_predictions else 0
+                oracle_accuracy = 1 if oracle_recall > 0 else 0
+            else:
+                oracle_recall = 0
+                oracle_precision = 0
+                oracle_accuracy = 0
+            
+            species_results['oracle_recall'] = oracle_recall
+            species_results['oracle_precision'] = oracle_precision
+            species_results['oracle_accuracy'] = oracle_accuracy
+            
+            # Synergy potential (improvement over best individual)
+            species_results['synergy_recall_gain'] = oracle_recall - best_recall
+            species_results['synergy_precision_gain'] = oracle_precision - best_precision
+            species_results['synergy_accuracy_gain'] = oracle_accuracy - best_accuracy
+            
+            # Which LLM performed best for this species
+            best_llm_recall = max(llm_species_performances.keys(), key=lambda x: llm_species_performances[x]['recall_exact'])
+            best_llm_precision = max(llm_species_performances.keys(), key=lambda x: llm_species_performances[x]['precision_exact'])
+            best_llm_accuracy = max(llm_species_performances.keys(), key=lambda x: llm_species_performances[x]['accuracy'])
+            
+            species_results['best_llm_recall'] = best_llm_recall
+            species_results['best_llm_precision'] = best_llm_precision
+            species_results['best_llm_accuracy'] = best_llm_accuracy
+            
+            synergy_results.append(species_results)
+    
+    # Convert to DataFrame
+    synergy_df = pd.DataFrame(synergy_results)
+    
+    if synergy_df.empty:
+        print("No overlapping data found between LLM results")
+        return pd.DataFrame()
+    
+    # Save results
+    synergy_df.to_csv(output_file, index=False)
+    print(f"Saved synergy analysis to {output_file}")
+    
+    # Print summary statistics
+    if analysis_level == 'model':
+        print("\n=== LLM SYNERGY ANALYSIS SUMMARY (PER-MODEL) ===")
+        print(f"Total models analyzed: {len(synergy_df)}")
+        
+        # Overall synergy potential
+        avg_synergy_recall = synergy_df['synergy_recall_gain'].mean()
+        avg_synergy_precision = synergy_df['synergy_precision_gain'].mean()
+        avg_synergy_accuracy = synergy_df['synergy_accuracy_gain'].mean()
+        
+        print(f"Average synergy gains:")
+        print(f"  Recall: {avg_synergy_recall:.3f}")
+        print(f"  Precision: {avg_synergy_precision:.3f}")
+        print(f"  Accuracy: {avg_synergy_accuracy:.3f}")
+        
+        # Models with highest synergy potential
+        high_synergy = synergy_df.nlargest(100, 'synergy_recall_gain')
+        print(f"\nTop 100 models with highest synergy potential (recall):")
+        for _, row in high_synergy.iterrows():
+            print(f"  {row['model']} (gain: {row['synergy_recall_gain']:.3f})")
+        
+        # LLM performance distribution
+        print(f"\nLLM performance distribution:")
+        for llm_name in llm_names:
+            if f'{llm_name}_avg_recall_exact' in synergy_df.columns:
+                avg_recall = synergy_df[f'{llm_name}_avg_recall_exact'].mean()
+                best_count = sum(synergy_df['best_llm_recall'] == llm_name)
+                print(f"  {llm_name}: avg recall {avg_recall:.3f}, best on {best_count} models")
+        
+        # Complementarity analysis
+        avg_recall_std = synergy_df['recall_std'].mean()
+        avg_precision_std = synergy_df['precision_std'].mean()
+        print(f"\nLLM Complementarity (higher = more diverse):")
+        print(f"  Average recall std dev: {avg_recall_std:.3f}")
+        print(f"  Average precision std dev: {avg_precision_std:.3f}")
+        
+        # Distribution of which LLM is best
+        print(f"\nBest LLM distribution (by recall):")
+        best_llm_counts = synergy_df['best_llm_recall'].value_counts()
+        for llm_name, count in best_llm_counts.items():
+            print(f"  {llm_name}: best on {count} models ({100*count/len(synergy_df):.1f}%)")
+    
+    else:  # species level
+        print("\n=== LLM SYNERGY ANALYSIS SUMMARY (PER-SPECIES) ===")
+        print(f"Total species analyzed: {len(synergy_df)}")
+        
+        # Overall synergy potential
+        avg_synergy_recall = synergy_df['synergy_recall_gain'].mean()
+        avg_synergy_precision = synergy_df['synergy_precision_gain'].mean()
+        avg_synergy_accuracy = synergy_df['synergy_accuracy_gain'].mean()
+        
+        print(f"Average synergy gains:")
+        print(f"  Recall: {avg_synergy_recall:.3f}")
+        print(f"  Precision: {avg_synergy_precision:.3f}")
+        print(f"  Accuracy: {avg_synergy_accuracy:.3f}")
+        
+        # Species with highest synergy potential
+        high_synergy = synergy_df.nlargest(5, 'synergy_recall_gain')
+        print(f"\nTop 5 species with highest synergy potential (recall):")
+        for _, row in high_synergy.iterrows():
+            print(f"  {row['model']}:{row['species_id']} (gain: {row['synergy_recall_gain']:.3f})")
+        
+        # LLM performance distribution
+        print(f"\nLLM performance distribution:")
+        for llm_name in llm_names:
+            if f'{llm_name}_recall_exact' in synergy_df.columns:
+                avg_recall = synergy_df[f'{llm_name}_recall_exact'].mean()
+                best_count = sum(synergy_df['best_llm_recall'] == llm_name)
+                print(f"  {llm_name}: avg recall {avg_recall:.3f}, best on {best_count} species")
+        
+        # Distribution of which LLM is best
+        print(f"\nBest LLM distribution (by recall):")
+        best_llm_counts = synergy_df['best_llm_recall'].value_counts()
+        for llm_name, count in best_llm_counts.items():
+            print(f"  {llm_name}: best on {count} species ({100*count/len(synergy_df):.1f}%)")
+    
+    return synergy_df
+
+def filter_qualifiers_in_results(results_csv: str, 
+                                 bqbiol_qualifiers: List[str],
+                                 model_dir: str,
+                                 output_csv: str = None,
+                                 entity_type: str = "chemical",
+                                 database: str = "chebi") -> pd.DataFrame:
+    """
+    Filter previously saved results to only include species that use the specified bqbiol qualifiers.
+    
+    Args:
+        results_csv: Path to CSV file containing previously saved evaluation results
+        bqbiol_qualifiers: List of bqbiol qualifiers to filter for (e.g. ['is', 'isVersionOf', 'hasPart'])
+        model_dir: Directory containing the original SBML model files
+        output_csv: Path to save filtered results (optional)
+        entity_type: Type of entity ("chemical" or "gene")
+        database: Database being used ("chebi" or "ncbigene")
+        
+    Returns:
+        Filtered DataFrame containing only results for species with the specified qualifiers
+    """
+    if not os.path.exists(results_csv):
+        raise FileNotFoundError(f"Results file not found: {results_csv}")
+    
+    # Load the results
+    df = pd.read_csv(results_csv)
+    
+    if df.empty:
+        return df
+    
+    # Get unique models from the results
+    models_in_results = df['model'].unique()
+    
+    filtered_rows = []
+    
+    for model_name in models_in_results:
+        # Find the corresponding model file
+        model_file = None
+        for ext in ['.xml', '.sbml']:
+            potential_path = os.path.join(model_dir, model_name.replace('.xml', '').replace('.sbml', '') + ext)
+            if os.path.exists(potential_path):
+                model_file = potential_path
+                break
+        
+        if not model_file:
+            logger.warning(f"Model file not found for {model_name}, skipping")
+            continue
+        
+        # Get annotations for this model using the specified qualifiers
+        if entity_type == "chemical" and database == "chebi":
+            qualified_annotations = find_species_with_chebi_annotations(model_file, bqbiol_qualifiers)
+        elif entity_type == "gene" and database == "ncbigene":
+            qualified_annotations = find_species_with_ncbigene_annotations(model_file, bqbiol_qualifiers)
+        else:
+            logger.warning(f"Entity type {entity_type} with database {database} not supported")
+            continue
+        
+        # Filter rows for this model to only include species with qualified annotations
+        model_rows = df[df['model'] == model_name]
+        for _, row in model_rows.iterrows():
+            species_id = row['species_id']
+            if species_id in qualified_annotations:
+                filtered_rows.append(row)
+    
+    # Create filtered DataFrame
+    if filtered_rows:
+        filtered_df = pd.DataFrame(filtered_rows)
+        filtered_df.reset_index(drop=True, inplace=True)
+    else:
+        filtered_df = pd.DataFrame()
+    
+    # Save if output path provided
+    if output_csv:
+        filtered_df.to_csv(output_csv, index=False)
+        logger.info(f"Filtered results saved to: {output_csv}")
+    
+    return filtered_df
+
+def analyze_bqbiol_qualifier_statistics(model_dir: str, 
+                                       output_file: str = 'bqbiol_qualifier_statistics.csv',
+                                       verbose: bool = True) -> pd.DataFrame:
+    """
+    Analyze how many species have annotations using each bqbiol qualifier across all models,
+    broken down by ontology (chebi, uniprot, ncbigene, etc.).
+    
+    Args:
+        model_dir: Directory containing SBML model files
+        output_file: Path to save the statistics table
+        verbose: If True, show detailed logging
+        
+    Returns:
+        DataFrame with statistics table where rows are ontologies, columns are qualifiers,
+        and cells show the number of species that contain that ontology term for that qualifier
+    """
+    from core.model_info import find_species_with_chebi_annotations, find_species_with_ncbigene_annotations, find_species_with_uniprot_annotations, detect_model_format
+    from utils.constants import CHEBI_URI_PATTERNS, NCBIGENE_URI_PATTERNS, UNIPROT_URI_PATTERNS, ModelType
+    
+    # Common bqbiol qualifiers to check
+    common_qualifiers = [
+        'is', 'isVersionOf', 'hasVersion', 'isDescribedBy', 'hasPart','isPartOf',
+        'hasProperty', 'isPropertyOf', 'isEncodedBy', 'encodes', 'isHomologTo',  
+        'occursIn', 'hasTaxon', 'isRelatedTo'
+    ]
+    
+    # Initialize statistics storage - start with main ontologies, others will be added dynamically
+    ontology_stats = {
+        'chebi': {qualifier: 0 for qualifier in common_qualifiers},
+        'ncbigene': {qualifier: 0 for qualifier in common_qualifiers},
+        'uniprot': {qualifier: 0 for qualifier in common_qualifiers},
+    }
+    
+    models_with_qualifiers = {qualifier: set() for qualifier in common_qualifiers}
+    model_type_counts = {'SBML': 0, 'SBML-qual': 0, 'SBML-fbc': 0}
+    discovered_ontologies = set()
+    
+    # Get all model files
+    model_files = [f for f in os.listdir(model_dir) if f.endswith('.xml') or f.endswith('.sbml')]
+    
+    if verbose:
+        print(f"Analyzing {len(model_files)} models for bqbiol qualifier statistics...")
+    
+    for model_file in model_files:
+        model_path = os.path.join(model_dir, model_file)
+        
+        if verbose:
+            print(f"Processing {model_file}...")
+        
+        # Detect model type
+        try:
+            model_type, format_info = detect_model_format(model_path)
+            model_type_counts[model_type.value] += 1
+        except Exception as e:
+            if verbose:
+                logger.warning(f"Error detecting model type for {model_file}: {e}")
+            continue
+        
+        for qualifier in common_qualifiers:
+            # Check for each ontology using specific qualifiers
+            try:
+                # ChEBI annotations
+                chebi_annotations = find_species_with_chebi_annotations(model_path, [qualifier])
+                if chebi_annotations:
+                    ontology_stats['chebi'][qualifier] += len(chebi_annotations)
+                    models_with_qualifiers[qualifier].add(model_file)
+                
+                # NCBI Gene annotations  
+                ncbigene_annotations = find_species_with_ncbigene_annotations(model_path, [qualifier])
+                if ncbigene_annotations:
+                    ontology_stats['ncbigene'][qualifier] += len(ncbigene_annotations)
+                    models_with_qualifiers[qualifier].add(model_file)
+                
+                # UniProt annotations
+                uniprot_annotations = find_species_with_uniprot_annotations(model_path, [qualifier])
+                if uniprot_annotations:
+                    ontology_stats['uniprot'][qualifier] += len(uniprot_annotations)
+                    models_with_qualifiers[qualifier].add(model_file)
+                
+                # Detect and count other ontologies
+                other_ontologies = _detect_and_count_other_ontologies(model_path, qualifier, model_type)
+                for ontology, count in other_ontologies.items():
+                    if count > 0:
+                        # Add new ontology if not seen before
+                        if ontology not in ontology_stats:
+                            ontology_stats[ontology] = {q: 0 for q in common_qualifiers}
+                        
+                        ontology_stats[ontology][qualifier] += count
+                        models_with_qualifiers[qualifier].add(model_file)
+                        discovered_ontologies.add(ontology)
+                
+            except Exception as e:
+                if verbose:
+                    logger.warning(f"Error processing {model_file} for qualifier {qualifier}: {e}")
+                continue
+    
+    # Convert to DataFrame
+    stats_df = pd.DataFrame(ontology_stats).T  # Transpose so ontologies are rows
+    stats_df.index.name = 'Ontology'
+    
+    # Add a summary row showing number of models that contain each qualifier
+    model_counts = {qualifier: len(models_with_qualifiers[qualifier]) for qualifier in common_qualifiers}
+    summary_row = pd.DataFrame([model_counts], index=['Models_with_qualifier'])
+    stats_df = pd.concat([stats_df, summary_row])
+    
+    # Save results
+    stats_df.to_csv(output_file)
+    if verbose:
+        print(f"Statistics saved to: {output_file}")
+        print(f"\nModel type distribution:")
+        for model_type, count in model_type_counts.items():
+            print(f"  {model_type}: {count} models")
+        
+        print(f"\nDiscovered ontologies: {sorted(discovered_ontologies)}")
+        print("\nSummary:")
+        print(stats_df)
+        
+        print(f"\nNumber of models that contain at least one annotation for each qualifier:")
+        for qualifier in common_qualifiers:
+            count = len(models_with_qualifiers[qualifier])
+            print(f"  {qualifier}: {count} models")
+    
+    return stats_df
+
+def _detect_and_count_other_ontologies(model_file: str, qualifier: str, model_type: 'ModelType') -> Dict[str, int]:
+    """
+    Enhanced helper function to detect and count annotations for various ontologies for a specific qualifier.
+    Handles different model types (SBML, SBML_FBC, SBML_QUAL).
+    Extracts ontology names from identifiers.org URLs automatically.
+    """
+    import libsbml
+    from utils.constants import ModelType
+    
+    reader = libsbml.SBMLReader()
+    document = reader.readSBML(model_file)
+    model = document.getModel()
+    
+    if model is None:
+        return {}
+    
+    ontology_counts = {}
+    
+    def extract_ontologies_from_qualifier_content(qualifier_content: str):
+        """Extract ontology names from identifiers.org URLs in qualifier content."""
+        # Pattern to match the term after 'identifiers.org/' and before any following / or :
+        identifiers_pattern = r'http[s]?://identifiers\.org/([^/:]+)'
+        miriam_pattern = r'urn:miriam:([^:\s<>"]+)'
+        
+        # Find all identifiers.org URLs
+        identifiers_matches = re.findall(identifiers_pattern, qualifier_content)
+        miriam_matches = re.findall(miriam_pattern, qualifier_content)
+        
+        # Combine and count ontologies
+        all_ontologies = identifiers_matches + miriam_matches
+        
+        for ontology in all_ontologies:
+            # Clean up ontology name (remove any trailing characters)
+            ontology = ontology.strip()
+            if ontology and ontology not in ['chebi', 'ncbigene', 'uniprot']:  # Skip main ones we handle separately
+                if ontology not in ontology_counts:
+                    ontology_counts[ontology] = 0
+                ontology_counts[ontology] += 1
+    
+    def check_annotations_for_species(species_list):
+        """Helper to check annotations for a list of species objects."""
+        for species in species_list:
+            if species.isSetAnnotation():
+                annotation_str = species.getAnnotation().toXMLString()
+                
+                # Check if this species has the qualifier
+                qualifier_match = re.search(
+                    r'<bqbiol:{}[^>]*?>.*?</bqbiol:{}>'.format(
+                        re.escape(qualifier), re.escape(qualifier)
+                    ), 
+                    annotation_str, 
+                    flags=re.DOTALL
+                )
+                
+                if qualifier_match:
+                    qualifier_content = qualifier_match.group(0)
+                    extract_ontologies_from_qualifier_content(qualifier_content)
+    
+    # Handle different model types
+    if model_type == ModelType.SBML:
+        # Regular SBML models - check species
+        check_annotations_for_species(model.getListOfSpecies())
+        
+    elif model_type == ModelType.SBML_FBC:
+        # SBML-FBC models - check species and gene products
+        check_annotations_for_species(model.getListOfSpecies())
+        
+        fbc_plugin = model.getPlugin("fbc")
+        if fbc_plugin:
+            gene_products = []
+            for gene_product in fbc_plugin.getListOfGeneProducts():
+                gene_products.append(gene_product)
+            check_annotations_for_species(gene_products)
+    
+    elif model_type == ModelType.SBML_QUAL:
+        # SBML-qual models - check qualitative species
+        qual_plugin = model.getPlugin("qual")
+        if qual_plugin:
+            qual_species = []
+            for qual_spec in qual_plugin.getListOfQualitativeSpecies():
+                qual_species.append(qual_spec)
+            check_annotations_for_species(qual_species)
+    
+    return ontology_counts

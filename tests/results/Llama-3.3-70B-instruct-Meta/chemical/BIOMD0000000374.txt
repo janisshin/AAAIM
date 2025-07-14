@@ -1,9 +1,0 @@
-Model: BIOMD0000000374
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:43:56
-
-Synonyms:
-Ca_er_Ca_equations: ['calcium ion', 'Ca2+', 'calcium']
-Ca_i: ['calcium ion', 'Ca2+', 'calcium']
-
-Reason: Both Ca_er_Ca_equations and Ca_i are likely referring to calcium ions, as the model is related to calcium release-activated current (CRAC) in pancreatic beta-cells and the equations involve calcium flux. The "_er" and "_i" suffixes suggest "endoplasmic reticulum" and "intracellular", respectively, but the underlying chemical entity is still calcium.

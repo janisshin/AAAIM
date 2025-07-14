@@ -1,8 +1,0 @@
-Model: BIOMD0000000574
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:56:52
-
-Synonyms:
-ca: ['calcium', 'calcium ion', 'Ca2+']
-
-Reason: The model is described as a hemiconcerted MWC model of intact calmodulin with two targets, and the abstract mentions calmodulin as a calcium-binding protein, indicating that 'ca' likely refers to calcium.

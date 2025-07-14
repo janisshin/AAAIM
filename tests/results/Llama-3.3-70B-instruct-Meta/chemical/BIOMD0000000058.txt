@@ -1,9 +1,0 @@
-Model: BIOMD0000000058
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:37:22
-
-Synonyms:
-c1: ['calcium ion', 'Ca2+', 'calcium(2+)']
-c2: ['calcium ion', 'Ca2+', 'calcium(2+)']
-
-Reason: Both c1 and c2 are annotated as "Calcium ion Cell1" and "Calcium ion Cell2" respectively, indicating they represent calcium ions in different cells, hence the standardized names are the same for both species.

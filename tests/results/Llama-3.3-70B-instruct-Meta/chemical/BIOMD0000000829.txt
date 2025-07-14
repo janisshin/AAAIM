@@ -1,8 +1,0 @@
-Model: BIOMD0000000829
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 16:02:01
-
-Synonyms:
-Glucose_G: ['glucose', 'D-glucose', 'blood glucose']
-
-Reason: Glucose_G is likely to be glucose, a common energy source for cells, given its role in the model as a controlled substance to activate miR-451 and its mention in the abstract as being administered intravenously to regulate intracellular signaling pathways.

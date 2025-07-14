@@ -20,7 +20,7 @@ except ImportError:
     QUAL_SUPPORT = False
     logging.warning("biolqm and/or pyboolnet not available - SBML-qual models not supported")
 
-from utils.constants import ModelType, MODEL_FORMAT_PLUGINS, NCBIGENE_URI_PATTERNS, CHEBI_URI_PATTERNS
+from utils.constants import ModelType, MODEL_FORMAT_PLUGINS, NCBIGENE_URI_PATTERNS, CHEBI_URI_PATTERNS, UNIPROT_URI_PATTERNS
 
 logger = logging.getLogger(__name__)
 
@@ -66,56 +66,105 @@ def detect_model_format(model_file: str) -> Tuple[ModelType, Dict[str, Any]]:
     # Default to regular SBML
     return ModelType.SBML, format_info
 
-def extract_id_from_annotation(annotation_str: str, uri_patterns: List[str]) -> List[str]:
-    """Helper function to extract IDs from annotation string."""
-    ids = []
-    for pattern in uri_patterns:
-        matches = re.findall(pattern, annotation_str)
-        ids.extend(matches)
-    return list(set(ids))  # Remove duplicates
+def extract_id_from_annotation(annotation_str: str, uri_patterns: List[str], bqbiol_qualifiers: list = None) -> List[str]:
+    """
+    Helper function to extract IDs from annotation string using both URI patterns.
+    If bqbiol_qualifiers is provided, also search within those qualifier blocks for matches.
+    """
+    ids = set()
 
-def find_species_with_chebi_annotations(model_file: str) -> Dict[str, List[str]]:
+    # If bqbiol_qualifiers are provided, search within those blocks for matches
+    if bqbiol_qualifiers:
+        combined_str = ''
+        for one_qualifier in bqbiol_qualifiers:
+            one_match = r'<bqbiol:{}[^>]*?>.*?</bqbiol:{}>'.format(
+                re.escape(one_qualifier), re.escape(one_qualifier)
+            )
+            one_matched = re.findall(one_match, annotation_str, flags=re.DOTALL)
+            if len(one_matched) > 0:
+                matched_filt = [s.replace("      ", "") for s in one_matched]
+                one_str = '\n'.join(matched_filt)
+            else:
+                one_str = ''
+            combined_str = combined_str + one_str
+
+        # Search the combined qualifier string for all URI patterns
+        for pattern in uri_patterns:
+            matches = re.findall(pattern, combined_str)
+            ids.update(matches)
+    else:
+        # If no bqbiol qualifiers are provided, directly search the annotation string for all URI patterns
+        for pattern in uri_patterns:
+            matches = re.findall(pattern, annotation_str)
+            ids.update(matches)
+
+    return list(ids)
+
+def find_species_with_chebi_annotations(model_file: str, bqbiol_qualifiers: list = None) -> Dict[str, List[str]]:
     """
     Find species with existing ChEBI annotations.
-    Supports both identifiers.org URIs and URN formats.
-    
+
     Args:
         model_file: Path to the SBML model file
-        
+        bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
+
     Returns:
         Dictionary mapping species IDs to their ChEBI annotation IDs
     """
     reader = libsbml.SBMLReader()
     document = reader.readSBML(model_file)
     model = document.getModel()
-    
+
     if model is None:
         return {}
-    
-    chebi_annotations = {}
-    
-    # Extract annotations from species
-    for species in model.getListOfSpecies():
-        species_id = species.getId()
-        
-        if species.isSetAnnotation():
-            annotation = species.getAnnotation()
-            annotation_str = annotation.toXMLString()
-            
-            # Look for ChEBI URIs using all supported patterns
-            chebi_ids = extract_id_from_annotation(annotation_str, CHEBI_URI_PATTERNS)
 
-            if chebi_ids:
-                chebi_annotations[species_id] = chebi_ids
-    
+    model_type, format_info = detect_model_format(model_file)
+    chebi_annotations = {}
+
+    if model_type == ModelType.SBML:
+        for species in model.getListOfSpecies():
+            species_id = species.getId()
+
+            if species.isSetAnnotation():
+                annotation = species.getAnnotation()
+                annotation_str = annotation.toXMLString()
+                chebi_ids = extract_id_from_annotation(annotation_str, CHEBI_URI_PATTERNS, bqbiol_qualifiers)
+                if chebi_ids:
+                    chebi_annotations[species_id] = chebi_ids
+
+    elif model_type == ModelType.SBML_FBC:
+        # For SBML_FBC models, ChEBI annotations are typically on regular species
+        for species in model.getListOfSpecies():
+            species_id = species.getId()
+
+            if species.isSetAnnotation():
+                annotation = species.getAnnotation()
+                annotation_str = annotation.toXMLString()
+                chebi_ids = extract_id_from_annotation(annotation_str, CHEBI_URI_PATTERNS, bqbiol_qualifiers)
+                if chebi_ids:
+                    chebi_annotations[species_id] = chebi_ids
+
+    elif model_type == ModelType.SBML_QUAL:
+        qual_plugin = model.getPlugin("qual")
+        if qual_plugin:
+            for qual_species in qual_plugin.getListOfQualitativeSpecies():
+                qual_species_id = qual_species.getId()
+                if qual_species.isSetAnnotation():
+                    annotation = qual_species.getAnnotation()
+                    annotation_str = annotation.toXMLString()
+                    chebi_ids = extract_id_from_annotation(annotation_str, CHEBI_URI_PATTERNS, bqbiol_qualifiers)
+                    if chebi_ids:
+                        chebi_annotations[qual_species_id] = chebi_ids
+
     return chebi_annotations
     
-def find_species_with_ncbigene_annotations(model_file: str) -> Dict[str, List[str]]:
+def find_species_with_ncbigene_annotations(model_file: str, bqbiol_qualifiers: list = None) -> Dict[str, List[str]]:
     """
     Find species with existing NCBI gene annotations.
     
     Args:
         model_file: Path to the SBML model file
+        bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
         
     Returns:
         Dictionary mapping species IDs to their NCBI gene annotation IDs
@@ -140,8 +189,7 @@ def find_species_with_ncbigene_annotations(model_file: str) -> Dict[str, List[st
                 if gene_product.isSetAnnotation():
                     annotation = gene_product.getAnnotation()
                     annotation_str = annotation.toXMLString()
-                    gene_ids = extract_id_from_annotation(annotation_str, NCBIGENE_URI_PATTERNS)
-                    
+                    gene_ids = extract_id_from_annotation(annotation_str, NCBIGENE_URI_PATTERNS, bqbiol_qualifiers)                    
                     if gene_ids:
                         ncbigene_annotations[gene_product_id] = gene_ids
     
@@ -155,12 +203,86 @@ def find_species_with_ncbigene_annotations(model_file: str) -> Dict[str, List[st
                 if qual_species.isSetAnnotation():
                     annotation = qual_species.getAnnotation()
                     annotation_str = annotation.toXMLString()
-                    gene_ids = extract_id_from_annotation(annotation_str, NCBIGENE_URI_PATTERNS)
-                    
+                    gene_ids = extract_id_from_annotation(annotation_str, NCBIGENE_URI_PATTERNS, bqbiol_qualifiers)        
                     if gene_ids:
                         ncbigene_annotations[qual_species_id] = gene_ids
+                        
+    elif model_type == ModelType.SBML:
+        for species in model.getListOfSpecies():
+            species_id = species.getId()
+
+            if species.isSetAnnotation():
+                annotation = species.getAnnotation()
+                annotation_str = annotation.toXMLString()
+                gene_ids = extract_id_from_annotation(annotation_str, NCBIGENE_URI_PATTERNS, bqbiol_qualifiers)                
+                if gene_ids:
+                    ncbigene_annotations[species_id] = gene_ids
     
     return ncbigene_annotations
+
+def find_species_with_uniprot_annotations(model_file: str, bqbiol_qualifiers: list = None) -> Dict[str, List[str]]:
+    """
+    Find species with existing UniProt annotations.
+    
+    Args:
+        model_file: Path to the SBML model file
+        bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
+        
+    Returns:
+        Dictionary mapping species IDs to their UniProt annotation IDs
+    """
+    reader = libsbml.SBMLReader()
+    document = reader.readSBML(model_file)
+    model = document.getModel()
+    
+    if model is None:
+        return {}
+    
+    model_type, format_info = detect_model_format(model_file)
+    uniprot_annotations = {}
+    
+    if model_type == ModelType.SBML_FBC:
+        # Extract annotations from FBC gene products
+        fbc_plugin = model.getPlugin("fbc")
+        if fbc_plugin:
+            for gene_product in fbc_plugin.getListOfGeneProducts():
+                gene_product_id = gene_product.getId()
+                
+                if gene_product.isSetAnnotation():
+                    annotation = gene_product.getAnnotation()
+                    annotation_str = annotation.toXMLString()
+                    gene_ids = extract_id_from_annotation(annotation_str, UNIPROT_URI_PATTERNS, bqbiol_qualifiers)
+                    
+                    if gene_ids:
+                        uniprot_annotations[gene_product_id] = gene_ids
+    
+    elif model_type == ModelType.SBML_QUAL:
+        # Extract annotations from qual qualitative species
+        qual_plugin = model.getPlugin("qual")
+        if qual_plugin:
+            for qual_species in qual_plugin.getListOfQualitativeSpecies():
+                qual_species_id = qual_species.getId()
+                
+                if qual_species.isSetAnnotation():
+                    annotation = qual_species.getAnnotation()
+                    annotation_str = annotation.toXMLString()
+                    gene_ids = extract_id_from_annotation(annotation_str, UNIPROT_URI_PATTERNS, bqbiol_qualifiers)
+                    
+                    if gene_ids:
+                        uniprot_annotations[qual_species_id] = gene_ids
+    elif model_type == ModelType.SBML:
+        for species in model.getListOfSpecies():
+            species_id = species.getId()
+
+            if species.isSetAnnotation():
+                annotation = species.getAnnotation()
+                annotation_str = annotation.toXMLString()
+                gene_ids = extract_id_from_annotation(annotation_str, UNIPROT_URI_PATTERNS, bqbiol_qualifiers)
+                
+                if gene_ids:
+                    uniprot_annotations[species_id] = gene_ids
+                    
+    return uniprot_annotations
 
 def get_species_display_names(model_file: str, entity_type: str = "chemical") -> Dict[str, str]:
     """
@@ -507,7 +629,7 @@ Reason: …
     else:
         # Original format for chemical entities
         prompt = f"""Now annotate these:
-Species to annotate: {", ".join(species_ids)}
+{entity_type.title()} to annotate: {", ".join(species_ids)}
 Model: "{model_info["model_name"]}"
 // Display Names:
 {model_info["display_names"]}
@@ -516,11 +638,12 @@ Model: "{model_info["model_name"]}"
 // Notes:
 {model_info["model_notes"]}
 
-Return up to 3 standardized names or common synonyms for each species, ranked by likelihood.
-Use the below format, do not include any other text except the synonyms, and give short reasons for all species after 'Reason:' by the end.
+Return up to 3 standardized names or common synonyms for each {entity_type}, ranked by likelihood.
+Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type} after 'Reason:' by the end.
 
 SpeciesA: "name1", "name2", …
 SpeciesB:  …
 Reason: …
         """
     return prompt 
+

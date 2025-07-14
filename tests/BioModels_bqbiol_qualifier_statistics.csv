@@ -1,0 +1,8 @@
+,is,isVersionOf,hasVersion,isDescribedBy,hasPart,isPartOf,hasProperty,isPropertyOf,isEncodedBy,encodes,isHomologTo,occursIn,hasTaxon,isRelatedTo
+chebi,3659,1911,65,0,1020,12,208,1,0,0,3,0,0,0
+ncbigene,1396,54,0,0,9,0,2,0,97,0,0,0,0,0
+uniprot,4215,3689,225,0,3366,48,59,4,1,188,273,0,0,0
+go,94,388,6,9,242,19,263,4,0,4,0,131,0,0
+kegg,5042,606,20,0,381,1,0,0,1828,0,2,0,0,0
+other,1347,1848,72,42,256,72,4234,21,106,224,9,342,31,0
+Models_with_qualifier,454,762,108,14,397,54,270,19,37,61,54,63,10,0

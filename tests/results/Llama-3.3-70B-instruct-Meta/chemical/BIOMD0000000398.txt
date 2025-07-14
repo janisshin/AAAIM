@@ -1,9 +1,0 @@
-Model: BIOMD0000000398
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:44:47
-
-Synonyms:
-s101: ['Erlotinib', 'erlotinib hydrochloride', 'OSI-774']
-s147: ["6-bromoindirubin-3'-oxime", '6-bromoindirubin 3 oxime', 'BIO']
-
-Reason: s101 is annotated with standardized names for the drug Erlotinib, a known EGFR inhibitor. s147 is annotated with standardized names for 6-bromoindirubin-3'-oxime, a known GSK-3 inhibitor, based on the provided display name.

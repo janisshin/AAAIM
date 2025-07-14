@@ -1,8 +1,0 @@
-Model: BIOMD0000000666
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 16:00:51
-
-Synonyms:
-Dabrafenib: ['Dabrafenib', 'GSK2118436', 'N-[3-(5-(2-Amino-4-pyrimidinyl)-2-(1,1-dimethylethyl)-1H-pyrazol-3-yl)-2,6-difluorophenyl]-2-pyridinecarboxamide']
-
-Reason: Dabrafenib is a known drug and its standardized name is the same as its display name, other names are synonyms or its chemical name, the reaction and model context suggest it is a specific chemical entity used in cancer treatment.

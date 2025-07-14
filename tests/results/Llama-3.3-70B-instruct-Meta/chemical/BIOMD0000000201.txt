@@ -1,9 +1,0 @@
-Model: BIOMD0000000201
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:40:40
-
-Synonyms:
-Rasa: ['Ras protein', 'GTPase HRas', 'Ras GTPase']
-Rasi: ['Ras protein, inactive', 'GDP-bound Ras', 'inactive HRas']
-
-Reason: Rasa and Rasi are annotated based on their display names as "active Ras" and "inactive Ras", which refers to the Ras protein, a small GTPase involved in cellular signaling pathways. The standardized names are based on common synonyms for the Ras protein in its active and inactive states.

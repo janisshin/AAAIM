@@ -98,12 +98,17 @@ MODEL_FORMAT_PLUGINS = {
 }
 
 # Annotation URI Patterns
+CHEBI_URI_PATTERNS = [
+    r'http[s]?://identifiers\.org/chebi/CHEBI:(\d+)',
+    r'urn:miriam:chebi:CHEBI:(\d+)'
+]
+
 NCBIGENE_URI_PATTERNS = [
     r'http[s]?://identifiers\.org/ncbigene/(\d+)',
     r'urn:miriam:ncbigene:(\d+)'
 ]
 
-CHEBI_URI_PATTERNS = [
-    r'http[s]?://identifiers\.org/chebi/CHEBI:(\d+)',
-    r'urn:miriam:chebi:CHEBI:(\d+)'
+UNIPROT_URI_PATTERNS = [
+    r'http[s]?://identifiers\.org/uniprot/(\w+)',
+    r'urn:miriam:uniprot:(\w+)'
 ]

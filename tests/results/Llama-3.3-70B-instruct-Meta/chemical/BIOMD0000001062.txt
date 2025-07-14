@@ -1,9 +1,0 @@
-Model: BIOMD0000001062
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 16:06:18
-
-Synonyms:
-SpeciesA: ['acetyl-CoA', 'acetyl-CoA', 'acetyl-CoA']
-SpeciesB: ['acetyl-CoA', 'acetyl-CoA', 'acetyl-CoA']
-
-Reason: acetyl-CoA is a common synonym for all three names, and is a highly likely candidate due to its widespread use in biochemical literature.

@@ -117,7 +117,8 @@ recommendations_df, metrics = annotate_model(
     max_entities = 100,					 # maximum number of entities to annotate (None for all)
     entity_type = "gene",				 # type of entities to annotate ("chemical", "gene")
     database = "ncbigene",				 # database to use ("chebi", "ncbigene")
-    method = "direct"					 # method used to find the ontology ID ("direct", "rag")
+    method = "direct",					 # method used to find the ontology ID ("direct", "rag")
+    top_k = 3						 # number of top candidates to return per entity (based on scores)
 )
 ```
 
@@ -132,11 +133,11 @@ python examples/simple_example.py
 
 ### Direct matching
 
-After LLM performs synonym normalization, use direct dictionary matching to find ontology ID and report hit counting.
+After LLM performs synonym normalization, use direct dictionary matching to find ontology ID and report hit counting. Returns the top_k candidates with the highest hit counts.
 
 ### Retrival augmented generation (RAG)
 
-After LLM performs synonym normalization, use direct dictionary matching to find ontology ID and report hit counting.
+After LLM performs synonym normalization, use RAG with embeddings to find the top_k most similar ontology terms based on cosine similarity.
 
 To use RAG, create embeddings of the ontology first:
 
@@ -155,12 +156,12 @@ python load_data.py --database ncbigene --model default --tax_id 9606
 - **ChEBI**: Chemical Entities of Biological Interest
 
   - **Entity Type**: `chemical`
-  - **Direct**: Dictionary of standard names to ontology ID.
-  - **RAG**: Embeddings of ontology terms.
+  - **Direct**: Dictionary of standard names to ontology ID. Returns top_k candidates with highest hit counts.
+  - **RAG**: Embeddings of ontology terms. Returns top_k most similar terms.
 - **NCBI Gene**: Gene annotation
 
   - **Entity Type**: `gene`
-  - **Direct**: Dictionary of gene names to NCBI gene IDs.
+  - **Direct**: Dictionary of gene names to NCBI gene IDs. Returns top_k candidates with highest hit counts.
   - **RAG**: Not yet implemented.
 
 ### Future Support
@@ -219,5 +220,5 @@ aaaim/
 ### Planned Features
 
 - **Multi-Database Support**: UniProt, GO, Rhea
-- **RAG for NCBI Gene**: Reduce vector embedding size and add RAG support for gene annotations
+- **Improve RAG for NCBI Gene**: Test on other embedding models for genes
 - **Web Interface**: User-friendly annotation tool

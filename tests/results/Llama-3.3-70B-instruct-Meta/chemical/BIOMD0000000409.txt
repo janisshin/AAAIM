@@ -1,8 +1,0 @@
-Model: BIOMD0000000409
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:44:58
-
-Synonyms:
-AA: ['UNK']
-
-Reason: The display name 'AA' is not informative, and there are no reactions or additional context provided to determine a standardized name or common synonym for the species AA.

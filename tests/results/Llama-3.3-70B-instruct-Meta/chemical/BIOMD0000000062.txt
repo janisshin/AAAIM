@@ -1,9 +1,0 @@
-Model: BIOMD0000000062
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:37:31
-
-Synonyms:
-Ts: ['tryptophan', 'L-tryptophan', 'tryptophan amino acid']
-Tt: ['tryptophan', 'total tryptophan', 'tryptophan concentration']
-
-Reason: Ts and Tt are annotated based on their display names, with Ts being "Synthesized tryptophan" and Tt being "Total tryptophan", indicating they are related to tryptophan, an amino acid. The model name "Bhartiya2003_Tryptophan_operon" also supports this annotation, as it suggests the model is related to the tryptophan operon, a genetic regulatory system involved in tryptophan biosynthesis.

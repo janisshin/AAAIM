@@ -1,8 +1,0 @@
-Model: BIOMD0000000382
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:44:08
-
-Synonyms:
-z: ['glucose', 'insulin', 'UNK']
-
-Reason: The model is related to insulin and glucose regulation, and 'z' is a key component in the reaction equation, but its display name is not informative, and there is no clear indication of what 'z' represents, so the top two guesses are based on the model context, and "UNK" is included due to uncertainty.

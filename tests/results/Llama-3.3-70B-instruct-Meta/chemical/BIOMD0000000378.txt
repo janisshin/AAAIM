@@ -1,9 +1,0 @@
-Model: BIOMD0000000378
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:44:01
-
-Synonyms:
-Ca_i_cytosolic_calcium: ['calcium(2+)', 'calcium ion', 'Ca2+']
-Ca_lum: ['calcium(2+)', 'calcium ion', 'Ca2+']
-
-Reason: Both species are likely referring to calcium ions, with Ca_i_cytosolic_calcium representing calcium in the cytosol and Ca_lum representing calcium in the luminal space, but the display names and reactions do not provide enough information to distinguish between them, so the same standardized names are assigned to both.

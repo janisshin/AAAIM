@@ -1,8 +1,0 @@
-Model: BIOMD0000000927
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 16:02:16
-
-Synonyms:
-IAA: ['indole-3-acetic acid', 'auxin', 'indoleacetic acid']
-
-Reason: IAA is likely referring to the phytohormone auxin, which is also known as indole-3-acetic acid, given the context of the model "Grigolon2018-Responses to auxin signals" and the mention of auxin signalling in the notes.

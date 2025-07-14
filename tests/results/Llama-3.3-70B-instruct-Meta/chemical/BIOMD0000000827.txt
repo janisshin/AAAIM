@@ -1,9 +1,0 @@
-Model: BIOMD0000000827
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 16:01:59
-
-Synonyms:
-X_7_MET_MET: ['MET protein', 'hepatocyte growth factor receptor', 'MET proto-oncogene']
-X_10_p_MET_MET: ['phosphorylated MET protein', 'p-MET', 'activated MET']
-
-Reason: X_7_MET_MET is likely the MET protein homodimer, and X_10_p_MET_MET is its phosphorylated form, based on the display names and reactions in the model, which describe the dimerization and phosphorylation of MET.

@@ -1,9 +1,0 @@
-Model: BIOMD0000000542
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:56:04
-
-Synonyms:
-ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
-ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
-
-Reason: ADP and ATP are well-known biochemical compounds with standardized names, and their display names in the model match their common abbreviations, making their identification straightforward.

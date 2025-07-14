@@ -1,8 +1,0 @@
-Model: BIOMD0000000372
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:43:53
-
-Synonyms:
-G: ['glucose', 'blood glucose', 'plasma glucose']
-
-Reason: The model is described as the "insulin-glucose feedback system" and the article discusses the regulation of glucose levels in the blood, suggesting that G represents glucose.

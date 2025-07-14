@@ -1,8 +1,0 @@
-Model: BIOMD0000000275
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:42:44
-
-Synonyms:
-RA: ['retinoic acid', 'vitamin A acid', 'all-trans retinoic acid']
-
-Reason: The model is described as simulating the antagonistic gradients of retinoic acid (RA) and FGF signaling, and the notes mention "retinoic acid (RA)" explicitly, making it highly likely that RA refers to retinoic acid.

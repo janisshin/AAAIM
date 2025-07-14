@@ -1,9 +1,0 @@
-Model: BIOMD0000000091
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:38:43
-
-Synonyms:
-ATP: ['adenosine triphosphate', 'ATP', "adenosine 5'-triphosphate"]
-ADP: ['adenosine diphosphate', 'ADP', "adenosine 5'-diphosphate"]
-
-Reason: The species ATP and ADP are identified as adenosine triphosphate and adenosine diphosphate respectively, based on their display names and common usage in biochemical models, including the provided model describing the actions of chaperones and their role in ageing.

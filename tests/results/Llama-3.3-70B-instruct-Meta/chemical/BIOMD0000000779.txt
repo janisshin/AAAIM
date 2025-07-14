@@ -1,8 +1,0 @@
-Model: BIOMD0000000779
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 16:01:52
-
-Synonyms:
-M_Chemotherapy_Drug: ['chemotherapy drug', 'anticancer drug', 'antineoplastic agent']
-
-Reason: M_Chemotherapy_Drug is likely a chemotherapy drug due to its involvement in cancer treatment and the context of the model, which includes tumour cell numbers and immune cells, but the exact chemical name cannot be determined without more specific information.

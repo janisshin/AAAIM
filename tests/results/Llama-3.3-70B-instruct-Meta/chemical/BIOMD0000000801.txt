@@ -1,9 +1,0 @@
-Model: BIOMD0000000801
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 16:01:54
-
-Synonyms:
-B: ['glucose', 'D-glucose', 'blood glucose']
-S: ['glucose', 'D-glucose', 'serum glucose']
-
-Reason: B and S are likely to be glucose, given the reaction names such as "glucose_b_s", "glucose_intake", and "glucose_consumption_b", which suggest glucose is being converted or consumed. The difference in display names 'B' and 'S' may indicate different locations or forms of glucose, such as blood glucose and serum glucose.

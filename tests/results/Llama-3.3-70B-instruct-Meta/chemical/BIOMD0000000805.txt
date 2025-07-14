@@ -1,9 +1,0 @@
-Model: BIOMD0000000805
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 16:01:55
-
-Synonyms:
-Li: ['lactate', 'lactic acid', 'DL-lactate']
-Le: ['lactate', 'lactic acid', 'DL-lactate']
-
-Reason: Li and Le are likely to be lactate, given the model name "Al-Husari2013 - pH and lactate in tumor" and the reactions involving lactate_source, lactate_degradation, and removal_of_lactate, and the fact that MCT (monocarboxylate transporter) is known to transport lactate. The distinction between Li and Le is unclear, but based on the reaction MCT: Hi + Li => He + Le, it is possible that Li and Le represent different states or locations of lactate, but without further information, they are annotated with the same names.

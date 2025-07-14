@@ -1,8 +1,0 @@
-Model: BIOMD0000000582
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:57:50
-
-Synonyms:
-Insulin: ['insulin', 'human insulin', 'porcine insulin']
-
-Reason: Insulin is a well-known hormone with a standardized name, and the model context suggests a biological pathway involving insulin signaling, so the provided names are likely synonyms.

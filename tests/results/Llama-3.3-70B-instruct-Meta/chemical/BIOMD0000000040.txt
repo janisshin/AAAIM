@@ -1,9 +1,0 @@
-Model: BIOMD0000000040
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:36:53
-
-Synonyms:
-Br: ['bromide', 'bromide ion', 'Br-']
-BrO3: ['bromate', 'bromate ion', 'BrO3-']
-
-Reason: Br is annotated as "Br-" in the display names, which corresponds to bromide ion. BrO3 is annotated as "BrO3-" in the display names, which corresponds to bromate ion. The reactions and model context also support these annotations, as they are consistent with the chemistry of the Belousov-Zhabotinsky reaction.

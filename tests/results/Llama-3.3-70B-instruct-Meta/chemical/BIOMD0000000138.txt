@@ -1,8 +1,0 @@
-Model: BIOMD0000000138
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:39:09
-
-Synonyms:
-c: ['calcium', 'calcium ion', 'Ca2+']
-
-Reason: The display name 'calcium concentration' suggests that 'c' represents the concentration of calcium ions, which is a common chemical entity in biological systems.

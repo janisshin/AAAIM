@@ -13,8 +13,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# System prompt from AMAS for chemical annotation
-SYSTEM_PROMPT_CHEMICAL = """You are a biomedical knowledge assistant. Your task is to normalize species names from biochemical models into standardized or canonical chemical names or common synonyms for ontology lookup on ChEBI. Only consider them as chemical entities, return "UNK" if not or unsure.
+# System prompt for chemical annotation
+SYSTEM_PROMPT_CHEMICAL = """You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized or canonical chemical names for ontology lookup on ChEBI. 
+All given species are chemical entities. For complexes, only consider the chemical components. If lacking information about details, try your best to give the most likely general name.
 
 Here is one example:
 Species: A, B, D
@@ -32,6 +33,27 @@ A: "acetyl-CoA", "acetyl coenzyme A"
 B: "citric acid", "sodium citrate", "citrate(4−)"
 D: "UNK"
 Reason: the reaction is likely to be the TCA cycle, where A is the substrate and B is an intermediate. D is unknown because no display names are given for its reactants."""
+
+# SYSTEM_PROMPT_CHEMICAL = """You are a biomedical knowledge assistant. Your task is to normalize species names from biochemical models into standardized or canonical chemical names for ontology lookup on ChEBI. 
+# All given species are chemical entities. For complexes, only consider the chemical components.
+# Return "UNK" if not or unsure.
+
+# Here is one example:
+# Species: A, B, D
+# Model: "citric acid cycle model"
+#  // Display Names:
+# A is "acetyl-CoA";
+# B is "citrate";
+# C is "CoA";
+#  // Reactions:
+# A + oxaloacetate => B + C;
+# E + F => D;
+
+# This should return:
+# A: "acetyl-CoA", "acetyl coenzyme A"
+# B: "citric acid", "sodium citrate", "citrate(4−)"
+# D: "UNK"
+# Reason: the reaction is likely to be the TCA cycle, where A is the substrate and B is an intermediate. D is unknown because no display names are given for its reactants."""
 
 # System prompt for gene annotation
 SYSTEM_PROMPT_GENE = """You are a biomedical knowledge assistant. Your task is to normalize species names from biochemical models into standardized gene names or common gene symbols for ontology lookup on NCBI Gene. Only consider them as gene entities, return "UNK" if not or unsure.

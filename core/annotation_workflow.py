@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 def annotate_single_model(model_file: str, 
                   llm_model: str = "gpt-4o-mini",
                   method: str = "direct",
+                  top_k: int = 3,
                   max_entities: int = None,
                   entity_type: str = "chemical",
                   database: str = "chebi",
@@ -39,6 +40,7 @@ def annotate_single_model(model_file: str,
         model_file: Path to SBML model file
         llm_model: LLM model to use ("gpt-4o-mini", "meta-llama/llama-3.3-70b-instruct:free")
         method: Method to use for database search ("direct", "rag")
+        top_k: Number of top candidates to return per species
         max_entities: Maximum number of entities to annotate (None for all)
         entity_type: Type of entities to annotate ("chemical", "gene", "protein")
         database: Target database ("chebi", "ncbigene", "uniprot")
@@ -138,7 +140,7 @@ def annotate_single_model(model_file: str,
     
     if database == "chebi":
         if method == "direct":
-            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi")
+            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
         elif method == "rag":
             recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi")
         else:
@@ -146,7 +148,7 @@ def annotate_single_model(model_file: str,
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
     elif database == "ncbigene":
         if method == "direct":
-            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
+            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
         elif method == "rag":
             recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
         else:

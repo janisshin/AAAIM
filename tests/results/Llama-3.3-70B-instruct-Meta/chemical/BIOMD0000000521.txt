@@ -1,8 +1,0 @@
-Model: BIOMD0000000521
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:55:57
-
-Synonyms:
-C: ['procarbazine', 'PCV chemotherapy', 'chemotherapy']
-
-Reason: The display name 'PCV_plasma' suggests that C represents a chemotherapy agent, and the context of the model and the article confirms that PCV (procarbazine, 1-(2-chloroethyl)-3-cyclohexyl-l-nitrosourea, and vincristine) is a chemotherapy regimen used to treat low-grade gliomas.

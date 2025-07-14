@@ -1,9 +1,0 @@
-Model: BIOMD0000000019
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:36:44
-
-Synonyms:
-x26: ['GDP-bound Ras', 'Ras-GDP', 'Ras protein']
-x28: ['GTP-bound Ras', 'Ras-GTP', 'Active Ras']
-
-Reason: The display names 'Ras-GDP' and 'Ras-GTP' directly correspond to the standardized names, indicating the species are related to the Ras protein in different guanine nucleotide-bound states, which is a key component in the MAPK signaling pathway.

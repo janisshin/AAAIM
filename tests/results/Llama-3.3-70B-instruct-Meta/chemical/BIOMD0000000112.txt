@@ -1,8 +1,0 @@
-Model: BIOMD0000000112
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:38:57
-
-Synonyms:
-Pi: ['phosphate', 'inorganic phosphate', 'orthophosphate']
-
-Reason: Pi is likely to represent inorganic phosphate, a common product of phosphorylation reactions, given its involvement in the dephosphorylation reaction of R-Smad-P_nuc to R-Smad_nuc.

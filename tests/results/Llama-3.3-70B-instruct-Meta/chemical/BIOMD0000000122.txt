@@ -1,9 +1,0 @@
-Model: BIOMD0000000122
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:39:03
-
-Synonyms:
-Ca_Nuc: ['calcium ion', 'calcium(2+)', 'Ca2+']
-Ca_Cyt: ['calcium ion', 'calcium(2+)', 'Ca2+']
-
-Reason: Both Ca_Nuc and Ca_Cyt are annotated with "Calcium" in their display names, indicating they represent calcium ions in different cellular locations, nucleus and cytosol, respectively.

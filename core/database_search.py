@@ -186,7 +186,7 @@ def remove_symbols(text: str) -> str:
     """
     return re.sub(r'[^a-zA-Z0-9]', '', text)
 
-def get_species_recommendations_direct(species_ids: List[str], synonyms_dict, database: str = "chebi", tax_id: Any = None) -> List[Recommendation]:
+def get_species_recommendations_direct(species_ids: List[str], synonyms_dict, database: str = "chebi", tax_id: Any = None, top_k: int = 3) -> List[Recommendation]:
     """
     Find recommendations by directly matching against database synonyms.
     
@@ -195,19 +195,20 @@ def get_species_recommendations_direct(species_ids: List[str], synonyms_dict, da
     - synonyms_dict (dict): Mapping of species IDs to synonyms.
     - database (str): Database to search ("chebi", "ncbigene")
     - tax_id (str/list): For ncbigene database, the organism's tax_id for organism-specific lookup. If list, search all tax_ids for each species.
+    - top_k (int): Number of top candidates to return per species based on hit_count.
     
     Returns:
     - list: List of Recommendation objects with candidates and names.
     """
     if database == "chebi":
-        return _get_chebi_recommendations_direct(species_ids, synonyms_dict)
+        return _get_chebi_recommendations_direct(species_ids, synonyms_dict, top_k=top_k)
     elif database == "ncbigene":
-        return _get_ncbigene_recommendations_direct(species_ids, synonyms_dict, tax_id=tax_id)
+        return _get_ncbigene_recommendations_direct(species_ids, synonyms_dict, tax_id=tax_id, top_k=top_k)
     else:
         logger.error(f"Database {database} not supported for direct search")
         return []
 
-def _get_chebi_recommendations_direct(species_ids: List[str], synonyms_dict) -> List[Recommendation]:
+def _get_chebi_recommendations_direct(species_ids: List[str], synonyms_dict, top_k: int = 3) -> List[Recommendation]:
     """
     Find ChEBI recommendations by directly matching against ChEBI synonyms.
     """
@@ -259,6 +260,22 @@ def _get_chebi_recommendations_direct(species_ids: List[str], synonyms_dict) -> 
                         else:
                             hit_count[chebi_id] += 1
         
+        # Sort candidates by hit_count (descending) and take top_k
+        if all_candidates:
+            # Create list of (candidate, name, hit_count) tuples
+            candidate_tuples = [(candidate, name, hit_count[candidate]) 
+                               for candidate, name in zip(all_candidates, all_candidate_names)]
+            
+            # Sort by hit_count descending
+            candidate_tuples.sort(key=lambda x: x[2], reverse=True)
+            
+            # Take top_k candidates
+            top_candidates = candidate_tuples[:top_k]
+            
+            # Extract sorted lists
+            all_candidates = [candidate for candidate, _, _ in top_candidates]
+            all_candidate_names = [name for _, name, _ in top_candidates]
+        
         # Calculate normalized match scores (hit_count / number_of_synonyms)
         num_synonyms = len(synonyms)
         match_score_list = [hit_count.get(candidate, 0) / num_synonyms for candidate in all_candidates]
@@ -275,13 +292,14 @@ def _get_chebi_recommendations_direct(species_ids: List[str], synonyms_dict) -> 
     
     return recommendations
 
-def _get_ncbigene_recommendations_direct(species_ids: List[str], synonyms_dict, tax_id: Any = None) -> List[Recommendation]:
+def _get_ncbigene_recommendations_direct(species_ids: List[str], synonyms_dict, tax_id: Any = None, top_k: int = 3) -> List[Recommendation]:
     """
     Find NCBI gene recommendations by directly matching against NCBI gene synonyms.
     Args:
         species_ids: List of species IDs to evaluate
         synonyms_dict: Mapping of species IDs to synonyms
         tax_id: Organism's tax_id for each species (str, list). If list, search all tax_ids for each species.
+        top_k: Number of top candidates to return per species based on hit_count.
     """
     label_dict = load_ncbigene_label_dict()
     recommendations = []
@@ -333,6 +351,23 @@ def _get_ncbigene_recommendations_direct(species_ids: List[str], synonyms_dict, 
                                 hit_count[gene_id] = 1
                             else:
                                 hit_count[gene_id] += 1
+        
+        # Sort candidates by hit_count (descending) and take top_k
+        if all_candidates:
+            # Create list of (candidate, name, hit_count) tuples
+            candidate_tuples = [(candidate, name, hit_count[candidate]) 
+                               for candidate, name in zip(all_candidates, all_candidate_names)]
+            
+            # Sort by hit_count descending
+            candidate_tuples.sort(key=lambda x: x[2], reverse=True)
+            
+            # Take top_k candidates
+            top_candidates = candidate_tuples[:top_k]
+            
+            # Extract sorted lists
+            all_candidates = [candidate for candidate, _, _ in top_candidates]
+            all_candidate_names = [name for _, name, _ in top_candidates]
+        
         num_synonyms = len(synonyms)
         match_score_list = [hit_count.get(candidate, 0) / num_synonyms for candidate in all_candidates]
         
@@ -580,6 +615,7 @@ def get_species_recommendations_rag(
         all_candidates = []
         all_candidate_names = []
         candidate_scores = {}
+        candidate_names = {}  # Keep track of candidate names separately
         for synonym in synonyms:
             try:
                 results = collection.query(
@@ -600,13 +636,17 @@ def get_species_recommendations_rag(
                         all_candidates.append(db_id)
                         all_candidate_names.append(db_name)
                         candidate_scores[db_id] = similarity_score
+                        candidate_names[db_id] = db_name  # Store name mapping
                     else:
                         candidate_scores[db_id] = max(candidate_scores[db_id], similarity_score)
+                        # Keep the name from first occurrence or update if needed
+                        if db_id not in candidate_names:
+                            candidate_names[db_id] = db_name
                 # Only keep the top_k candidates
                 if len(candidate_scores) > top_k:
                     sorted_candidates = sorted(candidate_scores.items(), key=lambda x: x[1], reverse=True)[:top_k]
                     all_candidates = [db_id for db_id, _ in sorted_candidates]
-                    all_candidate_names = [all_candidate_names[all_candidates.index(db_id)] for db_id, _ in sorted_candidates if db_id in all_candidates]
+                    all_candidate_names = [candidate_names[db_id] for db_id, _ in sorted_candidates]
                     candidate_scores = dict(sorted_candidates)
             except Exception as e:
                 logger.warning(f"Error querying synonym '{synonym}' for species '{spec_id}': {e}")

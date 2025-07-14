@@ -1,8 +1,0 @@
-Model: BIOMD0000000826
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 16:01:58
-
-Synonyms:
-STAT3uStattic: ['STAT3', 'signal transducer and activator of transcription 3', 'STAT3 protein']
-
-Reason: The species name 'STAT3uStattic' seems to be a modified or inhibited form of STAT3, a transcription factor, given the context of the EGFR-PYK2-c-Met interaction network and the mention of 'Stattic', a known STAT3 inhibitor.

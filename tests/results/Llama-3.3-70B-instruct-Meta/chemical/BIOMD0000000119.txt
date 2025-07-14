@@ -1,8 +1,0 @@
-Model: BIOMD0000000119
-LLM: Llama-3.3-70B-Instruct
-Timestamp: 2025-06-15 15:39:02
-
-Synonyms:
-Ca: ['calcium', 'calcium ion', 'Ca2+']
-
-Reason: The species 'Ca' is likely referring to calcium, a common ion in biological systems, particularly in the context of neuronal bursting and calcium-dependent signaling pathways. The model name "Golomb2006_SomaticBursting_nonzero[Ca]" and the reaction "=> Ca" suggest that 'Ca' is being produced or is involved in the model, consistent with the role of calcium in cellular processes.
