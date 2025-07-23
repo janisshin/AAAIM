@@ -107,6 +107,29 @@ print(f"Gene entities with existing annotations: {metrics['total_entities']}")
 print(f"Accuracy: {metrics['accuracy']:.1%}")
 ```
 
+### 3. Updating Model Annotations After Review
+
+After running `annotate_model` or `curate_model`, you can review the resulting CSV file and edit the `update_annotation` column for each entity:
+
+- `add`: Add the recommended annotation to the model for that entity.
+- `delete`: Remove the annotation for that entity.
+- `ignore` or `keep`: Leave the annotation unchanged. Whether keep the existing one, or ignore the new suggestion.
+
+To apply your changes and save a new SBML model:
+
+```python
+from core.update_model import update_annotate
+
+update_annotation(
+    original_model_path="path/to/original_model.xml",
+    recommendation_table="recommendations.csv",  # or a pandas DataFrame
+    new_model_path="path/to/updated_model.xml",
+    qualifier="is"  # (optional) bqbiol qualifier, default is 'is'
+)
+```
+
+A summary of added/removed annotations will be printed after update.
+
 ### Advanced Usage
 
 ```python

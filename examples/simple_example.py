@@ -17,7 +17,7 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 # Import the main AAAIM interfaces
-from core import annotate_model, curate_model, print_results
+from core import annotate_model, curate_model, print_results, update_annotation
 
 def main():
     """
@@ -27,9 +27,11 @@ def main():
     print("=" * 50)
     
     # Configuration
-    model_file = "tests/test_models/BIOMD0000000190.xml"
-    model_curation_file = "tests/190_few_anno.xml"
-    llm_model = "meta-llama/llama-3.3-70b-instruct:free"  # or "gpt-4o-mini"
+    model_curation_file = "tests/test_models/BIOMD0000000190.xml"
+    model_file = "tests/190_few_anno.xml"
+    # llm_model = "meta-llama/llama-3.3-70b-instruct:free"
+    llm_model = "Llama-3.3-70B-Instruct"
+    max_entities = 5  # None will evaluate all species
     
     # Check if model file exists
     if not os.path.exists(model_file):
@@ -55,7 +57,7 @@ def main():
         recommendations_df, metrics = curate_model(
             model_file=model_curation_file,
             llm_model=llm_model,
-            max_entities=5,  # Limit for demo
+            max_entities=max_entities,
             entity_type="chemical",
             database="chebi"
         )
@@ -87,7 +89,7 @@ def main():
         recommendations_df2, metrics2 = annotate_model(
             model_file=model_file,
             llm_model=llm_model,
-            max_entities=5,  # Limit for demo
+            max_entities=max_entities,
             entity_type="chemical",
             database="chebi"
         )
@@ -113,16 +115,31 @@ def main():
             print(sample_df2.to_string(index=False))
             print()
             
-            # Save results
-            output_file = "simple_annotation_results.csv"
-            recommendations_df2.to_csv(output_file, index=False)
-            print(f"Full annotation results saved to: {output_file}")
-            
         else:
             print("No annotation recommendations generated.")
             if 'error' in metrics2:
                 print(f"Error: {metrics2['error']}")
-    
+            sys.exit()
+
+        # Next step: Update model with new annotations
+        print("Next step: Updating model with new annotations")
+        print("-" * 80)
+        print("A recommendation table was generated in previous step for the user to inspect:", model_file+'_recommendations.csv')
+        print("User can now give instructions by editing the last column of the recommendation table.")
+        print("-" * 80)
+        print("Assuming that the user want to delete the first annotation and add the second one in the table...")
+        recommendations_df2.loc[0, 'update_annotation'] = 'delete'
+        recommendations_df2.loc[1, 'update_annotation'] = 'add'
+        print("-" * 80)
+        update_annotation(
+            original_model_path=model_file,
+            recommendation_table=recommendations_df2,
+            new_model_path=model_file+'_updated.xml'
+        )
+        print("Model updated successfully")
+        print("Saved to: ", model_file+'_updated.xml')
+        print("-" * 80)
+
     except Exception as e:
         print(f"Processing failed: {e}")
         import traceback

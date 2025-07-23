@@ -20,6 +20,7 @@ from utils.constants import REF_CHEBI2LABEL, REF_NAMES2CHEBI, REF_NCBIGENE2LABEL
 from core.data_types import Recommendation
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.WARNING)
 
 # Global ChromaDB client cache to avoid conflicts
 _CHROMADB_CLIENTS = {}
@@ -576,16 +577,20 @@ def get_species_recommendations_rag(
         if not tax_id:
             logger.warning("No tax_id provided for ncbigene RAG search. Using default tax_id 9606.")
             tax_id = 9606
-        if collection_name is None:
+        if collection_name is None and model_type == "default":
             collection_name = f"ncbigene_default_tax{tax_id}"
+        elif collection_name is None and model_type == "openai":
+            collection_name = f"ncbigene_openai_tax{tax_id}"
         try:
             client, collection = get_chromadb_client(persist_directory, collection_name, model_type)
         except Exception as e:
             logger.error(f"Could not access NCBI gene RAG collection '{collection_name}': {e}")
             raise
     elif database == "chebi":
-        if collection_name is None:
+        if collection_name is None and model_type == "default":
             collection_name = "chebi_default_numonly"
+        elif collection_name is None and model_type == "openai":
+            collection_name = "chebi_openai_numonly"
         try:
             client, collection = get_chromadb_client(persist_directory, collection_name, model_type)
         except Exception as e:

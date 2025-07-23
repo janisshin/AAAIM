@@ -169,6 +169,9 @@ def curate_single_model(model_file: str,
     logger.info(f"Curation completed in {total_time:.2f}s")
     logger.info(f"Generated {len(recommendations_df)} recommendations")
     
+    recommendations_df.to_csv(f"{Path(model_file).name}_recommendations.csv", index=False)
+    logger.info(f"Recommendations saved to {Path(model_file).name}_recommendations.csv")
+    
     return recommendations_df, metrics
 
 def _generate_recommendation_table(model_file: str, 
