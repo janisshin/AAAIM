@@ -25,6 +25,13 @@ export OPENAI_API_KEY="your-openai-key"
 export OPENROUTER_API_KEY="your-openrouter-key"
 ```
 
+Alternatively, you can setup an `.env` file that looks like the following:
+
+```bash
+LLAMA_API_KEY=<your-llama-api-key-here>
+OPENROUTER_API_KEY=<your-openrouter-api-key-here>
+```
+
 ## Usage
 
 AAAIM currently provides two main workflows for both chemical and gene annotation:
