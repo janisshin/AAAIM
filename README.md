@@ -154,6 +154,8 @@ cd data
 python load_data.py --database chebi --model default
 # for NCBI gene, specify the taxnomy id:
 python load_data.py --database ncbigene --model default --tax_id 9606
+# for KEGG:
+python load_data.py --database kegg --model default
 ```
 
 ## Databases
@@ -165,11 +167,15 @@ python load_data.py --database ncbigene --model default --tax_id 9606
   - **Entity Type**: `chemical`
   - **Direct**: Dictionary of standard names to ontology ID. Returns top_k candidates with highest hit counts.
   - **RAG**: Embeddings of ontology terms. Returns top_k most similar terms.
-- **NCBI Gene**: Gene annotation
+- **NCBI Gene**: Gene annotations
 
   - **Entity Type**: `gene`
   - **Direct**: Dictionary of gene names to NCBI gene IDs. Returns top_k candidates with highest hit counts.
   - **RAG**: Not yet implemented.
+- **KEGG**: Reaction and enzyme annotations
+
+  - **Entity Type**: `enzyme`
+  - **RAG**: Embeddings of reaction substrates and products. Returns top_k mosts similar candidates.
 
 ### Future Support
 
@@ -196,6 +202,14 @@ python load_data.py --database ncbigene --model default --tax_id 9606
   - `ncbigene2label_bigg_organisms_protein-coding.lzma`: Mapping from NCBI gene IDs to labels
   - `ncbigene2names_tax{tax_id}_protein-coding.lzma`: NCBI gene synonyms for tax_id used for RAG approach
 - **Source**: Data are obtained from the NCBI gene FTP site: https://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/.
+
+### KEGG Data
+
+- **Location**: `data/kegg/`
+- **Files**:
+  - `chebi_to_kegg_map.lzma`: Mapping from ChEBI IDs to KEGG compound IDs.
+  - `parsed_kegg_reactions.lzma`: Dict of KEGG reactions and their attributes
+- **Source**: Data are obtained from the KEGG site: https://rest.kegg.jp.
 
 ## File Structure
 
