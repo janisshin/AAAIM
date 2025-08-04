@@ -10,6 +10,7 @@ Usage:
     python load_data.py --help
     python load_data.py --database chebi --model default --collection chebi_default
     python load_data.py --database ncbigene --model default --tax_id 9606
+    python load_data.py --database kegg --model default
 """
 
 import os
@@ -20,8 +21,10 @@ from typing import Dict, List, Any, Optional
 import compress_pickle
 from tqdm import tqdm
 import sys
+import json
 import chromadb
 from chromadb.utils import embedding_functions
+from sentence_transformers import SentenceTransformer
 
 # Configure logging
 logging.basicConfig(
@@ -54,34 +57,76 @@ def load_reference_data(ref_data_path: str) -> Dict[str, List[str]]:
         raise
 
 
-def prepare_documents_for_indexing(ref_data: Dict[str, List[str]], database: str) -> tuple[list, list, list]:
+def build_chunks_for_embedding(kegg_reactions):
+    """Convert parsed KEGG reactions into text + metadata chunks for Chroma."""
+    chunks = []
+
+    for rxn in kegg_reactions:
+        ec_line = f"EC: {', '.join(rxn['ec_numbers'])}" if rxn['ec_numbers'] else ""
+        subs = ', '.join(rxn['substrates'])
+        prods = ', '.join(rxn['products'])
+
+        text = f"""KEGG Reaction {rxn['reaction_id']}
+{ec_line}
+Equation: {rxn['raw_equation']}
+Substrates: {subs}
+Products: {prods}
+Pathways: {', '.join(rxn.get('pathways', []))}"""
+
+        chunks.append({
+            "reaction_id": rxn["reaction_id"],
+            "text": text,
+            "metadata": {
+                "reaction_id": rxn["reaction_id"],
+                "ec_numbers": ', '.join(rxn["ec_numbers"]),
+                "substrates": ', '.join(rxn["substrates"]),
+                "products": ', '.join(rxn["products"]),
+                "pathways": ', '.join(rxn.get("pathways", []))
+            }
+        })
+
+    return chunks
+
+
+def prepare_documents_for_indexing(ref_data: Dict[str, List[str]] | List[Dict], database: str) -> tuple[list, list, list]:
     """
     Convert reference data into documents for ChromaDB indexing.
-    For ChEBI: chebi_id, for gene: ncbigene_id.
+    For ChEBI: chebi_id, for gene: ncbigene_id, for KEGG: reaction_id.
     """
     logger.info("Preparing documents for indexing...")
     ids = []
     documents = []
     metadatas = []
     doc_id = 0
-    for entry_id, names in tqdm(ref_data.items(), desc="Processing entries"):
-        if not names:
-            continue
-        for name in names:
-            if not name or name.strip() == "":
+    
+    # Handle KEGG data which is a list of dictionaries
+    if database == "kegg":
+        # Use the specialized KEGG chunking function for richer text representation
+        chunks = build_chunks_for_embedding(ref_data)
+        for chunk in tqdm(chunks, desc="Processing KEGG reactions"):
+            ids.append(chunk["reaction_id"])
+            documents.append(chunk["text"])
+            metadatas.append(chunk["metadata"])
+    else:
+        # Handle ChEBI and NCBI gene data which are dictionaries
+        for entry_id, names in tqdm(ref_data.items(), desc="Processing entries"):
+            if not names:
                 continue
-            cleaned_name = name.strip()
-            if database == "chebi":
-                metadata = {"chebi_id": entry_id, "name": cleaned_name}
-                ids.append(f"{entry_id}_{doc_id}")
-            elif database == "ncbigene":
-                metadata = {"ncbigene_id": entry_id, "name": cleaned_name}
-                ids.append(f"{entry_id}_{doc_id}")
-            else:
-                raise ValueError(f"Unsupported database: {database}")
-            documents.append(cleaned_name)
-            metadatas.append(metadata)
-            doc_id += 1
+            for name in names:
+                if not name or name.strip() == "":
+                    continue
+                cleaned_name = name.strip()
+                if database == "chebi":
+                    metadata = {"chebi_id": entry_id, "name": cleaned_name}
+                    ids.append(f"{entry_id}_{doc_id}")
+                elif database == "ncbigene":
+                    metadata = {"ncbigene_id": entry_id, "name": cleaned_name}
+                    ids.append(f"{entry_id}_{doc_id}")
+                else:
+                    raise ValueError(f"Unsupported database: {database}")
+                documents.append(cleaned_name)
+                metadatas.append(metadata)
+                doc_id += 1
     logger.info(f"Prepared {len(documents)} documents for indexing")
     return ids, documents, metadatas
 
@@ -111,9 +156,43 @@ def get_embedding_function(model_type: str):
         )
 
 
+def batch_add_to_chroma(collection, ids, documents, metadatas, model=None, batch_size=5000):
+    """
+    Add documents to Chroma in batches, with optional pre-embedding.
+    
+    Args:
+        collection: ChromaDB collection
+        ids: List of document IDs
+        documents: List of document texts
+        metadatas: List of document metadata
+        model: Optional SentenceTransformer model for pre-embedding
+        batch_size: Number of documents to process in each batch
+    """
+    if model:
+        logger.info("🔍 Pre-embedding all documents...")
+        embeddings = model.encode(documents, show_progress_bar=True)
+        
+        logger.info("🧠 Inserting into Chroma in batches with pre-computed embeddings...")
+        for i in tqdm(range(0, len(ids), batch_size), desc="Storing in Chroma"):
+            collection.add(
+                ids=ids[i:i+batch_size],
+                documents=documents[i:i+batch_size],
+                metadatas=metadatas[i:i+batch_size],
+                embeddings=embeddings[i:i+batch_size]
+            )
+    else:
+        logger.info("🧠 Inserting into Chroma in batches...")
+        for i in tqdm(range(0, len(ids), batch_size), desc="Storing in Chroma"):
+            collection.add(
+                ids=ids[i:i+batch_size],
+                documents=documents[i:i+batch_size],
+                metadatas=metadatas[i:i+batch_size]
+            )
+
+
 def create_embeddings(
     ids: List[str],
-    documents: List[str], 
+    documents: List[str],
     metadatas: List[Dict[str, Any]],
     collection_name: str,
     model_type: str = "default",
@@ -152,26 +231,14 @@ def create_embeddings(
     logger.info(f"Indexing {total_docs} documents in batches of {batch_size}")
     
     try:
-        for i, (id_batch, doc_batch, meta_batch) in enumerate(
-            zip(
-                chunk_list(ids, batch_size), 
-                chunk_list(documents, batch_size), 
-                chunk_list(metadatas, batch_size)
-            )
-        ):
-            start_doc = i * batch_size
-            end_doc = min((i + 1) * batch_size, total_docs)
-            percent_done = (end_doc / total_docs) * 100 if total_docs > 0 else 0
-            logger.info(
-                f"Processing batch {i+1}, documents {start_doc} to {end_doc} "
-                f"({percent_done:.2f}% complete)"
-            )
-            
-            collection.add(
-                ids=id_batch,
-                documents=doc_batch,
-                metadatas=meta_batch
-            )
+        # For default model (SentenceTransformer), we can optimize by pre-computing embeddings
+        if model_type == "default":
+            from sentence_transformers import SentenceTransformer
+            model = SentenceTransformer("all-MiniLM-L6-v2")
+            batch_add_to_chroma(collection, ids, documents, metadatas, model, batch_size)
+        else:
+            # For other models (like OpenAI), use the standard approach
+            batch_add_to_chroma(collection, ids, documents, metadatas, None, batch_size)
         
         final_count = collection.count()
         logger.info(f"Successfully indexed {final_count} documents in collection '{collection_name}'")
@@ -197,6 +264,8 @@ def test_search(
             test_queries = ["glucose", "D-glucose", "blood sugar"]
         elif database == "ncbigene":
             test_queries = ["TP53", "BRCA1", "RAS"]
+        elif database == "kegg":
+            test_queries = ["hydrolase", "dehydrogenase", "kinase"]
         else:
             test_queries = ["test"]
     logger.info("Testing the embeddings with sample queries...")
@@ -245,9 +314,9 @@ def main():
     parser.add_argument(
         "--database",
         type=str,
-        choices=["chebi", "ncbigene"],
+        choices=["chebi", "ncbigene", "kegg"],
         default="chebi",
-        help="Database to use: 'chebi' or 'ncbigene' (default: chebi)"
+        help="Database to use: 'chebi', 'ncbigene', or 'kegg' (default: chebi)"
     )
     parser.add_argument(
         "--tax_id",
@@ -305,6 +374,13 @@ def main():
             if not args.tax_id:
                 raise ValueError("--tax_id is required for ncbigene database")
             args.ref_data_path = str(Path(f"ncbigene/ncbigene2names_tax{args.tax_id}_protein-coding.lzma"))
+        elif args.database == "kegg":
+            args.ref_data_path = str(Path("kegg/parsed_kegg_reactions.lzma"))
+            # Check if JSON format is available (for backward compatibility)
+            json_path = str(Path("kegg/parsed_kegg_reactions.json"))
+            if os.path.exists(json_path) and not os.path.exists(args.ref_data_path):
+                logger.info(f"Using JSON format for KEGG reactions: {json_path}")
+                args.ref_data_path = json_path
     if args.collection is None:
         if args.database == "chebi":
             args.collection = "chebi_default_numonly"
@@ -312,10 +388,20 @@ def main():
             if not args.tax_id:
                 raise ValueError("--tax_id is required for ncbigene database")
             args.collection = f"ncbigene_default_tax{args.tax_id}"
+        elif args.database == "kegg":
+            args.collection = "kegg_reactions_default"
     os.makedirs(args.persist_directory, exist_ok=True)
     try:
         if not args.test_only:
-            ref_data = load_reference_data(args.ref_data_path)
+            # Load reference data
+            if args.database == "kegg" and args.ref_data_path.endswith(".json"):
+                logger.info(f"Loading KEGG data from JSON: {args.ref_data_path}")
+                import json
+                with open(args.ref_data_path, "r") as f:
+                    ref_data = json.load(f)
+            else:
+                ref_data = load_reference_data(args.ref_data_path)
+                
             ids, documents, metadatas = prepare_documents_for_indexing(ref_data, args.database)
             create_embeddings(
                 ids=ids,
