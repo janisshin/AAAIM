@@ -429,7 +429,7 @@ def extract_qual_transitions(model_file: str, species_ids: List[str]) -> List[st
     return transitions
 
 def extract_model_info(model_file: str, species_ids: List[str], entity_type: str = "chemical") -> Dict[str, Any]:
-    """
+    """ ### JANISTAG add fields for substrates and products by splitting reaction string 
     Extract display names and reactions/transitions for the specified species.
     Supports regular SBML, SBML-fbc, and SBML-qual models.
     
@@ -647,3 +647,16 @@ Reason: …
         """
     return prompt 
 
+def parse_reaction_equation(rxn_str):
+    # Assume directional info is unreliable
+    if "<=>" in rxn_str or "=>" in rxn_str or "->" in rxn_str:
+        lhs, rhs = re.split(r"<=>|=>|->", rxn_str)
+    else:
+        return [], []
+
+    def parse_side(side):
+        return [s.strip().split()[-1] for s in side.strip().split("+")]
+
+    reactants = parse_side(lhs)
+    products = parse_side(rhs)
+    return reactants, products
