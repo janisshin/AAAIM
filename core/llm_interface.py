@@ -76,6 +76,27 @@ G2: "NFKB1", "KBF1", "NF-kB"
 G3: "CHUK", "IKK1", "BPS2"
 Reason: This appears to be a regulatory motif in the NF-κB signaling pathway. G1 is the p65 subunit (RELA), G2 is the p50 subunit (NFKB1), and G3 is IKK, a kinase that phosphorylates p50."""
 
+# System prompt for protein annotation
+SYSTEM_PROMPT_PROTEIN = """You are a biomedical knowledge assistant. Your task is to normalize species names from biochemical models into standardized protein names or common protein symbols for ontology lookup on UniProt. Only consider them as protein entities, return "UNK" if not or unsure.
+
+Here is one example:
+Species: P1, P2, P3
+Model: "EGFR signaling pathway"
+ // Display Names:
+P1 is "EGFR";
+P2 is "RAS";
+P3 is "AKT";
+ // Reactions:
+P1 + ligand => P1_activated;
+P1_activated => P2_activated;
+P2_activated => P3_activated;
+
+This should return:
+P1: "EGFR", "ERBB1", "HER1"
+P2: "KRAS", "HRAS", "NRAS"
+P3: "AKT1", "PKB", "RAC"
+Reason: This appears to be an EGFR signaling pathway. P1 is the epidermal growth factor receptor (EGFR), P2 is a RAS protein family member, and P3 is AKT kinase."""
+
 # Backward compatibility
 SYSTEM_PROMPT = SYSTEM_PROMPT_CHEMICAL
 
@@ -84,7 +105,7 @@ def get_system_prompt(entity_type: str = "chemical") -> str:
     Get the appropriate system prompt based on entity type.
     
     Args:
-        entity_type: Type of entity ("chemical", "gene")
+        entity_type: Type of entity ("chemical", "gene", "protein")
         
     Returns:
         System prompt string
@@ -93,6 +114,8 @@ def get_system_prompt(entity_type: str = "chemical") -> str:
         return SYSTEM_PROMPT_CHEMICAL
     elif entity_type == "gene":
         return SYSTEM_PROMPT_GENE
+    elif entity_type == "protein":
+        return SYSTEM_PROMPT_PROTEIN
     else:
         logger.warning(f"Unknown entity type {entity_type}, using chemical prompt")
         return SYSTEM_PROMPT_CHEMICAL
