@@ -68,12 +68,31 @@ from core import annotate_model
 recommendations_df, metrics = annotate_model(
     model_file="path/to/model.xml",
     entity_type="gene",
-    database="ncbigene"
+    database="ncbigene",
+    tax_id="9606"  # for human
 )
 
 # Save results
 recommendations_df.to_csv("gene_annotation_results.csv", index=False)
 ```
+
+#### Protein Annotation (UniProt)
+
+```python
+from core import annotate_model
+
+# Annotate all gene species in a model
+recommendations_df, metrics = annotate_model(
+    model_file="path/to/model.xml",
+    entity_type="protein",
+    database="uniprot",
+    tax_id="9606"  # for human
+)
+
+# Save results
+recommendations_df.to_csv("protein_annotation_results.csv", index=False)
+```
+
 
 ### 2. Curation Workflow (for models with existing annotations)
 
@@ -113,6 +132,24 @@ curations_df, metrics = curate_model(
 print(f"Gene entities with existing annotations: {metrics['total_entities']}")
 print(f"Accuracy: {metrics['accuracy']:.1%}")
 ```
+
+#### Protein Curation
+
+```python
+from core import curate_model
+
+# Curate existing gene annotations
+curations_df, metrics = curate_model(
+    model_file="path/to/model.xml",
+    entity_type="protein",
+    database="uniprot",
+    tax_id=9606  # for human
+)
+
+print(f"Gene entities with existing annotations: {metrics['total_entities']}")
+print(f"Accuracy: {metrics['accuracy']:.1%}")
+```
+
 
 ### 3. Updating Model Annotations After Review
 
@@ -177,6 +214,8 @@ cd data
 python load_data.py --database chebi --model default
 # for NCBI gene, specify the taxnomy id:
 python load_data.py --database ncbigene --model default --tax_id 9606
+# for uniprot, specify the taxnomy id:
+python load_data.py --database uniprot --model default --tax_id 9606
 # for KEGG:
 python load_data.py --database kegg --model default
 ```
@@ -186,23 +225,22 @@ python load_data.py --database kegg --model default
 ### Currently Supported
 
 - **ChEBI**: Chemical Entities of Biological Interest
-
   - **Entity Type**: `chemical`
-  - **Direct**: Dictionary of standard names to ontology ID. Returns top_k candidates with highest hit counts.
-  - **RAG**: Embeddings of ontology terms. Returns top_k most similar terms.
-- **NCBI Gene**: Gene annotations
+  - All terms in ChEBI are included.
 
+- **NCBI Gene**: Gene annotation
   - **Entity Type**: `gene`
-  - **Direct**: Dictionary of gene names to NCBI gene IDs. Returns top_k candidates with highest hit counts.
-  - **RAG**: Not yet implemented.
-- **KEGG**: Reaction and enzyme annotations
+  - Only genes for common species are supported (those included in bigg models).
 
-  - **Entity Type**: `enzyme`
-  - **RAG**: Embeddings of reaction substrates and products. Returns top_k mosts similar candidates.
+- **UniProt**: protein annotation
+  - **Entity Type**: `uniprot`
+  - Only proteins for human (9606) and mouse (10090) are supported for now.
+
+- **KEGGe**: Enzyme annotation
+  - For reaction substrates and products.
 
 ### Future Support
 
-- **UniProt**: Protein annotation
 - **Rhea**: Reaction annotation
 - **GO**: Gene Ontology terms
 
@@ -222,9 +260,19 @@ python load_data.py --database kegg --model default
 - **Location**: `data/ncbigene/`
 - **Files**:
   - `names2ncbigene_bigg_organisms_protein-coding.lzma`: Mapping from names to NCBI gene IDs, only include protein-coding genes from 18 species covered in Bigg models for file size considerations
-  - `ncbigene2label_bigg_organisms_protein-coding.lzma`: Mapping from NCBI gene IDs to labels
+  - `ncbigene2label_bigg_organisms_protein-coding.lzma`: Mapping from NCBI gene IDs to labels (primary name)
   - `ncbigene2names_tax{tax_id}_protein-coding.lzma`: NCBI gene synonyms for tax_id used for RAG approach
 - **Source**: Data are obtained from the NCBI gene FTP site: https://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/.
+
+### UniProt Data
+
+- **Location**: `data/uniprot/`
+- **Files**:
+  - `names2uniprot_human+mouse.lzma`: Mapping from synonyms to UniProt IDs, only include human and mouse proteins for now
+  - `uniprot2label_human+mouse.lzma`: Mapping from UniProt IDs to labels (primary name)
+  - `uniprot2names_tax{tax_id}.lzma`: Uniprot synonyms for tax_id used for RAG approach
+- **Source**: Data are obtained from the UniProt site: https://www.uniprot.org/help/downloads (Reviewed (Swiss-Prot) xml).
+
 
 ### KEGG Data
 
@@ -244,7 +292,8 @@ aaaim/
 │   ├── curation_workflow.py     # Curation workflow (models with annotations)
 │   ├── model_info.py           # Model parsing and context
 │   ├── llm_interface.py        # LLM interaction
-│   └── database_search.py      # Database search functions
+│   ├── database_search.py      # Database search functions
+│   └── update_model.py         # put annotations into model
 ├── utils/
 │   ├── constants.py
 │   ├── evaluation.py 		# functions for evaluation
@@ -253,6 +302,7 @@ aaaim/
 ├── data/
 │   ├── chebi/                   # ChEBI compressed dictionaries
 │   ├── ncbigene/                # NCBIgene compressed dictionaries
+│   ├── uniprot/                 # UniProt compressed dictionaries
 │   ├── chroma_storage/          # Database embeddings for RAG
 └── tests/
     ├── test_models     	 # Test models
@@ -263,6 +313,6 @@ aaaim/
 
 ### Planned Features
 
-- **Multi-Database Support**: UniProt, GO, Rhea
+- **Multi-Database Support**: GO, Rhea, mapping between ontologies
 - **Improve RAG for NCBI Gene**: Test on other embedding models for genes
 - **Web Interface**: User-friendly annotation tool

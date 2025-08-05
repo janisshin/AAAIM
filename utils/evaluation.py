@@ -21,11 +21,11 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_distances
 
 from core.curation_workflow import curate_model
-from core.model_info import find_species_with_chebi_annotations, extract_model_info, format_prompt, find_species_with_ncbigene_annotations, get_species_display_names, detect_model_format
+from core.model_info import find_species_with_chebi_annotations, extract_model_info, format_prompt, find_species_with_ncbigene_annotations, find_species_with_uniprot_annotations, get_species_display_names, detect_model_format
 from core.llm_interface import SYSTEM_PROMPT, query_llm, parse_llm_response, get_system_prompt
 from core.data_types import Recommendation
 from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, clear_chromadb_cache
-from utils.constants import REF_CHEBI2LABEL, REF_NCBIGENE2LABEL, REF_CHEBI2FORMULA, CHEBI_URI_PATTERNS, NCBIGENE_URI_PATTERNS, UNIPROT_URI_PATTERNS, ModelType
+from utils.constants import REF_CHEBI2LABEL, REF_NCBIGENE2LABEL, REF_UNIPROT2LABEL, REF_CHEBI2FORMULA, CHEBI_URI_PATTERNS, NCBIGENE_URI_PATTERNS, UNIPROT_URI_PATTERNS, ModelType
 
 REF_RESULTS = "/Users/luna/Desktop/CRBM/AMAS_proj/Results/biomd_species_accuracy_AMAS.csv"
 
@@ -123,6 +123,7 @@ def _configure_verbosity(verbose: bool = True):
 _CHEBI_LABEL_DICT: Optional[Dict[str, str]] = None
 _CHEBI_FORMULA_DICT: Optional[Dict[str, str]] = None
 _NCBIGENE_LABEL_DICT: Optional[Dict[str, str]] = None
+_UNIPROT_LABEL_DICT: Optional[Dict[str, str]] = None
 
 def load_chebi_label_dict() -> Dict[str, str]:
     """
@@ -183,6 +184,50 @@ def load_ncbigene_label_dict() -> Dict[str, str]:
             _NCBIGENE_LABEL_DICT = pickle.load(f)
     
     return _NCBIGENE_LABEL_DICT
+
+def load_uniprot_label_dict(tax_id: str = None) -> Dict[str, str]:
+    """
+    Load the UniProt ID to label dictionary.
+    
+    Args:
+        tax_id: If provided, loads organism-specific reference file.
+                If None, tries to load the combined file
+    
+    Returns:
+        Dictionary mapping UniProt IDs to their labels
+    """
+    global _UNIPROT_LABEL_DICT
+    
+    # Use a cache key that includes tax_id to handle multiple organisms
+    cache_key = f"uniprot_label_{tax_id or 'combined'}"
+    
+    # Check if we have this specific version cached
+    if not hasattr(load_uniprot_label_dict, '_cache'):
+        load_uniprot_label_dict._cache = {}
+    
+    if cache_key in load_uniprot_label_dict._cache:
+        return load_uniprot_label_dict._cache[cache_key]
+    
+    if tax_id:
+        # Load organism-specific file
+        data_file = Path(__file__).parent.parent / "data" / "uniprot" / f"uniprot2label_tax{tax_id}.lzma"
+    else:
+        # Try to load combined file
+        data_file = Path(__file__).parent.parent / "data" / "uniprot" / REF_UNIPROT2LABEL
+    
+    if not data_file.exists():
+        if tax_id:
+            raise FileNotFoundError(f"UniProt label data file not found for tax_id {tax_id}: {data_file}")
+        else:
+            raise FileNotFoundError(f"UniProt label data file not found: {data_file}")
+    
+    with lzma.open(data_file, 'rb') as f:
+        label_dict = pickle.load(f)
+    
+    # Cache the result
+    load_uniprot_label_dict._cache[cache_key] = label_dict
+    
+    return label_dict
 
 def get_recall(ref: Dict[str, List[str]], pred: Dict[str, List[str]], mean: bool = True) -> float:
     """
@@ -327,13 +372,14 @@ def find_species_with_formulas(model_file: str, bqbiol_qualifiers: list = None) 
     
     return species_with_formulas
 
-def find_species_with_gene_annotations(model_file: str, bqbiol_qualifiers: list = None) -> Dict[str, List[str]]:
+def find_species_with_gene_annotations(model_file: str, bqbiol_qualifiers: list = None, tax_id: str = None) -> Dict[str, List[str]]:
     """
     Find species with existing NCBI gene annotations.
     
     Args:
         model_file: Path to the SBML model file
         bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
+        tax_id: Taxonomy ID
     Returns:
         Dictionary mapping species IDs to their NCBI gene annotation IDs
     """
@@ -342,8 +388,52 @@ def find_species_with_gene_annotations(model_file: str, bqbiol_qualifiers: list 
     
     if not existing_annotations:
         return {}
+    else:
+        if tax_id:
+            label_dict = load_ncbigene_label_dict()
+            filtered_annotations = {}
+            
+            for species_id, ncbi_ids in existing_annotations.items():
+                # Filter out NCBI IDs that don't exist in the label dictionary
+                valid_ncbi_ids = [ncbi_id for ncbi_id in ncbi_ids if ncbi_id in label_dict]
+                if valid_ncbi_ids:
+                    filtered_annotations[species_id] = valid_ncbi_ids
+            
+            return filtered_annotations
     
     # Return all species that have NCBI gene annotations
+    return existing_annotations
+
+def find_species_with_protein_annotations(model_file: str, bqbiol_qualifiers: list = None, tax_id: str = None) -> Dict[str, List[str]]:
+    """
+    Find species with existing UniProt annotations.
+    
+    Args:
+        model_file: Path to the SBML model file
+        bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
+        tax_id: Taxonomy ID
+    Returns:
+        Dictionary mapping species IDs to their UniProt annotation IDs
+    """
+    # Get all species with UniProt annotations
+    existing_annotations = find_species_with_uniprot_annotations(model_file, bqbiol_qualifiers)
+    
+    if not existing_annotations:
+        return {}
+    else:
+        if tax_id:
+            label_dict = load_uniprot_label_dict(tax_id)
+            filtered_annotations = {}
+            
+            for species_id, uniprot_ids in existing_annotations.items():
+                # Filter out UniProt IDs that don't exist in the label dictionary
+                valid_uniprot_ids = [uniprot_id for uniprot_id in uniprot_ids if uniprot_id in label_dict]
+                if valid_uniprot_ids:
+                    filtered_annotations[species_id] = valid_uniprot_ids
+            
+            return filtered_annotations
+    
+    # Return all species that have UniProt annotations
     return existing_annotations
 
 def evaluate_single_model(model_file: str, 
@@ -397,7 +487,9 @@ def evaluate_single_model(model_file: str,
         if entity_type == "chemical" and database == "chebi":
             existing_annotations = find_species_with_formulas(model_file, bqbiol_qualifiers)
         elif entity_type == "gene" and database == "ncbigene":
-            existing_annotations = find_species_with_gene_annotations(model_file, bqbiol_qualifiers)
+            existing_annotations = find_species_with_gene_annotations(model_file, bqbiol_qualifiers, tax_id)
+        elif entity_type == "protein" and database == "uniprot":
+            existing_annotations = find_species_with_protein_annotations(model_file, bqbiol_qualifiers, tax_id)
         else:
             if verbose:
                 logger.warning(f"Entity type {entity_type} with database {database} not yet supported")
@@ -439,6 +531,8 @@ def evaluate_single_model(model_file: str,
                     recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
                 elif database == "ncbigene":
                     recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
+                elif database == "uniprot":
+                    recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
                 else:
                     if verbose:
                         logger.error(f"Database {database} not supported")
@@ -448,6 +542,8 @@ def evaluate_single_model(model_file: str,
                     recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k, model_type=model_type)
                 elif database == "ncbigene":
                     recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                elif database == "uniprot":
+                    recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k, model_type=model_type)
                 else:
                     if verbose:
                         logger.error(f"Database {database} not supported")
@@ -704,10 +800,12 @@ def _convert_format(recommendations: List[Recommendation],
         # Calculate statistics
         stats = get_species_statistics(recommendations, refs_formula, refs_chebi, model_mean=False)
     
-    elif database == "ncbigene":
-        label_dict = load_ncbigene_label_dict()
+    elif database == "ncbigene" or database == "uniprot":
+        if database == "ncbigene":
+            label_dict = load_ncbigene_label_dict()
+        elif database == "uniprot":
+            label_dict = load_uniprot_label_dict(tax_id)
         
-        # For NCBI gene, we don't have formulas, so we use gene IDs directly
         refs_gene = existing_annotations
         refs_formula = {}  # Empty for gene annotations
         
@@ -774,6 +872,7 @@ def _convert_format(recommendations: List[Recommendation],
         # Get predictions and their names
         predictions = rec.candidates
         prediction_names = [label_dict.get(db_id, db_id) for db_id in predictions]
+        prediction_names = ', '.join(prediction_names) if prediction_names else 'NA'
         
         # Calculate match scores
         match_scores = []
@@ -1049,7 +1148,8 @@ def process_saved_llm_responses(response_folder: str,
         top_k: Number of top candidates to retrieve per species
         entity_type: Type of entity being annotated
         database: Database being used
-        tax_id: Taxonomy ID for NCBI gene search, list or string
+        tax_id: Taxonomy ID for NCBI gene / UniProt search, list or string
+        bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
         output_dir: Path to directory where results should be saved
         output_file: Name of the output CSV file
         verbose: If True, show detailed logging. If False, minimize output.
@@ -1167,6 +1267,8 @@ def process_saved_llm_responses(response_folder: str,
                         recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
                     elif database == "ncbigene":
                         recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
+                    elif database == "uniprot":
+                        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
                     else:
                         print(f"Database {database} not supported")
                         return None
@@ -1175,6 +1277,8 @@ def process_saved_llm_responses(response_folder: str,
                         recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
                     elif database == "ncbigene":
                         recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
+                    elif database == "uniprot":
+                        recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
                     else:
                         print(f"Database {database} not supported")
                         return None
@@ -1186,9 +1290,11 @@ def process_saved_llm_responses(response_folder: str,
             
             # Get existing annotations for statistics calculation
             if entity_type == "chemical" and database == "chebi":
-                existing_annotations = find_species_with_formulas(model_file)
+                existing_annotations = find_species_with_formulas(model_file, bqbiol_qualifiers)
             elif entity_type == "gene" and database == "ncbigene":
-                existing_annotations = find_species_with_gene_annotations(model_file)
+                existing_annotations = find_species_with_gene_annotations(model_file, bqbiol_qualifiers, tax_id)
+            elif entity_type == "protein" and database == "uniprot":
+                existing_annotations = find_species_with_protein_annotations(model_file, bqbiol_qualifiers, tax_id)
             else:
                 existing_annotations = {}
             
@@ -1484,7 +1590,7 @@ def filter_qualifiers_in_results(results_csv: str,
         model_dir: Directory containing the original SBML model files
         output_csv: Path to save filtered results (optional)
         entity_type: Type of entity ("chemical" or "gene")
-        database: Database being used ("chebi" or "ncbigene")
+        database: Database being used ("chebi" or "ncbigene" or "uniprot")
         
     Returns:
         Filtered DataFrame containing only results for species with the specified qualifiers
@@ -1521,6 +1627,8 @@ def filter_qualifiers_in_results(results_csv: str,
             qualified_annotations = find_species_with_chebi_annotations(model_file, bqbiol_qualifiers)
         elif entity_type == "gene" and database == "ncbigene":
             qualified_annotations = find_species_with_ncbigene_annotations(model_file, bqbiol_qualifiers)
+        elif entity_type == "protein" and database == "uniprot":
+            qualified_annotations = find_species_with_uniprot_annotations(model_file, bqbiol_qualifiers)
         else:
             logger.warning(f"Entity type {entity_type} with database {database} not supported")
             continue

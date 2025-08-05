@@ -12,7 +12,7 @@ from typing import Dict, List, Optional, Tuple, Any
 from pathlib import Path
 import logging
 
-from core.model_info import find_species_with_chebi_annotations, find_species_with_ncbigene_annotations, extract_model_info, format_prompt
+from core.model_info import find_species_with_chebi_annotations, find_species_with_ncbigene_annotations,find_species_with_uniprot_annotations, extract_model_info, format_prompt
 from core.llm_interface import get_system_prompt, query_llm, parse_llm_response
 from core.data_types import Recommendation
 from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag
@@ -20,7 +20,7 @@ from core.database_search import get_species_recommendations_direct, get_species
 logger = logging.getLogger(__name__)
 
 def curate_single_model(model_file: str, 
-                  llm_model: str = "gpt-4o-mini",
+                  llm_model: str = "Llama-3.3-70B-Instruct",
                   method: str = "direct",
                   top_k: int = 3,
                   max_entities: int = None,
@@ -33,7 +33,7 @@ def curate_single_model(model_file: str,
     
     Args:
         model_file: Path to SBML model file
-        llm_model: LLM model to use ("gpt-4o-mini", "meta-llama/llama-3.3-70b-instruct:free")
+        llm_model: LLM model to use ("gpt-4o-mini", "Llama-3.3-70B-Instruct")
         method: Method to use for database search ("direct", "rag")
         top_k: Number of top candidates to return per species
         max_entities: Maximum number of entities to annotate (None for all)
@@ -62,6 +62,9 @@ def curate_single_model(model_file: str,
         logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
     elif entity_type == "gene" and database == "ncbigene":
         existing_annotations = find_species_with_ncbigene_annotations(model_file)
+        logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
+    elif entity_type == "protein" and database == "uniprot":
+        existing_annotations = find_species_with_uniprot_annotations(model_file)
         logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
     else:
         # Future: support other entity types and databases
@@ -146,6 +149,14 @@ def curate_single_model(model_file: str,
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
+    elif database == "uniprot":
+        if method == "direct":
+            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
+        elif method == "rag":
+            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id)
+        else:
+            logger.error(f"Invalid method: {method}")
+            return pd.DataFrame(), {"error": f"Invalid method: {method}"}
     else:
         # Future: support other databases
         logger.error(f"Database {database} not yet supported")
@@ -163,7 +174,7 @@ def curate_single_model(model_file: str,
     # Step 9: Calculate metrics
     total_time = time.time() - start_time
     metrics = _calculate_metrics(
-        recommendations_df, existing_annotations, total_time, llm_time, search_time
+        recommendations_df, existing_annotations, max_entities, total_time, llm_time, search_time
     )
     
     logger.info(f"Curation completed in {total_time:.2f}s")
@@ -263,6 +274,7 @@ def _generate_recommendation_table(model_file: str,
 
 def _calculate_metrics(recommendations_df: pd.DataFrame,
                       existing_annotations: Dict[str, List[str]],
+                      max_entities: int,
                       total_time: float,
                       llm_time: float,
                       search_time: float) -> Dict[str, Any]:
@@ -272,6 +284,7 @@ def _calculate_metrics(recommendations_df: pd.DataFrame,
     Args:
         recommendations_df: Recommendation DataFrame
         existing_annotations: Dictionary of existing annotations
+        max_entities: Maximum number of entities to annotate (None for all)
         total_time: Total processing time
         llm_time: LLM query time
         search_time: Database search time
@@ -292,9 +305,11 @@ def _calculate_metrics(recommendations_df: pd.DataFrame,
             'search_time': search_time
         }
     
-    total_entities = len(existing_annotations)
+    if max_entities is None:
+        max_entities = len(existing_annotations)
+    
     entities_with_predictions = recommendations_df[recommendations_df['annotation'] != '']['id'].nunique()
-    annotation_rate = entities_with_predictions / total_entities if total_entities > 0 else 0
+    annotation_rate = entities_with_predictions / max_entities if max_entities > 0 else np.nan
     
     # Calculate accuracy based on existing annotations
     total_predictions = len(recommendations_df[recommendations_df['annotation'] != ''])
@@ -302,7 +317,7 @@ def _calculate_metrics(recommendations_df: pd.DataFrame,
     accuracy = matches / entities_with_predictions if entities_with_predictions > 0 else 0
     
     return {
-        'total_entities': total_entities,
+        'total_entities': max_entities,
         'entities_with_predictions': entities_with_predictions,
         'annotation_rate': annotation_rate,
         'total_predictions': total_predictions,

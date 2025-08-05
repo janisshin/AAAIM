@@ -3,13 +3,14 @@
 ChEBI Reference Data Loader for RAG-based Entity Linking
 
 This script loads ChEBI reference data from a compressed pickle file and creates
-embeddings using ChromaDB for RAG-based chemical entity linking. It supports
+embeddings using ChromaDB for RAG-based ontology entity linking. It supports
 both default sentence transformer models and OpenAI embedding models.
 
 Usage:
     python load_data.py --help
     python load_data.py --database chebi --model default --collection chebi_default
     python load_data.py --database ncbigene --model default --tax_id 9606
+    python load_data.py --database uniprot --model default --tax_id 9606
 """
 
 import os
@@ -57,7 +58,6 @@ def load_reference_data(ref_data_path: str) -> Dict[str, List[str]]:
 def prepare_documents_for_indexing(ref_data: Dict[str, List[str]], database: str) -> tuple[list, list, list]:
     """
     Convert reference data into documents for ChromaDB indexing.
-    For ChEBI: chebi_id, for gene: ncbigene_id.
     """
     logger.info("Preparing documents for indexing...")
     ids = []
@@ -76,6 +76,9 @@ def prepare_documents_for_indexing(ref_data: Dict[str, List[str]], database: str
                 ids.append(f"{entry_id}_{doc_id}")
             elif database == "ncbigene":
                 metadata = {"ncbigene_id": entry_id, "name": cleaned_name}
+                ids.append(f"{entry_id}_{doc_id}")
+            elif database == "uniprot":
+                metadata = {"uniprot_id": entry_id, "name": cleaned_name}
                 ids.append(f"{entry_id}_{doc_id}")
             else:
                 raise ValueError(f"Unsupported database: {database}")
@@ -197,6 +200,8 @@ def test_search(
             test_queries = ["glucose", "D-glucose", "blood sugar"]
         elif database == "ncbigene":
             test_queries = ["TP53", "BRCA1", "RAS"]
+        elif database == "uniprot":
+            test_queries = ["TP53", "RAS", "EGFR"]
         else:
             test_queries = ["test"]
     logger.info("Testing the embeddings with sample queries...")
@@ -226,6 +231,8 @@ def test_search(
                         entry_id = metadata.get('chebi_id', 'Unknown')
                     elif database == "ncbigene":
                         entry_id = metadata.get('ncbigene_id', 'Unknown')
+                    elif database == "uniprot":
+                        entry_id = metadata.get('uniprot_id', 'Unknown')
                     else:
                         entry_id = metadata.get('id', 'Unknown')
                     name = metadata.get('name', 'Unknown')
@@ -245,15 +252,15 @@ def main():
     parser.add_argument(
         "--database",
         type=str,
-        choices=["chebi", "ncbigene"],
+        choices=["chebi", "ncbigene", "uniprot"],
         default="chebi",
-        help="Database to use: 'chebi' or 'ncbigene' (default: chebi)"
+        help="Database to use: 'chebi' or 'ncbigene' or 'uniprot' (default: chebi)"
     )
     parser.add_argument(
         "--tax_id",
         type=str,
         default=None,
-        help="Taxonomy ID for gene database (required for ncbigene)"
+        help="Taxonomy ID for gene database (required for ncbigene and uniprot)"
     )
     parser.add_argument(
         "--ref_data_path",
@@ -305,6 +312,10 @@ def main():
             if not args.tax_id:
                 raise ValueError("--tax_id is required for ncbigene database")
             args.ref_data_path = str(Path(f"ncbigene/ncbigene2names_tax{args.tax_id}_protein-coding.lzma"))
+        elif args.database == "uniprot":
+            if not args.tax_id:
+                raise ValueError("--tax_id is required for uniprot database")
+            args.ref_data_path = str(Path(f"uniprot/uniprot2names_tax{args.tax_id}.lzma"))
     if args.collection is None:
         if args.database == "chebi":
             args.collection = "chebi_default_numonly"
@@ -312,6 +323,10 @@ def main():
             if not args.tax_id:
                 raise ValueError("--tax_id is required for ncbigene database")
             args.collection = f"ncbigene_default_tax{args.tax_id}"
+        elif args.database == "uniprot":
+            if not args.tax_id:
+                raise ValueError("--tax_id is required for uniprot database")
+            args.collection = f"uniprot_default_tax{args.tax_id}"
     os.makedirs(args.persist_directory, exist_ok=True)
     try:
         if not args.test_only:
