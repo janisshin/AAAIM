@@ -25,6 +25,13 @@ export OPENAI_API_KEY="your-openai-key"
 export OPENROUTER_API_KEY="your-openrouter-key"
 ```
 
+Alternatively, you can setup an `.env` file that looks like the following:
+
+```bash
+LLAMA_API_KEY=<your-llama-api-key-here>
+OPENROUTER_API_KEY=<your-openrouter-api-key-here>
+```
+
 ## Usage
 
 AAAIM currently provides two main workflows for both chemical and gene annotation:
@@ -155,7 +162,7 @@ After running `annotate_model` or `curate_model`, you can review the resulting C
 To apply your changes and save a new SBML model:
 
 ```python
-from core.update_model import update_annotate
+from core.update_model import update_annotation
 
 update_annotation(
     original_model_path="path/to/original_model.xml",
@@ -209,6 +216,8 @@ python load_data.py --database chebi --model default
 python load_data.py --database ncbigene --model default --tax_id 9606
 # for uniprot, specify the taxnomy id:
 python load_data.py --database uniprot --model default --tax_id 9606
+# for KEGG:
+python load_data.py --database kegg --model default
 ```
 
 ## Databases
@@ -216,17 +225,19 @@ python load_data.py --database uniprot --model default --tax_id 9606
 ### Currently Supported
 
 - **ChEBI**: Chemical Entities of Biological Interest
-
   - **Entity Type**: `chemical`
   - All terms in ChEBI are included.
-- **NCBI Gene**: Gene annotation
 
+- **NCBI Gene**: Gene annotation
   - **Entity Type**: `gene`
   - Only genes for common species are supported (those included in bigg models).
-- **UniProt**: protein annotation
 
+- **UniProt**: protein annotation
   - **Entity Type**: `uniprot`
   - Only proteins for human (9606) and mouse (10090) are supported for now.
+
+- **KEGGe**: Enzyme annotation
+  - For reaction substrates and products.
 
 ### Future Support
 
@@ -261,6 +272,15 @@ python load_data.py --database uniprot --model default --tax_id 9606
   - `uniprot2label_human+mouse.lzma`: Mapping from UniProt IDs to labels (primary name)
   - `uniprot2names_tax{tax_id}.lzma`: Uniprot synonyms for tax_id used for RAG approach
 - **Source**: Data are obtained from the UniProt site: https://www.uniprot.org/help/downloads (Reviewed (Swiss-Prot) xml).
+
+
+### KEGG Data
+
+- **Location**: `data/kegg/`
+- **Files**:
+  - `chebi_to_kegg_map.lzma`: Mapping from ChEBI IDs to KEGG compound IDs.
+  - `parsed_kegg_reactions.lzma`: Dict of KEGG reactions and their attributes
+- **Source**: Data are obtained from the KEGG site: https://rest.kegg.jp.
 
 ## File Structure
 
