@@ -20,7 +20,7 @@ except ImportError:
     QUAL_SUPPORT = False
     logging.warning("biolqm and/or pyboolnet not available - SBML-qual models not supported")
 
-from utils.constants import ModelType, MODEL_FORMAT_PLUGINS, NCBIGENE_URI_PATTERNS, CHEBI_URI_PATTERNS, UNIPROT_URI_PATTERNS
+from utils.constants import ModelType, MODEL_FORMAT_PLUGINS, NCBIGENE_URI_PATTERNS, CHEBI_URI_PATTERNS, UNIPROT_URI_PATTERNS, KEGG_URI_PATTERNS
 
 logger = logging.getLogger(__name__)
 
@@ -284,6 +284,54 @@ def find_species_with_uniprot_annotations(model_file: str, bqbiol_qualifiers: li
                     
     return uniprot_annotations
 
+def find_reactions_with_kegg_annotations(model_file: str, bqbiol_qualifiers: list = None) -> Dict[str, List[str]]:
+    """
+    Find reactions with existing KEGG annotations.
+
+    Args:
+        model_file: Path to the SBML model file
+        bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
+
+    Returns:
+        Dictionary mapping reaction IDs to their KEGG annotation IDs
+    """
+    reader = libsbml.SBMLReader()
+    document = reader.readSBML(model_file)
+    model = document.getModel()
+
+    if model is None:
+        return {}
+
+    model_type, format_info = detect_model_format(model_file)
+    kegg_annotations = {}
+
+    if model_type in [ModelType.SBML, ModelType.SBML_FBC]:
+        for reaction in model.getListOfReactions():
+            reaction_id = reaction.getId()
+
+            if reaction.isSetAnnotation():
+                annotation = reaction.getAnnotation()
+                annotation_str = annotation.toXMLString()
+                kegg_ids = extract_id_from_annotation(annotation_str, KEGG_URI_PATTERNS, bqbiol_qualifiers)
+                if kegg_ids:
+                    kegg_annotations[reaction_id] = kegg_ids
+
+    elif model_type == ModelType.SBML_QUAL:
+        # QUAL models typically use Transitions, not Reactions
+        qual_plugin = model.getPlugin("qual")
+        if qual_plugin and hasattr(qual_plugin, "getListOfTransitions"):
+            for transition in qual_plugin.getListOfTransitions():
+                transition_id = transition.getId()
+                if transition.isSetAnnotation():
+                    annotation = transition.getAnnotation()
+                    annotation_str = annotation.toXMLString()
+                    kegg_ids = extract_id_from_annotation(annotation_str, KEGG_URI_PATTERNS, bqbiol_qualifiers)
+                    if kegg_ids:
+                        kegg_annotations[transition_id] = kegg_ids
+
+    return kegg_annotations
+
+
 def get_species_display_names(model_file: str, entity_type: str = "chemical") -> Dict[str, str]:
     """
     Get the display names for all species in the model.
@@ -361,6 +409,71 @@ def get_all_species_ids(model_file: str, entity_type: str = "chemical") -> List[
     display_names = get_species_display_names(model_file, entity_type)
     return list(display_names.keys())
 
+def get_reaction_display_names(model_file: str) -> Dict[str, str]:
+    """
+    Get the display names for all reactions in the model.
+    Supports regular SBML reactions and SBML-qual transitions.
+    
+    Args:
+        model_file: Path to the SBML model file
+
+    Returns:
+        Dictionary mapping reaction or transition IDs to their display names
+    """
+    reader = libsbml.SBMLReader()
+    document = reader.readSBML(model_file)
+    model = document.getModel()
+
+    if model is None:
+        return {}
+
+    model_type, format_info = detect_model_format(model_file)
+    names = {}
+
+    if model_type in [ModelType.SBML, ModelType.SBML_FBC]:
+        # Regular SBML or FBC: use reactions
+        for reaction in model.getListOfReactions():
+            reaction_id = reaction.getId()
+
+            # Prefer name over ID
+            if reaction.isSetName() and reaction.getName():
+                reaction_name = reaction.getName()
+            else:
+                reaction_name = reaction_id
+
+            names[reaction_id] = reaction_name
+
+    elif model_type == ModelType.SBML_QUAL:
+        # SBML-qual: use transitions
+        qual_plugin = model.getPlugin("qual")
+        if qual_plugin and hasattr(qual_plugin, "getListOfTransitions"):
+            for transition in qual_plugin.getListOfTransitions():
+                transition_id = transition.getId()
+
+                if transition.isSetName() and transition.getName():
+                    transition_name = transition.getName()
+                else:
+                    transition_name = transition_id
+
+                names[transition_id] = transition_name
+
+    return names
+
+def get_all_reaction_ids(model_file: str, entity_type: str = "reaction") -> List[str]:
+    """
+    Get all species IDs from an SBML model.
+    Supports regular species, FBC gene products, and qual qualitative species.
+    
+    Args:
+        model_file: Path to SBML model file
+        entity_type: Type of entity ("chemical" for species, "gene" for gene products)
+        
+    Returns:
+        List of species/gene IDs
+    """
+    display_names = get_reaction_display_names(model_file, entity_type)
+    return list(display_names.keys())
+
 def extract_qual_transitions(model_file: str, species_ids: List[str]) -> List[str]:
     """
     Extract boolean transitions from SBML-qual models.
@@ -429,7 +542,7 @@ def extract_qual_transitions(model_file: str, species_ids: List[str]) -> List[st
     return transitions
 
 def extract_model_info(model_file: str, species_ids: List[str], entity_type: str = "chemical") -> Dict[str, Any]:
-    """ ### JANISTAG add fields for substrates and products by splitting reaction string 
+    """
     Extract display names and reactions/transitions for the specified species.
     Supports regular SBML, SBML-fbc, and SBML-qual models.
     
@@ -508,7 +621,7 @@ def extract_model_info(model_file: str, species_ids: List[str], entity_type: str
     elif entity_type == "gene" and model_type == ModelType.SBML_FBC:
         # For SBML-fbc gene models, reactions are empty (genes don't participate in reactions directly)
         reactions = []
-        
+    
     else:
         # For chemical entities or regular SBML models, use antimony
         antimony.clearPreviousLoads()
@@ -577,7 +690,8 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
     Args:
         model_file: Path to the SBML model file
         species_ids: List of species IDs to include in the prompt
-        entity_type: Type of entity ("chemical" for species, "gene" for gene products)
+        entity_type: Type of entity ("chemical" for species, "gene" 
+                        for gene products, "kegg" for reactions)
         
     Returns:
         Formatted prompt string
@@ -587,9 +701,31 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
         return ""
     
     model_type = model_info.get("model_type", ModelType.SBML)
-    
+
+    if entity_type == "kegg":
+        reaction_display_names = get_reaction_display_names(model_file, entity_type) #bench
+        reaction_ids = get_all_reaction_ids(model_file, entity_type)
+
+        prompt = f"""Now annotate these metabolic reactions using KEGG data:
+Reactions to annotate: {", ".join(reaction_ids)}
+Model: "{model_info["model_name"]}"
+// Display Names:
+{reaction_display_names}
+// Reactions:
+{chr(10).join(model_info["reactions"])}
+// Notes:
+{model_info["model_notes"]}
+
+Return up to 3 KEGG reaction IDs (e.g., R01070) and their associated EC numbers for each reaction, ranked by likelihood.
+Use the following format and do not include any other output.
+
+SpeciesA: "Rxxxx", "Ryyyy", …
+SpeciesB: …
+Reason: …
+        """
+
     # For gene entities, format prompt differently based on model type
-    if entity_type == "gene":
+    elif entity_type == "gene":
         if model_type == ModelType.SBML_QUAL:
             # SBML-qual models have boolean transitions
             prompt = f"""Now annotate these:

@@ -13,6 +13,7 @@ from typing import Dict, List, Optional, Tuple, Any
 from pathlib import Path
 from dataclasses import dataclass
 import logging
+from collections import Counter
 import sys
 import chromadb
 from chromadb.utils import embedding_functions
@@ -205,6 +206,8 @@ def get_species_recommendations_direct(species_ids: List[str], synonyms_dict, da
         return _get_chebi_recommendations_direct(species_ids, synonyms_dict, top_k=top_k)
     elif database == "ncbigene":
         return _get_ncbigene_recommendations_direct(species_ids, synonyms_dict, tax_id=tax_id, top_k=top_k)
+    elif database == "kegg":
+        return _get_kegg_recommendations_direct(species_ids, synonyms_dict, tax_id=tax_id, top_k=top_k)
     else:
         logger.error(f"Database {database} not supported for direct search")
         return []
@@ -382,6 +385,155 @@ def _get_ncbigene_recommendations_direct(species_ids: List[str], synonyms_dict, 
         )
         recommendations.append(recommendation)
     return recommendations
+
+
+
+def _get_kegg_recommendations_direct(species_ids: List[str], synonyms_dict, tax_id: Any = None, top_k: int = 5, cofactors_to_ignore={}) -> List[Recommendation]:
+    """
+    Find KEGG reaction recommendations by matching model reactions to KEGG reactions.
+    
+    Args:
+        species_ids: List of reaction IDs to evaluate
+        synonyms_dict: Dictionary containing normalized reaction data
+        tax_id: Optional taxonomy ID (not used for KEGG reactions but kept for API consistency)
+        top_k: Number of top candidates to return per reaction
+        
+    Returns:
+        List of Recommendation objects with candidates and match scores
+    """
+    try:
+        # Load KEGG reaction data if needed
+        kegg_reactions = {}
+        kegg_data_file = get_data_dir() / "kegg" / "parsed_kegg_reactions.lzma"
+        
+        if os.path.exists(kegg_data_file):
+            with lzma.open(kegg_data_file, 'rb') as f:
+                kegg_reactions = pickle.load(f)
+            logger.info(f"Loaded {len(kegg_reactions)} KEGG reactions")
+        else:
+            logger.error(f"KEGG reactions file not found: {kegg_data_file}")
+            return []
+        
+        recommendations = []
+        
+        for spec_id in species_ids:
+            # Get normalized reaction data for this reaction ID
+            if isinstance(synonyms_dict, dict):
+                rxn_data = synonyms_dict.get(spec_id, {})
+            elif isinstance(synonyms_dict, tuple) and len(synonyms_dict) == 2:
+                rxn_data = synonyms_dict[0].get(spec_id, {})
+            else:
+                rxn_data = {}
+                
+            # Skip if no reaction data available
+            if not rxn_data:
+                recommendation = Recommendation(
+                    id=spec_id,
+                    synonyms=[spec_id],
+                    candidates=[],
+                    candidate_names=[],
+                    match_score=[]
+                )
+                recommendations.append(recommendation)
+                continue
+                
+            # Extract substrate and product counters
+            model_subs = rxn_data.get('substrate_counter', Counter())
+            model_prods = rxn_data.get('product_counter', Counter())
+            
+            matches = []
+            
+            # Compare with each KEGG reaction
+            for kegg_id, kegg_rxn in kegg_reactions.items():
+                kegg_subs = kegg_rxn.get('substrate_counter', Counter())
+                kegg_prods = kegg_rxn.get('product_counter', Counter())
+                
+                # Score both orientations (forward and reverse)
+                score_forward = compute_similarity(model_subs, kegg_subs, cofactors_to_ignore) + \
+                                compute_similarity(model_prods, kegg_prods, cofactors_to_ignore)
+                
+                score_reverse = compute_similarity(model_subs, kegg_prods, cofactors_to_ignore) + \
+                                compute_similarity(model_prods, kegg_subs, cofactors_to_ignore)
+                
+                # Average the two comparisons
+                score_forward /= 2
+                score_reverse /= 2
+                max_score = max(score_forward, score_reverse)
+                
+                matches.append({
+                    'kegg_id': kegg_id,
+                    'score_forward': score_forward,
+                    'score_reverse': score_reverse,
+                    'final_score': max_score
+                })
+            
+            # Sort matches by final score (descending)
+            matches.sort(key=lambda x: x['final_score'], reverse=True)
+            
+            # Keep top_k matches
+            top_matches = matches[:top_k]
+            
+            # Extract candidates and scores for recommendation
+            candidates = [match['kegg_id'] for match in top_matches]
+            match_scores = [match['final_score'] for match in top_matches]
+            
+            # Get reaction names from KEGG
+            candidate_names = []
+            for kegg_id in candidates:
+                rxn_name = kegg_reactions.get(kegg_id, {}).get('name', kegg_id)
+                candidate_names.append(rxn_name)
+            
+            # Create recommendation object
+            recommendation = Recommendation(
+                id=spec_id,
+                synonyms=[spec_id],  # Use reaction ID as synonym
+                candidates=candidates,
+                candidate_names=candidate_names,
+                match_score=match_scores
+            )
+            recommendations.append(recommendation)
+            
+        return recommendations
+        
+    except Exception as e:
+        logger.error(f"Error in KEGG recommendation: {e}")
+        import traceback
+        traceback.print_exc()
+        return []
+
+def compute_similarity(counter1: Counter, counter2: Counter, cofactors_to_ignore: set) -> float:
+    """
+    Compute Jaccard-like similarity between two reaction sides with stoichiometry awareness.
+    
+    This function calculates a similarity score between two sets of metabolites,
+    taking into account their stoichiometric coefficients and filtering out common cofactors.
+    
+    Args:
+        counter1: Counter object for first reaction side (substrates or products)
+        counter2: Counter object for second reaction side (substrates or products)
+        cofactors_to_ignore: Set of cofactor IDs to ignore in the comparison
+        
+    Returns:
+        Similarity score between 0.0 (no similarity) and 1.0 (identical)
+    """
+    # Filter out cofactors
+    c1 = {k: v for k, v in counter1.items() if k not in cofactors_to_ignore}
+    c2 = {k: v for k, v in counter2.items() if k not in cofactors_to_ignore}
+    
+    # Perfect match if both are empty after filtering cofactors
+    if not c1 and not c2:
+        return 1.0
+    
+    # Calculate stoichiometry-aware Jaccard similarity
+    # Sum of minimum values (intersection) divided by sum of maximum values (union)
+    intersection = sum(min(c1.get(k, 0), c2.get(k, 0)) for k in set(c1) | set(c2))
+    union = sum(max(c1.get(k, 0), c2.get(k, 0)) for k in set(c1) | set(c2))
+    
+    if union == 0:
+        return 0.0
+        
+    return intersection / union
+
 
 def get_embedding_function(model_type: str = "default"):
     """
