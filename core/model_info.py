@@ -20,7 +20,7 @@ except ImportError:
     QUAL_SUPPORT = False
     logging.warning("biolqm and/or pyboolnet not available - SBML-qual models not supported")
 
-from utils.constants import ModelType, MODEL_FORMAT_PLUGINS, NCBIGENE_URI_PATTERNS, CHEBI_URI_PATTERNS, UNIPROT_URI_PATTERNS, KEGG_URI_PATTERNS
+from utils.constants import ModelType, MODEL_FORMAT_PLUGINS, NCBIGENE_URI_PATTERNS, CHEBI_URI_PATTERNS, UNIPROT_URI_PATTERNS, KEGG_REACTION_URI_PATTERNS
 
 logger = logging.getLogger(__name__)
 
@@ -312,7 +312,7 @@ def find_reactions_with_kegg_annotations(model_file: str, bqbiol_qualifiers: lis
             if reaction.isSetAnnotation():
                 annotation = reaction.getAnnotation()
                 annotation_str = annotation.toXMLString()
-                kegg_ids = extract_id_from_annotation(annotation_str, KEGG_URI_PATTERNS, bqbiol_qualifiers)
+                kegg_ids = extract_id_from_annotation(annotation_str, KEGG_REACTION_URI_PATTERNS, bqbiol_qualifiers)
                 if kegg_ids:
                     kegg_annotations[reaction_id] = kegg_ids
 
@@ -325,7 +325,7 @@ def find_reactions_with_kegg_annotations(model_file: str, bqbiol_qualifiers: lis
                 if transition.isSetAnnotation():
                     annotation = transition.getAnnotation()
                     annotation_str = annotation.toXMLString()
-                    kegg_ids = extract_id_from_annotation(annotation_str, KEGG_URI_PATTERNS, bqbiol_qualifiers)
+                    kegg_ids = extract_id_from_annotation(annotation_str, KEGG_REACTION_URI_PATTERNS, bqbiol_qualifiers)
                     if kegg_ids:
                         kegg_annotations[transition_id] = kegg_ids
 
