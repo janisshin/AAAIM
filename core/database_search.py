@@ -220,6 +220,92 @@ def load_uniprot_label_dict(tax_id: str = None) -> Dict[str, str]:
     
     return label_dict
 
+def load_chebi2kegg_dict() -> Dict[str, str]:
+    """
+    Load the ChEBI ID to KEGG compound ID mapping dictionary.
+    
+    Returns:
+        Dictionary mapping ChEBI IDs to KEGG compound IDs
+    """
+    global _CHEBI2KEGG_DICT
+    
+    if _CHEBI2KEGG_DICT is None:
+        data_file = get_data_dir() / "kegg" / REF_CHEBI2KEGG_COMPOUND
+        
+        if not data_file.exists():
+            raise FileNotFoundError(f"ChEBI to KEGG compound mapping file not found: {data_file}")
+        
+        with lzma.open(data_file, 'rb') as f:
+            _CHEBI2KEGG_DICT = pickle.load(f)
+    
+    return _CHEBI2KEGG_DICT
+
+def load_kegg_reaction2name_dict() -> Dict[str, str]:
+    """
+    Load the KEGG reaction ID to name dictionary.
+    
+    Returns:
+        Dictionary mapping KEGG reaction IDs to their names
+    """
+    global _KEGG_REACTION2NAME_DICT
+    
+    if _KEGG_REACTION2NAME_DICT is None:
+        data_file = get_data_dir() / "kegg" / REF_KEGG_REACTION2NAME
+        
+        if not data_file.exists():
+            raise FileNotFoundError(f"KEGG reaction to name mapping file not found: {data_file}")
+        
+        with lzma.open(data_file, 'rb') as f:
+            _KEGG_REACTION2NAME_DICT = pickle.load(f)
+    
+    return _KEGG_REACTION2NAME_DICT
+
+def load_kegg2ec_dict() -> Dict[str, Dict[str, List[str]]]:
+    """
+    Load the KEGG ID to EC number mapping dictionary.
+    
+    Returns:
+        Dictionary mapping KEGG IDs to EC numbers with additional metadata
+    """
+    global _KEGG2EC_DICT
+    
+    if _KEGG2EC_DICT is None:
+        data_file = get_data_dir() / "kegg" / REF_KEGG2EC
+        
+        if not data_file.exists():
+            raise FileNotFoundError(f"KEGG to EC mapping file not found: {data_file}")
+        
+        with lzma.open(data_file, 'rb') as f:
+            _KEGG2EC_DICT = pickle.load(f)
+    
+    return _KEGG2EC_DICT
+
+def load_kegg_reaction_features_dict() -> Dict[str, Dict[str, Any]]:
+    """
+    Load the parsed KEGG reactions dictionary containing detailed reaction features.
+    
+    The dictionary contains information about KEGG reactions including:
+    - substrate and product counters
+    - reaction stoichiometry
+    - pathway information
+    - other reaction metadata
+    
+    Returns:
+        Dictionary mapping KEGG reaction IDs to their feature dictionaries
+    """
+    global _KEGG_REACTION_FEATURES_DICT
+    
+    if _KEGG_REACTION_FEATURES_DICT is None:
+        data_file = get_data_dir() / "kegg" / REF_KEGG_REACTION_FEATURES
+        
+        if not data_file.exists():
+            raise FileNotFoundError(f"Parsed KEGG reactions data file not found: {data_file}")
+        
+        with lzma.open(data_file, 'rb') as f:
+            _KEGG_REACTION_FEATURES_DICT = pickle.load(f)
+    
+    return _KEGG_REACTION_FEATURES_DICT
+
 def remove_symbols(text: str) -> str:
     """
     Remove all characters except numbers and letters.
