@@ -11,15 +11,6 @@ from typing import Dict, List, Any, Optional, Tuple
 from pathlib import Path
 import logging
 
-# Import for SBML-qual support
-try:
-    import biolqm
-    import pyboolnet
-    QUAL_SUPPORT = True
-except ImportError:
-    QUAL_SUPPORT = False
-    logging.warning("biolqm and/or pyboolnet not available - SBML-qual models not supported")
-
 from utils.constants import ModelType, MODEL_FORMAT_PLUGINS, NCBIGENE_URI_PATTERNS, CHEBI_URI_PATTERNS, UNIPROT_URI_PATTERNS, KEGG_REACTION_URI_PATTERNS
 
 logger = logging.getLogger(__name__)
@@ -486,9 +477,6 @@ def extract_qual_transitions(model_file: str, species_ids: List[str]) -> List[st
     Returns:
         List of transition strings in the format "target = rule"
     """
-    if not QUAL_SUPPORT:
-        logger.warning("biolqm/pyboolnet not available - cannot extract qual transitions")
-        return []
     
     # Open the SBML file and get the qualitative_model model
     reader = libsbml.SBMLReader()

@@ -17,7 +17,7 @@ from collections import Counter
 import sys
 import chromadb
 from chromadb.utils import embedding_functions
-from utils.constants import REF_CHEBI2LABEL, REF_NAMES2CHEBI, REF_NCBIGENE2LABEL, REF_NAMES2NCBIGENE
+from utils.constants import REF_CHEBI2LABEL, REF_NAMES2CHEBI, REF_NCBIGENE2LABEL, REF_NAMES2NCBIGENE, REF_UNIPROT2LABEL, REF_NAMES2UNIPROT
 from utils.constants import REF_CHEBI2KEGG_COMPOUND, REF_KEGG_REACTION2NAME, REF_KEGG2EC, REF_KEGG_REACTION_FEATURES
 from core.data_types import Recommendation
 
@@ -32,6 +32,8 @@ _CHEBI_CLEANNAMES_DICT: Optional[Dict[str, List[str]]] = None
 _CHEBI_LABEL_DICT: Optional[Dict[str, str]] = None
 _NCBIGENE_NAMES_DICT: Optional[Dict[str, List[str]]] = None
 _NCBIGENE_LABEL_DICT: Optional[Dict[str, str]] = None
+_UNIPROT_NAMES_DICT: Optional[Dict[str, List[str]]] = None
+_UNIPROT_LABEL_DICT: Optional[Dict[str, str]] = None
 _CHEBI2KEGG_DICT: Optional[Dict[str, str]] = None
 _KEGG_REACTION2NAME_DICT: Optional[Dict[str, str]] = None
 _KEGG2EC_DICT: Optional[Dict[str, Dict[str, List[str]]]] = None
@@ -109,7 +111,7 @@ def load_ncbigene_names_dict(tax_id: str = None) -> Dict[str, List[str]]:
         # Load organism-specific file
         data_file = get_data_dir() / "ncbigene" / f"names2ncbigene_tax{tax_id}_protein-coding.lzma"
     else:
-        # Try to load old combined file for backwards compatibility
+        # Try to load combined file
         data_file = get_data_dir() / "ncbigene" / REF_NAMES2NCBIGENE
     
     if not data_file.exists():
@@ -126,40 +128,6 @@ def load_ncbigene_names_dict(tax_id: str = None) -> Dict[str, List[str]]:
     
     return names_dict
 
-def load_ncbigene_gene2names_dict(tax_id: str) -> Dict[str, List[str]]:
-    """
-    Load the NCBI gene ID to names dictionary for RAG embeddings.
-    
-    Args:
-        tax_id: The organism's tax_id for organism-specific lookup.
-    
-    Returns:
-        Dictionary mapping NCBI gene IDs to lists of names/synonyms
-    """
-    
-    # Use a cache key that includes tax_id to handle multiple organisms
-    cache_key = f"ncbigene_gene2names_{tax_id}"
-    
-    # Check if we have this specific version cached
-    if not hasattr(load_ncbigene_gene2names_dict, '_cache'):
-        load_ncbigene_gene2names_dict._cache = {}
-    
-    if cache_key in load_ncbigene_gene2names_dict._cache:
-        return load_ncbigene_gene2names_dict._cache[cache_key]
-    
-    # Load organism-specific gene2names file
-    data_file = get_data_dir() / "ncbigene" / f"ncbigene2names_tax{tax_id}_protein-coding.lzma"
-    
-    if not data_file.exists():
-        raise FileNotFoundError(f"NCBI gene2names data file not found for tax_id {tax_id}: {data_file}")
-    
-    with lzma.open(data_file, 'rb') as f:
-        gene2names_dict = pickle.load(f)
-    
-    # Cache the result
-    load_ncbigene_gene2names_dict._cache[cache_key] = gene2names_dict
-    
-    return gene2names_dict
 
 def load_ncbigene_label_dict() -> Dict[str, str]:
     """
@@ -181,91 +149,76 @@ def load_ncbigene_label_dict() -> Dict[str, str]:
     
     return _NCBIGENE_LABEL_DICT
 
-def load_chebi2kegg_dict() -> Dict[str, str]:
+def load_uniprot_names_dict(tax_id: str = None) -> Dict[str, List[str]]:
     """
-    Load the ChEBI ID to KEGG compound ID mapping dictionary.
+    Load the UniProt clean names to UniProt ID dictionary.
+    
+    Args:
+        tax_id: If provided, loads organism-specific reference file.
+                If None, tries to load the old combined file for backwards compatibility.
     
     Returns:
-        Dictionary mapping ChEBI IDs to KEGG compound IDs
+        Dictionary mapping clean names to lists of UniProt IDs
     """
-    global _CHEBI2KEGG_DICT
+    global _UNIPROT_NAMES_DICT
     
-    if _CHEBI2KEGG_DICT is None:
-        data_file = get_data_dir() / "kegg" / REF_CHEBI2KEGG_COMPOUND
-        
-        if not data_file.exists():
-            raise FileNotFoundError(f"ChEBI to KEGG compound mapping file not found: {data_file}")
-        
-        with lzma.open(data_file, 'rb') as f:
-            _CHEBI2KEGG_DICT = pickle.load(f)
+    # Use a cache key that includes tax_id to handle multiple organisms
+    cache_key = f"uniprot_names_{tax_id or 'combined'}"
     
-    return _CHEBI2KEGG_DICT
+    # Check if we have this specific version cached
+    if not hasattr(load_uniprot_names_dict, '_cache'):
+        load_uniprot_names_dict._cache = {}
+    
+    if cache_key in load_uniprot_names_dict._cache:
+        return load_uniprot_names_dict._cache[cache_key]
+    
+    if tax_id:
+        # Load organism-specific file
+        data_file = get_data_dir() / "uniprot" / f"names2uniprot_tax{tax_id}.lzma"
+    else:
+        # Try to load combined file
+        data_file = get_data_dir() / "uniprot" / REF_NAMES2UNIPROT
+    
+    if not data_file.exists():
+        if tax_id:
+            raise FileNotFoundError(f"UniProt names data file not found for tax_id {tax_id}: {data_file}")
+        else:
+            raise FileNotFoundError(f"UniProt names data file not found: {data_file}")
+    
+    with lzma.open(data_file, 'rb') as f:
+        names_dict = pickle.load(f)
+    
+    # Cache the result
+    load_uniprot_names_dict._cache[cache_key] = names_dict
+    
+    return names_dict
 
-def load_kegg_reaction2name_dict() -> Dict[str, str]:
+def load_uniprot_label_dict(tax_id: str = None) -> Dict[str, str]:
     """
-    Load the KEGG reaction ID to name dictionary.
+    Load the UniProt ID to label dictionary.
+    
+    Args:
+        tax_id: If provided, loads organism-specific reference file.
+                If None, tries to load the old combined file for backwards compatibility.
     
     Returns:
-        Dictionary mapping KEGG reaction IDs to their names
+        Dictionary mapping UniProt IDs to their labels
     """
-    global _KEGG_REACTION2NAME_DICT
+    global _NCBIGENE_LABEL_DICT
     
-    if _KEGG_REACTION2NAME_DICT is None:
-        data_file = get_data_dir() / "kegg" / REF_KEGG_REACTION2NAME
+    if _NCBIGENE_LABEL_DICT is None:
+        data_file = get_data_dir() / "ncbigene" / REF_NCBIGENE2LABEL
         
         if not data_file.exists():
-            raise FileNotFoundError(f"KEGG reaction to name mapping file not found: {data_file}")
+            raise FileNotFoundError(f"NCBI gene label data file not found: {data_file}")
         
         with lzma.open(data_file, 'rb') as f:
-            _KEGG_REACTION2NAME_DICT = pickle.load(f)
+            _NCBIGENE_LABEL_DICT = pickle.load(f)
     
-    return _KEGG_REACTION2NAME_DICT
-
-def load_kegg2ec_dict() -> Dict[str, Dict[str, List[str]]]:
-    """
-    Load the KEGG ID to EC number mapping dictionary.
+    # Cache the result
+    load_uniprot_label_dict._cache[cache_key] = label_dict
     
-    Returns:
-        Dictionary mapping KEGG IDs to EC numbers with additional metadata
-    """
-    global _KEGG2EC_DICT
-    
-    if _KEGG2EC_DICT is None:
-        data_file = get_data_dir() / "kegg" / REF_KEGG2EC
-        
-        if not data_file.exists():
-            raise FileNotFoundError(f"KEGG to EC mapping file not found: {data_file}")
-        
-        with lzma.open(data_file, 'rb') as f:
-            _KEGG2EC_DICT = pickle.load(f)
-    
-    return _KEGG2EC_DICT
-
-def load_kegg_reaction_features_dict() -> Dict[str, Dict[str, Any]]:
-    """
-    Load the parsed KEGG reactions dictionary containing detailed reaction features.
-    
-    The dictionary contains information about KEGG reactions including:
-    - substrate and product counters
-    - reaction stoichiometry
-    - pathway information
-    - other reaction metadata
-    
-    Returns:
-        Dictionary mapping KEGG reaction IDs to their feature dictionaries
-    """
-    global _KEGG_REACTION_FEATURES_DICT
-    
-    if _KEGG_REACTION_FEATURES_DICT is None:
-        data_file = get_data_dir() / "kegg" / REF_KEGG_REACTION_FEATURES
-        
-        if not data_file.exists():
-            raise FileNotFoundError(f"Parsed KEGG reactions data file not found: {data_file}")
-        
-        with lzma.open(data_file, 'rb') as f:
-            _KEGG_REACTION_FEATURES_DICT = pickle.load(f)
-    
-    return _KEGG_REACTION_FEATURES_DICT
+    return label_dict
 
 def remove_symbols(text: str) -> str:
     """
@@ -286,8 +239,8 @@ def get_species_recommendations_direct(species_ids: List[str], synonyms_dict, da
     Parameters:
     - species_ids (list): List of species IDs to evaluate.
     - synonyms_dict (dict): Mapping of species IDs to synonyms.
-    - database (str): Database to search ("chebi", "ncbigene")
-    - tax_id (str/list): For ncbigene database, the organism's tax_id for organism-specific lookup. If list, search all tax_ids for each species.
+    - database (str): Database to search ("chebi", "ncbigene", "uniprot")
+    - tax_id (str/list): For ncbigene/uniprot database, the organism's tax_id for organism-specific lookup. If list, search all tax_ids for each species.
     - top_k (int): Number of top candidates to return per species based on hit_count.
     
     Returns:
@@ -297,6 +250,8 @@ def get_species_recommendations_direct(species_ids: List[str], synonyms_dict, da
         return _get_chebi_recommendations_direct(species_ids, synonyms_dict, top_k=top_k)
     elif database == "ncbigene":
         return _get_ncbigene_recommendations_direct(species_ids, synonyms_dict, tax_id=tax_id, top_k=top_k)
+    elif database == "uniprot":
+        return _get_uniprot_recommendations_direct(species_ids, synonyms_dict, tax_id=tax_id, top_k=top_k)
     elif database == "kegg":
         return _get_kegg_recommendations_direct(species_ids, synonyms_dict, tax_id=tax_id, top_k=top_k)
     else:
@@ -446,6 +401,96 @@ def _get_ncbigene_recommendations_direct(species_ids: List[str], synonyms_dict, 
                                 hit_count[gene_id] = 1
                             else:
                                 hit_count[gene_id] += 1
+        
+        # Sort candidates by hit_count (descending) and take top_k
+        if all_candidates:
+            # Create list of (candidate, name, hit_count) tuples
+            candidate_tuples = [(candidate, name, hit_count[candidate]) 
+                               for candidate, name in zip(all_candidates, all_candidate_names)]
+            
+            # Sort by hit_count descending
+            candidate_tuples.sort(key=lambda x: x[2], reverse=True)
+            
+            # Take top_k candidates
+            top_candidates = candidate_tuples[:top_k]
+            
+            # Extract sorted lists
+            all_candidates = [candidate for candidate, _, _ in top_candidates]
+            all_candidate_names = [name for _, name, _ in top_candidates]
+        
+        num_synonyms = len(synonyms)
+        match_score_list = [hit_count.get(candidate, 0) / num_synonyms for candidate in all_candidates]
+        
+        # Create recommendation object
+        recommendation = Recommendation(
+            id=spec_id,
+            synonyms=synonyms,
+            candidates=all_candidates,
+            candidate_names=all_candidate_names,
+            match_score=match_score_list
+        )
+        recommendations.append(recommendation)
+    return recommendations
+
+def _get_uniprot_recommendations_direct(species_ids: List[str], synonyms_dict, tax_id: Any = None, top_k: int = 3) -> List[Recommendation]:
+    """
+    Find UniProt recommendations by directly matching against UniProt synonyms.
+    Args:
+        species_ids: List of species IDs to evaluate
+        synonyms_dict: Mapping of species IDs to synonyms
+        tax_id: Organism's tax_id for each species (str, list). If list, search all tax_ids for each species.
+        top_k: Number of top candidates to return per species based on hit_count.
+    """
+    label_dict = load_uniprot_label_dict(tax_id=tax_id)
+    recommendations = []
+    for spec_id in species_ids:
+        # Get synonyms for this species ID
+        if isinstance(synonyms_dict, dict):
+            synonyms = synonyms_dict.get(spec_id, [spec_id])
+        elif isinstance(synonyms_dict, tuple) and len(synonyms_dict) == 2:
+            # If it's a tuple with two items (dict and reason)
+            synonyms = synonyms_dict[0].get(spec_id, [spec_id])
+        else:
+            synonyms = [spec_id]
+        # Skip if only 'UNK' synonym
+        if synonyms == ['UNK'] or (len(synonyms) == 1 and synonyms[0] == 'UNK'):
+            # Create empty recommendation for UNK
+            recommendation = Recommendation(
+                id=spec_id,
+                synonyms=synonyms,
+                candidates=[],
+                candidate_names=[],
+                match_score=[]
+            )
+            recommendations.append(recommendation)
+            continue
+        all_candidates = []
+        all_candidate_names = []
+        hit_count = {}
+        # Determine which tax_ids to search
+        if isinstance(tax_id, list):
+            tax_ids_to_search = tax_id
+        else:
+            tax_ids_to_search = [tax_id]
+        # Query for each synonym and each tax_id
+        for synonym in synonyms:
+            norm_synonym = remove_symbols(synonym.lower())
+            for tid in tax_ids_to_search:
+                try:
+                    names_dict = load_uniprot_names_dict(tax_id=tid)
+                except Exception as e:
+                    logger.warning(f"Error loading UniProt names for tax_id {tid}: {e}")
+                    continue
+                for ref_name, uniprot_ids in names_dict.items():
+                    if norm_synonym == ref_name.lower():
+                        for uniprot_id in uniprot_ids:
+                            uniprot_name = label_dict.get(uniprot_id, uniprot_id)
+                            if uniprot_id not in all_candidates:
+                                all_candidates.append(uniprot_id)
+                                all_candidate_names.append(uniprot_name)
+                                hit_count[uniprot_id] = 1
+                            else:
+                                hit_count[uniprot_id] += 1
         
         # Sort candidates by hit_count (descending) and take top_k
         if all_candidates:
@@ -746,11 +791,16 @@ def get_species_recommendations_rag(
     recommendations = []
     # Helper to get collection for a given tax_id
     def get_collection_for_taxid(tid):
-        cname = f"ncbigene_default_tax{tid}"
+        if database == "ncbigene":
+            cname = f"ncbigene_default_tax{tid}"
+        elif database == "uniprot":
+            cname = f"uniprot_default_tax{tid}"
+        else:
+            cname = f"{database}_default_tax{tid}"
         client, collection = get_chromadb_client(persist_directory, cname, model_type)
         return collection
-    # If database is ncbigene and tax_id is a list, aggregate results
-    if database == "ncbigene" and isinstance(tax_id, list):
+    # If database is ncbigene/uniprot and tax_id is a list, aggregate results
+    if database in ["ncbigene", "uniprot"] and isinstance(tax_id, list):
         for spec_id in species_ids:
             if isinstance(synonyms_dict, dict):
                 synonyms = synonyms_dict.get(spec_id, [spec_id])
@@ -774,7 +824,7 @@ def get_species_recommendations_rag(
                 try:
                     collection = get_collection_for_taxid(tid)
                 except Exception as e:
-                    logger.warning(f"Could not access NCBI gene RAG collection for tax_id {tid}: {e}")
+                    logger.warning(f"Could not access {database.upper()} RAG collection for tax_id {tid}: {e}")
                     continue
                 for synonym in synonyms:
                     try:
@@ -807,19 +857,20 @@ def get_species_recommendations_rag(
             )
             recommendations.append(recommendation)
         return recommendations
-    # If database is ncbigene and tax_id is a str or None (single organism)
-    if database == "ncbigene":
+    # If database is ncbigene/uniprot and tax_id is a str or None (single organism)
+    if database in ["ncbigene", "uniprot"]:
         if not tax_id:
-            logger.warning("No tax_id provided for ncbigene RAG search. Using default tax_id 9606.")
-            tax_id = 9606
+            default_tax_id = 9606
+            logger.warning(f"No tax_id provided for {database} RAG search. Using default tax_id {default_tax_id}.")
+            tax_id = default_tax_id
         if collection_name is None and model_type == "default":
-            collection_name = f"ncbigene_default_tax{tax_id}"
+            collection_name = f"{database}_default_tax{tax_id}"
         elif collection_name is None and model_type == "openai":
-            collection_name = f"ncbigene_openai_tax{tax_id}"
+            collection_name = f"{database}_openai_tax{tax_id}"
         try:
             client, collection = get_chromadb_client(persist_directory, collection_name, model_type)
         except Exception as e:
-            logger.error(f"Could not access NCBI gene RAG collection '{collection_name}': {e}")
+            logger.error(f"Could not access {database.upper()} RAG collection '{collection_name}': {e}")
             raise
     elif database == "chebi":
         if collection_name is None and model_type == "default":
@@ -868,6 +919,8 @@ def get_species_recommendations_rag(
                         db_id = metadata.get('chebi_id', 'Unknown')
                     elif database == "ncbigene":
                         db_id = metadata.get('ncbigene_id', 'Unknown')
+                    elif database == "uniprot":
+                        db_id = metadata.get('uniprot_id', 'Unknown')
                     else:
                         db_id = metadata.get('id', 'Unknown')
                     db_name = metadata.get('name', 'Unknown')
@@ -909,14 +962,14 @@ def search_database(entity_name: str,
                    tax_id: str = None) -> List[Tuple[str, float, str]]:
     """
     Search for annotation candidates in specified database.
-    Currently supports ChEBI and NCBI gene, extensible to other databases.
+    Currently supports ChEBI, NCBI gene, and UniProt, extensible to other databases.
     
     Args:
         entity_name: Name of entity to search for
         entity_type: Type of entity (chemical, gene, protein)
-        database: Database to search in ("chebi", "ncbigene")
+        database: Database to search in ("chebi", "ncbigene", "uniprot")
         max_candidates: Maximum number of candidates to return
-        tax_id: For ncbigene database, the organism's tax_id for organism-specific lookup
+        tax_id: For ncbigene/uniprot database, the organism's tax_id for organism-specific lookup
         
     Returns:
         List of tuples (database_id, confidence, description)
@@ -925,6 +978,8 @@ def search_database(entity_name: str,
         return _search_chebi(entity_name, max_candidates)
     elif database.lower() == "ncbigene":
         return _search_ncbigene(entity_name, max_candidates, tax_id=tax_id)
+    elif database.lower() == "uniprot":
+        return _search_uniprot(entity_name, max_candidates, tax_id=tax_id)
     else:
         logger.warning(f"Database {database} not yet supported")
         return []
@@ -1022,6 +1077,53 @@ def _search_ncbigene(entity_name: str, max_candidates: int = 10, tax_id: str = N
         logger.error(f"NCBI gene search failed for {entity_name}: {e}")
         return []
 
+def _search_uniprot(entity_name: str, max_candidates: int = 10, tax_id: str = None) -> List[Tuple[str, float, str]]:
+    """
+    Search UniProt database for entity matches.
+    
+    Args:
+        entity_name: Name to search for
+        max_candidates: Maximum number of candidates
+        tax_id: Organism's tax_id for organism-specific UniProt lookup
+        
+    Returns:
+        List of tuples (uniprot_id, confidence, description)
+    """
+    try:
+        names_dict = load_uniprot_names_dict(tax_id=tax_id)
+        label_dict = load_uniprot_label_dict(tax_id=tax_id)
+        
+        # Normalize entity name
+        norm_name = remove_symbols(entity_name.lower())
+        
+        candidates = []
+        
+        # Direct match search
+        for ref_name, uniprot_ids in names_dict.items():
+            if norm_name == ref_name.lower():
+                for uniprot_id in uniprot_ids:
+                    uniprot_name = label_dict.get(uniprot_id, uniprot_id)
+                    confidence = 1.0  # Direct match gets highest confidence
+                    candidates.append((uniprot_id, confidence, uniprot_name))
+        
+        # Partial match search if no direct matches
+        if not candidates:
+            for ref_name, uniprot_ids in names_dict.items():
+                if norm_name in ref_name.lower() or ref_name.lower() in norm_name:
+                    for uniprot_id in uniprot_ids:
+                        uniprot_name = label_dict.get(uniprot_id, uniprot_id)
+                        # Calculate confidence based on string similarity
+                        confidence = min(len(norm_name), len(ref_name.lower())) / max(len(norm_name), len(ref_name.lower()))
+                        candidates.append((uniprot_id, confidence, uniprot_name))
+        
+        # Sort by confidence and limit results
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        return candidates[:max_candidates]
+        
+    except Exception as e:
+        logger.error(f"UniProt search failed for {entity_name}: {e}")
+        return []
+
 def is_database_available(database: str) -> bool:
     """
     Check if a database is available for searching.
@@ -1045,6 +1147,22 @@ def is_database_available(database: str) -> bool:
             data_dir = get_data_dir()
             names_file = data_dir / "ncbigene" / REF_NAMES2NCBIGENE
             labels_file = data_dir / "ncbigene" / REF_NCBIGENE2LABEL
+            return names_file.exists() and labels_file.exists()
+        except Exception:
+            return False
+    elif database.lower() == "uniprot":
+        try:
+            data_dir = get_data_dir()
+            # Check for organism-specific files (common tax_ids: 9606 for human, 10090 for mouse)
+            common_tax_ids = ["9606", "10090"]
+            for tax_id in common_tax_ids:
+                names_file = data_dir / "uniprot" / f"names2uniprot_tax{tax_id}.lzma"
+                labels_file = data_dir / "uniprot" / f"uniprot2label_tax{tax_id}.lzma"
+                if names_file.exists() and labels_file.exists():
+                    return True
+            # Also check for old combined files for backwards compatibility
+            names_file = data_dir / "uniprot" / REF_NAMES2UNIPROT
+            labels_file = data_dir / "uniprot" / REF_UNIPROT2LABEL
             return names_file.exists() and labels_file.exists()
         except Exception:
             return False
@@ -1078,13 +1196,16 @@ def get_available_databases() -> List[str]:
     
     if is_database_available("ncbigene"):
         available.append("ncbigene")
+    
+    if is_database_available("uniprot"):
+        available.append("uniprot")
 
     if is_database_available("kegg"):
         available.append("kegg")
     
     # Future databases can be added here
-    # if is_database_available("uniprot"):
-    #     available.append("uniprot")
+    # if is_database_available("go"):
+    #     available.append("go")
     
     return available
 

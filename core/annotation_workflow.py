@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 def annotate_single_model(model_file: str, 
-                  llm_model: str = "gpt-4o-mini",
+                  llm_model: str = "Llama-3.3-70B-Instruct",
                   method: str = "direct",
                   top_k: int = 3,
                   max_entities: int = None,
@@ -38,7 +38,7 @@ def annotate_single_model(model_file: str,
     
     Args:
         model_file: Path to SBML model file
-        llm_model: LLM model to use ("gpt-4o-mini", "meta-llama/llama-3.3-70b-instruct:free")
+        llm_model: LLM model to use ("gpt-4o-mini", "Llama-3.3-70B-Instruct")
         method: Method to use for database search ("direct", "rag")
         top_k: Number of top candidates to return per species
         max_entities: Maximum number of entities to annotate (None for all)
@@ -78,6 +78,9 @@ def annotate_single_model(model_file: str,
     elif entity_type == "gene" and database == "ncbigene":
         existing_annotations = find_species_with_ncbigene_annotations(model_file)
         logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
+    elif entity_type == "protein" and database == "uniprot":
+        existing_annotations = find_species_with_uniprot_annotations(model_file)
+        logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
     elif entity_type == "reaction" and database == "kegg":
         existing_annotations = find_reactions_with_kegg_annotations(model_file)
         logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
@@ -97,6 +100,7 @@ def annotate_single_model(model_file: str,
     logger.info(">>>Step 2: Extracting model context...<<<")
 
     model_info = extract_model_info(model_file, specs_to_evaluate, entity_type)
+    # print(model_info)
     
     if not model_info:
         logger.error("Failed to extract model context")
@@ -158,6 +162,14 @@ def annotate_single_model(model_file: str,
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
+    elif database == "uniprot":
+        if method == "direct":
+            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
+        elif method == "rag":
+            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id)
+        else:
+            logger.error(f"Invalid method: {method}")
+            return pd.DataFrame(), {"error": f"Invalid method: {method}"}
     elif database == "kegg":
         if method == "direct":
             recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="kegg", top_k=top_k)
@@ -182,7 +194,7 @@ def annotate_single_model(model_file: str,
     # Step 10: Calculate metrics
     total_time = time.time() - start_time
     metrics = _calculate_metrics(
-        recommendations_df, existing_annotations, len(all_species_ids), total_time, llm_time, search_time
+        recommendations_df, existing_annotations, max_entities, len(all_species_ids), total_time, llm_time, search_time
     )
     
     logger.info(f"Annotation completed in {total_time:.2f}s")
@@ -239,7 +251,9 @@ def _generate_recommendation_table(model_file: str,
                 candidate_display = f"CHEBI:{candidate}"
             elif database == "ncbigene":
                 candidate_display = f"NCBIGENE:{candidate}"
-            elif database == "kegg":
+            elif database == "uniprot":
+                candidate_display = f"UNIPROT:{candidate}"
+             elif database == "kegg":
                 candidate_display = f"KEGG:{candidate}"
 
             # Determine if this is an existing annotation
@@ -273,6 +287,7 @@ def _generate_recommendation_table(model_file: str,
 
 def _calculate_metrics(recommendations_df: pd.DataFrame,
                       existing_annotations: Dict[str, List[str]],
+                      max_entities: int,
                       total_species: int,
                       total_time: float,
                       llm_time: float,
@@ -283,6 +298,7 @@ def _calculate_metrics(recommendations_df: pd.DataFrame,
     Args:
         recommendations_df: Recommendation DataFrame
         existing_annotations: Dictionary of existing annotations (may be empty)
+        max_entities: Maximum number of entities to annotate (None for all)
         total_species: Total number of species in the model
         total_time: Total processing time
         llm_time: LLM query time
@@ -293,19 +309,22 @@ def _calculate_metrics(recommendations_df: pd.DataFrame,
     """
     if recommendations_df.empty:
         return {
-            'total_entities': total_species,
+            'total_entities': max_entities,
             'entities_with_predictions': 0,
             'annotation_rate': 0.0,
             'total_predictions': 0,
             'matches': 0,
-            'accuracy': np.nan if not existing_annotations else 0.0,
+            'accuracy': np.nan,
             'total_time': total_time,
             'llm_time': llm_time,
             'search_time': search_time
         }
     
+    if max_entities is None:
+        max_entities = total_species
+    
     entities_with_predictions = recommendations_df[recommendations_df['annotation'] != '']['id'].nunique()
-    annotation_rate = entities_with_predictions / total_species if total_species > 0 else 0
+    annotation_rate = entities_with_predictions / max_entities if max_entities > 0 else np.nan
     
     # Calculate accuracy based on existing annotations
     total_predictions = len(recommendations_df[recommendations_df['annotation'] != ''])
@@ -315,11 +334,10 @@ def _calculate_metrics(recommendations_df: pd.DataFrame,
     if not existing_annotations:
         accuracy = np.nan
     else:
-        entities_with_existing = len(existing_annotations)
-        accuracy = matches / entities_with_existing if entities_with_existing > 0 else 0
+        accuracy = matches / max_entities if max_entities > 0 else np.nan
     
     return {
-        'total_entities': total_species,
+        'total_entities': max_entities,
         'entities_with_predictions': entities_with_predictions,
         'annotation_rate': annotation_rate,
         'total_predictions': total_predictions,
