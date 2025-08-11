@@ -122,9 +122,9 @@ def prepare_documents_for_indexing(ref_data: Dict[str, List[str]] | List[Dict], 
                 elif database == "ncbigene":
                     metadata = {"ncbigene_id": entry_id, "name": cleaned_name}
                     ids.append(f"{entry_id}_{doc_id}")
-            elif database == "uniprot":
-                metadata = {"uniprot_id": entry_id, "name": cleaned_name}
-                ids.append(f"{entry_id}_{doc_id}")
+                elif database == "uniprot":
+                    metadata = {"uniprot_id": entry_id, "name": cleaned_name}
+                    ids.append(f"{entry_id}_{doc_id}")
                 else:
                     raise ValueError(f"Unsupported database: {database}")
                 documents.append(cleaned_name)
