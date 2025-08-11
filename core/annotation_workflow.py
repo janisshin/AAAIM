@@ -253,7 +253,7 @@ def _generate_recommendation_table(model_file: str,
                 candidate_display = f"NCBIGENE:{candidate}"
             elif database == "uniprot":
                 candidate_display = f"UNIPROT:{candidate}"
-             elif database == "kegg":
+            elif database == "kegg":
                 candidate_display = f"KEGG:{candidate}"
 
             # Determine if this is an existing annotation
