@@ -55,6 +55,9 @@ DATABASE_URIS: Dict[DatabaseID, str] = {
     DatabaseID.RHEA: "https://identifiers.org/rhea:",
     DatabaseID.GO: "https://identifiers.org/GO:",
     DatabaseID.PUBMED: "https://identifiers.org/pubmed:",
+    DatabaseID.KEGG: "https://identifiers.org/kegg.reaction:",
+    DatabaseID.EC: "https://identifiers.org/ec-code:",
+
 }
 
 # Entity Type to Database Mapping
@@ -90,6 +93,11 @@ REF_NAMES2CHEBI = "cleannames2chebi.lzma"
 REF_CHEBI2FORMULA = "chebi_shortened_formula.lzma"
 REF_NCBIGENE2LABEL = "ncbigene2label_bigg_organisms_protein-coding_added.lzma"
 REF_NAMES2NCBIGENE = "names2ncbigene_bigg_organisms_protein-coding.lzma"
+REF_CHEBI2KEGG_COMPOUND = "chebi_to_kegg_map.lzma" 
+REF_KEGG_REACTION2NAME = "reactionnames2kegg.lzma"
+REF_KEGG2EC = "kegg2ec.lzma"
+REF_KEGG_REACTION_FEATURES = "parsed_kegg_reactions.lzma"
+
 
 # Model Format Detection
 MODEL_FORMAT_PLUGINS = {
@@ -111,4 +119,29 @@ NCBIGENE_URI_PATTERNS = [
 UNIPROT_URI_PATTERNS = [
     r'http[s]?://identifiers\.org/uniprot/(\w+)',
     r'urn:miriam:uniprot:(\w+)'
+]
+
+KEGG_REACTION_URI_PATTERNS = [
+    r'https?://identifiers\.org/kegg\.reaction:(R\d+)',
+    r'urn:miriam:kegg\.reaction:(R\d+)'
+]
+
+KEGG_COMPOUND_URI_PATTERNS = [
+    r'https?://identifiers\.org/kegg\.compound:(C\d+)',
+    r'urn:miriam:kegg\.compound:(C\d+)'
+]
+
+KEGG_PATHWAY_URI_PATTERNS = [
+    r'https?://identifiers\.org/kegg\.pathway:(map\d+)',
+    r'urn:miriam:kegg\.pathway:(map\d+)'
+]
+
+KEGG_ENZYME_URI_PATTERNS = [
+    r'https?://identifiers\.org/ec-code:(\d+\.\d+\.\d+\.\d+)',
+    r'urn:miriam:ec-code:(\d+\.\d+\.\d+\.\d+)'
+]
+
+KEGG_GENE_URI_PATTERNS = [
+    r'https?://identifiers\.org/kegg\.gene:([\w]+:[\w]+)',
+    r'urn:miriam:kegg\.gene:([\w]+:[\w]+)'
 ]

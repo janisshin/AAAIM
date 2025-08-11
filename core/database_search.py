@@ -18,6 +18,7 @@ import sys
 import chromadb
 from chromadb.utils import embedding_functions
 from utils.constants import REF_CHEBI2LABEL, REF_NAMES2CHEBI, REF_NCBIGENE2LABEL, REF_NAMES2NCBIGENE
+from utils.constants import REF_CHEBI2KEGG_COMPOUND, REF_KEGG_REACTION2NAME, REF_KEGG2EC, REF_KEGG_REACTION_FEATURES
 from core.data_types import Recommendation
 
 logger = logging.getLogger(__name__)
@@ -31,6 +32,10 @@ _CHEBI_CLEANNAMES_DICT: Optional[Dict[str, List[str]]] = None
 _CHEBI_LABEL_DICT: Optional[Dict[str, str]] = None
 _NCBIGENE_NAMES_DICT: Optional[Dict[str, List[str]]] = None
 _NCBIGENE_LABEL_DICT: Optional[Dict[str, str]] = None
+_CHEBI2KEGG_DICT: Optional[Dict[str, str]] = None
+_KEGG_REACTION2NAME_DICT: Optional[Dict[str, str]] = None
+_KEGG2EC_DICT: Optional[Dict[str, Dict[str, List[str]]]] = None
+_KEGG_REACTION_FEATURES_DICT: Optional[Dict[str, Dict[str, Any]]] = None
 
 def get_data_dir() -> Path:
     """Get the path to the AAAIM data directory."""
@@ -175,6 +180,92 @@ def load_ncbigene_label_dict() -> Dict[str, str]:
             _NCBIGENE_LABEL_DICT = pickle.load(f)
     
     return _NCBIGENE_LABEL_DICT
+
+def load_chebi2kegg_dict() -> Dict[str, str]:
+    """
+    Load the ChEBI ID to KEGG compound ID mapping dictionary.
+    
+    Returns:
+        Dictionary mapping ChEBI IDs to KEGG compound IDs
+    """
+    global _CHEBI2KEGG_DICT
+    
+    if _CHEBI2KEGG_DICT is None:
+        data_file = get_data_dir() / "kegg" / REF_CHEBI2KEGG_COMPOUND
+        
+        if not data_file.exists():
+            raise FileNotFoundError(f"ChEBI to KEGG compound mapping file not found: {data_file}")
+        
+        with lzma.open(data_file, 'rb') as f:
+            _CHEBI2KEGG_DICT = pickle.load(f)
+    
+    return _CHEBI2KEGG_DICT
+
+def load_kegg_reaction2name_dict() -> Dict[str, str]:
+    """
+    Load the KEGG reaction ID to name dictionary.
+    
+    Returns:
+        Dictionary mapping KEGG reaction IDs to their names
+    """
+    global _KEGG_REACTION2NAME_DICT
+    
+    if _KEGG_REACTION2NAME_DICT is None:
+        data_file = get_data_dir() / "kegg" / REF_KEGG_REACTION2NAME
+        
+        if not data_file.exists():
+            raise FileNotFoundError(f"KEGG reaction to name mapping file not found: {data_file}")
+        
+        with lzma.open(data_file, 'rb') as f:
+            _KEGG_REACTION2NAME_DICT = pickle.load(f)
+    
+    return _KEGG_REACTION2NAME_DICT
+
+def load_kegg2ec_dict() -> Dict[str, Dict[str, List[str]]]:
+    """
+    Load the KEGG ID to EC number mapping dictionary.
+    
+    Returns:
+        Dictionary mapping KEGG IDs to EC numbers with additional metadata
+    """
+    global _KEGG2EC_DICT
+    
+    if _KEGG2EC_DICT is None:
+        data_file = get_data_dir() / "kegg" / REF_KEGG2EC
+        
+        if not data_file.exists():
+            raise FileNotFoundError(f"KEGG to EC mapping file not found: {data_file}")
+        
+        with lzma.open(data_file, 'rb') as f:
+            _KEGG2EC_DICT = pickle.load(f)
+    
+    return _KEGG2EC_DICT
+
+def load_kegg_reaction_features_dict() -> Dict[str, Dict[str, Any]]:
+    """
+    Load the parsed KEGG reactions dictionary containing detailed reaction features.
+    
+    The dictionary contains information about KEGG reactions including:
+    - substrate and product counters
+    - reaction stoichiometry
+    - pathway information
+    - other reaction metadata
+    
+    Returns:
+        Dictionary mapping KEGG reaction IDs to their feature dictionaries
+    """
+    global _KEGG_REACTION_FEATURES_DICT
+    
+    if _KEGG_REACTION_FEATURES_DICT is None:
+        data_file = get_data_dir() / "kegg" / REF_KEGG_REACTION_FEATURES
+        
+        if not data_file.exists():
+            raise FileNotFoundError(f"Parsed KEGG reactions data file not found: {data_file}")
+        
+        with lzma.open(data_file, 'rb') as f:
+            _KEGG_REACTION_FEATURES_DICT = pickle.load(f)
+    
+    return _KEGG_REACTION_FEATURES_DICT
 
 def remove_symbols(text: str) -> str:
     """
@@ -402,17 +493,9 @@ def _get_kegg_recommendations_direct(species_ids: List[str], synonyms_dict, tax_
         List of Recommendation objects with candidates and match scores
     """
     try:
-        # Load KEGG reaction data if needed
-        kegg_reactions = {}
-        kegg_data_file = get_data_dir() / "kegg" / "parsed_kegg_reactions.lzma"
-        
-        if os.path.exists(kegg_data_file):
-            with lzma.open(kegg_data_file, 'rb') as f:
-                kegg_reactions = pickle.load(f)
-            logger.info(f"Loaded {len(kegg_reactions)} KEGG reactions")
-        else:
-            logger.error(f"KEGG reactions file not found: {kegg_data_file}")
-            return []
+        # Load KEGG reaction data
+        kegg_reactions = load_kegg_reaction_features_dict()
+        logger.info(f"Loaded {len(kegg_reactions)} KEGG reactions")
         
         recommendations = []
         
@@ -965,6 +1048,19 @@ def is_database_available(database: str) -> bool:
             return names_file.exists() and labels_file.exists()
         except Exception:
             return False
+    elif database.lower() == "kegg":
+        try:
+            data_dir = get_data_dir()
+            chebi_to_kegg_map_file = data_dir / "kegg" / REF_CHEBI2KEGG_COMPOUND
+            names_file = data_dir / "kegg" / REF_KEGG_REACTION2NAME
+            ec_file = data_dir / "kegg" / REF_KEGG2EC
+            reactions_file = data_dir / "kegg" / "parsed_kegg_reactions.lzma"
+            return (chebi_to_kegg_map_file.exists() and 
+                   names_file.exists() and 
+                   ec_file.exists() and 
+                   reactions_file.exists())
+        except Exception:
+            return False
     
     return False
 
@@ -982,6 +1078,9 @@ def get_available_databases() -> List[str]:
     
     if is_database_available("ncbigene"):
         available.append("ncbigene")
+
+    if is_database_available("kegg"):
+        available.append("kegg")
     
     # Future databases can be added here
     # if is_database_available("uniprot"):
