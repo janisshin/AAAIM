@@ -10,6 +10,11 @@ import sys
 import pandas as pd
 import lzma
 import pickle
+
+from dotenv import load_dotenv
+load_dotenv()
+
+
 from pathlib import Path
 
 # Add parent directory to path to import AAAIM modules
@@ -17,7 +22,9 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from core import annotate_model, curate_model, get_available_databases, database_search
 from core import normalize_reactions, build_recommendation_table
+from core import load_chebi2kegg_dict, load_kegg_reaction_features_dict
 from core.update_model import update_annotation
+
 
 # Define common cofactors to ignore in reaction matching
 cofactors_to_ignore = {
@@ -136,16 +143,9 @@ def main():
     print("-" * 65)  
     
     # Load ChEBI to KEGG mapping
-    try:
-        chebi_to_kegg_map_file = "../data/kegg/chebi_to_kegg_map.lzma"
-        if os.path.exists(chebi_to_kegg_map_file):
-            with lzma.open(chebi_to_kegg_map_file, 'rb') as f:
-                chebi_to_kegg_map = pickle.load(f)
-            print(f"Loaded ChEBI to KEGG mapping with {len(chebi_to_kegg_map)} entries")
-        else:
-            print(f"ChEBI to KEGG mapping file not found: {chebi_to_kegg_map_file}")
-            chebi_to_kegg_map = {}
-            
+    chebi_to_kegg_map = load_chebi2kegg_dict()
+    
+    try: # JANISTAG why are we trying (+ excepting) this? 
         # Add KEGG IDs to chemical recommendations if available
         if not recommendations_df.empty and 'annotation' in recommendations_df.columns:
             # Map ChEBI IDs to KEGG IDs
@@ -154,18 +154,11 @@ def main():
             )
             print("\nSample of ChEBI to KEGG mapping:")
             print(recommendations_df[['id', 'display_name', 'annotation', 'KEGG_ID']].head(5).to_string(index=False))
-            
-        # Load KEGG reaction data
-        kegg_reactions_file = "../data/kegg/parsed_kegg_reactions.lzma"
-        if os.path.exists(kegg_reactions_file):
-            with lzma.open(kegg_reactions_file, 'rb') as f:
-                kegg_reactions = pickle.load(f)
-            print(f"\nLoaded {len(kegg_reactions)} KEGG reactions")
-        else:
-            print(f"KEGG reactions file not found: {kegg_reactions_file}")
-            kegg_reactions = {}
-            
         
+        ##############################################
+
+        # Load KEGG reaction data
+        kegg_reaction_features = load_kegg_reaction_features_dict()
         
         # Extract model reactions from the annotated model
         # For this example, we'll create a simple test set
@@ -188,7 +181,9 @@ def main():
         print(f"Normalized {len(normalized_reactions)} test reactions")
         
         # Get KEGG recommendations
-        match_results = database_search._get_kegg_recommendations(normalized_reactions, kegg_reactions, cofactors_to_ignore)
+        match_results = database_search._get_kegg_recommendations(
+            normalized_reactions, kegg_reaction_features, 
+            cofactors_to_ignore)
         
         # Build recommendation table
         recommendation_rows = build_recommendation_table(match_results)
@@ -211,8 +206,9 @@ def main():
         traceback.print_exc()
 
     chebi_annotated_model = model_file.split('.')[0]+'_annotated.xml'
+    print("Time to update the file with annotations!")
 
-    if os.path.exists(output_file):
+    """if os.path.exists(output_file):
         update_annotation(
             original_model_path=model_file,
             recommendation_table="recommendations.csv",  # or a pandas DataFrame
@@ -220,9 +216,9 @@ def main():
             qualifier="is"  # (optional) bqbiol qualifier, default is 'is'
             )
     else: 
-        return
+        return"""
     
-    if os.path.exists(chebi_annotated_model):
+    """if os.path.exists(chebi_annotated_model):
         try:
             # Annotate reactions in the model
             reaction_recommendations_df, reaction_metrics = annotate_model(
@@ -280,8 +276,10 @@ def main():
             except Exception as e:
                 print(f"Reaction annotation failed: {e}")
         else: 
-            return
-         
+            return"""
+        
+
+
 """
 # Example 2: Reaction Curation Workflow (for models with existing reaction annotations)
 print("\n2. Reaction Curation Workflow (for models with existing reaction annotations)")
@@ -314,8 +312,9 @@ try:
 except Exception as e:
     print(f"Reaction curation failed: {e}")"""
 
-print("\nKEGG reaction annotation example completed!")
+
 
 
 if __name__ == "__main__":
     main()
+    print("\nKEGG reaction annotation example completed!")
