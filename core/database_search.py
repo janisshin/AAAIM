@@ -609,8 +609,7 @@ def _get_uniprot_recommendations_direct(species_ids: List[str], synonyms_dict, t
     return recommendations
 
 
-
-def _get_kegg_recommendations_direct(species_ids: List[str], synonyms_dict, tax_id: Any = None, top_k: int = 5, cofactors_to_ignore={}) -> List[Recommendation]:
+def _get_kegg_recommendations_direct(reactions_list: List[str], synonyms_dict, tax_id: Any = None, top_k: int = 5, cofactors_to_ignore={}) -> List[Recommendation]:
     """
     Find KEGG reaction recommendations by matching model reactions to KEGG reactions.
     
@@ -625,42 +624,42 @@ def _get_kegg_recommendations_direct(species_ids: List[str], synonyms_dict, tax_
     """
     try:
         # Load KEGG reaction data
-        kegg_reactions = load_kegg_reaction_features_dict()
-        logger.info(f"Loaded {len(kegg_reactions)} KEGG reactions")
+        kegg_reaction_features_dict = load_kegg_reaction_features_dict()
+        logger.info(f"Loaded {len(kegg_reaction_features_dict)} KEGG reactions")
         
         recommendations = []
-        
-        for spec_id in species_ids:
-            # Get normalized reaction data for this reaction ID
-            if isinstance(synonyms_dict, dict):
-                rxn_data = synonyms_dict.get(spec_id, {})
-            elif isinstance(synonyms_dict, tuple) and len(synonyms_dict) == 2:
-                rxn_data = synonyms_dict[0].get(spec_id, {})
-            else:
-                rxn_data = {}
-                
-            # Skip if no reaction data available
-            if not rxn_data:
-                recommendation = Recommendation(
-                    id=spec_id,
-                    synonyms=[spec_id],
-                    candidates=[],
-                    candidate_names=[],
-                    match_score=[]
-                )
-                recommendations.append(recommendation)
-                continue
-                
+        for rxn_data in reactions_list:
+            
+            reaction_label = rxn_data.get('reaction_name_in_model')
             # Extract substrate and product counters
             model_subs = rxn_data.get('substrate_counter', Counter())
             model_prods = rxn_data.get('product_counter', Counter())
             
+            # filter out the reactions that contain the substrates and products in model_subs and model_prods
+            # this could probably be its own separate function
+            filtered_reaction_list = []
+
+            model_sub_keys = set(model_subs.keys())
+            model_prod_keys = set(model_prods.keys())
+
+            for rxn in kegg_reaction_features_dict:
+                kegg_subs_set = set(rxn.get('substrates', []))
+                kegg_prods_set = set(rxn.get('products', []))
+
+                # Check if all metabolites in model_subs are in kegg_subs (ignore counts)
+                subs_match = model_sub_keys.issubset(kegg_subs_set)
+                # Check if all metabolites in model_prods are in kegg_prods (ignore counts)
+                prods_match = model_prod_keys.issubset(kegg_prods_set)
+
+                if subs_match and prods_match:
+                    filtered_reaction_list.append(rxn)
+
             matches = []
             
             # Compare with each KEGG reaction
-            for kegg_id, kegg_rxn in kegg_reactions.items():
-                kegg_subs = kegg_rxn.get('substrate_counter', Counter())
-                kegg_prods = kegg_rxn.get('product_counter', Counter())
+            for kegg_rxn in filtered_reaction_list:
+                kegg_subs = Counter(set(kegg_rxn.get('substrates', [])))
+                kegg_prods = Counter(set(kegg_rxn.get('products', [])))
                 
                 # Score both orientations (forward and reverse)
                 score_forward = compute_similarity(model_subs, kegg_subs, cofactors_to_ignore) + \
@@ -675,7 +674,7 @@ def _get_kegg_recommendations_direct(species_ids: List[str], synonyms_dict, tax_
                 max_score = max(score_forward, score_reverse)
                 
                 matches.append({
-                    'kegg_id': kegg_id,
+                    'kegg_id': kegg_rxn.get('reaction_id'),
                     'score_forward': score_forward,
                     'score_reverse': score_reverse,
                     'final_score': max_score
@@ -692,15 +691,19 @@ def _get_kegg_recommendations_direct(species_ids: List[str], synonyms_dict, tax_
             match_scores = [match['final_score'] for match in top_matches]
             
             # Get reaction names from KEGG
+            # Build a dict mapping kegg_id to the reaction dict
+            filtered_dict = {rxn['reaction_id']: rxn for rxn in filtered_reaction_list}
+
+            # Then get reaction names for candidates
             candidate_names = []
             for kegg_id in candidates:
-                rxn_name = kegg_reactions.get(kegg_id, {}).get('name', kegg_id)
+                rxn_name = filtered_dict.get(kegg_id, {}).get('name', kegg_id)
                 candidate_names.append(rxn_name)
-            
+
             # Create recommendation object
             recommendation = Recommendation(
-                id=spec_id,
-                synonyms=[spec_id],  # Use reaction ID as synonym
+                id=reaction_label,
+                synonyms=[],
                 candidates=candidates,
                 candidate_names=candidate_names,
                 match_score=match_scores
