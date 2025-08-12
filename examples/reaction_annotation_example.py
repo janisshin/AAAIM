@@ -91,7 +91,7 @@ def main():
     print("\n1. Reaction Annotation Workflow (for models without reaction annotations)")
     print("-" * 65)
     
-
+    """
     # first annotate model using ChEBI
     try:
         # Annotate genes in the model
@@ -145,18 +145,19 @@ def main():
     # Load ChEBI to KEGG mapping
     chebi_to_kegg_map = load_chebi2kegg_dict()
     
-    try: # JANISTAG why are we trying (+ excepting) this? 
-        # Add KEGG IDs to chemical recommendations if available
-        if not recommendations_df.empty and 'annotation' in recommendations_df.columns:
-            # Map ChEBI IDs to KEGG IDs
-            recommendations_df['KEGG_ID'] = recommendations_df['annotation'].apply(
-                lambda x: chebi_to_kegg_map.get(x, "Not mapped")
-            )
-            print("\nSample of ChEBI to KEGG mapping:")
-            print(recommendations_df[['id', 'display_name', 'annotation', 'KEGG_ID']].head(5).to_string(index=False))
+
+    # Add KEGG IDs to chemical recommendations if available
+    if not recommendations_df.empty and 'annotation' in recommendations_df.columns:
+        # Map ChEBI IDs to KEGG IDs
+        recommendations_df['KEGG_ID'] = recommendations_df['annotation'].apply(
+            lambda x: chebi_to_kegg_map.get(x, "")
+        )
+        print("\nSample of ChEBI to KEGG mapping:")
+        print(recommendations_df[['id', 'display_name', 'annotation', 'KEGG_ID']].head(5).to_string(index=False))
+    """
         
         ##############################################
-
+    try: 
         # Load KEGG reaction data
         kegg_reaction_features = load_kegg_reaction_features_dict()
         
@@ -165,14 +166,14 @@ def main():
         print("\nCreating test reaction set...")
         test_reactions = [
             {
-                'id': 'R1',
-                'substrates': ['C00031', 'C00103'],  # Glucose + ATP
-                'products': ['C00668', 'C00008'],    # Glucose-6-P + ADP
+                'id': 'R1', # 'R00001'
+                'substrates': ['C00404', 'C00001'],  
+                'products': ['C02174'],   
             },
             {
-                'id': 'R2',
-                'substrates': ['C00668', 'C00003'],  # Glucose-6-P + NAD+
-                'products': ['C00198', 'C00004'],    # Glucono-1,5-lactone 6-P + NADH
+                'id': 'R2', # 'R00004'
+                'substrates': ['C00013', 'C00001'],
+                'products': ['C00009'],   
             }
         ]
         
@@ -181,7 +182,7 @@ def main():
         print(f"Normalized {len(normalized_reactions)} test reactions")
         
         # Get KEGG recommendations
-        match_results = database_search._get_kegg_recommendations(
+        match_results = database_search._get_kegg_recommendations_direct(
             normalized_reactions, kegg_reaction_features, 
             cofactors_to_ignore)
         
