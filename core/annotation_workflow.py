@@ -409,10 +409,9 @@ def normalize_reactions(model_reactions, cofactors_to_ignore):
         prods = filter_and_count(rxn.get('products', []), cofactors_to_ignore)
         
         normalized_reactions.append({
-            'original_reaction': rxn.get('id', 'Unknown'),
+            'reaction_name_in_model': rxn.get('id', 'Unknown'),
             'substrate_counter': subs,
             'product_counter': prods,
-            'direction': rxn.get('direction', 'forward')
         })
                 
     return normalized_reactions
@@ -429,10 +428,11 @@ def filter_and_count(kegg_list, cofactors_to_ignore):
         Counter object with metabolite counts
     """
     counter = Counter()
+
     for kegg_id in kegg_list:
         if kegg_id is None:
             continue  # skip unmapped
-        if kegg_id not in cofactors_to_ignore:
+        if kegg_id: # not in cofactors_to_ignore:
             counter[kegg_id] += 1  # track stoichiometry
     return counter      
     
@@ -449,19 +449,18 @@ def build_recommendation_table(match_results, top_k=5):
     """
     rows = []
     
+    # print(match_results) ### DELETE LATER
+
     for entry in match_results:
-        model_rxn_str = entry['model_reaction']
-        kegg_matches = entry['top_kegg_matches'][:top_k]
-        
-        for match in kegg_matches:
+        model_rxn_str = entry.id  # It's just a string here
+
+        for kegg_id, score in zip(entry.candidates, entry.match_score):
             rows.append({
                 'Model_Reaction': model_rxn_str,
-                'KEGG_Reaction_ID': match['kegg_id'],
-                'Score_Forward': round(match['score_forward'], 3),
-                'Score_Reverse': round(match['score_reverse'], 3),
-                'Final_Score': round(match['final_score'], 3)
+                'KEGG_Reaction_ID': kegg_id,
+                'Final_Score': round(score, 3)
             })
-            
+    
     return rows
 
 
