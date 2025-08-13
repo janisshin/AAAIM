@@ -339,7 +339,7 @@ def get_species_recommendations_direct(species_ids: List[str], synonyms_dict, da
     elif database == "uniprot":
         return _get_uniprot_recommendations_direct(species_ids, synonyms_dict, tax_id=tax_id, top_k=top_k)
     elif database == "kegg":
-        return _get_kegg_recommendations_direct(species_ids, synonyms_dict, tax_id=tax_id, top_k=top_k)
+        return _get_kegg_recommendations_rulebased(species_ids, synonyms_dict, tax_id=tax_id, top_k=top_k)
     else:
         logger.error(f"Database {database} not supported for direct search")
         return []
@@ -609,7 +609,7 @@ def _get_uniprot_recommendations_direct(species_ids: List[str], synonyms_dict, t
     return recommendations
 
 
-def _get_kegg_recommendations_direct(reactions_list: List[str], synonyms_dict, tax_id: Any = None, top_k: int = 5, cofactors_to_ignore={}) -> List[Recommendation]:
+def _get_kegg_recommendations_rulebased(reactions_list: List[str], synonyms_dict, tax_id: Any = None, top_k: int = 5, cofactors_to_ignore={}) -> List[Recommendation]:
     """
     Find KEGG reaction recommendations by matching model reactions to KEGG reactions.
     
@@ -677,18 +677,18 @@ def _get_kegg_recommendations_direct(reactions_list: List[str], synonyms_dict, t
                     'kegg_id': kegg_rxn.get('reaction_id'),
                     'score_forward': score_forward,
                     'score_reverse': score_reverse,
-                    'final_score': max_score
+                    'match_score': max_score
                 })
             
             # Sort matches by final score (descending)
-            matches.sort(key=lambda x: x['final_score'], reverse=True)
+            matches.sort(key=lambda x: x['match_score'], reverse=True)
             
             # Keep top_k matches
             top_matches = matches[:top_k]
             
             # Extract candidates and scores for recommendation
             candidates = [match['kegg_id'] for match in top_matches]
-            match_scores = [match['final_score'] for match in top_matches]
+            match_scores = [match['match_score'] for match in top_matches]
             
             # Get reaction names from KEGG
             # Build a dict mapping kegg_id to the reaction dict

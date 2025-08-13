@@ -529,6 +529,66 @@ def extract_qual_transitions(model_file: str, species_ids: List[str]) -> List[st
     
     return transitions
 
+def extract_reactions_from_sbml(model_file: str, species_ids: List[str]) -> Tuple[List[str], set]:
+    """
+    Extract reactions from an SBML model file using antimony.
+    Returns both the reactions involving the target species and a set of all related species.
+    
+    Args:
+        model_file: Path to the SBML model file
+        species_ids: List of species IDs to filter reactions for
+        
+    Returns:
+        Tuple containing:
+        - List of reaction strings
+        - Set of all species IDs involved in the filtered reactions
+    """
+    reactions = []
+    related_species = set(species_ids)
+    
+    antimony.clearPreviousLoads()
+    sbml_model = antimony.loadSBMLFile(model_file)
+    if sbml_model == -1:
+        logger.error(f"Error loading SBML file with antimony: {antimony.getLastError()}")
+        return [], related_species
+    
+    antimony_string = antimony.getAntimonyString()
+    
+    # Look for lines with => symbols which indicate reactions
+    reaction_pattern = re.compile(r'// Reactions:.*?(?=//|$)', re.DOTALL)
+    reactions_section = reaction_pattern.search(antimony_string)
+    
+    reaction_matches = []
+    if reactions_section:
+        reactions_text = reactions_section.group(0).replace("// Reactions:", "").strip()
+        reaction_pattern = re.compile(r'([^;]+)(=>)([^;]+);', re.MULTILINE)
+        reaction_matches = reaction_pattern.findall(reactions_text)
+
+    # If no matches found with '=>', try with '=' instead
+    if not reaction_matches:
+        reaction_pattern = re.compile(r'// Rate Rules:.*?(?=//|$)', re.DOTALL)
+        reactions_section = reaction_pattern.search(antimony_string)
+        
+        if reactions_section:
+            reactions_text = reactions_section.group(0).replace("// Rate Rules:", "").strip()
+            reaction_pattern = re.compile(r'([^;]+)(=)([^;]+);', re.MULTILINE)
+            reaction_matches = reaction_pattern.findall(reactions_text)
+
+    # Filter reactions to only include those involving our species
+    for match in reaction_matches:
+        left_side, arrow, right_side = match
+        reaction_str = f"{left_side.strip()} {arrow} {right_side.strip()}"
+        
+        # Check if any of our species IDs are in this reaction
+        if any(re.search(r'\b' + re.escape(species_id) + r'\b', left_side + ' ' + right_side) for species_id in species_ids):
+            reactions.append(reaction_str)
+            
+            # Extract all species IDs from this reaction
+            all_ids_in_reaction = re.findall(r'\b([A-Za-z0-9_]+)\b', left_side + ' ' + right_side)
+            related_species.update(all_ids_in_reaction)
+            
+    return reactions, related_species
+
 def extract_model_info(model_file: str, species_ids: List[str], entity_type: str = "chemical") -> Dict[str, Any]:
     """
     Extract display names and reactions/transitions for the specified species.
@@ -612,51 +672,7 @@ def extract_model_info(model_file: str, species_ids: List[str], entity_type: str
     
     else:
         # For chemical entities or regular SBML models, use antimony
-        antimony.clearPreviousLoads()
-        sbml_model = antimony.loadSBMLFile(model_file)
-        if sbml_model == -1:
-            print(f"Error loading SBML file: {antimony.getLastError()}")
-            return {} 
-        
-        antimony_string = antimony.getAntimonyString()
-        
-        # Parse the antimony_string to extract reactions
-        # Look for lines with => symbols which indicate reactions
-        reaction_pattern = re.compile(r'// Reactions:.*?(?=//|$)', re.DOTALL)
-        reactions_section = reaction_pattern.search(antimony_string)
-        
-        reaction_matches = []
-        if reactions_section:
-            reactions_text = reactions_section.group(0).replace("// Reactions:", "").strip()
-            reaction_pattern = re.compile(r'([^;]+)(=>)([^;]+);', re.MULTILINE)
-            reaction_matches = reaction_pattern.findall(reactions_text)
-
-        # If no matches found with '=>', try with '=' instead
-        if not reaction_matches:
-            reaction_pattern = re.compile(r'// Rate Rules:.*?(?=//|$)', re.DOTALL)
-            reactions_section = reaction_pattern.search(antimony_string)
-            
-            reaction_matches = []
-            if reactions_section:
-                reactions_text = reactions_section.group(0).replace("// Rate Rules:", "").strip()
-                reaction_pattern = re.compile(r'([^;]+)(=)([^;]+);', re.MULTILINE)
-                reaction_matches = reaction_pattern.findall(reactions_text)
-
-        # Keep track of all species involved in reactions with our target species
-        related_species = set(species_ids)
-        
-        # Filter reactions to only include those involving our species
-        for match in reaction_matches:
-            left_side, arrow, right_side = match
-            reaction_str = f"{left_side.strip()} {arrow} {right_side.strip()}"
-            
-            # Check if any of our species IDs are in this reaction
-            if any(re.search(r'\b' + re.escape(species_id) + r'\b', left_side + ' ' + right_side) for species_id in species_ids):
-                reactions.append(reaction_str)
-                
-                # Extract all species IDs from this reaction
-                all_ids_in_reaction = re.findall(r'\b([A-Za-z0-9_]+)\b', left_side + ' ' + right_side)
-                related_species.update(all_ids_in_reaction)
+        reactions, related_species = extract_reactions_from_sbml(model_file, species_ids)
     
         # Filter display names to include our target species and all related species
         filtered_display_names = {species_id: all_display_names.get(species_id, "") for species_id in related_species if species_id in all_display_names}
@@ -771,16 +787,4 @@ Reason: …
         """
     return prompt 
 
-def parse_reaction_equation(rxn_str):
-    # Assume directional info is unreliable
-    if "<=>" in rxn_str or "=>" in rxn_str or "->" in rxn_str:
-        lhs, rhs = re.split(r"<=>|=>|->", rxn_str)
-    else:
-        return [], []
 
-    def parse_side(side):
-        return [s.strip().split()[-1] for s in side.strip().split("+")]
-
-    reactants = parse_side(lhs)
-    products = parse_side(rhs)
-    return reactants, products

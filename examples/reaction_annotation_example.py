@@ -24,6 +24,8 @@ from core import annotate_model, curate_model, get_available_databases, database
 from core import normalize_reactions, build_recommendation_table
 from core import load_chebi2kegg_dict, load_kegg_reaction_features_dict
 from core.update_model import update_annotation
+from core.model_info import extract_reactions_from_sbml
+from core.annotation_workflow import map_reactions_to_kegg
 
 
 # Define common cofactors to ignore in reaction matching
@@ -91,10 +93,8 @@ def main():
     print("\n1. Reaction Annotation Workflow (for models without reaction annotations)")
     print("-" * 65)
     
-    """
     # first annotate model using ChEBI
-    try:
-        # Annotate genes in the model
+    try:    
         recommendations_df, metrics = annotate_model(
             model_file=model_file,
             llm_model=llm_model,  # You can change this to your preferred model
@@ -152,64 +152,53 @@ def main():
         recommendations_df['KEGG_ID'] = recommendations_df['annotation'].apply(
             lambda x: chebi_to_kegg_map.get(x, "")
         )
-        print("\nSample of ChEBI to KEGG mapping:")
-        print(recommendations_df[['id', 'display_name', 'annotation', 'KEGG_ID']].head(5).to_string(index=False))
-    """
+    
+    high_score_recommendations = recommendations_df.loc[recommendations_df.groupby('id')['match_score'].idxmax()].reset_index(drop=True)
+    #print("\nSample of ChEBI to KEGG mapping:")
+    print(high_score_recommendations[['id', 'display_name', 'annotation', 'KEGG_ID', 'match_score']].head(10).to_string(index=False))
         
+    reactions, _ = extract_reactions_from_sbml(model_file, list(high_score_recommendations['id'].unique()))
+
+    test_reactions = map_reactions_to_kegg(reactions, high_score_recommendations[['id', 'KEGG_ID']])
+    
         ##############################################
-    try: 
+    try: ## idk if this try loop is necessary
         # Load KEGG reaction data
         kegg_reaction_features = load_kegg_reaction_features_dict()
-        
-        # Extract model reactions from the annotated model
-        # For this example, we'll create a simple test set
-        print("\nCreating test reaction set...")
-        test_reactions = [
-            {
-                'id': 'R1', # 'R00001'
-                'substrates': ['C00404', 'C00001'],  
-                'products': ['C02174'],   
-            },
-            {
-                'id': 'R2', # 'R00004'
-                'substrates': ['C00013', 'C00001'],
-                'products': ['C00009'],   
-            }
-        ]
         
         # Normalize reactions
         normalized_reactions = normalize_reactions(test_reactions, cofactors_to_ignore)
         print(f"Normalized {len(normalized_reactions)} test reactions")
         
         # Get KEGG recommendations
-        match_results = database_search._get_kegg_recommendations_direct(
+        match_results = database_search._get_kegg_recommendations_rulebased(
             normalized_reactions, kegg_reaction_features, 
             cofactors_to_ignore)
         
         # Build recommendation table
         recommendation_rows = build_recommendation_table(match_results)
         kegg_recommendations_df = pd.DataFrame(recommendation_rows)
-        
-        if not kegg_recommendations_df.empty:
-            print("\nSample KEGG reaction recommendations:")
-            print(kegg_recommendations_df.head(10).to_string(index=False))
-            
-            # Save results
-            kegg_output_file = "kegg_reaction_recommendations.csv"
-            kegg_recommendations_df.to_csv(kegg_output_file, index=False)
-            print(f"\nKEGG reaction recommendations saved to: {kegg_output_file}")
-        else:
-            print("\nNo KEGG reaction recommendations generated.")
-            
+    
     except Exception as e:
         print(f"\nError in custom KEGG reaction mapping: {e}")
         import traceback
-        traceback.print_exc()
+        traceback.print_exc() 
+
+    kegg_output_file = "kegg_reaction_recommendations.csv"
+    if not kegg_recommendations_df.empty:
+        print("\nSample KEGG reaction recommendations:")
+        print(kegg_recommendations_df.head(10).to_string(index=False))
+        
+        # Save results
+        kegg_recommendations_df.to_csv(kegg_output_file, index=False)
+        print(f"\nKEGG reaction recommendations saved to: {kegg_output_file}")
+    else:
+        print("\nNo KEGG reaction recommendations generated.")
 
     chebi_annotated_model = model_file.split('.')[0]+'_annotated.xml'
     print("Time to update the file with annotations!")
-
-    """if os.path.exists(output_file):
+    
+    if os.path.exists(output_file):
         update_annotation(
             original_model_path=model_file,
             recommendation_table="recommendations.csv",  # or a pandas DataFrame
@@ -217,102 +206,53 @@ def main():
             qualifier="is"  # (optional) bqbiol qualifier, default is 'is'
             )
     else: 
-        return"""
+        return
     
-    """if os.path.exists(chebi_annotated_model):
-        try:
-            # Annotate reactions in the model
-            reaction_recommendations_df, reaction_metrics = annotate_model(
-                model_file=model_file,
-                llm_model="gpt-4o-mini",
-                entity_type="reaction",
-                database="kegg",
-                method="direct",
-                max_entities=5
-            )
-            # Display annotation results
-            if not reaction_recommendations_df.empty:
-                print("Annotation Results:")
-                print(f"Total entities in model: {reaction_metrics['total_entities']}")
-                print(f"Entities with predictions: {reaction_metrics['entities_with_predictions']}")
-                print(f"Annotation rate: {reaction_metrics['annotation_rate']:.1%}")
-                
-                if not pd.isna(reaction_metrics['accuracy']):
-                    print(f"Accuracy (where existing annotations available): {reaction_metrics['accuracy']:.1%}")
-                else:
-                    print("Accuracy: N/A (no existing annotations to compare against)")
-                
-                print(f"Total time: {reaction_metrics['total_time']:.2f}s")
-                print()
-                
-                # Show sample recommendations
-                print("Sample Annotation Recommendations:")
-                reaction_samples_df = reaction_recommendations_df[['id', 'display_name', 'annotation', 'annotation_label', 'match_score', 'existing']].head(5)
-                print(reaction_samples_df.to_string(index=False))
-                print()
-                
-                # Save results
-                output_file = "reaction_recommendations.csv"
-                reaction_recommendations_df.to_csv(output_file, index=False)
-                print(f"Full reaction annotation results saved to: {output_file}")
-                
-            else:
-                print("No reaction annotation recommendations generated.")
-                if 'error' in reaction_metrics:
-                    print(f"Error: {reaction_metrics['error']}")
-
+    if os.path.exists(kegg_output_file):
+        try: 
+            update_annotation(
+                original_model_path=chebi_annotated_model,
+                recommendation_table="kegg_reaction_recommendations.csv",  # or a pandas DataFrame
+                new_model_path=model_file.split('.')[0]+'_annotated.xml',
+                qualifier="is"  # (optional) bqbiol qualifier, default is 'is'
+                )
         except Exception as e:
-            print(f"Processing failed: {e}")
-            import traceback
-            traceback.print_exc()
-
-        if os.path.exists(output_file):
-            try: 
-                update_annotation(
-                    original_model_path=model_file,
-                    recommendation_table="recommendations.csv",  # or a pandas DataFrame
-                    new_model_path=model_file.split('.')[0]+'_annotated.xml',
-                    qualifier="is"  # (optional) bqbiol qualifier, default is 'is'
-                    )
-            except Exception as e:
-                print(f"Reaction annotation failed: {e}")
-        else: 
-            return"""
-        
-
-
-"""
-# Example 2: Reaction Curation Workflow (for models with existing reaction annotations)
-print("\n2. Reaction Curation Workflow (for models with existing reaction annotations)")
-print("-" * 65)
-
-try:
-    # Try to curate existing reaction annotations
-    curation_df, curation_metrics = curate_model(
-        model_file=model_file,
-        llm_model="gpt-4o-mini",
-        entity_type="reaction", 
-        database="kegg",
-        method="direct"
-    )
+            print(f"Reaction annotation failed: {e}")
+    else: 
+        return
     
-    if not curation_df.empty:
-        print(f"Generated {len(curation_df)} reaction curation recommendations")
-        print("\nSample curations:")
-        print(curation_df[['id', 'display_name', 'annotation', 'annotation_label', 'existing']].head())
-        
-        # Save results
-        output_file = "reaction_curation_results.csv"
-        curation_df.to_csv(output_file, index=False)
-        print(f"\nResults saved to: {output_file}")
-        
-        print(f"\nCuration metrics: {curation_metrics}")
-    else:
-        print("No existing reaction annotations found in model - curation not applicable")
-    
-except Exception as e:
-    print(f"Reaction curation failed: {e}")"""
+    """
+    # Example 2: Reaction Curation Workflow (for models with existing reaction annotations)
+    print("\n2. Reaction Curation Workflow (for models with existing reaction annotations)")
+    print("-" * 65)
 
+    try:
+        # Try to curate existing reaction annotations
+        curation_df, curation_metrics = curate_model(
+            model_file=model_file,
+            llm_model="gpt-4o-mini",
+            entity_type="reaction", 
+            database="kegg",
+            method="direct"
+        )
+        
+        if not curation_df.empty:
+            print(f"Generated {len(curation_df)} reaction curation recommendations")
+            print("\nSample curations:")
+            print(curation_df[['id', 'display_name', 'annotation', 'annotation_label', 'existing']].head())
+            
+            # Save results
+            output_file = "reaction_curation_results.csv"
+            curation_df.to_csv(output_file, index=False)
+            print(f"\nResults saved to: {output_file}")
+            
+            print(f"\nCuration metrics: {curation_metrics}")
+        else:
+            print("No existing reaction annotations found in model - curation not applicable")
+        
+    except Exception as e:
+        print(f"Reaction curation failed: {e}")
+    """
 
 
 

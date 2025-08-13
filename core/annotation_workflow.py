@@ -12,6 +12,7 @@ from typing import Dict, List, Optional, Tuple, Any
 from pathlib import Path
 import logging
 import numpy as np
+import re
 from collections import Counter
 from core.model_info import find_species_with_chebi_annotations, find_species_with_ncbigene_annotations, find_reactions_with_kegg_annotations, extract_model_info, format_prompt, get_all_species_ids
 from core.llm_interface import get_system_prompt, query_llm, parse_llm_response
@@ -100,7 +101,6 @@ def annotate_single_model(model_file: str,
     logger.info(">>>Step 2: Extracting model context...<<<")
 
     model_info = extract_model_info(model_file, specs_to_evaluate, entity_type)
-    # print(model_info)
     
     if not model_info:
         logger.error("Failed to extract model context")
@@ -456,14 +456,55 @@ def build_recommendation_table(match_results, top_k=5):
 
         for kegg_id, score in zip(entry.candidates, entry.match_score):
             rows.append({
-                'Model_Reaction': model_rxn_str,
+                'id': model_rxn_str,
                 'KEGG_Reaction_ID': kegg_id,
-                'Final_Score': round(score, 3)
+                'match_score': round(score, 3)
             })
     
     return rows
 
+def map_reactions_to_kegg(rxn_list, id_df):
+    # Make a quick lookup from the DataFrame for faster mapping
+    id_lookup = id_df.set_index('id')['KEGG_ID']
 
+    def parse_reaction_equation(rxn_str):
+        # Assume directional info is unreliable
+        if "<=>" in rxn_str or "=>" in rxn_str or "->" in rxn_str:
+            lhs, rhs = re.split(r"<=>|=>|->", rxn_str)
+        else:
+            return [], []
+        
+        def strip_and_split(side):
+            side = side.strip()
+            if not side:  # Empty or all whitespace
+                return []
+            return [s.strip().split()[-1].lstrip('$') for s in side.split("+")]
+        
+        reactants = strip_and_split(lhs)
+        products = strip_and_split(rhs)
+        return reactants, products
+
+    output = []
+    for idx, rxn in enumerate(rxn_list, start=1):
+        # Remove reaction name (before the ':') if present
+        if ":" in rxn:
+            _, rxn_str = rxn.split(":", 1)
+        else:
+            rxn_str = rxn
+
+        reactants, products = parse_reaction_equation(rxn_str)
+
+        # Map IDs to KEGG IDs using your DataFrame
+        subs_counter = Counter(id_lookup.get(r, None) for r in reactants if r in id_lookup.index)
+        prod_counter = Counter(id_lookup.get(p, None) for p in products if p in id_lookup.index)
+
+        output.append({
+            "id": f"R{idx}",
+            "substrates": subs_counter,
+            "products": prod_counter
+        })
+    
+    return output
 
 # Main interface function for users
 def annotate_model(model_file: str, **kwargs) -> Tuple[pd.DataFrame, Dict[str, Any]]:
