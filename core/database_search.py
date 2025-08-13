@@ -13,10 +13,12 @@ from typing import Dict, List, Optional, Tuple, Any
 from pathlib import Path
 from dataclasses import dataclass
 import logging
+from collections import Counter
 import sys
 import chromadb
 from chromadb.utils import embedding_functions
 from utils.constants import REF_CHEBI2LABEL, REF_NAMES2CHEBI, REF_NCBIGENE2LABEL, REF_NAMES2NCBIGENE, REF_UNIPROT2LABEL, REF_NAMES2UNIPROT
+from utils.constants import REF_CHEBI2KEGG_COMPOUND, REF_KEGG_REACTION2NAME, REF_KEGG2EC, REF_KEGG_REACTION_FEATURES
 from core.data_types import Recommendation
 
 logger = logging.getLogger(__name__)
@@ -32,6 +34,10 @@ _NCBIGENE_NAMES_DICT: Optional[Dict[str, List[str]]] = None
 _NCBIGENE_LABEL_DICT: Optional[Dict[str, str]] = None
 _UNIPROT_NAMES_DICT: Optional[Dict[str, List[str]]] = None
 _UNIPROT_LABEL_DICT: Optional[Dict[str, str]] = None
+_CHEBI2KEGG_DICT: Optional[Dict[str, str]] = None
+_KEGG_REACTION2NAME_DICT: Optional[Dict[str, str]] = None
+_KEGG2EC_DICT: Optional[Dict[str, Dict[str, List[str]]]] = None
+_KEGG_REACTION_FEATURES_DICT: Optional[Dict[str, Dict[str, Any]]] = None
 
 def get_data_dir() -> Path:
     """Get the path to the AAAIM data directory."""
@@ -198,38 +204,107 @@ def load_uniprot_label_dict(tax_id: str = None) -> Dict[str, str]:
     Returns:
         Dictionary mapping UniProt IDs to their labels
     """
-    global _UNIPROT_LABEL_DICT
+    global _NCBIGENE_LABEL_DICT
     
-    # Use a cache key that includes tax_id to handle multiple organisms
-    cache_key = f"uniprot_label_{tax_id or 'combined'}"
-    
-    # Check if we have this specific version cached
-    if not hasattr(load_uniprot_label_dict, '_cache'):
-        load_uniprot_label_dict._cache = {}
-    
-    if cache_key in load_uniprot_label_dict._cache:
-        return load_uniprot_label_dict._cache[cache_key]
-    
-    if tax_id:
-        # Load organism-specific file
-        data_file = get_data_dir() / "uniprot" / f"uniprot2label_tax{tax_id}.lzma"
-    else:
-        # Try to load combined file
-        data_file = get_data_dir() / "uniprot" / REF_UNIPROT2LABEL
-    
-    if not data_file.exists():
-        if tax_id:
-            raise FileNotFoundError(f"UniProt label data file not found for tax_id {tax_id}: {data_file}")
-        else:
-            raise FileNotFoundError(f"UniProt label data file not found: {data_file}")
-    
-    with lzma.open(data_file, 'rb') as f:
-        label_dict = pickle.load(f)
+    if _NCBIGENE_LABEL_DICT is None:
+        data_file = get_data_dir() / "ncbigene" / REF_NCBIGENE2LABEL
+        
+        if not data_file.exists():
+            raise FileNotFoundError(f"NCBI gene label data file not found: {data_file}")
+        
+        with lzma.open(data_file, 'rb') as f:
+            _NCBIGENE_LABEL_DICT = pickle.load(f)
     
     # Cache the result
     load_uniprot_label_dict._cache[cache_key] = label_dict
     
     return label_dict
+
+def load_chebi2kegg_dict() -> Dict[str, str]:
+    """
+    Load the ChEBI ID to KEGG compound ID mapping dictionary.
+    
+    Returns:
+        Dictionary mapping ChEBI IDs to KEGG compound IDs
+    """
+    global _CHEBI2KEGG_DICT
+    
+    if _CHEBI2KEGG_DICT is None:
+        data_file = get_data_dir() / "kegg" / REF_CHEBI2KEGG_COMPOUND
+        
+        if not data_file.exists():
+            raise FileNotFoundError(f"ChEBI to KEGG compound mapping file not found: {data_file}")
+        
+        with lzma.open(data_file, 'rb') as f:
+            _CHEBI2KEGG_DICT = pickle.load(f)
+    
+    return _CHEBI2KEGG_DICT
+
+def load_kegg_reaction2name_dict() -> Dict[str, str]:
+    """
+    Load the KEGG reaction ID to name dictionary.
+    
+    Returns:
+        Dictionary mapping KEGG reaction IDs to their names
+    """
+    global _KEGG_REACTION2NAME_DICT
+    
+    if _KEGG_REACTION2NAME_DICT is None:
+        data_file = get_data_dir() / "kegg" / REF_KEGG_REACTION2NAME
+        
+        if not data_file.exists():
+            raise FileNotFoundError(f"KEGG reaction to name mapping file not found: {data_file}")
+        
+        with lzma.open(data_file, 'rb') as f:
+            _KEGG_REACTION2NAME_DICT = pickle.load(f)
+    
+    return _KEGG_REACTION2NAME_DICT
+
+def load_kegg2ec_dict() -> Dict[str, Dict[str, List[str]]]:
+    """
+    Load the KEGG ID to EC number mapping dictionary.
+    
+    Returns:
+        Dictionary mapping KEGG IDs to EC numbers with additional metadata
+    """
+    global _KEGG2EC_DICT
+    
+    if _KEGG2EC_DICT is None:
+        data_file = get_data_dir() / "kegg" / REF_KEGG2EC
+        
+        if not data_file.exists():
+            raise FileNotFoundError(f"KEGG to EC mapping file not found: {data_file}")
+        
+        with lzma.open(data_file, 'rb') as f:
+            _KEGG2EC_DICT = pickle.load(f)
+    
+    return _KEGG2EC_DICT
+
+def load_kegg_reaction_features_dict() -> Dict[str, Dict[str, Any]]:
+    """
+    Load the parsed KEGG reactions dictionary containing detailed reaction features.
+    
+    The dictionary contains information about KEGG reactions including:
+    - substrate and product counters
+    - reaction stoichiometry
+    - pathway information
+    - other reaction metadata
+    
+    Returns:
+        Dictionary mapping KEGG reaction IDs to their feature dictionaries
+    """
+    global _KEGG_REACTION_FEATURES_DICT
+    
+    if _KEGG_REACTION_FEATURES_DICT is None:
+        data_file = get_data_dir() / "kegg" / REF_KEGG_REACTION_FEATURES
+        
+        if not data_file.exists():
+            raise FileNotFoundError(f"Parsed KEGG reactions data file not found: {data_file}")
+        
+        with lzma.open(data_file, 'rb') as f:
+            _KEGG_REACTION_FEATURES_DICT = pickle.load(f)
+    
+    return _KEGG_REACTION_FEATURES_DICT
 
 def remove_symbols(text: str) -> str:
     """
@@ -263,6 +338,8 @@ def get_species_recommendations_direct(species_ids: List[str], synonyms_dict, da
         return _get_ncbigene_recommendations_direct(species_ids, synonyms_dict, tax_id=tax_id, top_k=top_k)
     elif database == "uniprot":
         return _get_uniprot_recommendations_direct(species_ids, synonyms_dict, tax_id=tax_id, top_k=top_k)
+    elif database == "kegg":
+        return _get_kegg_recommendations_rulebased(species_ids, synonyms_dict, tax_id=tax_id, top_k=top_k)
     else:
         logger.error(f"Database {database} not supported for direct search")
         return []
@@ -530,6 +607,150 @@ def _get_uniprot_recommendations_direct(species_ids: List[str], synonyms_dict, t
         )
         recommendations.append(recommendation)
     return recommendations
+
+
+def _get_kegg_recommendations_rulebased(reactions_list: List[str], synonyms_dict, tax_id: Any = None, top_k: int = 5, cofactors_to_ignore={}) -> List[Recommendation]:
+    """
+    Find KEGG reaction recommendations by matching model reactions to KEGG reactions.
+    
+    Args:
+        species_ids: List of reaction IDs to evaluate
+        synonyms_dict: Dictionary containing normalized reaction data
+        tax_id: Optional taxonomy ID (not used for KEGG reactions but kept for API consistency)
+        top_k: Number of top candidates to return per reaction
+        
+    Returns:
+        List of Recommendation objects with candidates and match scores
+    """
+    try:
+        # Load KEGG reaction data
+        kegg_reaction_features_dict = load_kegg_reaction_features_dict()
+        logger.info(f"Loaded {len(kegg_reaction_features_dict)} KEGG reactions")
+        
+        recommendations = []
+        for rxn_data in reactions_list:
+            
+            reaction_label = rxn_data.get('reaction_name_in_model')
+            # Extract substrate and product counters
+            model_subs = rxn_data.get('substrate_counter', Counter())
+            model_prods = rxn_data.get('product_counter', Counter())
+            
+            # filter out the reactions that contain the substrates and products in model_subs and model_prods
+            # this could probably be its own separate function
+            filtered_reaction_list = []
+
+            model_sub_keys = set(model_subs.keys())
+            model_prod_keys = set(model_prods.keys())
+
+            for rxn in kegg_reaction_features_dict:
+                kegg_subs_set = set(rxn.get('substrates', []))
+                kegg_prods_set = set(rxn.get('products', []))
+
+                # Check if all metabolites in model_subs are in kegg_subs (ignore counts)
+                subs_match = model_sub_keys.issubset(kegg_subs_set)
+                # Check if all metabolites in model_prods are in kegg_prods (ignore counts)
+                prods_match = model_prod_keys.issubset(kegg_prods_set)
+
+                if subs_match and prods_match:
+                    filtered_reaction_list.append(rxn)
+
+            matches = []
+            
+            # Compare with each KEGG reaction
+            for kegg_rxn in filtered_reaction_list:
+                kegg_subs = Counter(set(kegg_rxn.get('substrates', [])))
+                kegg_prods = Counter(set(kegg_rxn.get('products', [])))
+                
+                # Score both orientations (forward and reverse)
+                score_forward = compute_similarity(model_subs, kegg_subs, cofactors_to_ignore) + \
+                                compute_similarity(model_prods, kegg_prods, cofactors_to_ignore)
+                
+                score_reverse = compute_similarity(model_subs, kegg_prods, cofactors_to_ignore) + \
+                                compute_similarity(model_prods, kegg_subs, cofactors_to_ignore)
+                
+                # Average the two comparisons
+                score_forward /= 2
+                score_reverse /= 2
+                max_score = max(score_forward, score_reverse)
+                
+                matches.append({
+                    'kegg_id': kegg_rxn.get('reaction_id'),
+                    'score_forward': score_forward,
+                    'score_reverse': score_reverse,
+                    'match_score': max_score
+                })
+            
+            # Sort matches by final score (descending)
+            matches.sort(key=lambda x: x['match_score'], reverse=True)
+            
+            # Keep top_k matches
+            top_matches = matches[:top_k]
+            
+            # Extract candidates and scores for recommendation
+            candidates = [match['kegg_id'] for match in top_matches]
+            match_scores = [match['match_score'] for match in top_matches]
+            
+            # Get reaction names from KEGG
+            # Build a dict mapping kegg_id to the reaction dict
+            filtered_dict = {rxn['reaction_id']: rxn for rxn in filtered_reaction_list}
+
+            # Then get reaction names for candidates
+            candidate_names = []
+            for kegg_id in candidates:
+                rxn_name = filtered_dict.get(kegg_id, {}).get('name', kegg_id)
+                candidate_names.append(rxn_name)
+
+            # Create recommendation object
+            recommendation = Recommendation(
+                id=reaction_label,
+                synonyms=[],
+                candidates=candidates,
+                candidate_names=candidate_names,
+                match_score=match_scores
+            )
+            recommendations.append(recommendation)
+            
+        return recommendations
+        
+    except Exception as e:
+        logger.error(f"Error in KEGG recommendation: {e}")
+        import traceback
+        traceback.print_exc()
+        return []
+
+def compute_similarity(counter1: Counter, counter2: Counter, cofactors_to_ignore: set) -> float:
+    """
+    Compute Jaccard-like similarity between two reaction sides with stoichiometry awareness.
+    
+    This function calculates a similarity score between two sets of metabolites,
+    taking into account their stoichiometric coefficients and filtering out common cofactors.
+    
+    Args:
+        counter1: Counter object for first reaction side (substrates or products)
+        counter2: Counter object for second reaction side (substrates or products)
+        cofactors_to_ignore: Set of cofactor IDs to ignore in the comparison
+        
+    Returns:
+        Similarity score between 0.0 (no similarity) and 1.0 (identical)
+    """
+    # Filter out cofactors
+    c1 = {k: v for k, v in counter1.items() if k not in cofactors_to_ignore}
+    c2 = {k: v for k, v in counter2.items() if k not in cofactors_to_ignore}
+    
+    # Perfect match if both are empty after filtering cofactors
+    if not c1 and not c2:
+        return 1.0
+    
+    # Calculate stoichiometry-aware Jaccard similarity
+    # Sum of minimum values (intersection) divided by sum of maximum values (union)
+    intersection = sum(min(c1.get(k, 0), c2.get(k, 0)) for k in set(c1) | set(c2))
+    union = sum(max(c1.get(k, 0), c2.get(k, 0)) for k in set(c1) | set(c2))
+    
+    if union == 0:
+        return 0.0
+        
+    return intersection / union
+
 
 def get_embedding_function(model_type: str = "default"):
     """
@@ -1034,6 +1255,19 @@ def is_database_available(database: str) -> bool:
             return names_file.exists() and labels_file.exists()
         except Exception:
             return False
+    elif database.lower() == "kegg":
+        try:
+            data_dir = get_data_dir()
+            chebi_to_kegg_map_file = data_dir / "kegg" / REF_CHEBI2KEGG_COMPOUND
+            names_file = data_dir / "kegg" / REF_KEGG_REACTION2NAME
+            ec_file = data_dir / "kegg" / REF_KEGG2EC
+            reactions_file = data_dir / "kegg" / "parsed_kegg_reactions.lzma"
+            return (chebi_to_kegg_map_file.exists() and 
+                   names_file.exists() and 
+                   ec_file.exists() and 
+                   reactions_file.exists())
+        except Exception:
+            return False
     
     return False
 
@@ -1054,6 +1288,9 @@ def get_available_databases() -> List[str]:
     
     if is_database_available("uniprot"):
         available.append("uniprot")
+
+    if is_database_available("kegg"):
+        available.append("kegg")
     
     # Future databases can be added here
     # if is_database_available("go"):
