@@ -12,8 +12,9 @@ from typing import Dict, List, Optional, Tuple, Any
 from pathlib import Path
 import logging
 import numpy as np
-
-from core.model_info import find_species_with_chebi_annotations, find_species_with_ncbigene_annotations,find_species_with_uniprot_annotations, extract_model_info, format_prompt, get_species_display_names, get_all_species_ids
+import re
+from collections import Counter
+from core.model_info import find_species_with_chebi_annotations, find_species_with_ncbigene_annotations, find_reactions_with_kegg_annotations, extract_model_info, format_prompt, get_all_species_ids
 from core.llm_interface import get_system_prompt, query_llm, parse_llm_response
 from core.data_types import Recommendation
 from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag
@@ -81,6 +82,9 @@ def annotate_single_model(model_file: str,
     elif entity_type == "protein" and database == "uniprot":
         existing_annotations = find_species_with_uniprot_annotations(model_file)
         logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
+    elif entity_type == "reaction" and database == "kegg":
+        existing_annotations = find_reactions_with_kegg_annotations(model_file)
+        logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
     else:
         # Future: support other entity types and databases
         logger.warning(f"Entity type {entity_type} with database {database} not yet supported")
@@ -95,8 +99,8 @@ def annotate_single_model(model_file: str,
     
     # Step 2: Extract model context
     logger.info(">>>Step 2: Extracting model context...<<<")
+
     model_info = extract_model_info(model_file, specs_to_evaluate, entity_type)
-    # print(model_info)
     
     if not model_info:
         logger.error("Failed to extract model context")
@@ -163,6 +167,14 @@ def annotate_single_model(model_file: str,
             recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
         elif method == "rag":
             recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id)
+        else:
+            logger.error(f"Invalid method: {method}")
+            return pd.DataFrame(), {"error": f"Invalid method: {method}"}
+    elif database == "kegg":
+        if method == "direct":
+            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="kegg", top_k=top_k)
+        elif method == "rag":
+            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="kegg")
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
@@ -241,7 +253,9 @@ def _generate_recommendation_table(model_file: str,
                 candidate_display = f"NCBIGENE:{candidate}"
             elif database == "uniprot":
                 candidate_display = f"UNIPROT:{candidate}"
- 
+            elif database == "kegg":
+                candidate_display = f"KEGG:{candidate}"
+
             # Determine if this is an existing annotation
             existing = 1 if candidate in existing_annotations.get(rec.id, []) else 0
             
@@ -375,6 +389,122 @@ def print_results(results_df: pd.DataFrame):
     # Average number of predictions per species
     average_predictions = results_df[results_df['annotation'] != ''].groupby('model').size().mean()
     print(f"Average number of predictions per model: {average_predictions}")
+
+def normalize_reactions(model_reactions, cofactors_to_ignore):
+    """
+    Normalize reaction data for comparison by filtering out common cofactors
+    and tracking stoichiometry.
+    
+    Args:
+        model_reactions: List of reaction dictionaries
+        cofactors_to_ignore: Set of cofactor IDs to ignore
+        
+    Returns:
+        List of normalized reaction dictionaries
+    """
+    normalized_reactions = []
+    
+    for rxn in model_reactions:
+        subs = filter_and_count(rxn.get('substrates', []), cofactors_to_ignore)
+        prods = filter_and_count(rxn.get('products', []), cofactors_to_ignore)
+        
+        normalized_reactions.append({
+            'reaction_name_in_model': rxn.get('id', 'Unknown'),
+            'substrate_counter': subs,
+            'product_counter': prods,
+        })
+                
+    return normalized_reactions
+            
+def filter_and_count(kegg_list, cofactors_to_ignore):
+    """
+    Filter out cofactors and count occurrences of each metabolite.
+    
+    Args:
+        kegg_list: List of KEGG IDs
+        cofactors_to_ignore: Set of cofactor IDs to ignore
+        
+    Returns:
+        Counter object with metabolite counts
+    """
+    counter = Counter()
+
+    for kegg_id in kegg_list:
+        if kegg_id is None:
+            continue  # skip unmapped
+        if kegg_id: # not in cofactors_to_ignore:
+            counter[kegg_id] += 1  # track stoichiometry
+    return counter      
+    
+def build_recommendation_table(match_results, top_k=5):
+    """
+    Build a recommendation table from match results.
+    
+    Args:
+        match_results: List of dictionaries with match results
+        top_k: Number of best matches to retain per reaction
+        
+    Returns:
+        List of dictionaries for DataFrame conversion
+    """
+    rows = []
+    
+    # print(match_results) ### DELETE LATER
+
+    for entry in match_results:
+        model_rxn_str = entry.id  # It's just a string here
+
+        for kegg_id, score in zip(entry.candidates, entry.match_score):
+            rows.append({
+                'id': model_rxn_str,
+                'KEGG_Reaction_ID': kegg_id,
+                'match_score': round(score, 3)
+            })
+    
+    return rows
+
+def map_reactions_to_kegg(rxn_list, id_df):
+    # Make a quick lookup from the DataFrame for faster mapping
+    id_lookup = id_df.set_index('id')['KEGG_ID']
+
+    def parse_reaction_equation(rxn_str):
+        # Assume directional info is unreliable
+        if "<=>" in rxn_str or "=>" in rxn_str or "->" in rxn_str:
+            lhs, rhs = re.split(r"<=>|=>|->", rxn_str)
+        else:
+            return [], []
+        
+        def strip_and_split(side):
+            side = side.strip()
+            if not side:  # Empty or all whitespace
+                return []
+            return [s.strip().split()[-1].lstrip('$') for s in side.split("+")]
+        
+        reactants = strip_and_split(lhs)
+        products = strip_and_split(rhs)
+        return reactants, products
+
+    output = []
+    for idx, rxn in enumerate(rxn_list, start=1):
+        # Remove reaction name (before the ':') if present
+        if ":" in rxn:
+            _, rxn_str = rxn.split(":", 1)
+        else:
+            rxn_str = rxn
+
+        reactants, products = parse_reaction_equation(rxn_str)
+
+        # Map IDs to KEGG IDs using your DataFrame
+        subs_counter = Counter(id_lookup.get(r, None) for r in reactants if r in id_lookup.index)
+        prod_counter = Counter(id_lookup.get(p, None) for p in products if p in id_lookup.index)
+
+        output.append({
+            "id": f"R{idx}",
+            "substrates": subs_counter,
+            "products": prod_counter
+        })
+    
+    return output
 
 # Main interface function for users
 def annotate_model(model_file: str, **kwargs) -> Tuple[pd.DataFrame, Dict[str, Any]]:

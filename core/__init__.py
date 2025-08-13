@@ -9,8 +9,9 @@ from .annotation_workflow import annotate_model, annotate_single_model
 from .curation_workflow import curate_model, curate_single_model
 
 # Shared functionality
-from .annotation_workflow import print_results
+from .annotation_workflow import print_results, normalize_reactions, build_recommendation_table
 from .update_model import update_annotation
+from .database_search import load_chebi2kegg_dict, load_kegg_reaction_features_dict
 
 # Individual components
 from .model_info import find_species_with_chebi_annotations, find_species_with_ncbigene_annotations, extract_model_info, format_prompt, get_species_display_names, get_all_species_ids, detect_model_format

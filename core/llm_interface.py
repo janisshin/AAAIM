@@ -97,6 +97,28 @@ P2: "KRAS", "HRAS", "NRAS"
 P3: "AKT1", "PKB", "RAC"
 Reason: This appears to be an EGFR signaling pathway. P1 is the epidermal growth factor receptor (EGFR), P2 is a RAS protein family member, and P3 is AKT kinase."""
 
+### JANISTAG
+# System prompt for reaction and enzyme annotation
+SYSTEM_PROMPT_REACTION = """You are a biomedical knowledge assistant. Your task is to normalize reaction and enzyme names from biochemical models into standardized or canonical EC numbers for ontology lookup on KEGG. 
+All given reactions should be considered as enzymes. If lacking information about details, try your best to give the most likely EC number. Return "UNK" if not or unsure.
+
+Here is one example:
+Species: A, B, D
+Model: "citric acid cycle model"
+ // Display Names:
+A is "acetyl-CoA";
+B is "citrate";
+C is "CoA";
+ // Reactions:
+A + oxaloacetate => B + C;
+E + F => D;
+
+This should return:
+A: "acetyl-CoA", "acetyl coenzyme A"
+B: "citric acid", "sodium citrate", "citrate(4−)"
+D: "UNK"
+Reason: the reaction is likely to be the TCA cycle, where A is the substrate and B is an intermediate. D is unknown because no display names are given for its reactants."""
+
 # Backward compatibility
 SYSTEM_PROMPT = SYSTEM_PROMPT_CHEMICAL
 
