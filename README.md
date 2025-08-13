@@ -93,7 +93,6 @@ recommendations_df, metrics = annotate_model(
 recommendations_df.to_csv("protein_annotation_results.csv", index=False)
 ```
 
-
 ### 2. Curation Workflow (for models with existing annotations)
 
 - **Purpose**: Evaluate and improve existing annotations
@@ -149,7 +148,6 @@ curations_df, metrics = curate_model(
 print(f"Gene entities with existing annotations: {metrics['total_entities']}")
 print(f"Accuracy: {metrics['accuracy']:.1%}")
 ```
-
 
 ### 3. Updating Model Annotations After Review
 
@@ -225,18 +223,19 @@ python load_data.py --database kegg --model default
 ### Currently Supported
 
 - **ChEBI**: Chemical Entities of Biological Interest
+
   - **Entity Type**: `chemical`
   - All terms in ChEBI are included.
-
 - **NCBI Gene**: Gene annotation
+
   - **Entity Type**: `gene`
   - Only genes for common species are supported (those included in bigg models).
+- **UniProt**: Protein annotation
 
-- **UniProt**: protein annotation
   - **Entity Type**: `uniprot`
   - Only proteins for human (9606) and mouse (10090) are supported for now.
+- **KEGG**: Compount/reaction annotation
 
-- **KEGGe**: Enzyme annotation
   - For reaction substrates and products.
 
 ### Future Support
@@ -272,7 +271,6 @@ python load_data.py --database kegg --model default
   - `uniprot2label_human+mouse.lzma`: Mapping from UniProt IDs to labels (primary name)
   - `uniprot2names_tax{tax_id}.lzma`: Uniprot synonyms for tax_id used for RAG approach
 - **Source**: Data are obtained from the UniProt site: https://www.uniprot.org/help/downloads (Reviewed (Swiss-Prot) xml).
-
 
 ### KEGG Data
 

@@ -1589,7 +1589,7 @@ def filter_qualifiers_in_results(results_csv: str,
         bqbiol_qualifiers: List of bqbiol qualifiers to filter for (e.g. ['is', 'isVersionOf', 'hasPart'])
         model_dir: Directory containing the original SBML model files
         output_csv: Path to save filtered results (optional)
-        entity_type: Type of entity ("chemical" or "gene")
+        entity_type: Type of entity ("chemical" or "gene" or "protein")
         database: Database being used ("chebi" or "ncbigene" or "uniprot")
         
     Returns:

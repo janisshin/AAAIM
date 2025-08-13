@@ -90,8 +90,8 @@ REF_NAMES2CHEBI = "cleannames2chebi.lzma"
 REF_CHEBI2FORMULA = "chebi_shortened_formula.lzma"
 REF_NCBIGENE2LABEL = "ncbigene2label_bigg_organisms_protein-coding_added.lzma"
 REF_NAMES2NCBIGENE = "names2ncbigene_bigg_organisms_protein-coding.lzma"
-REF_UNIPROT2LABEL = "uniprot2label_human+mouse.lzma"
-REF_NAMES2UNIPROT = "names2uniprot_human+mouse.lzma"
+REF_UNIPROT2LABEL = "uniprot2label_human+mouse+rat.lzma"
+REF_NAMES2UNIPROT = "names2uniprot_human+mouse+rat.lzma"
 
 # Model Format Detection
 MODEL_FORMAT_PLUGINS = {
