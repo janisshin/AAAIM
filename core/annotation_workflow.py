@@ -14,10 +14,10 @@ import logging
 import numpy as np
 import re
 from collections import Counter
-from core.model_info import find_species_with_chebi_annotations, find_species_with_ncbigene_annotations, find_reactions_with_kegg_annotations, extract_model_info, format_prompt, get_all_species_ids
+from core.model_info import find_species_with_chebi_annotations, find_species_with_annotations_and_qualifiers, find_species_with_ncbigene_annotations, find_species_with_uniprot_annotations, find_reactions_with_kegg_annotations, extract_model_info, format_prompt, get_all_species_ids
 from core.llm_interface import get_system_prompt, query_llm, parse_llm_response
 from core.data_types import Recommendation
-from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag
+from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, load_chebi_label_dict, load_ncbigene_label_dict, load_uniprot_label_dict
 
 logger = logging.getLogger(__name__)
 
@@ -73,14 +73,15 @@ def annotate_single_model(model_file: str,
     
     # Check for existing annotations (for metrics calculation)
     existing_annotations = {}
+    qualifier_annotations = {}
     if entity_type == "chemical" and database == "chebi":
-        existing_annotations = find_species_with_chebi_annotations(model_file)
+        existing_annotations, qualifier_annotations = find_species_with_annotations_and_qualifiers(model_file, "chebi")
         logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
     elif entity_type == "gene" and database == "ncbigene":
-        existing_annotations = find_species_with_ncbigene_annotations(model_file)
+        existing_annotations, qualifier_annotations = find_species_with_annotations_and_qualifiers(model_file, "ncbigene")
         logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
     elif entity_type == "protein" and database == "uniprot":
-        existing_annotations = find_species_with_uniprot_annotations(model_file)
+        existing_annotations, qualifier_annotations = find_species_with_annotations_and_qualifiers(model_file, "uniprot")
         logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
     elif entity_type == "reaction" and database == "kegg":
         existing_annotations = find_reactions_with_kegg_annotations(model_file)
@@ -188,7 +189,7 @@ def annotate_single_model(model_file: str,
     # Generate recommendation table
     logger.info(">>>Step 5: Generating recommendation table...<<<")
     recommendations_df = _generate_recommendation_table(
-        model_file, recommendations, existing_annotations, model_info, entity_type, database
+        model_file, recommendations, existing_annotations, model_info, entity_type, database, qualifier_annotations
     )
     
     # Step 10: Calculate metrics
@@ -210,7 +211,8 @@ def _generate_recommendation_table(model_file: str,
                                  existing_annotations: Dict[str, List[str]],
                                  model_info: Dict[str, Any],
                                  entity_type: str = "chemical",
-                                 database: str = "chebi") -> pd.DataFrame:
+                                 database: str = "chebi",
+                                 qualifier_annotations: Dict[str, List[str]] = None) -> pd.DataFrame:
     """
     Generate AMAS-compatible recommendation table.
     
@@ -231,30 +233,47 @@ def _generate_recommendation_table(model_file: str,
     for rec in recommendations:
         if not rec.candidates:
             # No candidates found
+            # Get qualifier information for this species
+            # For existing annotations, show the qualifier used
+            # For new predictions, show 'is' as default
+            if rec.id in qualifier_annotations and qualifier_annotations[rec.id]:
+                # Get all qualifiers for this species
+                all_qualifiers = list(qualifier_annotations[rec.id].values())
+                specific_qualifier = ', '.join(all_qualifiers) if all_qualifiers else 'is'
+            else:
+                specific_qualifier = 'is'  # Default for new predictions
+
+            # get the label for existing annotation
+            if database == "chebi":
+                dict = load_chebi_label_dict()
+            elif database == "ncbigene":
+                dict = load_ncbigene_label_dict()
+            elif database == "uniprot":
+                dict = load_uniprot_label_dict()
+            if rec.id in dict:
+                label = dict[rec.id]
+            else:
+                logger.warning(f"Annotation {rec.id} not found in {database} label dictionary")
+                label = rec.id
+
             row = {
                 'file': filename,
                 'type': entity_type,
                 'id': rec.id,
                 'display_name': model_info["display_names"].get(rec.id, rec.id),
                 'annotation': '',
-                'annotation_label': '',
+                'annotation_label': label,
                 'match_score': 0.0,
                 'existing': 0,
-                'update_annotation': 'ignore'
+                'update_annotation': 'ignore',
+                'qualifier': specific_qualifier
             }
             rows.append(row)
             continue
         
         # Add row for each candidate
         for i, candidate in enumerate(rec.candidates):
-            if database == "chebi":
-                candidate_display = f"CHEBI:{candidate}"
-            elif database == "ncbigene":
-                candidate_display = f"NCBIGENE:{candidate}"
-            elif database == "uniprot":
-                candidate_display = f"UNIPROT:{candidate}"
-            elif database == "kegg":
-                candidate_display = f"KEGG:{candidate}"
+            candidate_display = f"{database.upper()}:{candidate}"
 
             # Determine if this is an existing annotation
             existing = 1 if candidate in existing_annotations.get(rec.id, []) else 0
@@ -270,6 +289,12 @@ def _generate_recommendation_table(model_file: str,
             else:
                 update_action = 'ignore'
             
+            # One annotation per row: use the specific qualifier for this candidate if it exists; otherwise 'is'
+            if existing == 1 and qualifier_annotations:
+                specific_qualifier = qualifier_annotations.get(rec.id, {}).get(candidate, 'is')
+            else:
+                specific_qualifier = 'is'
+            
             row = {
                 'file': filename,
                 'type': entity_type,
@@ -279,7 +304,8 @@ def _generate_recommendation_table(model_file: str,
                 'annotation_label': rec.candidate_names[i],
                 'match_score': match_score,
                 'existing': existing,
-                'update_annotation': update_action
+                'update_annotation': update_action,
+                'qualifier': specific_qualifier
             }
             rows.append(row)
     

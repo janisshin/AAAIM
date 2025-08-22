@@ -20,8 +20,7 @@ import logging
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_distances
 
-from core.curation_workflow import curate_model
-from core.model_info import find_species_with_chebi_annotations, extract_model_info, format_prompt, find_species_with_ncbigene_annotations, find_species_with_uniprot_annotations, get_species_display_names, detect_model_format
+from core.model_info import find_species_with_chebi_annotations, find_species_with_annotations_and_qualifiers, extract_model_info, format_prompt, find_species_with_ncbigene_annotations, find_species_with_uniprot_annotations, get_species_display_names, detect_model_format
 from core.llm_interface import SYSTEM_PROMPT, query_llm, parse_llm_response, get_system_prompt
 from core.data_types import Recommendation
 from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, clear_chromadb_cache
@@ -335,7 +334,7 @@ def get_species_statistics(recommendations: List[Recommendation],
         'precision_exact': precision_exact
     }
 
-def find_species_with_formulas(model_file: str, bqbiol_qualifiers: list = None) -> Dict[str, List[str]]:
+def find_species_with_formulas(model_file: str, bqbiol_qualifiers: list = None) -> Tuple[Dict[str, List[str]], Dict[str, Dict[str, str]]]:
     """
     Find species with existing ChEBI annotations that have chemical formulas.
     Replicates the logic from AMAS species_annotation.py exist_annotation_formula.
@@ -345,19 +344,23 @@ def find_species_with_formulas(model_file: str, bqbiol_qualifiers: list = None) 
         bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
 
     Returns:
-        Dictionary mapping species IDs to their ChEBI annotation IDs (only for species with formulas)
+        Tuple of (species_with_formulas, qualifier_annotations) where:
+        - species_with_formulas: Dictionary mapping species IDs to their ChEBI annotation IDs (only for species with formulas)
+        - qualifier_annotations: Dictionary mapping species IDs to a dict of {annotation_id: qualifier}
     """
-    # Get all species with ChEBI annotations
-    existing_annotations = find_species_with_chebi_annotations(model_file, bqbiol_qualifiers)
+    # Get all species with ChEBI annotations and their qualifiers
+    existing_annotations, qualifier_annotations = find_species_with_annotations_and_qualifiers(model_file, "chebi", bqbiol_qualifiers)
     
     if not existing_annotations:
-        return {}
+        return {}, {}
     
     # Load ChEBI to formula dictionary
     formula_dict = load_chebi_formula_dict()
     
     # Filter to only species that have at least one ChEBI with a formula
     species_with_formulas = {}
+    filtered_qualifier_annotations = {}
+    
     for species_id, chebi_ids in existing_annotations.items():
         formulas = []
         for chebi_id in chebi_ids:
@@ -369,10 +372,11 @@ def find_species_with_formulas(model_file: str, bqbiol_qualifiers: list = None) 
         # Only include species that have at least one formula
         if formulas:
             species_with_formulas[species_id] = chebi_ids
+            filtered_qualifier_annotations[species_id] = qualifier_annotations.get(species_id, {})
     
-    return species_with_formulas
+    return species_with_formulas, filtered_qualifier_annotations
 
-def find_species_with_gene_annotations(model_file: str, bqbiol_qualifiers: list = None, tax_id: str = None) -> Dict[str, List[str]]:
+def find_species_with_gene_annotations(model_file: str, bqbiol_qualifiers: list = None, tax_id: str = None) -> Tuple[Dict[str, List[str]], Dict[str, Dict[str, str]]]:
     """
     Find species with existing NCBI gene annotations.
     
@@ -381,30 +385,38 @@ def find_species_with_gene_annotations(model_file: str, bqbiol_qualifiers: list 
         bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
         tax_id: Taxonomy ID
     Returns:
-        Dictionary mapping species IDs to their NCBI gene annotation IDs
+        Tuple of (existing_annotations, qualifier_annotations) where:
+        - existing_annotations: Dictionary mapping species IDs to their NCBI gene annotation IDs
+        - qualifier_annotations: Dictionary mapping species IDs to a dict of {annotation_id: qualifier}
     """
-    # Get all species with NCBI gene annotations
-    existing_annotations = find_species_with_ncbigene_annotations(model_file, bqbiol_qualifiers)
+    # Get all species with NCBI gene annotations and their qualifiers
+    existing_annotations, qualifier_annotations = find_species_with_annotations_and_qualifiers(model_file, "ncbigene", bqbiol_qualifiers)
     
     if not existing_annotations:
-        return {}
+        return {}, {}
     else:
         if tax_id:
             label_dict = load_ncbigene_label_dict()
             filtered_annotations = {}
+            filtered_qualifier_annotations = {}
             
             for species_id, ncbi_ids in existing_annotations.items():
-                # Filter out NCBI IDs that don't exist in the label dictionary
+                # Filter out NCBI IDs that don't exist in the label_dict
                 valid_ncbi_ids = [ncbi_id for ncbi_id in ncbi_ids if ncbi_id in label_dict]
                 if valid_ncbi_ids:
                     filtered_annotations[species_id] = valid_ncbi_ids
+                    # Filter qualifier annotations to only include valid NCBI IDs
+                    filtered_qualifier_annotations[species_id] = {
+                        ncbi_id: qualifier_annotations.get(species_id, {}).get(ncbi_id, 'unknown')
+                        for ncbi_id in valid_ncbi_ids
+                    }
             
-            return filtered_annotations
+            return filtered_annotations, filtered_qualifier_annotations
     
     # Return all species that have NCBI gene annotations
-    return existing_annotations
+    return existing_annotations, qualifier_annotations
 
-def find_species_with_protein_annotations(model_file: str, bqbiol_qualifiers: list = None, tax_id: str = None) -> Dict[str, List[str]]:
+def find_species_with_protein_annotations(model_file: str, bqbiol_qualifiers: list = None, tax_id: str = None) -> Tuple[Dict[str, List[str]], Dict[str, Dict[str, str]]]:
     """
     Find species with existing UniProt annotations.
     
@@ -413,28 +425,37 @@ def find_species_with_protein_annotations(model_file: str, bqbiol_qualifiers: li
         bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
         tax_id: Taxonomy ID
     Returns:
-        Dictionary mapping species IDs to their UniProt annotation IDs
+        Tuple of (existing_annotations, qualifier_annotations) where:
+        - existing_annotations: Dictionary mapping species IDs to their UniProt annotation IDs
+        - qualifier_annotations: Dictionary mapping species IDs to a dict of {annotation_id: qualifier}
     """
-    # Get all species with UniProt annotations
-    existing_annotations = find_species_with_uniprot_annotations(model_file, bqbiol_qualifiers)
+    # Get all species with UniProt annotations and their qualifiers
+    existing_annotations, qualifier_annotations = find_species_with_annotations_and_qualifiers(model_file, "uniprot", bqbiol_qualifiers)
+    # print(f"Existing annotations: {existing_annotations}")
     
     if not existing_annotations:
-        return {}
+        return {}, {}
     else:
         if tax_id:
             label_dict = load_uniprot_label_dict(tax_id)
             filtered_annotations = {}
+            filtered_qualifier_annotations = {}
             
             for species_id, uniprot_ids in existing_annotations.items():
                 # Filter out UniProt IDs that don't exist in the label dictionary
                 valid_uniprot_ids = [uniprot_id for uniprot_id in uniprot_ids if uniprot_id in label_dict]
                 if valid_uniprot_ids:
                     filtered_annotations[species_id] = valid_uniprot_ids
+                    # Filter qualifier annotations to only include valid UniProt IDs
+                    filtered_qualifier_annotations[species_id] = {
+                        uniprot_id: qualifier_annotations.get(species_id, {}).get(uniprot_id, 'unknown')
+                        for uniprot_id in valid_uniprot_ids
+                    }
             
-            return filtered_annotations
+            return filtered_annotations, filtered_qualifier_annotations
     
     # Return all species that have UniProt annotations
-    return existing_annotations
+    return existing_annotations, qualifier_annotations
 
 def evaluate_single_model(model_file: str, 
                          llm_model: str = 'meta-llama/llama-3.3-70b-instruct:free',
@@ -462,6 +483,7 @@ def evaluate_single_model(model_file: str,
         max_entities: Maximum number of entities to evaluate (None for all)
         entity_type: Type of entities to annotate
         database: Target database
+        model_type: Type of embedding model ("default", "openai")
         save_llm_results: Whether to save LLM results to files
         save_llm_results_folder: Custom folder name for LLM results. If None, uses timestamp.
         output_dir: Directory to save results
@@ -485,11 +507,11 @@ def evaluate_single_model(model_file: str,
         
         # Get existing annotations to determine entities to evaluate
         if entity_type == "chemical" and database == "chebi":
-            existing_annotations = find_species_with_formulas(model_file, bqbiol_qualifiers)
+            existing_annotations, qualifier_annotations = find_species_with_formulas(model_file, bqbiol_qualifiers)
         elif entity_type == "gene" and database == "ncbigene":
-            existing_annotations = find_species_with_gene_annotations(model_file, bqbiol_qualifiers, tax_id)
+            existing_annotations, qualifier_annotations = find_species_with_gene_annotations(model_file, bqbiol_qualifiers, tax_id)
         elif entity_type == "protein" and database == "uniprot":
-            existing_annotations = find_species_with_protein_annotations(model_file, bqbiol_qualifiers, tax_id)
+            existing_annotations, qualifier_annotations = find_species_with_protein_annotations(model_file, bqbiol_qualifiers, tax_id)
         else:
             if verbose:
                 logger.warning(f"Entity type {entity_type} with database {database} not yet supported")
@@ -564,7 +586,7 @@ def evaluate_single_model(model_file: str,
         # Convert to evaluation format with LLM results
         result_df = _convert_format(
             recommendations, existing_annotations, model_name, 
-            synonyms_dict, reason, total_time, llm_time, search_time, entity_type, database, tax_id, tax_name, model_file
+            synonyms_dict, reason, total_time, llm_time, search_time, entity_type, database, tax_id, tax_name, model_file, bqbiol_qualifiers, qualifier_annotations
         )
         
         # Save LLM results if requested
@@ -695,6 +717,8 @@ def evaluate_models_in_folder(model_dir: str,
             tax_name = "Escherichia coli"
         elif tax_id == 10090:
             tax_name = "Mus musculus"
+        elif tax_id == 10116:
+            tax_name = "Rattus norvegicus"
         if tax_dict_file:
             tax_id, tax_name = get_model_taxonomy(model_file, tax_dict_file)
             if not tax_id:
@@ -758,7 +782,9 @@ def _convert_format(recommendations: List[Recommendation],
                                    database: str = "chebi",
                                    tax_id: str = None,
                                    tax_name: str = None,
-                                   model_file: str = None) -> pd.DataFrame:
+                                   model_file: str = None,
+                                   bqbiol_qualifiers: List[str] = None,
+                                   qualifier_annotations: Dict[str, List[str]] = None) -> pd.DataFrame:
     """
     Convert AAAIM recommendations to evaluation format with LLM results.
     
@@ -776,6 +802,8 @@ def _convert_format(recommendations: List[Recommendation],
         tax_id: For gene/protein annotations, the organism's tax_id
         tax_name: For gene/protein annotations, the organism's tax_name
         model_file: Path to the model file (optional)
+        bqbiol_qualifiers: List of bqbiol qualifiers used to extract annotations (optional)
+        qualifier_annotations: Dictionary mapping species IDs to their qualifier lists (optional)
 
     Returns:
         DataFrame in evaluation format
@@ -897,6 +925,19 @@ def _convert_format(recommendations: List[Recommendation],
         # Use display name from SBML if available
         display_name = display_names.get(species_id, '')
         
+        # Get specific qualifier for this species
+        # For existing annotations, show the qualifier used for the matching annotation
+        # For new predictions, show 'is' as default
+        if existing_ids and qualifier_annotations and species_id in qualifier_annotations:
+            # Find qualifiers for existing annotations
+            existing_qualifiers = []
+            for ann_id in existing_ids:
+                if ann_id in qualifier_annotations[species_id]:
+                    existing_qualifiers.append(qualifier_annotations[species_id][ann_id])
+            specific_qualifier = ', '.join(existing_qualifiers) if existing_qualifiers else 'is'
+        else:
+            specific_qualifier = 'is'  # Default for new predictions
+        
         # Create row in AMAS format
         row = {
             'model': model_name,
@@ -918,7 +959,8 @@ def _convert_format(recommendations: List[Recommendation],
             'llm_time': llm_time,
             'query_time': search_time,
             'tax_id': tax_id,
-            'tax_name': tax_name
+            'tax_name': tax_name,
+            'qualifier': specific_qualifier
         }
         result_rows.append(row)
     
@@ -1133,6 +1175,7 @@ def process_saved_llm_responses(response_folder: str,
                                entity_type: str = "chemical",
                                database: str = "chebi",
                                tax_id: str = None,
+                               bqbiol_qualifiers: List[str] = None,
                                output_dir: str = './results/', 
                                output_file: str = 'reprocessed_results.csv',
                                verbose: bool = False) -> pd.DataFrame:
@@ -1290,13 +1333,14 @@ def process_saved_llm_responses(response_folder: str,
             
             # Get existing annotations for statistics calculation
             if entity_type == "chemical" and database == "chebi":
-                existing_annotations = find_species_with_formulas(model_file, bqbiol_qualifiers)
+                existing_annotations, qualifier_annotations = find_species_with_formulas(model_file, bqbiol_qualifiers)
             elif entity_type == "gene" and database == "ncbigene":
-                existing_annotations = find_species_with_gene_annotations(model_file, bqbiol_qualifiers, tax_id)
+                existing_annotations, qualifier_annotations = find_species_with_gene_annotations(model_file, bqbiol_qualifiers, tax_id)
             elif entity_type == "protein" and database == "uniprot":
-                existing_annotations = find_species_with_protein_annotations(model_file, bqbiol_qualifiers, tax_id)
+                existing_annotations, qualifier_annotations = find_species_with_protein_annotations(model_file, bqbiol_qualifiers, tax_id)
             else:
                 existing_annotations = {}
+                qualifier_annotations = {}
             
             # Filter existing_annotations to match the species we're actually evaluating
             existing_annotations = {species_id: existing_annotations[species_id] 
@@ -1310,7 +1354,7 @@ def process_saved_llm_responses(response_folder: str,
             result_df = _convert_format(
                 recommendations, existing_annotations, model_name, 
                 synonyms_dict, reason, previous_llm_time + dict_search_time, 
-                previous_llm_time, dict_search_time, entity_type, database, tax_id, model_file=model_file
+                previous_llm_time, dict_search_time, entity_type, database, tax_id, model_file=model_file, bqbiol_qualifiers=bqbiol_qualifiers, qualifier_annotations=qualifier_annotations
             )
             
             if not result_df.empty:

@@ -185,6 +185,25 @@ recommendations_df, metrics = annotate_model(
     method = "direct",					 # method used to find the ontology ID ("direct", "rag")
     top_k = 3						 # number of top candidates to return per entity (based on scores)
 )
+
+# Direct access to qualifier tracking functions
+from core.model_info import find_species_with_annotations_and_qualifiers
+
+# Get annotations and qualifiers for any supported database
+annotations, qualifiers = find_species_with_annotations_and_qualifiers(
+    model_file="path/to/model.xml",
+    database="chebi",  # or "ncbigene", "uniprot"
+    bqbiol_qualifiers=['is', 'isVersionOf']  # optional: filter by specific qualifiers
+)
+
+print(f"Found {len(annotations)} species with annotations")
+for species_id, annotation_ids in annotations.items():
+    if species_id in qualifiers:
+        print(f"{species_id}: {annotation_ids}")
+        for ann_id, qualifier in qualifiers[species_id].items():
+            print(f"  {ann_id} -> {qualifier}")
+    else:
+        print(f"{species_id}: {annotation_ids} (no qualifier info)")
 ```
 
 ### Example

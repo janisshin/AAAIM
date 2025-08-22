@@ -14,7 +14,7 @@ from .update_model import update_annotation
 from .database_search import load_chebi2kegg_dict, load_kegg_reaction_features_dict
 
 # Individual components
-from .model_info import find_species_with_chebi_annotations, find_species_with_ncbigene_annotations, extract_model_info, format_prompt, get_species_display_names, get_all_species_ids, detect_model_format
+from .model_info import find_species_with_chebi_annotations, find_species_with_annotations_and_qualifiers, find_species_with_ncbigene_annotations, extract_model_info, format_prompt, get_species_display_names, get_all_species_ids, detect_model_format
 from .llm_interface import SYSTEM_PROMPT, SYSTEM_PROMPT_CHEMICAL, SYSTEM_PROMPT_GENE, get_system_prompt, query_llm, parse_llm_response
 from .database_search import get_species_recommendations_direct, search_database, get_available_databases, Recommendation
 
@@ -30,6 +30,7 @@ __all__ = [
     # Individual components
     'get_all_species_ids',
     'find_species_with_chebi_annotations',
+    'find_species_with_annotations_and_qualifiers',
     'find_species_with_ncbigene_annotations',
     'get_species_display_names',
     'extract_model_info',
