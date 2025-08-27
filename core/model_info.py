@@ -555,13 +555,14 @@ def extract_reactions_from_sbml(model_file: str, species_ids: List[str]) -> Tupl
     antimony_string = antimony.getAntimonyString()
     
     # Look for lines with => symbols which indicate reactions
+    
     reaction_pattern = re.compile(r'// Reactions:.*?(?=//|$)', re.DOTALL)
     reactions_section = reaction_pattern.search(antimony_string)
     
     reaction_matches = []
     if reactions_section:
         reactions_text = reactions_section.group(0).replace("// Reactions:", "").strip()
-        reaction_pattern = re.compile(r'([^;]+)(=>)([^;]+);', re.MULTILINE)
+        reaction_pattern = re.compile(r'([^;]+)(=>|->)([^;]+);', re.MULTILINE)
         reaction_matches = reaction_pattern.findall(reactions_text)
 
     # If no matches found with '=>', try with '=' instead
@@ -571,7 +572,7 @@ def extract_reactions_from_sbml(model_file: str, species_ids: List[str]) -> Tupl
         
         if reactions_section:
             reactions_text = reactions_section.group(0).replace("// Rate Rules:", "").strip()
-            reaction_pattern = re.compile(r'([^;]+)(=)([^;]+);', re.MULTILINE)
+            reaction_pattern = re.compile(r'([^;]+)(=>|->|=)([^;]+);', re.MULTILINE)
             reaction_matches = reaction_pattern.findall(reactions_text)
 
     # Filter reactions to only include those involving our species
