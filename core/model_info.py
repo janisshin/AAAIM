@@ -60,7 +60,7 @@ def detect_model_format(model_file: str) -> Tuple[ModelType, Dict[str, Any]]:
 def extract_id_from_annotation(annotation_str: str, uri_patterns: List[str], bqbiol_qualifiers: list = None) -> List[str]:
     """
     Helper function to extract IDs from annotation string using both URI patterns.
-    If bqbiol_qualifiers is provided, also search within those qualifier blocks for matches.
+    If bqbiol_qualifiers are provided, also search within those qualifier blocks for matches.
     """
     ids = set()
 
@@ -90,6 +90,51 @@ def extract_id_from_annotation(annotation_str: str, uri_patterns: List[str], bqb
             ids.update(matches)
 
     return list(ids)
+
+def extract_id_and_qualifier_from_annotation(annotation_str: str, uri_patterns: List[str], bqbiol_qualifiers: list = None) -> Tuple[List[str], List[str]]:
+    """
+    Helper function to extract IDs and their corresponding qualifiers from annotation string.
+    
+    Args:
+        annotation_str: XML annotation string
+        uri_patterns: List of URI patterns to search for
+        bqbiol_qualifiers: List of bqbiol qualifiers to extract (None for all)
+        
+    Returns:
+        Tuple of (ids, qualifiers) where qualifiers[i] corresponds to ids[i]
+    """
+    ids = []
+    qualifiers = []
+    
+    if bqbiol_qualifiers:
+        # Search within specific qualifier blocks
+        for qualifier in bqbiol_qualifiers:
+            qualifier_match = r'<bqbiol:{}[^>]*?>.*?</bqbiol:{}>'.format(
+                re.escape(qualifier), re.escape(qualifier)
+            )
+            qualifier_blocks = re.findall(qualifier_match, annotation_str, flags=re.DOTALL)
+            
+            for block in qualifier_blocks:
+                # Search for URI patterns within this qualifier block
+                for pattern in uri_patterns:
+                    matches = re.findall(pattern, block)
+                    for match in matches:
+                        ids.append(match)
+                        qualifiers.append(qualifier)
+    else:
+        # If no specific qualifiers given, search for all qualifiers
+        # Find all bqbiol qualifier blocks and extract their content
+        full_blocks = re.findall(r'<bqbiol:([^>]+)[^>]*?>(.*?)</bqbiol:\1>', annotation_str, flags=re.DOTALL)
+        
+        for qualifier_name, block_content in full_blocks:
+            # Search for URI patterns within this qualifier block
+            for pattern in uri_patterns:
+                matches = re.findall(pattern, block_content)
+                for match in matches:
+                    ids.append(match)
+                    qualifiers.append(qualifier_name)
+    
+    return ids, qualifiers
 
 def find_species_with_chebi_annotations(model_file: str, bqbiol_qualifiers: list = None) -> Dict[str, List[str]]:
     """
@@ -148,6 +193,107 @@ def find_species_with_chebi_annotations(model_file: str, bqbiol_qualifiers: list
                         chebi_annotations[qual_species_id] = chebi_ids
 
     return chebi_annotations
+
+def find_species_with_annotations_and_qualifiers(model_file: str, database: str, bqbiol_qualifiers: list = None) -> Tuple[Dict[str, List[str]], Dict[str, Dict[str, str]]]:
+    """
+    Find species with existing annotations and their corresponding qualifiers for any supported database.
+
+    Args:
+        model_file: Path to the SBML model file
+        database: Database to search ("chebi", "ncbigene", "uniprot")
+        bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
+
+    Returns:
+        Tuple of (annotations, qualifier_annotations) where:
+        - annotations: Dictionary mapping species IDs to their annotation IDs
+        - qualifier_annotations: Dictionary mapping species IDs to a dict of {annotation_id: qualifier}
+    """
+    reader = libsbml.SBMLReader()
+    document = reader.readSBML(model_file)
+    model = document.getModel()
+
+    if model is None:
+        return {}, {}
+
+    model_type, format_info = detect_model_format(model_file)
+    annotations = {}
+    qualifier_annotations = {}
+
+    # Select URI patterns based on database
+    if database == "chebi":
+        uri_patterns = CHEBI_URI_PATTERNS
+    elif database == "ncbigene":
+        uri_patterns = NCBIGENE_URI_PATTERNS
+    elif database == "uniprot":
+        uri_patterns = UNIPROT_URI_PATTERNS
+    else:
+        logger.warning(f"Database {database} not supported")
+        return {}, {}
+
+    # Process species annotations
+    for species in model.getListOfSpecies():
+        species_id = species.getId()
+
+        if species.isSetAnnotation():
+            annotation = species.getAnnotation()
+            annotation_str = annotation.toXMLString()
+            ids, qualifier_list = extract_id_and_qualifier_from_annotation(annotation_str, uri_patterns, bqbiol_qualifiers)
+            if ids:
+                annotations[species_id] = ids
+                # Create mapping from annotation ID to qualifier
+                qualifier_map = {}
+                for i, ann_id in enumerate(ids):
+                    if i < len(qualifier_list):
+                        qualifier_map[ann_id] = qualifier_list[i]
+                    else:
+                        qualifier_map[ann_id] = 'unknown'
+                qualifier_annotations[species_id] = qualifier_map
+
+    # Process FBC gene products if applicable
+    if model_type == ModelType.SBML_FBC and database in ["ncbigene", "uniprot"]:
+        fbc_plugin = model.getPlugin("fbc")
+        if fbc_plugin:
+            for gene_product in fbc_plugin.getListOfGeneProducts():
+                gene_id = gene_product.getId()
+
+                if gene_product.isSetAnnotation():
+                    annotation = gene_product.getAnnotation()
+                    annotation_str = annotation.toXMLString()
+                    ids, qualifier_list = extract_id_and_qualifier_from_annotation(annotation_str, uri_patterns, bqbiol_qualifiers)
+                    if ids:
+                        annotations[gene_id] = ids
+                        # Create mapping from annotation ID to qualifier
+                        qualifier_map = {}
+                        for i, ann_id in enumerate(ids):
+                            if i < len(qualifier_list):
+                                qualifier_map[ann_id] = qualifier_list[i]
+                            else:
+                                qualifier_map[ann_id] = 'unknown'
+                        qualifier_annotations[gene_id] = qualifier_map
+
+    # Process qualitative species if applicable
+    if model_type == ModelType.SBML_QUAL:
+        qual_plugin = model.getPlugin("qual")
+        if qual_plugin:
+            for qual_species in qual_plugin.getListOfQualitativeSpecies():
+                qual_id = qual_species.getId()
+
+                if qual_species.isSetAnnotation():
+                    annotation = qual_species.getAnnotation()
+                    annotation_str = annotation.toXMLString()
+                    ids, qualifier_list = extract_id_and_qualifier_from_annotation(annotation_str, uri_patterns, bqbiol_qualifiers)
+                    if ids:
+                        annotations[qual_id] = ids
+                        # Create mapping from annotation ID to qualifier
+                        qualifier_map = {}
+                        for i, ann_id in enumerate(ids):
+                            if i < len(qualifier_list):
+                                qualifier_map[ann_id] = qualifier_list[i]
+                            else:
+                                qualifier_map[ann_id] = 'unknown'
+                        qualifier_annotations[qual_id] = qualifier_map
+
+    return annotations, qualifier_annotations
     
 def find_species_with_ncbigene_annotations(model_file: str, bqbiol_qualifiers: list = None) -> Dict[str, List[str]]:
     """
@@ -344,7 +490,7 @@ def get_species_display_names(model_file: str, entity_type: str = "chemical") ->
     
     model_type, format_info = detect_model_format(model_file)
     
-    if entity_type == "gene":
+    if entity_type == "gene" or entity_type == "protein":
         names = {}
         
         if model_type == ModelType.SBML_FBC:
@@ -378,7 +524,8 @@ def get_species_display_names(model_file: str, entity_type: str = "chemical") ->
                         qual_name = qual_id
                     
                     names[qual_id] = qual_name
-        
+        else:
+            names = {val.getId(): val.getName() for val in model.getListOfSpecies()}
         return names
     else:
         # Use regular species for chemical entities
@@ -653,7 +800,7 @@ def extract_model_info(model_file: str, species_ids: List[str], entity_type: str
     ########## REACTIONS/TRANSITIONS ##########
     reactions = []
     
-    if entity_type == "gene" and model_type == ModelType.SBML_QUAL:
+    if (entity_type == "gene" or entity_type == "protein") and model_type == ModelType.SBML_QUAL:
         # For SBML-qual gene models, extract boolean transitions
         reactions = extract_qual_transitions(model_file, species_ids)
         
@@ -667,7 +814,7 @@ def extract_model_info(model_file: str, species_ids: List[str], entity_type: str
         # Filter display names to include our target species and all related species
         filtered_display_names = {species_id: all_display_names.get(species_id, "") for species_id in related_species if species_id in all_display_names}
         
-    elif entity_type == "gene" and model_type == ModelType.SBML_FBC:
+    elif (entity_type == "gene" or entity_type == "protein") and model_type == ModelType.SBML_FBC:
         # For SBML-fbc gene models, reactions are empty (genes don't participate in reactions directly)
         reactions = []
     
@@ -738,7 +885,7 @@ Reason: …
 Model: "{model_info["model_name"]}" 
 // Display Names:
 {model_info["display_names"]}
-// Boolean Transitions:
+// Boolean Transitions (target = rule):
 {chr(10).join(model_info["reactions"])}
 // Notes:
 {model_info["model_notes"]}
@@ -750,7 +897,7 @@ SpeciesA: "name1", "name2", …
 SpeciesB:  …
 Reason: …
             """
-        else:
+        elif model_type == ModelType.SBML_FBC:
             # SBML-fbc models don't have reactions for genes
             prompt = f"""Now annotate these:
 {entity_type.title()} to annotate: {", ".join(species_ids)}
@@ -767,8 +914,84 @@ SpeciesA: "name1", "name2", …
 SpeciesB:  …
 Reason: …
             """
+        else:
+            # SBML reactions may contain genes
+            prompt = f"""Now annotate these:
+{entity_type.title()} to annotate: {", ".join(species_ids)}
+Model: "{model_info["model_name"]}" 
+// Display Names:
+{model_info["display_names"]}
+// Reactions:
+{chr(10).join(model_info["reactions"])}
+// Notes:
+{model_info["model_notes"]}
+
+Return up to 3 standardized names or common synonyms for each {entity_type}, ranked by likelihood.
+Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type}s after 'Reason:' by the end.
+
+SpeciesA: "name1", "name2", …
+SpeciesB:  …
+Reason: …
+            """
+    # For protein, format prompt differently based on model type
+    elif entity_type == "protein":
+        if model_type == ModelType.SBML_QUAL:
+            # SBML-qual models have boolean transitions
+            prompt = f"""Now annotate these:
+{entity_type.title()} to annotate: {", ".join(species_ids)}
+Model: "{model_info["model_name"]}" 
+// Display Names:
+{model_info["display_names"]}
+// Boolean Transitions (target = rule):
+{chr(10).join(model_info["reactions"])}
+// Notes:
+{model_info["model_notes"]}
+
+Return up to 3 standardized names or common synonyms for each {entity_type}, ranked by likelihood.
+Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type}s after 'Reason:' by the end.
+
+SpeciesA: "name1", "name2", …
+SpeciesB:  …
+Reason: …
+        """
+        elif model_type == ModelType.SBML_FBC:
+            # SBML-fbc models don't have reactions for proteins
+            prompt = f"""Now annotate these:
+{entity_type.title()} to annotate: {", ".join(species_ids)}
+Model: "{model_info["model_name"]}" 
+// Display Names:
+{model_info["display_names"]}
+// Notes:
+{model_info["model_notes"]}
+
+Return up to 3 standardized names or common synonyms for each {entity_type}, ranked by likelihood.
+Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type} after 'Reason:' by the end.
+
+SpeciesA: "name1", "name2", …
+SpeciesB:  …
+Reason: …
+        """
+        else:
+            # SBML reactions may contain proteins
+            prompt = f"""Now annotate these:
+{entity_type.title()} to annotate: {", ".join(species_ids)}
+Model: "{model_info["model_name"]}" 
+// Display Names:
+{model_info["display_names"]}
+// Reactions:
+{chr(10).join(model_info["reactions"])}
+// Notes:
+{model_info["model_notes"]}
+
+Return up to 3 standardized names or common synonyms for each {entity_type}, ranked by likelihood.
+Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type} after 'Reason:' by the end.
+
+SpeciesA: "name1", "name2", …
+SpeciesB:  …
+Reason: …
+        """
     else:
-        # Original format for chemical entities
+        # chemical entities
         prompt = f"""Now annotate these:
 {entity_type.title()} to annotate: {", ".join(species_ids)}
 Model: "{model_info["model_name"]}"
@@ -787,5 +1010,3 @@ SpeciesB:  …
 Reason: …
         """
     return prompt 
-
-

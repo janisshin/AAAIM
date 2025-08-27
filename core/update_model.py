@@ -115,10 +115,15 @@ def update_annotation(
             action = str(row.get('update_annotation', 'ignore')).lower()
             annotation = row.get('annotation', '')
             typ = row.get('type', '')
+            # Get qualifier from the row, fall back to default if not specified
+            row_qualifier = row.get('qualifier', qualifier)
+            if row_qualifier == 'NA' or not row_qualifier:
+                row_qualifier = qualifier  # Use default qualifier
+            
             if action == 'add' and annotation:
                 if ':' in annotation:
                     knowledge_resource, identifier = annotation.split(':', 1)
-                    to_add.append((knowledge_resource.lower(), annotation))
+                    to_add.append((knowledge_resource.lower(), annotation, row_qualifier))
             elif action == 'delete' and annotation:
                 if ':' in annotation:
                     knowledge_resource, identifier = annotation.split(':', 1)
@@ -142,31 +147,83 @@ def update_annotation(
             annotation_str = sbml_elem.getAnnotation().toXMLString()
         else:
             annotation_str = ''
-        ann_dict = divide_existing_annotation(annotation_str, f'bqbiol:{qualifier}') if annotation_str else None
-        existing_items = ann_dict['items'] if ann_dict else []
+        # Handle existing annotations - preserve all qualifier blocks
+        existing_items = []
+        if annotation_str:
+            # Extract all bqbiol qualifier blocks
+            qualifier_blocks = re.findall(r'<bqbiol:([^>]+)[^>]*?>(.*?)</bqbiol:\1>', annotation_str, flags=re.DOTALL)
+            for qual_name, block_content in qualifier_blocks:
+                # Extract items from this qualifier block
+                rdf_li_pattern = r"<rdf:li[^>]*/>"
+                items = re.findall(rdf_li_pattern, block_content)
+                for item in items:
+                    existing_items.append((item, qual_name))
+        
         # Parse all items, keep non-target ontologies, operate only on target ontology
         keep_items = []
         removed_this_species = 0
-        for ont_type, ont_id, item in extract_ontology_from_items(existing_items):
+        
+        # Group existing items by qualifier
+        existing_by_qualifier = {}
+        for item, qual_name in existing_items:
+            if qual_name not in existing_by_qualifier:
+                existing_by_qualifier[qual_name] = []
+            existing_by_qualifier[qual_name].append(item)
+        
+        # Remove items to delete
+        for ont_type, ont_id, item in extract_ontology_from_items([item for item, _ in existing_items]):
             # Only match for the correct ontology type and full identifier
             if ont_type is not None and (ont_type.lower(), ont_id) in to_delete:
                 removed += 1
                 removed_this_species += 1
+                # Remove from all qualifier blocks
+                for qual_name in list(existing_by_qualifier.keys()):
+                    existing_by_qualifier[qual_name] = [i for i in existing_by_qualifier[qual_name] if i != item]
                 continue
-            keep_items.append(item)
+        
         # Add new terms (avoid duplicates)
-        existing_set = set((ont_type.lower(), ont_id) for ont_type, ont_id, _ in extract_ontology_from_items(keep_items) if ont_type)
+        existing_set = set((ont_type.lower(), ont_id) for ont_type, ont_id, _ in extract_ontology_from_items([item for item, _ in existing_items]) if ont_type)
+        
+        # Group new items by qualifier
+        new_by_qualifier = {}
         for ont in to_add:
-            if ont not in existing_set:
-                keep_items.append(create_annotation_item(ont[0], ont[1]))
+            if len(ont) == 3:  # New format with qualifier
+                knowledge_resource, annotation, row_qualifier = ont
+            else:  # Old format without qualifier
+                knowledge_resource, annotation = ont
+                row_qualifier = qualifier
+            
+            if (knowledge_resource, annotation) not in existing_set:
+                if row_qualifier not in new_by_qualifier:
+                    new_by_qualifier[row_qualifier] = []
+                new_by_qualifier[row_qualifier].append(create_annotation_item(knowledge_resource, annotation))
                 added += 1
-        final_items = clean_items(keep_items)
-        if ann_dict:
-            new_anno = insert_items_back_to_container(ann_dict['container'], final_items, f'bqbiol:{qualifier}')
-        else:
+        
+        # Merge existing and new items by qualifier
+        final_by_qualifier = {}
+        for qual_name in set(list(existing_by_qualifier.keys()) + list(new_by_qualifier.keys())):
+            final_by_qualifier[qual_name] = []
+            if qual_name in existing_by_qualifier:
+                final_by_qualifier[qual_name].extend(existing_by_qualifier[qual_name])
+            if qual_name in new_by_qualifier:
+                final_by_qualifier[qual_name].extend(new_by_qualifier[qual_name])
+        
+        # Build new annotation string
+        if final_by_qualifier:
             meta_id = species_id
-            qualifier_tag = f'bqbiol:{qualifier}'
-            new_anno = f'<annotation>\n  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">\n    <rdf:Description rdf:about="#' + meta_id + '">\n      <' + qualifier_tag + '>\n        <rdf:Bag>\n' + '\n'.join(f'          {item}' for item in final_items) + f'\n        </rdf:Bag>\n      </' + qualifier_tag + '>\n    </rdf:Description>\n  </rdf:RDF>\n</annotation>'
+            new_anno = f'<annotation>\n  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">\n    <rdf:Description rdf:about="#{meta_id}">\n'
+            
+            for qual_name, items in final_by_qualifier.items():
+                if items:  # Only add qualifier blocks with items
+                    qualifier_tag = f'bqbiol:{qual_name}'
+                    new_anno += f'      <{qualifier_tag}>\n        <rdf:Bag>\n'
+                    for item in items:
+                        new_anno += f'          {item}\n'
+                    new_anno += f'        </rdf:Bag>\n      </{qualifier_tag}>\n'
+            
+            new_anno += '    </rdf:Description>\n  </rdf:RDF>\n</annotation>'
+        else:
+            new_anno = ''
         sbml_elem.setAnnotation(new_anno)
         if to_add or removed_this_species:
             updated_species.add(species_id)

@@ -200,24 +200,31 @@ def load_uniprot_label_dict(tax_id: str = None) -> Dict[str, str]:
     
     Args:
         tax_id: If provided, loads organism-specific reference file.
-                If None, tries to load the old combined file for backwards compatibility.
+                If None, tries to load the combined file
     
     Returns:
         Dictionary mapping UniProt IDs to their labels
     """
-    global _NCBIGENE_LABEL_DICT
+    global _UNIPROT_LABEL_DICT
     
-    if _NCBIGENE_LABEL_DICT is None:
-        data_file = get_data_dir() / "ncbigene" / REF_NCBIGENE2LABEL
-        
-        if not data_file.exists():
-            raise FileNotFoundError(f"NCBI gene label data file not found: {data_file}")
-        
-        with lzma.open(data_file, 'rb') as f:
-            _NCBIGENE_LABEL_DICT = pickle.load(f)
+    if _UNIPROT_LABEL_DICT is not None:
+        return _UNIPROT_LABEL_DICT
+
+    if tax_id:
+        # Load organism-specific file
+        data_file = get_data_dir() / "uniprot" / f"uniprot2label_tax{tax_id}.lzma"
+    else:
+        # Try to load combined file
+        data_file = get_data_dir() / "uniprot" / REF_UNIPROT2LABEL
     
-    # Cache the result
-    load_uniprot_label_dict._cache[cache_key] = label_dict
+    if not data_file.exists():
+        if tax_id:
+            raise FileNotFoundError(f"UniProt label data file not found for tax_id {tax_id}: {data_file}")
+        else:
+            raise FileNotFoundError(f"UniProt label data file not found: {data_file}")
+    
+    with lzma.open(data_file, 'rb') as f:
+        label_dict = pickle.load(f)
     
     return label_dict
 
