@@ -3,6 +3,7 @@ python-libsbml==5.20.5
 pandas==2.2.3
 numpy==2.2.2
 dotenv==0.9.9
+rdflib==7.1.4
 
 # Model parsing and context extraction
 antimony==2.15.0
