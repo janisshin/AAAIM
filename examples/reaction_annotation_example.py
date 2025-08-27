@@ -8,6 +8,7 @@ This script demonstrates how to use AAAIM for reaction annotation using the KEGG
 import os
 import sys
 import pandas as pd
+from itertools import chain
 import lzma
 import pickle
 
@@ -27,6 +28,8 @@ from core.update_model import update_annotation
 from core.model_info import extract_reactions_from_sbml
 from core.annotation_workflow import map_reactions_to_kegg
 
+
+TOP_K = 10
 
 # Define common cofactors to ignore in reaction matching
 cofactors_to_ignore = {
@@ -52,7 +55,8 @@ def main():
     print("=" * 55)
     
     # Configuration
-    llm_model = "meta-llama/llama-3.3-70b-instruct:free"  # or "gpt-4o-mini"
+    # llm_model = "meta-llama/llama-3.3-70b-instruct:free"  # or "gpt-4o-mini"
+    llm_model = "meta-llama/llama-3.1-8b-instruct"
 
     # Check if KEGG reaction database is available
     available_dbs = get_available_databases()
@@ -69,7 +73,9 @@ def main():
         return
     
     # Example model file (you can replace this with your own model)
-    model_file = "tests/test_models/BIOMD0000000190.xml"
+    model_file = "tests/test_models/small_model.xml"
+    # model_file = "tests/test_models/BIOMD0000000190.xml"
+
     
     # Check if model file exists
     if not os.path.exists(model_file):
@@ -93,14 +99,15 @@ def main():
     print("\n1. Reaction Annotation Workflow (for models without reaction annotations)")
     print("-" * 65)
     
-    # first annotate model using ChEBI
+    """# first annotate model using ChEBI
     try:    
         recommendations_df, metrics = annotate_model(
             model_file=model_file,
-            llm_model=llm_model,  # You can change this to your preferred model
+            llm_model=llm_model,
             entity_type="chemical",
             database="chebi",
-            method="direct",
+            method="rag",
+            top_k=TOP_K,
         )
         # Display annotation results
         if not recommendations_df.empty:
@@ -136,7 +143,10 @@ def main():
     except Exception as e:
         print(f"Processing failed: {e}")
         import traceback
-        traceback.print_exc()
+        traceback.print_exc()"""
+
+    # recommendations_df = pd.read_csv('recommendations.csv')
+    recommendations_df = pd.read_csv('recommendations_correctedChEBI.csv')
 
     # Example 2: Custom KEGG Reaction Mapping
     print("\n2. Custom KEGG Reaction Mapping")
@@ -145,44 +155,36 @@ def main():
     # Load ChEBI to KEGG mapping
     chebi_to_kegg_map = load_chebi2kegg_dict()
     
-
     # Add KEGG IDs to chemical recommendations if available
     if not recommendations_df.empty and 'annotation' in recommendations_df.columns:
         # Map ChEBI IDs to KEGG IDs
         recommendations_df['KEGG_ID'] = recommendations_df['annotation'].apply(
             lambda x: chebi_to_kegg_map.get(x, "")
         )
-    
-    high_score_recommendations = recommendations_df.loc[recommendations_df.groupby('id')['match_score'].idxmax()].reset_index(drop=True)
-    #print("\nSample of ChEBI to KEGG mapping:")
-    print(high_score_recommendations[['id', 'display_name', 'annotation', 'KEGG_ID', 'match_score']].head(10).to_string(index=False))
-        
-    reactions, _ = extract_reactions_from_sbml(model_file, list(high_score_recommendations['id'].unique()))
 
-    test_reactions = map_reactions_to_kegg(reactions, high_score_recommendations[['id', 'KEGG_ID']])
+    # Filter out rows with empty KEGG_ID
+    filtered_df = recommendations_df[recommendations_df['KEGG_ID'].notna() & (recommendations_df['KEGG_ID'] != '')]
+
+    # Keep rows that have the max match_score per id
+    high_score_recommendations = filtered_df[
+        filtered_df['match_score'] == filtered_df.groupby('id')['match_score'].transform('max')
+    ].reset_index(drop=True)
     
-        ##############################################
-    try: ## idk if this try loop is necessary
-        # Load KEGG reaction data
-        kegg_reaction_features = load_kegg_reaction_features_dict()
-        
-        # Normalize reactions
-        normalized_reactions = normalize_reactions(test_reactions, cofactors_to_ignore)
-        print(f"Normalized {len(normalized_reactions)} test reactions")
-        
-        # Get KEGG recommendations
-        match_results = database_search._get_kegg_recommendations_rulebased(
-            normalized_reactions, kegg_reaction_features, 
-            cofactors_to_ignore)
-        
-        # Build recommendation table
-        recommendation_rows = build_recommendation_table(match_results)
-        kegg_recommendations_df = pd.DataFrame(recommendation_rows)
+    #print("\nSample of ChEBI to KEGG mapping:")
+    print(high_score_recommendations[['id', 'display_name', 'annotation', 'KEGG_ID', 'match_score']].head(30).to_string(index=False))
+
+    reactions, _ = extract_reactions_from_sbml(model_file, list(high_score_recommendations['id'].unique()))
+    normalized_reactions = map_reactions_to_kegg(reactions, high_score_recommendations[['id', 'KEGG_ID']])
+
+    # Get KEGG recommendations
+    match_results = database_search._get_kegg_recommendations_rulebased(
+        normalized_reactions, cofactors_to_ignore = cofactors_to_ignore)
     
-    except Exception as e:
-        print(f"\nError in custom KEGG reaction mapping: {e}")
-        import traceback
-        traceback.print_exc() 
+    ## JANISTAG -- Up to here, it's good
+
+    # Build recommendation table
+    recommendation_rows = build_recommendation_table(match_results, top_k=TOP_K)
+    kegg_recommendations_df = pd.DataFrame(recommendation_rows)
 
     kegg_output_file = "kegg_reaction_recommendations.csv"
     if not kegg_recommendations_df.empty:
@@ -198,7 +200,7 @@ def main():
     chebi_annotated_model = model_file.split('.')[0]+'_annotated.xml'
     print("Time to update the file with annotations!")
     
-    if os.path.exists(output_file):
+    """if os.path.exists(output_file):
         update_annotation(
             original_model_path=model_file,
             recommendation_table="recommendations.csv",  # or a pandas DataFrame
@@ -219,7 +221,7 @@ def main():
         except Exception as e:
             print(f"Reaction annotation failed: {e}")
     else: 
-        return
+        return"""
     
     """
     # Example 2: Reaction Curation Workflow (for models with existing reaction annotations)
