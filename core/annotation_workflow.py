@@ -19,6 +19,7 @@ from core.model_info import find_species_with_chebi_annotations, find_species_wi
 from core.llm_interface import get_system_prompt, query_llm, parse_llm_response
 from core.data_types import Recommendation
 from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, load_chebi_label_dict, load_ncbigene_label_dict, load_uniprot_label_dict
+from core.database_search import cancel_spectators
 
 logger = logging.getLogger(__name__)
 
@@ -488,7 +489,7 @@ def build_recommendation_table(match_results, top_k=5):
     
     return rows
 
-def map_reactions_to_kegg(rxn_list: List[str], id_df: pd.DataFrame) -> List[Dict[str, Any]]:
+def map_reactions_to_kegg(rxn_list: List[str], id_df: pd.DataFrame, spectators=False) -> List[Dict[str, Any]]:
     """
     Map reaction strings to KEGG reaction identifiers.
     
@@ -630,6 +631,10 @@ def map_reactions_to_kegg(rxn_list: List[str], id_df: pd.DataFrame) -> List[Dict
 
         # Parse reaction equation into reactants and products
         reactants, products = parse_reaction_equation(rxn_str)
+
+        if not spectators: 
+            # Stoichiometric cancellation -- eliminate specatators
+            reactants, products = cancel_spectators(reactants, products)
 
         # Map metabolite IDs to KEGG IDs
         substrates_mapped = map_metabolites_to_kegg(reactants, id_lookup)

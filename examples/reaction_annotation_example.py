@@ -174,11 +174,12 @@ def main():
     print(high_score_recommendations[['id', 'display_name', 'annotation', 'KEGG_ID', 'match_score']].head(30).to_string(index=False))
 
     reactions, _ = extract_reactions_from_sbml(model_file, list(high_score_recommendations['id'].unique()))
-    normalized_reactions = map_reactions_to_kegg(reactions, high_score_recommendations[['id', 'KEGG_ID']])
+    normalized_reactions = map_reactions_to_kegg(reactions, high_score_recommendations[['id', 'KEGG_ID']], spectators=False)
 
     # Get KEGG recommendations
     match_results = database_search._get_kegg_recommendations_rulebased(
-        normalized_reactions, cofactors_to_ignore = cofactors_to_ignore)
+        normalized_reactions, cofactors_to_ignore = cofactors_to_ignore, 
+        spectators=False)
     
     ## JANISTAG -- Up to here, it's good
 

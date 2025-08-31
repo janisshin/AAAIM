@@ -617,7 +617,7 @@ def _get_uniprot_recommendations_direct(species_ids: List[str], synonyms_dict, t
     return recommendations
 
 
-def _get_kegg_recommendations_rulebased(reactions_list: List[str], cofactors_to_ignore: set = {}, top_k: int = None) -> List[Recommendation]:
+def _get_kegg_recommendations_rulebased(reactions_list: List[str], cofactors_to_ignore: set = {}, top_k: int = None, spectators=False) -> List[Recommendation]:
     """
     Find KEGG reaction recommendations by matching model reactions to KEGG reactions.
     
@@ -666,7 +666,7 @@ def _get_kegg_recommendations_rulebased(reactions_list: List[str], cofactors_to_
                         unique_list.append(d)
                 filtered_reaction_list = unique_list
             matches = []
-            
+
             # in case there are multiple candidates for a substrate or product group,
             # create a list of cartesian products of substrate and product groups
             cartesian_products = list(product(model_subs, model_prods))
@@ -674,6 +674,9 @@ def _get_kegg_recommendations_rulebased(reactions_list: List[str], cofactors_to_
             for kegg_rxn in filtered_reaction_list:
                 kegg_subs = Counter(set(kegg_rxn.get('substrates', [])))
                 kegg_prods = Counter(set(kegg_rxn.get('products', [])))
+
+                if not spectators:
+                    kegg_subs, kegg_prods = cancel_spectators(kegg_subs, kegg_prods)
 
                 for i in cartesian_products: 
                     # Score both orientations (forward and reverse)
@@ -689,7 +692,10 @@ def _get_kegg_recommendations_rulebased(reactions_list: List[str], cofactors_to_
                                 compute_similarity(i[1], kegg_prods, cofactors_to_ignore)                
                         score_reverse = compute_similarity(i[0], kegg_prods, cofactors_to_ignore) + \
                                 compute_similarity(i[1], kegg_subs, cofactors_to_ignore)
-                
+
+                    score_forward /= 2
+                    score_reverse /= 2
+                    
                     max_score = max(score_forward, score_reverse)
                     
                     matches.append({
@@ -777,6 +783,32 @@ def filter_kegg_reactions(model_subs: List[Counter], model_prods: List[Counter],
     
     return filtered_reactions
 
+def cancel_spectators(model_subs: Counter, model_prods: Counter):
+    """
+    Cancel spectator metabolites (same metabolite and same stoichiometry)
+    from substrates and products. Works directly with Counters.
+    
+    Parameters
+    ----------
+    model_subs : Counter
+        Substrate stoichiometry, e.g., Counter({"ATP": 1, "Glucose": 1})
+    model_prods : Counter
+        Product stoichiometry, e.g., Counter({"ADP": 1, "Glucose": 1})
+    
+    Returns
+    -------
+    (Counter, Counter)
+        New Counters after cancellation
+    """
+    # Find the intersection (min stoichiometry of each metabolite)
+    common = model_subs & model_prods   # stoichiometry-aware AND
+
+    # Subtract the common terms from both sides
+    new_subs = model_subs - common
+    new_prods = model_prods - common
+
+    return new_subs, new_prods
+
 def compute_similarity(counter1: Counter, counter2: Counter, cofactors_to_ignore: set = {}) -> float:
     """
     Compute Jaccard-like similarity between two reaction sides with stoichiometry awareness.
@@ -795,7 +827,7 @@ def compute_similarity(counter1: Counter, counter2: Counter, cofactors_to_ignore
     # Filter out cofactors
     c1 = {k: v for k, v in counter1.items() if k not in cofactors_to_ignore}
     c2 = {k: v for k, v in counter2.items() if k not in cofactors_to_ignore}
-    
+
     # Perfect match if both are empty after filtering cofactors
     if not c1 and not c2:
         return 1.0
