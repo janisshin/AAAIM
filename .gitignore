@@ -15,3 +15,7 @@ README_ChEBI_RAG.md
 chroma_storage/
 results/
 scratch.ipynb
+
+**/chebi_kegg.json
+**/chebi.owl.gz
+**/kegg_compound_flats

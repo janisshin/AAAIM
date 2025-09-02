@@ -1,0 +1,8 @@
+file,type,id,display_name,annotation,annotation_label,match_score,existing,update_annotation
+small_model.xml,chemical,Glucose,,CHEBI:4167,glucose,1.0,0,ignore
+small_model.xml,chemical,G6P,,CHEBI:17665,ga61,0.388,0,ignore
+small_model.xml,chemical,F6P,,CHEBI:61553,f6itc,0.634,0,add
+small_model.xml,chemical,F16BP,,CHEBI:37736,f6itc,0.493,0,ignore
+small_model.xml,chemical,ATP,,CHEBI:15422,atp,1.0,0,add
+small_model.xml,chemical,ADP,,CHEBI:16761,adp,1.0,0,ignore
+small_model.xml,chemical,G3P,,CHEBI:29052,gpg(18:3w3/18:1w9),0.147,0,ignore

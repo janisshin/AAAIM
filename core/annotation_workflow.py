@@ -14,10 +14,12 @@ import logging
 import numpy as np
 import re
 from collections import Counter
+import itertools
 from core.model_info import find_species_with_chebi_annotations, find_species_with_annotations_and_qualifiers, find_species_with_ncbigene_annotations, find_species_with_uniprot_annotations, find_reactions_with_kegg_annotations, extract_model_info, format_prompt, get_all_species_ids
 from core.llm_interface import get_system_prompt, query_llm, parse_llm_response
 from core.data_types import Recommendation
 from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, load_chebi_label_dict, load_ncbigene_label_dict, load_uniprot_label_dict
+from core.database_search import cancel_spectators
 
 logger = logging.getLogger(__name__)
 
@@ -151,7 +153,7 @@ def annotate_single_model(model_file: str,
         if method == "direct":
             recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
         elif method == "rag":
-            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi")
+            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
@@ -474,8 +476,6 @@ def build_recommendation_table(match_results, top_k=5):
         List of dictionaries for DataFrame conversion
     """
     rows = []
-    
-    # print(match_results) ### DELETE LATER
 
     for entry in match_results:
         model_rxn_str = entry.id  # It's just a string here
@@ -489,45 +489,163 @@ def build_recommendation_table(match_results, top_k=5):
     
     return rows
 
-def map_reactions_to_kegg(rxn_list, id_df):
-    # Make a quick lookup from the DataFrame for faster mapping
-    id_lookup = id_df.set_index('id')['KEGG_ID']
-
-    def parse_reaction_equation(rxn_str):
-        # Assume directional info is unreliable
-        if "<=>" in rxn_str or "=>" in rxn_str or "->" in rxn_str:
-            lhs, rhs = re.split(r"<=>|=>|->", rxn_str)
-        else:
-            return [], []
+def map_reactions_to_kegg(rxn_list: List[str], id_df: pd.DataFrame, spectators=False) -> List[Dict[str, Any]]:
+    """
+    Map reaction strings to KEGG reaction identifiers.
+    
+    This function processes a list of reaction strings and maps the metabolites
+    in each reaction to their corresponding KEGG IDs using the provided mapping DataFrame.
+    
+    Args:
+        rxn_list: List of reaction strings in the format "id: reactants -> products"
+        id_df: DataFrame with columns 'id' and 'KEGG_ID' mapping metabolite IDs to KEGG IDs
         
-        def strip_and_split(side):
+    Returns:
+        List of dictionaries containing mapped reaction information:
+        - id: Reaction identifier
+        - reaction_string: Original reaction string
+        - substrates: List of Counter objects with mapped substrate KEGG IDs and stoichiometry
+        - products: List of Counter objects with mapped product KEGG IDs and stoichiometry
+    """
+    # Create lookup table from DataFrame for faster mapping
+    id_lookup = id_df.set_index('id')['KEGG_ID']
+    
+    def parse_reaction_equation(rxn_str: str) -> Tuple[Counter, Counter]:
+        """
+        Parse a reaction equation string into reactants and products.
+        
+        Args:
+            rxn_str: Reaction equation string (e.g., "A + 2 B -> C + D")
+            
+        Returns:
+            Tuple of (reactants_counter, products_counter) where each counter
+            maps metabolite IDs to their stoichiometric coefficients
+        """
+        # Split reaction string into left-hand side (reactants) and right-hand side (products)
+        if "=>" in rxn_str or "->" in rxn_str:
+            lhs, rhs = re.split(r"=>|->", rxn_str)
+        else:
+            return Counter(), Counter()
+        
+        def parse_metabolites(side: str) -> Counter:
+            """
+            Parse one side of a reaction equation into a Counter of metabolites.
+            
+            Args:
+                side: String representing one side of a reaction equation
+                
+            Returns:
+                Counter mapping metabolite IDs to their stoichiometric coefficients
+            """
             side = side.strip()
             if not side:  # Empty or all whitespace
-                return []
-            return [s.strip().split()[-1].lstrip('$') for s in side.split("+")]
+                return Counter()
+            
+            result = Counter()
+            # Process each metabolite term (separated by +)
+            for term in side.split("+"):
+                parts = term.strip().split()
+                
+                if len(parts) == 1:
+                    # No explicit coefficient (assumed to be 1)
+                    coeff = 1
+                    met = parts[0]
+                else:
+                    # First part is coefficient, last part is metabolite ID
+                    try:
+                        coeff = float(parts[0])
+                    except ValueError:
+                        # If conversion fails, assume coefficient is 1
+                        coeff = 1
+                        met = term.strip()
+                    else:
+                        met = parts[-1]
+                
+                # Remove $ prefix if present (sometimes used in model IDs)
+                met = met.lstrip('$')
+                result[met] += coeff
+                
+            return result
         
-        reactants = strip_and_split(lhs)
-        products = strip_and_split(rhs)
+        reactants = parse_metabolites(lhs)
+        products = parse_metabolites(rhs)
         return reactants, products
+    
+    def map_metabolites_to_kegg(counter: Counter, mapping_df: pd.Series) -> List[Counter]:
+        """
+        Map metabolite IDs to KEGG IDs while preserving stoichiometry.
+        
+        For each metabolite in the counter, finds all possible KEGG IDs and
+        generates all possible combinations of mappings.
+        
+        Args:
+            counter: Counter mapping metabolite IDs to stoichiometric coefficients
+            mapping_df: Series mapping metabolite IDs to KEGG IDs
+            
+        Returns:
+            List of Counter objects representing all possible KEGG ID mappings
+        """
+        # For each metabolite in the counter, get possible KEGG IDs
+        id_choices = []
+        
+        for met, coeff in counter.items():
+            # Try to find KEGG IDs for this metabolite
+            try:
+                kegg_ids = mapping_df.loc[met]
+                
+                if isinstance(kegg_ids, pd.Series) or len(kegg_ids) > 1:
+                    # Multiple KEGG IDs for this metabolite
+                    choices = [(kid[0], coeff) for kid in kegg_ids.tolist()]
+                else:
+                    # Single KEGG ID
+                    choices = [(kegg_ids[0], coeff)]
+                    
+                id_choices.append(choices)
+            except (KeyError, IndexError):
+                # Metabolite not found in mapping, skip it
+                logger.debug(f"No KEGG mapping found for metabolite: {met}")
+                continue
+        
+        if not id_choices:
+            return []
+            
+        # Generate all possible combinations of KEGG IDs
+        counters = []
+        for combo in itertools.product(*id_choices):
+            counters.append(Counter(dict(combo)))
+            
+        return counters
 
+    # Process each reaction
     output = []
-    for idx, rxn in enumerate(rxn_list, start=1):
-        # Remove reaction name (before the ':') if present
+    
+    # Extract reaction IDs from reaction strings
+    rxn_ids = [rxn.split(":", 1)[0] if ":" in rxn else rxn for rxn in rxn_list]
+    
+    for idx, rxn in enumerate(rxn_list):
+        # Extract reaction string (remove ID prefix if present)
         if ":" in rxn:
             _, rxn_str = rxn.split(":", 1)
         else:
             rxn_str = rxn
 
+        # Parse reaction equation into reactants and products
         reactants, products = parse_reaction_equation(rxn_str)
 
-        # Map IDs to KEGG IDs using your DataFrame
-        subs_counter = Counter(id_lookup.get(r, None) for r in reactants if r in id_lookup.index)
-        prod_counter = Counter(id_lookup.get(p, None) for p in products if p in id_lookup.index)
+        if not spectators: 
+            # Stoichiometric cancellation -- eliminate specatators
+            reactants, products = cancel_spectators(reactants, products)
 
+        # Map metabolite IDs to KEGG IDs
+        substrates_mapped = map_metabolites_to_kegg(reactants, id_lookup)
+        products_mapped = map_metabolites_to_kegg(products, id_lookup)
+
+        # Store mapped reaction
         output.append({
-            "id": f"R{idx}",
-            "substrates": subs_counter,
-            "products": prod_counter
+            "id": rxn_ids[idx],
+            "reaction_string": rxn_str,
+            "substrates": substrates_mapped,
+            "products": products_mapped
         })
     
     return output
