@@ -750,6 +750,18 @@ def _get_kegg_recommendations_rulebased(reactions_list: List[str], cofactors_to_
         traceback.print_exc()
         return []
 
+
+def _get_kegg_recommendations_semantic(reactions_list: List[str], top_k: int = None, spectators=False)-> List[Recommendation]:
+    
+    
+    
+    pass
+
+
+
+
+
+
 def filter_kegg_reactions(model_subs: List[Counter], model_prods: List[Counter], kegg_reaction_features_dict: Dict[str, Any], cofactors_to_ignore={}) -> List[Dict[str, Any]]:
     """
     Filter KEGG reactions based on substrate and product matching.

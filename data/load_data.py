@@ -58,33 +58,75 @@ def load_reference_data(ref_data_path: str) -> Dict[str, List[str]]:
         raise
 
 
+import re
+def extract_brite_hierarchy(brite_text: str):
+    """
+    Extracts only the BRITE hierarchy (excluding [BR:...] tags, EC leaf nodes, 
+    and reaction entries).
+    """
+    lines = brite_text.splitlines()
+    clean_lines = []
+
+    for line in lines:
+        stripped = line.strip()
+        # Skip empty lines
+        if not stripped:
+            continue
+        # Skip lines with [BR:...] tags
+        if "[BR:" in stripped:
+            continue
+        # Skip EC leaf numbers (pure numbers like 2.2.1.6)
+        if re.fullmatch(r"(\d+\.)+\d+", stripped):
+            continue
+        # Skip lines that start with an R number (reaction ID)
+        if re.match(r"R\d{5}", stripped):
+            continue
+
+        clean_lines.append(stripped)
+
+    return "\n".join(clean_lines)
+
+
 def build_chunks_for_embedding(kegg_reactions):
     """Convert parsed KEGG reactions into text + metadata chunks for Chroma."""
-    chunks = []
+    def flatten_list(lst):
+        """
+        Flattens a list into a ';'-separated string.
+        Empty lists return an empty string.
+        """
+        return ";".join(map(str, lst)) if lst else ""
 
-    for rxn in kegg_reactions:
-        ec_line = f"EC: {', '.join(rxn['ec_numbers'])}" if rxn['ec_numbers'] else ""
-        subs = ', '.join(rxn['substrates'])
-        prods = ', '.join(rxn['products'])
+    chunks = {}
 
-        text = f"""KEGG Reaction {rxn['reaction_id']}
-{ec_line}
-Equation: {rxn['raw_equation']}
-Substrates: {subs}
-Products: {prods}
-Pathways: {', '.join(rxn.get('pathways', []))}"""
+    for reaction in kegg_reactions:
+        reaction_id = reaction
+        name = kegg_reactions[reaction].get("NAME", "")
+        ec_number = kegg_reactions[reaction].get("ENZYME", "").split()
+        ec_number = flatten_list([line.strip() for line in ec_number if line.strip()])
+        definition = kegg_reactions[reaction].get("DEFINITION", "")
+        equation = kegg_reactions[reaction].get("EQUATION", "")
+        brite = kegg_reactions[reaction].get("BRITE","")
+        if brite: 
+            brite = extract_brite_hierarchy(brite)# brite.split('\n')[1:-2]
+        pathways = kegg_reactions[reaction].get("PATHWAY", "").splitlines()
+        pathways = flatten_list([line.strip() for line in pathways if line.strip()])
 
-        chunks.append({
-            "reaction_id": rxn["reaction_id"],
+        # Construct the text to embed
+        text = f"Name: {name}\nReaction: {definition}\nType: {brite}"
+
+        # Store in dictionary keyed by compound_id
+        chunks[reaction_id] = {
             "text": text,
             "metadata": {
-                "reaction_id": rxn["reaction_id"],
-                "ec_numbers": ', '.join(rxn["ec_numbers"]),
-                "substrates": ', '.join(rxn["substrates"]),
-                "products": ', '.join(rxn["products"]),
-                "pathways": ', '.join(rxn.get("pathways", []))
+                "reaction_id": reaction_id,
+                "name": name,
+                "ec_number": ec_number,
+                "definition": definition,
+                "equation": equation,
+                "brite": brite,
+                "pathways": pathways,
             }
-        })
+        }
 
     return chunks
 
@@ -104,9 +146,9 @@ def prepare_documents_for_indexing(ref_data: Dict[str, List[str]] | List[Dict], 
         # Use the specialized KEGG chunking function for richer text representation
         chunks = build_chunks_for_embedding(ref_data)
         for chunk in tqdm(chunks, desc="Processing KEGG reactions"):
-            ids.append(chunk["reaction_id"])
-            documents.append(chunk["text"])
-            metadatas.append(chunk["metadata"])
+            ids.append(chunk)
+            documents.append(chunks[chunk].get("text"))
+            metadatas.append(chunks[chunk].get("metadata"))
     else:
         # Handle ChEBI and NCBI gene data which are dictionaries
         for entry_id, names in tqdm(ref_data.items(), desc="Processing entries"):
@@ -386,9 +428,9 @@ def main():
                 raise ValueError("--tax_id is required for uniprot database")
             args.ref_data_path = str(Path(f"uniprot/uniprot2names_tax{args.tax_id}.lzma"))
         elif args.database == "kegg":
-            args.ref_data_path = str(Path("kegg/parsed_kegg_reactions.lzma"))
+            args.ref_data_path = str(Path("kegg/merged_kegg_reactions.lzma"))
             # Check if JSON format is available (for backward compatibility)
-            json_path = str(Path("kegg/parsed_kegg_reactions.json"))
+            json_path = str(Path("kegg/merged_kegg_reactions.json"))
             if os.path.exists(json_path) and not os.path.exists(args.ref_data_path):
                 logger.info(f"Using JSON format for KEGG reactions: {json_path}")
                 args.ref_data_path = json_path
