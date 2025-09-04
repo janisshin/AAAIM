@@ -597,7 +597,7 @@ def get_reaction_display_names(model_file: str) -> Dict[str, str]:
 
     return names
 
-def get_all_reaction_ids(model_file: str, entity_type: str = "reaction") -> List[str]:
+def get_all_reaction_ids(model_file: str) -> List[str]:
     """
     Get all species IDs from an SBML model.
     Supports regular species, FBC gene products, and qual qualitative species.
@@ -609,7 +609,7 @@ def get_all_reaction_ids(model_file: str, entity_type: str = "reaction") -> List
     Returns:
         List of species/gene IDs
     """
-    display_names = get_reaction_display_names(model_file, entity_type)
+    display_names = get_reaction_display_names(model_file)
     return list(display_names.keys())
 
 def extract_qual_transitions(model_file: str, species_ids: List[str]) -> List[str]:
@@ -854,9 +854,9 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
     
     model_type = model_info.get("model_type", ModelType.SBML)
 
-    if entity_type == "kegg":
-        reaction_display_names = get_reaction_display_names(model_file, entity_type) #bench
-        reaction_ids = get_all_reaction_ids(model_file, entity_type)
+    if entity_type == "reaction":
+        reaction_display_names = get_reaction_display_names(model_file)
+        reaction_ids = get_all_reaction_ids(model_file)
 
         prompt = f"""Now annotate these metabolic reactions using KEGG data:
 Reactions to annotate: {", ".join(reaction_ids)}
@@ -868,13 +868,15 @@ Model: "{model_info["model_name"]}"
 // Notes:
 {model_info["model_notes"]}
 
-Return up to 3 KEGG reaction IDs (e.g., R01070) and their associated EC numbers for each reaction, ranked by likelihood.
-Use the following format and do not include any other output.
+Return up to 3 standardized names or common synonyms for each reaction, ranked by likelihood.
+Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type} after 'Reason:' by the end.
 
-SpeciesA: "Rxxxx", "Ryyyy", …
-SpeciesB: …
+ReactionA: "name1", "name2", …
+ReactionB:  …
 Reason: …
         """
+        return prompt 
+
 
     # For gene entities, format prompt differently based on model type
     elif entity_type == "gene":

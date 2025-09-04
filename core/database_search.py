@@ -22,6 +22,7 @@ from utils.constants import REF_CHEBI2LABEL, REF_NAMES2CHEBI, REF_NCBIGENE2LABEL
 from utils.constants import REF_CHEBI2KEGG_COMPOUND, REF_KEGG_REACTION2NAME, REF_KEGG2EC, REF_KEGG_REACTION_FEATURES
 from core.data_types import Recommendation, ReactionRecommendation
 
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.WARNING)
 
@@ -228,6 +229,9 @@ def load_uniprot_label_dict(tax_id: str = None) -> Dict[str, str]:
     
     return label_dict
 
+def load_kegg_label_dict(): 
+    return [] # JANISTAG
+
 def load_chebi2kegg_dict() -> Dict[str, str]:
     """
     Load the ChEBI ID to KEGG compound ID mapping dictionary.
@@ -326,6 +330,49 @@ def remove_symbols(text: str) -> str:
     """
     return re.sub(r'[^a-zA-Z0-9]', '', text)
 
+def extract_classifications(raw_text, classification):
+    """
+    classification (str): either 'brite' or 'orthology'
+    Extracts only the BRITE hierarchy (excluding [BR:...] tags, EC leaf nodes, 
+    and reaction entries).
+    """
+    lines = raw_text.splitlines()
+    clean_lines = []
+
+    if classification == 'brite':
+        for line in lines:
+            stripped = line.strip()
+            # Skip empty lines
+            if not stripped:
+                continue
+            # Skip lines with [BR:...] tags
+            if "[BR:" in stripped:
+                continue
+            # Skip EC leaf numbers (pure numbers like 2.2.1.6)
+            if re.fullmatch(r"(\d+\.)+\d+", stripped):
+                continue
+            # Skip lines that start with an R number (reaction ID)
+            if re.match(r"R\d{5}", stripped):
+                continue
+            
+            parts = stripped.split(maxsplit=1)
+            if len(parts) > 1:
+                clean_lines.append(parts[1].strip())
+            else:
+                clean_lines.append(stripped)
+        return "; ".join(clean_lines)
+    
+    elif classification == 'orthology':
+        for line in lines:
+        # Split once on spaces to remove the Kxxxxx ID
+            parts = line.split(maxsplit=1)
+            if len(parts) > 1:
+                # Remove the EC info if present
+                name = parts[1].split(" [EC:")[0].strip()
+                clean_lines.append(name)
+        return "; ".join(clean_lines)
+    
+
 def get_species_recommendations_direct(species_ids: List[str], synonyms_dict, database: str = "chebi", tax_id: Any = None, top_k: int = 3) -> List[Recommendation]:
     """
     Find recommendations by directly matching against database synonyms.
@@ -347,7 +394,8 @@ def get_species_recommendations_direct(species_ids: List[str], synonyms_dict, da
     elif database == "uniprot":
         return _get_uniprot_recommendations_direct(species_ids, synonyms_dict, tax_id=tax_id, top_k=top_k)
     elif database == "kegg":
-        return _get_kegg_recommendations_rulebased(species_ids, synonyms_dict, tax_id=tax_id, top_k=top_k)
+        # return _get_kegg_recommendations_rulebased(species_ids, synonyms_dict, tax_id=tax_id, top_k=top_k)
+        return _get_kegg_recommendations_direct(species_ids, synonyms_dict, top_k=top_k)
     else:
         logger.error(f"Database {database} not supported for direct search")
         return []
@@ -710,10 +758,10 @@ def _get_kegg_recommendations_rulebased(reactions_list: List[str], cofactors_to_
             matches.sort(key=lambda x: x['match_score'], reverse=True)
             
             # Keep top_k matches
-            if top_k is None:
-                top_matches = matches
-            else:
+            if top_k:
                 top_matches = matches[:top_k]
+            else:
+                top_matches = matches
             
             # Extract candidates and scores for recommendation
             candidates = [match['kegg_reaction_id'] for match in top_matches]
@@ -751,14 +799,144 @@ def _get_kegg_recommendations_rulebased(reactions_list: List[str], cofactors_to_
         return []
 
 
-def _get_kegg_recommendations_semantic(reactions_list: List[str], top_k: int = None, spectators=False)-> List[Recommendation]:
+def _get_kegg_recommendations_direct(reaction_ids: List[str], synonyms_dict, top_k: int = 3) -> List[Recommendation]:
+    """
+    Find KEGG recommendations by directly matching against KEGG compound synonyms.
+    Args:
+        reaction_ids: List of species IDs to evaluate
+        synonyms_dict: Mapping of species IDs to synonyms
+        top_k: Number of top candidates to return per species based on hit_count.
+    """
+    # Load necessary KEGG dictionaries
+    kegg_reaction_features_dict = load_kegg_reaction_features_dict()
     
+    recommendations = []
     
+    for reaction_id in reaction_ids:
+        # Get synonyms for this species ID
+        if isinstance(synonyms_dict, dict):
+            synonyms = synonyms_dict.get(reaction_id, [reaction_id])
+        elif isinstance(synonyms_dict, tuple) and len(synonyms_dict) == 2:
+            # If it's a tuple with two items (dict and reason)
+            synonyms = synonyms_dict[0].get(reaction_id, [reaction_id])
+        else:
+            synonyms = [reaction_id]
+        
+        # Skip if only 'UNK' synonym
+        if synonyms == ['UNK'] or (len(synonyms) == 1 and synonyms[0] == 'UNK'):
+            # Create empty recommendation for UNK
+            recommendation = Recommendation(
+                id=reaction_id,
+                synonyms=synonyms,
+                candidates=[],
+                candidate_names=[],
+                match_score=[]
+            )
+            recommendations.append(recommendation)
+            continue
+        
+        all_candidates = []
+        all_candidate_names = []
+        hit_count = {}
+        
+        # Query for each synonym
+        for synonym in synonyms:
+            norm_synonym = remove_symbols(synonym.lower())
+            
+            if norm_synonym.startswith('R') and len(norm_synonym)==5 and norm_synonym[-5:].isdigit():
+                kegg_reaction_id = norm_synonym.upper()
+                if kegg_reaction_id in kegg_reaction_features_dict:
+                    kegg_name = kegg_reaction_features_dict.get(kegg_id, kegg_id).get("NAME", "")
+                    
+                    if kegg_id not in all_candidates:
+                        all_candidates.append(kegg_id)
+                        all_candidate_names.append(kegg_name)
+                        hit_count[kegg_id] = 1
+                    else:
+                        hit_count[kegg_id] += 1
+            
+            # Then try direct name matching with KEGG reaction names
+            for kegg_id in kegg_reaction_features_dict:
+                name = kegg_reaction_features_dict.get(kegg_id, kegg_id).get("NAME", "")
+                if norm_synonym == remove_symbols(name.lower()): # this could benefit from fuzzy matching
+                    kegg_name = name
+                    
+                    if kegg_id not in all_candidates:
+                        all_candidates.append(kegg_id)
+                        all_candidate_names.append(kegg_name)
+                        hit_count[kegg_id] = 1
+                    else:
+                        hit_count[kegg_id] += 1
+            
+            # Also check for partial matches in reaction orthology/names if no direct matches found
+            # if not all_candidates:
+            for kegg_id in kegg_reaction_features_dict:
+                orthology = kegg_reaction_features_dict.get(kegg_id, kegg_id).get("ORTHOLOGY", "")
+                clean_orthology = remove_symbols(extract_classifications(orthology, 'orthology').lower())
+                name = kegg_reaction_features_dict.get(kegg_id, kegg_id).get("NAME", "")
+                clean_name = remove_symbols(name.lower())
+
+                if (norm_synonym in clean_orthology or clean_orthology in norm_synonym) and clean_orthology:
+                    kegg_orthology = orthology
+                    
+                    if kegg_id not in all_candidates:
+                        all_candidates.append(kegg_id)
+                        all_candidate_names.append(kegg_orthology)
+                        # Lower confidence for partial matches
+                        hit_count[kegg_id] = 0.5
+                    else:
+                        hit_count[kegg_id] += 0.5
+
+                elif (norm_synonym in clean_name or clean_name in norm_synonym) and clean_name:
+                    kegg_name = name
+                    
+                    if kegg_id not in all_candidates:
+                        all_candidates.append(kegg_id)
+                        all_candidate_names.append(kegg_name)
+                        # Lower confidence for partial matches
+                        hit_count[kegg_id] = 0.5
+                    else:
+                        hit_count[kegg_id] += 0.5
+
+        
+        # Sort candidates by hit_count (descending) and take top_k
+        if all_candidates:
+            # Create list of (candidate, name, hit_count) tuples
+            candidate_tuples = [(candidate, name, hit_count[candidate])
+                               for candidate, name in zip(all_candidates, all_candidate_names)]
+            
+            # Sort by hit_count descending
+            candidate_tuples.sort(key=lambda x: x[2], reverse=True)
+            
+            # Take top_k candidates
+            if top_k:
+                top_candidates = candidate_tuples[:top_k]
+            else:
+                top_candidates = candidate_tuples
+
+            
+            # Extract sorted lists
+            all_candidates = [candidate for candidate, _, _ in top_candidates]
+            all_candidate_names = [name for _, name, _ in top_candidates]
+        
+        num_synonyms = len(synonyms)
+        match_score_list = [hit_count.get(candidate, 0) / num_synonyms for candidate in all_candidates]
+        
+        # Create recommendation object
+        recommendation = Recommendation(
+            id=reaction_id,
+            synonyms=synonyms,
+            candidates=all_candidates,
+            candidate_names=all_candidate_names,
+            match_score=match_score_list
+        )
+        recommendations.append(recommendation)
     
+    return recommendations
+
+
+def _get_kegg_recommendations_RAG(reactions_list: List[str], top_k: int = None, spectators=False)-> List[Recommendation]:
     pass
-
-
-
 
 
 
