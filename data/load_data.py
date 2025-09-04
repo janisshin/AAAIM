@@ -23,6 +23,7 @@ import compress_pickle
 from tqdm import tqdm
 import sys
 import json
+import re
 import chromadb
 from chromadb.utils import embedding_functions
 from sentence_transformers import SentenceTransformer
@@ -58,33 +59,47 @@ def load_reference_data(ref_data_path: str) -> Dict[str, List[str]]:
         raise
 
 
-import re
-def extract_brite_hierarchy(brite_text: str):
+def extract_classifications(raw_text, classification):
     """
+    classification (str): either 'brite' or 'orthology'
     Extracts only the BRITE hierarchy (excluding [BR:...] tags, EC leaf nodes, 
     and reaction entries).
     """
-    lines = brite_text.splitlines()
+    lines = raw_text.splitlines()
     clean_lines = []
 
-    for line in lines:
-        stripped = line.strip()
-        # Skip empty lines
-        if not stripped:
-            continue
-        # Skip lines with [BR:...] tags
-        if "[BR:" in stripped:
-            continue
-        # Skip EC leaf numbers (pure numbers like 2.2.1.6)
-        if re.fullmatch(r"(\d+\.)+\d+", stripped):
-            continue
-        # Skip lines that start with an R number (reaction ID)
-        if re.match(r"R\d{5}", stripped):
-            continue
-
-        clean_lines.append(stripped)
-
-    return "\n".join(clean_lines)
+    if classification == 'brite':
+        for line in lines:
+            stripped = line.strip()
+            # Skip empty lines
+            if not stripped:
+                continue
+            # Skip lines with [BR:...] tags
+            if "[BR:" in stripped:
+                continue
+            # Skip EC leaf numbers (pure numbers like 2.2.1.6)
+            if re.fullmatch(r"(\d+\.)+\d+", stripped):
+                continue
+            # Skip lines that start with an R number (reaction ID)
+            if re.match(r"R\d{5}", stripped):
+                continue
+            
+            parts = stripped.split(maxsplit=1)
+            if len(parts) > 1:
+                clean_lines.append(parts[1].strip())
+            else:
+                clean_lines.append(stripped)
+        return "; ".join(clean_lines)
+    
+    elif classification == 'orthology':
+        for line in lines:
+        # Split once on spaces to remove the Kxxxxx ID
+            parts = line.split(maxsplit=1)
+            if len(parts) > 1:
+                # Remove the EC info if present
+                name = parts[1].split(" [EC:")[0].strip()
+                clean_lines.append(name)
+        return "; ".join(clean_lines)
 
 
 def build_chunks_for_embedding(kegg_reactions):
@@ -107,12 +122,15 @@ def build_chunks_for_embedding(kegg_reactions):
         equation = kegg_reactions[reaction].get("EQUATION", "")
         brite = kegg_reactions[reaction].get("BRITE","")
         if brite: 
-            brite = extract_brite_hierarchy(brite)# brite.split('\n')[1:-2]
+            brite = extract_classifications(brite, 'brite')
         pathways = kegg_reactions[reaction].get("PATHWAY", "").splitlines()
         pathways = flatten_list([line.strip() for line in pathways if line.strip()])
+        orthology = kegg_reactions[reaction].get("ORTHOLOGY","")
+        if orthology: 
+            orthology = extract_classifications(orthology, 'orthology')
 
         # Construct the text to embed
-        text = f"Name: {name}\nReaction: {definition}\nType: {brite}"
+        text = f"{orthology}\n{name}\n{brite}\n{pathways}"
 
         # Store in dictionary keyed by compound_id
         chunks[reaction_id] = {
@@ -124,6 +142,7 @@ def build_chunks_for_embedding(kegg_reactions):
                 "definition": definition,
                 "equation": equation,
                 "brite": brite,
+                "orthology": orthology,
                 "pathways": pathways,
             }
         }
@@ -428,7 +447,7 @@ def main():
                 raise ValueError("--tax_id is required for uniprot database")
             args.ref_data_path = str(Path(f"uniprot/uniprot2names_tax{args.tax_id}.lzma"))
         elif args.database == "kegg":
-            args.ref_data_path = str(Path("kegg/merged_kegg_reactions.lzma"))
+            args.ref_data_path = str(Path("kegg/compiled_kegg_reactions.lzma"))
             # Check if JSON format is available (for backward compatibility)
             json_path = str(Path("kegg/merged_kegg_reactions.json"))
             if os.path.exists(json_path) and not os.path.exists(args.ref_data_path):
@@ -453,7 +472,6 @@ def main():
             # Load reference data
             if args.database == "kegg" and args.ref_data_path.endswith(".json"):
                 logger.info(f"Loading KEGG data from JSON: {args.ref_data_path}")
-                import json
                 with open(args.ref_data_path, "r") as f:
                     ref_data = json.load(f)
             else:
