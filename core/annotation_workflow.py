@@ -16,9 +16,10 @@ import re
 from collections import Counter
 import itertools
 from core.model_info import find_species_with_chebi_annotations, find_species_with_annotations_and_qualifiers, find_species_with_ncbigene_annotations, find_species_with_uniprot_annotations, find_reactions_with_kegg_annotations, extract_model_info, format_prompt, get_all_species_ids
+from core.model_info import get_all_reaction_ids
 from core.llm_interface import get_system_prompt, query_llm, parse_llm_response
 from core.data_types import Recommendation
-from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, load_chebi_label_dict, load_ncbigene_label_dict, load_uniprot_label_dict
+from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, load_chebi_label_dict, load_ncbigene_label_dict, load_uniprot_label_dict, load_kegg_label_dict
 from core.database_search import cancel_spectators
 
 logger = logging.getLogger(__name__)
@@ -63,15 +64,26 @@ def annotate_single_model(model_file: str,
     if tax_id:
         logger.info(f"Using organism-specific search for tax_id: {tax_id}")
     
-    # Step 1: Get species from model
-    logger.info(">>>Step 1: Getting species from model...<<<")
-    all_species_ids = get_all_species_ids(model_file, entity_type)
-    
-    if not all_species_ids:
-        logger.warning("No species found in model")
-        return pd.DataFrame(), {"error": "No species found in model"}
-    
-    logger.info(f"Found {len(all_species_ids)} species in model")
+    if entity_type=='reaction':
+        # Step 1: Get reactions from model
+        logger.info(">>>Step 1: Getting species from model...<<<")
+        all_entity_ids = get_all_reaction_ids(model_file)
+
+        if not all_entity_ids:
+            logger.warning("No reactions found in model")
+            return pd.DataFrame(), {"error": "No reactions found in model"}
+        
+        logger.info(f"Found {len(all_entity_ids)} reactions in model")
+    else:
+        # Step 1: Get species from model
+        logger.info(">>>Step 1: Getting species from model...<<<")
+        all_entity_ids = get_all_species_ids(model_file, entity_type)
+        
+        if not all_entity_ids:
+            logger.warning("No species found in model")
+            return pd.DataFrame(), {"error": "No species found in model"}
+        
+        logger.info(f"Found {len(all_entity_ids)} species in model")
     
     # Check for existing annotations (for metrics calculation)
     existing_annotations = {}
@@ -92,18 +104,17 @@ def annotate_single_model(model_file: str,
         # Future: support other entity types and databases
         logger.warning(f"Entity type {entity_type} with database {database} not yet supported")
     
-    # Select entities to evaluate (limit if needed)
     if max_entities:
-        specs_to_evaluate = all_species_ids[:max_entities]
+        entities_to_evaluate = all_entity_ids[:max_entities]
         logger.info(f"Selected {max_entities} entities for annotation")
     else:
-        specs_to_evaluate = all_species_ids
-        logger.info(f"Annotate all {len(specs_to_evaluate)} entities")
-    
+        entities_to_evaluate = all_entity_ids
+        logger.info(f"Annotate all {len(entities_to_evaluate)} entities")
+        
     # Step 2: Extract model context
     logger.info(">>>Step 2: Extracting model context...<<<")
 
-    model_info = extract_model_info(model_file, specs_to_evaluate, entity_type)
+    model_info = extract_model_info(model_file, entities_to_evaluate, entity_type)
     
     if not model_info:
         logger.error("Failed to extract model context")
@@ -113,7 +124,7 @@ def annotate_single_model(model_file: str,
     
     # Format prompt for LLM
     logger.info(f">>>Step 3: Querying LLM ({llm_model})...<<<")
-    prompt = format_prompt(model_file, specs_to_evaluate, entity_type)
+    prompt = format_prompt(model_file, entities_to_evaluate, entity_type)
     
     if not prompt:
         logger.error("Failed to format prompt")
@@ -151,33 +162,33 @@ def annotate_single_model(model_file: str,
     
     if database == "chebi":
         if method == "direct":
-            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
+            recommendations = get_species_recommendations_direct(entities_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
         elif method == "rag":
-            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
+            recommendations = get_species_recommendations_rag(entities_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
     elif database == "ncbigene":
         if method == "direct":
-            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
+            recommendations = get_species_recommendations_direct(entities_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
         elif method == "rag":
-            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
+            recommendations = get_species_recommendations_rag(entities_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
     elif database == "uniprot":
         if method == "direct":
-            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
+            recommendations = get_species_recommendations_direct(entities_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
         elif method == "rag":
-            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id)
+            recommendations = get_species_recommendations_rag(entities_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id)
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
     elif database == "kegg":
         if method == "direct":
-            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="kegg", top_k=top_k)
+            recommendations = get_species_recommendations_direct(entities_to_evaluate, synonyms_dict, database="kegg", top_k=top_k)
         elif method == "rag":
-            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="kegg")
+            recommendations = get_species_recommendations_rag(entities_to_evaluate, synonyms_dict, database="kegg")
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
@@ -196,10 +207,11 @@ def annotate_single_model(model_file: str,
     
     # Step 10: Calculate metrics
     total_time = time.time() - start_time
-    metrics = _calculate_metrics(
-        recommendations_df, existing_annotations, max_entities, len(all_species_ids), total_time, llm_time, search_time
-    )
     
+    metrics = _calculate_metrics(
+        recommendations_df, existing_annotations, max_entities, len(all_entity_ids), total_time, llm_time, search_time
+    )
+        
     logger.info(f"Annotation completed in {total_time:.2f}s")
     logger.info(f"Generated {len(recommendations_df)} recommendations")
     
@@ -252,6 +264,8 @@ def _generate_recommendation_table(model_file: str,
                 dict = load_ncbigene_label_dict()
             elif database == "uniprot":
                 dict = load_uniprot_label_dict()
+            elif database == "kegg":
+                dict = load_kegg_label_dict()
             if rec.id in dict:
                 label = dict[rec.id]
             else:
@@ -464,13 +478,12 @@ def filter_and_count(kegg_list, cofactors_to_ignore):
             counter[kegg_id] += 1  # track stoichiometry
     return counter      
     
-def build_recommendation_table(match_results, top_k=5):
+def build_recommendation_table(match_results):
     """
     Build a recommendation table from match results.
     
     Args:
         match_results: List of dictionaries with match results
-        top_k: Number of best matches to retain per reaction
         
     Returns:
         List of dictionaries for DataFrame conversion
