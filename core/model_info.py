@@ -466,7 +466,7 @@ def find_reactions_with_kegg_annotations(model_file: str, bqbiol_qualifiers: lis
                     if kegg_ids:
                         kegg_annotations[transition_id] = kegg_ids
 
-    return kegg_annotations
+    return kegg_annotations, {} # empty qualifier annotations
 
 
 def get_species_display_names(model_file: str, entity_type: str = "chemical") -> Dict[str, str]:

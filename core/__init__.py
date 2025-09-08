@@ -9,7 +9,7 @@ from .annotation_workflow import annotate_model, annotate_single_model
 from .curation_workflow import curate_model, curate_single_model
 
 # Shared functionality
-from .annotation_workflow import print_results, normalize_reactions, build_recommendation_table
+from .annotation_workflow import print_results, normalize_reactions
 from .update_model import update_annotation
 from .database_search import load_chebi2kegg_dict, load_kegg_reaction_features_dict
 

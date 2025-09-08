@@ -19,7 +19,7 @@ import sys
 import chromadb
 from chromadb.utils import embedding_functions
 from utils.constants import REF_CHEBI2LABEL, REF_NAMES2CHEBI, REF_NCBIGENE2LABEL, REF_NAMES2NCBIGENE, REF_UNIPROT2LABEL, REF_NAMES2UNIPROT
-from utils.constants import REF_CHEBI2KEGG_COMPOUND, REF_KEGG_REACTION2NAME, REF_KEGG2EC, REF_KEGG_REACTION_FEATURES
+from utils.constants import REF_CHEBI2KEGG_COMPOUND, REF_KEGG_REACTION2NAME, REF_KEGG2EC, REF_KEGG_REACTION_FEATURES, REF_KEGG_PARSED_REACTIONS
 from core.data_types import Recommendation, ReactionRecommendation
 
 
@@ -40,6 +40,7 @@ _CHEBI2KEGG_DICT: Optional[Dict[str, str]] = None
 _KEGG_REACTION2NAME_DICT: Optional[Dict[str, str]] = None
 _KEGG2EC_DICT: Optional[Dict[str, Dict[str, List[str]]]] = None
 _KEGG_REACTION_FEATURES_DICT: Optional[Dict[str, Dict[str, Any]]] = None
+_KEGG_PARSED_REACTIONS_DICT: Optional[Dict[str, Dict[str, Any]]] = None
 
 def get_data_dir() -> Path:
     """Get the path to the AAAIM data directory."""
@@ -129,7 +130,6 @@ def load_ncbigene_names_dict(tax_id: str = None) -> Dict[str, List[str]]:
     load_ncbigene_names_dict._cache[cache_key] = names_dict
     
     return names_dict
-
 
 def load_ncbigene_label_dict() -> Dict[str, str]:
     """
@@ -229,9 +229,6 @@ def load_uniprot_label_dict(tax_id: str = None) -> Dict[str, str]:
     
     return label_dict
 
-def load_kegg_label_dict(): 
-    return [] # JANISTAG
-
 def load_chebi2kegg_dict() -> Dict[str, str]:
     """
     Load the ChEBI ID to KEGG compound ID mapping dictionary.
@@ -251,6 +248,9 @@ def load_chebi2kegg_dict() -> Dict[str, str]:
             _CHEBI2KEGG_DICT = pickle.load(f)
     
     return _CHEBI2KEGG_DICT
+
+def load_kegg_label_dict(): 
+    return [] # JANISTAG
 
 def load_kegg_reaction2name_dict() -> Dict[str, str]:
     """
@@ -297,10 +297,18 @@ def load_kegg_reaction_features_dict() -> Dict[str, Dict[str, Any]]:
     Load the parsed KEGG reactions dictionary containing detailed reaction features.
     
     The dictionary contains information about KEGG reactions including:
-    - substrate and product counters
-    - reaction stoichiometry
-    - pathway information
-    - other reaction metadata
+        {'R01600': {
+            'ENTRY': 'R01600                      Reaction',
+            'NAME': 'ATP:beta-D-glucose 6-phosphotransferase',
+            'DEFINITION': 'ATP + beta-D-Glucose <=> ADP + beta-D-Glucose 6
+            'EQUATION': 'C00002 + C00221 <=> C00008 + C01172',
+            'RCLASS': 'RC00002  C00002_C00008\nRC00017  C00221_C01172',
+            'ENZYME': '2.7.1.1         2.7.1.2',
+            'PATHWAY': 'rn00010  Glycolysis / Gluconeogenesis\nrn01100 
+            'BRITE': 'Enzymatic reactions [BR:br08201]\n2. Transferase 
+            'ORTHOLOGY': 'K00844  hexokinase [EC:2.7.1.1]\nK00845  glucoki
+            }
+        }
     
     Returns:
         Dictionary mapping KEGG reaction IDs to their feature dictionaries
@@ -311,12 +319,45 @@ def load_kegg_reaction_features_dict() -> Dict[str, Dict[str, Any]]:
         data_file = get_data_dir() / "kegg" / REF_KEGG_REACTION_FEATURES
         
         if not data_file.exists():
-            raise FileNotFoundError(f"Parsed KEGG reactions data file not found: {data_file}")
+            raise FileNotFoundError(f"KEGG reaction features data file not found: {data_file}")
         
         with lzma.open(data_file, 'rb') as f:
             _KEGG_REACTION_FEATURES_DICT = pickle.load(f)
     
     return _KEGG_REACTION_FEATURES_DICT
+
+
+def load_kegg_parsed_reactions_dict() -> Dict[str, Dict[str, Any]]:
+    """
+    Load the list of dicts containing detailed reaction features.
+    
+    Each dictionary contains information about KEGG reactions including:
+    - 'reaction_id': 'R00002',
+    - 'name': 'reduced ferredoxin:dinitrogen oxidoreductase (ATP-hydrolysing)',
+    - 'ec_numbers': ['1.18.6.1'],
+    - 'direction': 'reversible',
+    - 'substrates': ['C00002', 'C00001', 'C00138'],
+    - 'products': ['C05359', 'C00009', 'C00008', 'C00139'],
+    - 'pathways': [],
+    - 'raw_equation': '16 C00002 + 16 C00001 + 8 C00138 <=> 8 C05359 + 16 C00009 + 16 C00008 + 8 C00139'}
+    
+    Returns:
+        Dictionary mapping KEGG reaction IDs to their feature dictionaries
+    """
+    global _KEGG_PARSED_REACTIONS_DICT
+    
+    if _KEGG_PARSED_REACTIONS_DICT is None:
+        data_file = get_data_dir() / "kegg" / REF_KEGG_PARSED_REACTIONS
+        
+        if not data_file.exists():
+            raise FileNotFoundError(f"Parsed KEGG reactions data file not found: {data_file}")
+        
+        with lzma.open(data_file, 'rb') as f:
+            _KEGG_PARSED_REACTIONS_DICT = pickle.load(f)
+    
+    return _KEGG_PARSED_REACTIONS_DICT
+
+
 
 def remove_symbols(text: str) -> str:
     """
@@ -394,7 +435,7 @@ def get_species_recommendations_direct(species_ids: List[str], synonyms_dict, da
     elif database == "uniprot":
         return _get_uniprot_recommendations_direct(species_ids, synonyms_dict, tax_id=tax_id, top_k=top_k)
     elif database == "kegg":
-        # return _get_kegg_recommendations_rulebased(species_ids, synonyms_dict, tax_id=tax_id, top_k=top_k)
+        # return _get_kegg_recommendations_rulebased(species_ids, synonyms_dict, top_k=top_k)
         return _get_kegg_recommendations_direct(species_ids, synonyms_dict, top_k=top_k)
     else:
         logger.error(f"Database {database} not supported for direct search")
@@ -665,7 +706,7 @@ def _get_uniprot_recommendations_direct(species_ids: List[str], synonyms_dict, t
     return recommendations
 
 
-def _get_kegg_recommendations_rulebased(reactions_list: List[str], cofactors_to_ignore: set = {}, top_k: int = None, spectators=False) -> List[Recommendation]:
+def _get_kegg_recommendations_rulebased(normalized_reactions, cofactors_to_ignore: set = {}, top_k: int = None, spectators=False) -> List[Recommendation]:
     """
     Find KEGG reaction recommendations by matching model reactions to KEGG reactions.
     
@@ -678,19 +719,22 @@ def _get_kegg_recommendations_rulebased(reactions_list: List[str], cofactors_to_
         List of Recommendation objects with candidates and match scores
     """
     try:
-        print("Loading KEGG reaction data...")
+        logger.info(f"Loading KEGG reaction data...")
         # Load KEGG reaction data
+        kegg_parsed_reactions_dict = load_kegg_parsed_reactions_dict()
         kegg_reaction_features_dict = load_kegg_reaction_features_dict()
-        logger.info(f"Loaded {len(kegg_reaction_features_dict)} KEGG reactions")
+        logger.info(f"Loaded {len(kegg_parsed_reactions_dict)} parsed KEGG reactions")
+        logger.info(f"Loaded {len(kegg_reaction_features_dict)} KEGG reaction features")
         
         recommendations = []
-        for rxn_data in reactions_list:
+        
+        for reaction_id in normalized_reactions:
+            reaction_label = reaction_id.get('id')
             
-            reaction_label = rxn_data.get('id')
-            reaction_str = rxn_data.get('reaction_string')
+            reaction_str = reaction_id.get('reaction_string')
             # Extract substrate and product counters
-            model_subs = rxn_data.get('substrates', Counter())
-            model_prods = rxn_data.get('products', Counter())
+            model_subs = reaction_id.get('substrates', Counter())
+            model_prods = reaction_id.get('products', Counter())
             
             # Check if reactions only contain cofactors
             model_sub_keys = {key for counter in model_subs for key in counter.keys()}
@@ -701,27 +745,21 @@ def _get_kegg_recommendations_rulebased(reactions_list: List[str], cofactors_to_
             
             # If either substrates or products only contain cofactors, don't ignore cofactors in filtering
             if only_cofactors_subs or only_cofactors_prods:
-                filtered_reaction_list = filter_kegg_reactions(model_subs, model_prods, kegg_reaction_features_dict)
+                filtered_reaction_list = filter_kegg_reactions(model_subs, model_prods)
             else:
                 # Otherwise, try both with and without ignoring cofactors
-                filtered_reaction_list = filter_kegg_reactions(model_subs, model_prods, kegg_reaction_features_dict) + \
-                    filter_kegg_reactions(model_subs, model_prods, kegg_reaction_features_dict, cofactors_to_ignore=cofactors_to_ignore)
-                seen = set()
-                unique_list = []
-                for d in filtered_reaction_list:
-                    if d["reaction_id"] not in seen:
-                        seen.add(d["reaction_id"])
-                        unique_list.append(d)
-                filtered_reaction_list = unique_list
+                filtered_reaction_list = filter_kegg_reactions(model_subs, model_prods) + \
+                    filter_kegg_reactions(model_subs, model_prods, cofactors_to_ignore=cofactors_to_ignore)
+                filtered_reaction_list = set(filtered_reaction_list)
             matches = []
 
             # in case there are multiple candidates for a substrate or product group,
             # create a list of cartesian products of substrate and product groups
             cartesian_products = list(product(model_subs, model_prods))
             # Compare with each KEGG reaction
-            for kegg_rxn in filtered_reaction_list:
-                kegg_subs = Counter(set(kegg_rxn.get('substrates', [])))
-                kegg_prods = Counter(set(kegg_rxn.get('products', [])))
+            for kegg_id in filtered_reaction_list:
+                kegg_subs = Counter(set(kegg_parsed_reactions_dict.get(kegg_id, kegg_id).get('substrates', [])))
+                kegg_prods = Counter(set(kegg_parsed_reactions_dict.get(kegg_id, kegg_id).get('products', [])))
 
                 if not spectators:
                     kegg_subs, kegg_prods = cancel_spectators(kegg_subs, kegg_prods)
@@ -748,7 +786,7 @@ def _get_kegg_recommendations_rulebased(reactions_list: List[str], cofactors_to_
                     
                     matches.append({
                         'model_reaction_id': reaction_label,
-                        'kegg_reaction_id': kegg_rxn.get('reaction_id'),
+                        'kegg_reaction_id': kegg_id,
                         'score_forward': score_forward,
                         'score_reverse': score_reverse,
                         'match_score': max_score
@@ -768,14 +806,10 @@ def _get_kegg_recommendations_rulebased(reactions_list: List[str], cofactors_to_
             match_scores = [match['match_score'] for match in top_matches]
             
             # Get reaction names from KEGG
-            # Build a dict mapping kegg_id to the reaction dict
-            filtered_dict = {rxn['reaction_id']: rxn for rxn in filtered_reaction_list}
-
-            # Then get reaction names for candidates
             candidate_names = []
             for kegg_id in candidates:
-                rxn_name = filtered_dict.get(kegg_id, {}).get('name', kegg_id)
-                candidate_names.append(rxn_name)
+                orthology = kegg_reaction_features_dict.get(kegg_id, kegg_id).get("ORTHOLOGY", "")
+                candidate_names.append(extract_classifications(orthology, 'orthology'))
 
             # Create recommendation object
             recommendation = ReactionRecommendation(
@@ -799,7 +833,7 @@ def _get_kegg_recommendations_rulebased(reactions_list: List[str], cofactors_to_
         return []
 
 
-def _get_kegg_recommendations_direct(reaction_ids: List[str], synonyms_dict, top_k: int = 3) -> List[Recommendation]:
+def _get_kegg_recommendations_direct(reaction_ids: List[str], synonyms_dict, top_k: int = 3, species_recs=None) -> List[Recommendation]:
     """
     Find KEGG recommendations by directly matching against KEGG compound synonyms.
     Args:
@@ -808,8 +842,10 @@ def _get_kegg_recommendations_direct(reaction_ids: List[str], synonyms_dict, top
         top_k: Number of top candidates to return per species based on hit_count.
     """
     # Load necessary KEGG dictionaries
+    logger.info(f"Loading KEGG reaction data...")
     kegg_reaction_features_dict = load_kegg_reaction_features_dict()
-    
+    logger.info(f"Loaded {len(kegg_reaction_features_dict)} KEGG reactions")
+
     recommendations = []
     
     for reaction_id in reaction_ids:
@@ -935,41 +971,49 @@ def _get_kegg_recommendations_direct(reaction_ids: List[str], synonyms_dict, top
     return recommendations
 
 
-def _get_kegg_recommendations_RAG(reactions_list: List[str], top_k: int = None, spectators=False)-> List[Recommendation]:
+def _get_kegg_recommendations_RAG(reaction_ids: List[str], top_k: int = None, spectators=False)-> List[Recommendation]:
     pass
 
 
-
-def filter_kegg_reactions(model_subs: List[Counter], model_prods: List[Counter], kegg_reaction_features_dict: Dict[str, Any], cofactors_to_ignore={}) -> List[Dict[str, Any]]:
+def filter_kegg_reactions(model_subs: List[Counter], model_prods: List[Counter], cofactors_to_ignore={}) -> List[Dict[str, Any]]:
     """
     Filter KEGG reactions based on substrate and product matching.
     
     Args:
         model_subs: List of Counter objects representing model substrates
         model_prods: List of Counter objects representing model products
-        kegg_reaction_features_dict: Dictionary of KEGG reaction data
+        kegg_parsed_reactions_dict: Dictionary of KEGG reaction data
         cofactors_to_ignore: set of KEGG IDs of cofactors
         
     Returns:
         List of KEGG reactions that contain all model substrates and products
     """
+    kegg_parsed_reactions_dict = load_kegg_parsed_reactions_dict() # load_kegg_reaction_features_dict
     # Get unique keys from the model substrates and products
     model_sub_keys = {key for counter in model_subs for key in counter.keys() if key not in cofactors_to_ignore}
     model_prod_keys = {key for counter in model_prods for key in counter.keys() if key not in cofactors_to_ignore}
     
     filtered_reactions = []
+    partial_matches = []
     
-    for rxn in kegg_reaction_features_dict:
+    for kegg_id in kegg_parsed_reactions_dict:
         # Get sets of KEGG substrates and products
-        kegg_subs_set = set(rxn.get('substrates', []))
-        kegg_prods_set = set(rxn.get('products', []))
+        kegg_subs_set = set(kegg_parsed_reactions_dict.get(kegg_id, kegg_id).get('substrates', []))
+        kegg_prods_set = set(kegg_parsed_reactions_dict.get(kegg_id, kegg_id).get('products', []))
         
         # Check if all model metabolites are in KEGG reaction (ignore counts)
         subs_match = model_sub_keys.issubset(kegg_subs_set)
         prods_match = model_prod_keys.issubset(kegg_prods_set)
         
         if subs_match and prods_match:
-            filtered_reactions.append(rxn)
+            filtered_reactions.append(kegg_id)
+        elif subs_match:
+            partial_matches.append(kegg_id)
+        elif prods_match:
+            partial_matches.append(kegg_id)
+
+    #if not filtered_reactions: 
+    #    filtered_reactions=partial_matches
     
     return filtered_reactions
 

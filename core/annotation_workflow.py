@@ -66,7 +66,7 @@ def annotate_single_model(model_file: str,
     
     if entity_type=='reaction':
         # Step 1: Get reactions from model
-        logger.info(">>>Step 1: Getting species from model...<<<")
+        logger.info(">>>Step 1: Getting reactions from model...<<<")
         all_entity_ids = get_all_reaction_ids(model_file)
 
         if not all_entity_ids:
@@ -98,7 +98,7 @@ def annotate_single_model(model_file: str,
         existing_annotations, qualifier_annotations = find_species_with_annotations_and_qualifiers(model_file, "uniprot")
         logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
     elif entity_type == "reaction" and database == "kegg":
-        existing_annotations = find_reactions_with_kegg_annotations(model_file)
+        existing_annotations, qualifier_annotations = find_reactions_with_kegg_annotations(model_file)
         logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
     else:
         # Future: support other entity types and databases
@@ -478,29 +478,6 @@ def filter_and_count(kegg_list, cofactors_to_ignore):
             counter[kegg_id] += 1  # track stoichiometry
     return counter      
     
-def build_recommendation_table(match_results):
-    """
-    Build a recommendation table from match results.
-    
-    Args:
-        match_results: List of dictionaries with match results
-        
-    Returns:
-        List of dictionaries for DataFrame conversion
-    """
-    rows = []
-
-    for entry in match_results:
-        model_rxn_str = entry.id  # It's just a string here
-
-        for kegg_id, score in zip(entry.candidates, entry.match_score):
-            rows.append({
-                'id': model_rxn_str,
-                'KEGG_Reaction_ID': kegg_id,
-                'match_score': round(score, 3)
-            })
-    
-    return rows
 
 def map_reactions_to_kegg(rxn_list: List[str], id_df: pd.DataFrame, spectators=False) -> List[Dict[str, Any]]:
     """
