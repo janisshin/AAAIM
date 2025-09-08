@@ -447,7 +447,7 @@ def main():
                 raise ValueError("--tax_id is required for uniprot database")
             args.ref_data_path = str(Path(f"uniprot/uniprot2names_tax{args.tax_id}.lzma"))
         elif args.database == "kegg":
-            args.ref_data_path = str(Path("kegg/compiled_kegg_reactions.lzma"))
+            args.ref_data_path = str(Path("kegg/kegg_reaction_features.lzma"))
             # Check if JSON format is available (for backward compatibility)
             json_path = str(Path("kegg/merged_kegg_reactions.json"))
             if os.path.exists(json_path) and not os.path.exists(args.ref_data_path):

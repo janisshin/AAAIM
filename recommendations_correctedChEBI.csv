@@ -1,5 +1,5 @@
 file,type,id,display_name,annotation,annotation_label,match_score,existing,update_annotation
-small_model.xml,chemical,Glucose,,CHEBI:4167,glucose,1.0,0,ignore
+small_model.xml,chemical,Glucose,,CHEBI:17925,glucose,1.0,0,ignore
 small_model.xml,chemical,G6P,,CHEBI:17665,ga61,0.388,0,ignore
 small_model.xml,chemical,F6P,,CHEBI:61553,f6itc,0.634,0,add
 small_model.xml,chemical,F16BP,,CHEBI:37736,f6itc,0.493,0,ignore
