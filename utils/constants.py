@@ -98,7 +98,8 @@ REF_NAMES2UNIPROT = "names2uniprot_human+mouse+rat.lzma"
 REF_CHEBI2KEGG_COMPOUND = "chebi_to_kegg_map.lzma" 
 REF_KEGG_REACTION2NAME = "reactionnames2kegg.lzma"
 REF_KEGG2EC = "kegg2ec.lzma"
-REF_KEGG_REACTION_FEATURES = "parsed_kegg_reactions.lzma"
+REF_KEGG_REACTION_FEATURES = "kegg_reaction_features.lzma"
+REF_KEGG_PARSED_REACTIONS = "parsed_kegg_reactions.lzma"
 
 # Model Format Detection
 MODEL_FORMAT_PLUGINS = {

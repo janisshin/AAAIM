@@ -97,27 +97,27 @@ P2: "KRAS", "HRAS", "NRAS"
 P3: "AKT1", "PKB", "RAC"
 Reason: This appears to be an EGFR signaling pathway. P1 is the epidermal growth factor receptor (EGFR), P2 is a RAS protein family member, and P3 is AKT kinase."""
 
-### JANISTAG
 # System prompt for reaction and enzyme annotation
-SYSTEM_PROMPT_REACTION = """You are a biomedical knowledge assistant. Your task is to normalize reaction and enzyme names from biochemical models into standardized or canonical EC numbers for ontology lookup on KEGG. 
-All given reactions should be considered as enzymes. If lacking information about details, try your best to give the most likely EC number. Return "UNK" if not or unsure.
+SYSTEM_PROMPT_REACTION = """You are a biomedical knowledge assistant. Your task is to normalize reaction and enzyme names from biochemical models into standardized or canonical reaction or enzyme names for ontology lookup on KEGG. 
+Examine each reaction's label, and its substrates and products to determine the enzyme or process responsible for the reaction. If lacking information about details, try your best to give the most likely description. Return "UNK" if not or unsure.
 
 Here is one example:
 Species: A, B, D
 Model: "citric acid cycle model"
  // Display Names:
-A is "acetyl-CoA";
-B is "citrate";
-C is "CoA";
+J1 is "CS";
+J2 is "ACON";
+J3 is "IDH";
  // Reactions:
-A + oxaloacetate => B + C;
-E + F => D;
+J1: AcetylCoA + OAA -> Citrate + CoA; 
+J2: Citrate <-> Isocitrate;
+J3: Isocitrate + NAD -> AKG + CO2 + NADH;
 
 This should return:
-A: "acetyl-CoA", "acetyl coenzyme A"
-B: "citric acid", "sodium citrate", "citrate(4−)"
-D: "UNK"
-Reason: the reaction is likely to be the TCA cycle, where A is the substrate and B is an intermediate. D is unknown because no display names are given for its reactants."""
+J1: "Citrate synthase",
+J2: "Aconitase"
+J3: "Isocitrate dehydrogenase"
+Reason: these reactions match the reactions found in the TCA cycle """
 
 # Backward compatibility
 SYSTEM_PROMPT = SYSTEM_PROMPT_CHEMICAL
@@ -138,6 +138,8 @@ def get_system_prompt(entity_type: str = "chemical") -> str:
         return SYSTEM_PROMPT_GENE
     elif entity_type == "protein":
         return SYSTEM_PROMPT_PROTEIN
+    elif entity_type == "reaction":
+        return SYSTEM_PROMPT_REACTION
     else:
         logger.warning(f"Unknown entity type {entity_type}, using chemical prompt")
         return SYSTEM_PROMPT_CHEMICAL

@@ -23,6 +23,7 @@ import compress_pickle
 from tqdm import tqdm
 import sys
 import json
+import re
 import chromadb
 from chromadb.utils import embedding_functions
 from sentence_transformers import SentenceTransformer
@@ -58,33 +59,93 @@ def load_reference_data(ref_data_path: str) -> Dict[str, List[str]]:
         raise
 
 
+def extract_classifications(raw_text, classification):
+    """
+    classification (str): either 'brite' or 'orthology'
+    Extracts only the BRITE hierarchy (excluding [BR:...] tags, EC leaf nodes, 
+    and reaction entries).
+    """
+    lines = raw_text.splitlines()
+    clean_lines = []
+
+    if classification == 'brite':
+        for line in lines:
+            stripped = line.strip()
+            # Skip empty lines
+            if not stripped:
+                continue
+            # Skip lines with [BR:...] tags
+            if "[BR:" in stripped:
+                continue
+            # Skip EC leaf numbers (pure numbers like 2.2.1.6)
+            if re.fullmatch(r"(\d+\.)+\d+", stripped):
+                continue
+            # Skip lines that start with an R number (reaction ID)
+            if re.match(r"R\d{5}", stripped):
+                continue
+            
+            parts = stripped.split(maxsplit=1)
+            if len(parts) > 1:
+                clean_lines.append(parts[1].strip())
+            else:
+                clean_lines.append(stripped)
+        return "; ".join(clean_lines)
+    
+    elif classification == 'orthology':
+        for line in lines:
+        # Split once on spaces to remove the Kxxxxx ID
+            parts = line.split(maxsplit=1)
+            if len(parts) > 1:
+                # Remove the EC info if present
+                name = parts[1].split(" [EC:")[0].strip()
+                clean_lines.append(name)
+        return "; ".join(clean_lines)
+
+
 def build_chunks_for_embedding(kegg_reactions):
     """Convert parsed KEGG reactions into text + metadata chunks for Chroma."""
-    chunks = []
+    def flatten_list(lst):
+        """
+        Flattens a list into a ';'-separated string.
+        Empty lists return an empty string.
+        """
+        return ";".join(map(str, lst)) if lst else ""
 
-    for rxn in kegg_reactions:
-        ec_line = f"EC: {', '.join(rxn['ec_numbers'])}" if rxn['ec_numbers'] else ""
-        subs = ', '.join(rxn['substrates'])
-        prods = ', '.join(rxn['products'])
+    chunks = {}
 
-        text = f"""KEGG Reaction {rxn['reaction_id']}
-{ec_line}
-Equation: {rxn['raw_equation']}
-Substrates: {subs}
-Products: {prods}
-Pathways: {', '.join(rxn.get('pathways', []))}"""
+    for reaction in kegg_reactions:
+        reaction_id = reaction
+        name = kegg_reactions[reaction].get("NAME", "")
+        ec_number = kegg_reactions[reaction].get("ENZYME", "").split()
+        ec_number = flatten_list([line.strip() for line in ec_number if line.strip()])
+        definition = kegg_reactions[reaction].get("DEFINITION", "")
+        equation = kegg_reactions[reaction].get("EQUATION", "")
+        brite = kegg_reactions[reaction].get("BRITE","")
+        if brite: 
+            brite = extract_classifications(brite, 'brite')
+        pathways = kegg_reactions[reaction].get("PATHWAY", "").splitlines()
+        pathways = flatten_list([line.strip() for line in pathways if line.strip()])
+        orthology = kegg_reactions[reaction].get("ORTHOLOGY","")
+        if orthology: 
+            orthology = extract_classifications(orthology, 'orthology')
 
-        chunks.append({
-            "reaction_id": rxn["reaction_id"],
+        # Construct the text to embed
+        text = f"{orthology}\n{name}\n{brite}\n{pathways}"
+
+        # Store in dictionary keyed by compound_id
+        chunks[reaction_id] = {
             "text": text,
             "metadata": {
-                "reaction_id": rxn["reaction_id"],
-                "ec_numbers": ', '.join(rxn["ec_numbers"]),
-                "substrates": ', '.join(rxn["substrates"]),
-                "products": ', '.join(rxn["products"]),
-                "pathways": ', '.join(rxn.get("pathways", []))
+                "reaction_id": reaction_id,
+                "name": name,
+                "ec_number": ec_number,
+                "definition": definition,
+                "equation": equation,
+                "brite": brite,
+                "orthology": orthology,
+                "pathways": pathways,
             }
-        })
+        }
 
     return chunks
 
@@ -104,9 +165,9 @@ def prepare_documents_for_indexing(ref_data: Dict[str, List[str]] | List[Dict], 
         # Use the specialized KEGG chunking function for richer text representation
         chunks = build_chunks_for_embedding(ref_data)
         for chunk in tqdm(chunks, desc="Processing KEGG reactions"):
-            ids.append(chunk["reaction_id"])
-            documents.append(chunk["text"])
-            metadatas.append(chunk["metadata"])
+            ids.append(chunk)
+            documents.append(chunks[chunk].get("text"))
+            metadatas.append(chunks[chunk].get("metadata"))
     else:
         # Handle ChEBI and NCBI gene data which are dictionaries
         for entry_id, names in tqdm(ref_data.items(), desc="Processing entries"):
@@ -386,9 +447,9 @@ def main():
                 raise ValueError("--tax_id is required for uniprot database")
             args.ref_data_path = str(Path(f"uniprot/uniprot2names_tax{args.tax_id}.lzma"))
         elif args.database == "kegg":
-            args.ref_data_path = str(Path("kegg/parsed_kegg_reactions.lzma"))
+            args.ref_data_path = str(Path("kegg/kegg_reaction_features.lzma"))
             # Check if JSON format is available (for backward compatibility)
-            json_path = str(Path("kegg/parsed_kegg_reactions.json"))
+            json_path = str(Path("kegg/merged_kegg_reactions.json"))
             if os.path.exists(json_path) and not os.path.exists(args.ref_data_path):
                 logger.info(f"Using JSON format for KEGG reactions: {json_path}")
                 args.ref_data_path = json_path
@@ -411,7 +472,6 @@ def main():
             # Load reference data
             if args.database == "kegg" and args.ref_data_path.endswith(".json"):
                 logger.info(f"Loading KEGG data from JSON: {args.ref_data_path}")
-                import json
                 with open(args.ref_data_path, "r") as f:
                     ref_data = json.load(f)
             else:
