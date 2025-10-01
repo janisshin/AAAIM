@@ -30,14 +30,11 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from core import (
     annotate_model, 
-    curate_model, 
     get_available_databases, 
     database_search,
-    normalize_reactions,
     load_chebi2kegg_dict, 
-    load_kegg_reaction_features_dict
 )
-from core.update_model import update_annotation
+# from core.update_model import update_annotation
 from core.model_info import (
     extract_reactions_from_sbml, 
     extract_model_info,
@@ -502,7 +499,7 @@ def compute_reaction_likelihoods(
     return result_df
 
 
-def update_participant_kegg_likelihoods_single_iteration(
+def update_participant_likelihoods_singleiter(
     participant_df: pd.DataFrame,
     reaction_likelihood_df: pd.DataFrame
 ) -> pd.DataFrame:
@@ -524,18 +521,18 @@ def update_participant_kegg_likelihoods_single_iteration(
         Updated participant DataFrame with added 'participant_likelihood' column
     """
     # Create a copy of the input dataframe to avoid modifying the original
-    updated_df = participant_df.copy()
+    updated_participants_df = participant_df.copy()
     
     # Initialize a new column for participant likelihoods if it doesn't exist
-    if 'participant_likelihood' not in updated_df.columns:
-        updated_df['participant_likelihood'] = 0.0
+    if 'participant_likelihood' not in updated_participants_df.columns:
+        updated_participants_df['participant_likelihood'] = 0.0
     else:
         # Reset likelihoods for new iteration
-        updated_df['participant_likelihood'] = 0.0
+        updated_participants_df['participant_likelihood'] = 0.0
     
     # Create a mapping from KEGG_ID to participant rows
     kegg_id_to_indices = {}
-    for idx, row in updated_df.iterrows():
+    for idx, row in updated_participants_df.iterrows():
         if pd.notna(row.get('KEGG_ID')) and row['KEGG_ID'] != '':
             kegg_id = row['KEGG_ID']#[0]
             if kegg_id not in kegg_id_to_indices:
@@ -556,25 +553,31 @@ def update_participant_kegg_likelihoods_single_iteration(
                 if participant_id in kegg_id_to_indices:
                     for idx in kegg_id_to_indices[participant_id]:
                         # Accumulate likelihood (we'll take the max later)
-                        current_likelihood = updated_df.at[idx, 'participant_likelihood']
-                        updated_df.at[idx, 'participant_likelihood'] = max(current_likelihood, reaction_likelihood)
+                        current_likelihood = updated_participants_df.at[idx, 'participant_likelihood']
+                        updated_participants_df.at[idx, 'participant_likelihood'] = max(current_likelihood, reaction_likelihood)
     
     # Normalize likelihoods per participant group (same id)
-    for participant_id in updated_df['id'].unique():
-        mask = updated_df['id'] == participant_id
-        group_sum = updated_df.loc[mask, 'participant_likelihood'].sum()
+    for participant_id in updated_participants_df['id'].unique():
+        mask = updated_participants_df['id'] == participant_id
+        group_sum = updated_participants_df.loc[mask, 'participant_likelihood'].sum()
         if group_sum > 0:
-            updated_df.loc[mask, 'participant_likelihood'] = updated_df.loc[mask, 'participant_likelihood'] / group_sum
+            updated_participants_df.loc[mask, 'participant_likelihood'] = updated_participants_df.loc[mask, 'participant_likelihood'] / group_sum
     
-    return updated_df
+    return updated_participants_df
 
 
 def update_participant_kegg_likelihoods(
     participant_df: pd.DataFrame,
     reaction_likelihood_df: pd.DataFrame,
+    reaction_participants,
+    model_file: str,
+    model_info: Dict,
+    entity_type: str = 'reaction',
+    database: str = 'kegg',
     max_iterations: int = 100,
     convergence_threshold: float = 0.001,
-    convergence_count: int = 3
+    convergence_count: int = 3,
+    cofactors_to_ignore: Set = None
 ) -> pd.DataFrame:
     """
     Iteratively update each candidate participant's KEGG ID with their likelihood
@@ -588,19 +591,29 @@ def update_participant_kegg_likelihoods(
     reaction_likelihood_df : pd.DataFrame
         DataFrame containing reaction likelihoods with columns including 'annotation',
         'participant_ids', and 'likelihood'
+    model_file : str
+        Path to the SBML model file
+    model_info : Dict
+        Dictionary containing model information
+    entity_type : str, optional
+        Type of entity to annotate, by default 'reaction'
+    database : str, optional
+        Database to use for annotation, by default 'kegg'
     max_iterations : int, optional
         Maximum number of iterations to perform, by default 100
     convergence_threshold : float, optional
         Threshold for considering scores stable (to 3 decimal places), by default 0.001
     convergence_count : int, optional
         Number of consecutive stable iterations required for convergence, by default 3
+    cofactors_to_ignore : Set, optional
+        Set of cofactor IDs to ignore, by default None
         
     Returns
     -------
     pd.DataFrame
         Updated participant DataFrame with added 'participant_likelihood' column
     """
-    current_df = participant_df.copy()
+    current_participants_df = participant_df.copy()
     
     # Keep track of previous scores for convergence check
     previous_scores = []
@@ -610,15 +623,71 @@ def update_participant_kegg_likelihoods(
     
     for iteration in range(1, max_iterations + 1):
         # Perform a single iteration
-        updated_df = update_participant_kegg_likelihoods_single_iteration(
-            current_df, reaction_likelihood_df
+        updated_participants_df = update_participant_likelihoods_singleiter(
+            current_participants_df, reaction_likelihood_df
         )
         
+        # Map ChEBI IDs to KEGG Compound IDs
+        logger.info(f"Iteration {iteration}: Mapping ChEBI IDs to KEGG Compound IDs")
+        updated_participants_df_with_kegg, high_score_recommendations = map_chebi_to_kegg(updated_participants_df)
+        
+        # Map reactions to KEGG
+        logger.info(f"Iteration {iteration}: Mapping reactions to KEGG")
+        ## reactions, _ = extract_reactions_from_sbml(model_file, list(high_score_recommendations['id'].unique()))
+        normalized_reactions = map_reactions_to_kegg(
+            reactions,
+            high_score_recommendations[['id', 'KEGG_ID']],
+            spectators=False
+        )
+        
+        # Get KEGG recommendations using rule-based approach
+        logger.info(f"Iteration {iteration}: Getting KEGG recommendations using rule-based approach")
+        match_results = database_search._get_kegg_recommendations_rulebased(
+            normalized_reactions,
+            cofactors_to_ignore=cofactors_to_ignore if cofactors_to_ignore else COFACTORS_TO_IGNORE,
+            spectators=False
+        )
+        
+        # Generate updated recommendation table
+        logger.info(f"Iteration {iteration}: Generating updated recommendation table")
+        updated_kegg_recommendations_df = _generate_recommendation_table(
+            model_file,
+            match_results,
+            {},
+            model_info,
+            entity_type,
+            database,
+            {}
+        )
+        # Create new columns in the dataframe
+        updated_kegg_recommendations_df['participants'] = updated_kegg_recommendations_df['annotation'].apply(get_participants)
+        updated_kegg_recommendations_df['participant_ids'] = updated_kegg_recommendations_df['annotation'].apply(get_participant_ids)
+        # updated_participants_df
+        
+        
+        # Build a set of counters to account for all the species in the list
+        
+        
+        # Build participant counters for the updated recommendations
+        merged_participants = (
+            updated_kegg_recommendations_df
+            .groupby("id")["participants"]
+            .agg("; ".join)  # concatenate strings with "; "
+        )
+        counters = merged_participants.apply(
+            lambda s: Counter(p.strip() for p in s.split(";") if p.strip())
+        )
+        init_probs = init_species_probs_from_dict(reaction_participants, counters)
+        updated_kegg_recommendations_df = compute_reaction_likelihoods(init_probs, updated_kegg_recommendations_df)
+
+        # Update reaction_likelihood_df for next iteration
+        reaction_likelihood_df = updated_kegg_recommendations_df
+
         # Calculate the maximum change in likelihood scores
-        if 'participant_likelihood' in current_df.columns:
+        if 'participant_likelihood' in current_participants_df.columns:
             # Merge dataframes to compare scores
-            comparison_df = current_df.merge(
-                updated_df[['id', 'KEGG_ID', 'participant_likelihood']],
+            comparison_df = current_participants_df.merge(
+                updated_participants_df[['id', 'KEGG_ID', 'participant_likelihood']],
                 on=['id', 'KEGG_ID'],
                 suffixes=('_prev', '')
             )
@@ -647,8 +716,8 @@ def update_participant_kegg_likelihoods(
                 stable_iterations = 0
         
         # Store current scores for next iteration
-        previous_scores.append(updated_df['participant_likelihood'].copy())
-        current_df = updated_df
+        previous_scores.append(updated_participants_df['participant_likelihood'].copy())
+        current_participants_df = updated_participants_df_with_kegg
         
         # If we've reached max iterations without convergence
         if iteration == max_iterations:
@@ -657,7 +726,7 @@ def update_participant_kegg_likelihoods(
                 f"Last maximum change: {max_diff_rounded:.6f}"
             )
     
-    return current_df
+    return current_participants_df
 
 
 #------------------------------------------------------------------------------
@@ -888,6 +957,7 @@ def run_kegg_annotation_workflow(
     
     # Step 3: Begin rule-based matching to identify reactions
     logger.info("Step 3: Begin rule-based matching to identify reactions")
+    global reactions
     reactions, _ = extract_reactions_from_sbml(model_file, list(high_score_recommendations['id'].unique()))
     normalized_reactions = map_reactions_to_kegg(
         reactions, 
@@ -950,9 +1020,15 @@ def run_kegg_annotation_workflow(
     updated_participants_df = update_participant_kegg_likelihoods(
         high_score_recommendations,
         scored_df,
+        reaction_participants,
+        model_file=model_file,
+        model_info=model_info,
+        entity_type=entity_type,
+        database=database,
         max_iterations=50,
         convergence_threshold=0.001,
-        convergence_count=3
+        convergence_count=3,
+        cofactors_to_ignore=COFACTORS_TO_IGNORE
     )
     
     logger.info("\nSample of participants with updated likelihoods after convergence:")
@@ -986,51 +1062,10 @@ def main():
     
     # first annotate model using ChEBI
     print("Step 1: Identifying the chemical species")
-    try:    
-        recommendations_df, metrics = annotate_model(
-            model_file=model_file,
-            llm_model=llm_model,
-            entity_type="chemical",
-            database="chebi",
-            method="rag",
-            top_k=top_k,
-        )
-        # Display annotation results
-        if not recommendations_df.empty:
-            print("Annotation Results:")
-            print(f"Total entities in model: {metrics['total_entities']}")
-            print(f"Entities with predictions: {metrics['entities_with_predictions']}")
-            print(f"Annotation rate: {metrics['annotation_rate']:.1%}")
-            
-            if not pd.isna(metrics['accuracy']):
-                print(f"Accuracy (where existing annotations available): {metrics['accuracy']:.1%}")
-            else:
-                print("Accuracy: N/A (no existing annotations to compare against)")
-            
-            print(f"Total time: {metrics['total_time']:.2f}s")
-            print()
-            
-            # Show sample recommendations
-            print("Sample Annotation Recommendations:")
-            sample_df = recommendations_df[['id', 'display_name', 'annotation', 'annotation_label', 'match_score', 'existing']]# .head(5)
-            print(sample_df.to_string(index=False))
-            print()
-            
-            # Save results
-            file_name = model_file.split('.')[0]
-            output_file = f"{file_name}_initial_chemical_recommendations.csv"
-            recommendations_df.to_csv(output_file, index=False)
-            print(f"Full annotation results saved to: {output_file}")
-            
-        else:
-            print("No annotation recommendations generated.")
-            if 'error' in metrics:
-                print(f"Error: {metrics['error']}")
+    
+    file_name = model_file.split('.')[0]
+    recommendations_df = pd.read_csv(f"{file_name}_initial_chemical_recommendations.csv")
 
-    except Exception as e:
-        print(f"Processing failed: {e}")
-        import traceback
-        traceback.print_exc()
 
     # Run the workflow
     run_kegg_annotation_workflow(
