@@ -875,8 +875,7 @@ ReactionA: "name1", "name2", …
 ReactionB:  …
 Reason: …
         """
-        return prompt 
-
+        return prompt
 
     # For gene entities, format prompt differently based on model type
     elif entity_type == "gene":

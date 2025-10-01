@@ -20,10 +20,10 @@ from core.model_info import get_all_reaction_ids
 from core.llm_interface import get_system_prompt, query_llm, parse_llm_response
 from core.data_types import Recommendation
 from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, load_chebi_label_dict, load_ncbigene_label_dict, load_uniprot_label_dict, load_kegg_label_dict
-from core.database_search import cancel_spectators
+from core.database_search import cancel_spectators, extract_classifications
+
 
 logger = logging.getLogger(__name__)
-
 
 
 def annotate_single_model(model_file: str, 
@@ -188,7 +188,9 @@ def annotate_single_model(model_file: str,
         if method == "direct":
             recommendations = get_species_recommendations_direct(entities_to_evaluate, synonyms_dict, database="kegg", top_k=top_k)
         elif method == "rag":
-            recommendations = get_species_recommendations_rag(entities_to_evaluate, synonyms_dict, database="kegg")
+            reaction_definitions = [i.split(':')[1] for i in model_info['reactions']]
+            reaction_participants = [extract_classifications(i, 'definition') for i in reaction_definitions]
+            recommendations = get_species_recommendations_rag(entities_to_evaluate, synonyms_dict, database="kegg", reaction_participants=reaction_participants)
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
@@ -583,12 +585,12 @@ def map_reactions_to_kegg(rxn_list: List[str], id_df: pd.DataFrame, spectators=F
             try:
                 kegg_ids = mapping_df.loc[met]
                 
-                if isinstance(kegg_ids, pd.Series) or len(kegg_ids) > 1:
+                if isinstance(kegg_ids, pd.Series) or (isinstance(kegg_ids, list) & len(kegg_ids) > 1):
                     # Multiple KEGG IDs for this metabolite
                     choices = [(kid[0], coeff) for kid in kegg_ids.tolist()]
                 else:
                     # Single KEGG ID
-                    choices = [(kegg_ids[0], coeff)]
+                    choices = [(kegg_ids, coeff)]
                     
                 id_choices.append(choices)
             except (KeyError, IndexError):

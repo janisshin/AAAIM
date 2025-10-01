@@ -500,20 +500,20 @@ def compute_reaction_likelihoods(
     return result_df
 
 
-def update_participant_kegg_likelihoods(
-    participant_df: pd.DataFrame, 
+def update_participant_kegg_likelihoods_single_iteration(
+    participant_df: pd.DataFrame,
     reaction_likelihood_df: pd.DataFrame
 ) -> pd.DataFrame:
     """
-    Update each candidate participant's KEGG ID with their likelihood based on 
-    whether that KEGG ID shows up in the reaction likelihood dataframe.
+    Perform a single iteration of updating each candidate participant's KEGG ID
+    with their likelihood based on whether that KEGG ID shows up in the reaction likelihood dataframe.
     
     Parameters
     ----------
     participant_df : pd.DataFrame
         DataFrame containing participant information with columns including 'id' and 'KEGG_ID'
     reaction_likelihood_df : pd.DataFrame
-        DataFrame containing reaction likelihoods with columns including 'annotation', 
+        DataFrame containing reaction likelihoods with columns including 'annotation',
         'participant_ids', and 'likelihood'
         
     Returns
@@ -524,14 +524,18 @@ def update_participant_kegg_likelihoods(
     # Create a copy of the input dataframe to avoid modifying the original
     updated_df = participant_df.copy()
     
-    # Initialize a new column for participant likelihoods
-    updated_df['participant_likelihood'] = 0.0
+    # Initialize a new column for participant likelihoods if it doesn't exist
+    if 'participant_likelihood' not in updated_df.columns:
+        updated_df['participant_likelihood'] = 0.0
+    else:
+        # Reset likelihoods for new iteration
+        updated_df['participant_likelihood'] = 0.0
     
     # Create a mapping from KEGG_ID to participant rows
     kegg_id_to_indices = {}
     for idx, row in updated_df.iterrows():
         if pd.notna(row.get('KEGG_ID')) and row['KEGG_ID'] != '':
-            kegg_id = row['KEGG_ID'][0]
+            kegg_id = row['KEGG_ID']#[0]
             if kegg_id not in kegg_id_to_indices:
                 kegg_id_to_indices[kegg_id] = []
             kegg_id_to_indices[kegg_id].append(idx)
@@ -561,6 +565,97 @@ def update_participant_kegg_likelihoods(
             updated_df.loc[mask, 'participant_likelihood'] = updated_df.loc[mask, 'participant_likelihood'] / group_sum
     
     return updated_df
+
+
+def update_participant_kegg_likelihoods(
+    participant_df: pd.DataFrame,
+    reaction_likelihood_df: pd.DataFrame,
+    max_iterations: int = 100,
+    convergence_threshold: float = 0.001,
+    convergence_count: int = 3
+) -> pd.DataFrame:
+    """
+    Iteratively update each candidate participant's KEGG ID with their likelihood
+    based on whether that KEGG ID shows up in the reaction likelihood dataframe.
+    Continues until convergence criteria are met.
+    
+    Parameters
+    ----------
+    participant_df : pd.DataFrame
+        DataFrame containing participant information with columns including 'id' and 'KEGG_ID'
+    reaction_likelihood_df : pd.DataFrame
+        DataFrame containing reaction likelihoods with columns including 'annotation',
+        'participant_ids', and 'likelihood'
+    max_iterations : int, optional
+        Maximum number of iterations to perform, by default 100
+    convergence_threshold : float, optional
+        Threshold for considering scores stable (to 3 decimal places), by default 0.001
+    convergence_count : int, optional
+        Number of consecutive stable iterations required for convergence, by default 3
+        
+    Returns
+    -------
+    pd.DataFrame
+        Updated participant DataFrame with added 'participant_likelihood' column
+    """
+    current_df = participant_df.copy()
+    
+    # Keep track of previous scores for convergence check
+    previous_scores = []
+    stable_iterations = 0
+    
+    logger.info("Starting iterative participant likelihood updates")
+    
+    for iteration in range(1, max_iterations + 1):
+        # Perform a single iteration
+        updated_df = update_participant_kegg_likelihoods_single_iteration(
+            current_df, reaction_likelihood_df
+        )
+        
+        # Calculate the maximum change in likelihood scores
+        if 'participant_likelihood' in current_df.columns:
+            # Merge dataframes to compare scores
+            comparison_df = current_df.merge(
+                updated_df[['id', 'KEGG_ID', 'participant_likelihood']],
+                on=['id', 'KEGG_ID'],
+                suffixes=('_prev', '')
+            )
+            
+            # Calculate maximum absolute difference
+            max_diff = (
+                comparison_df['participant_likelihood'] -
+                comparison_df['participant_likelihood_prev']
+            ).abs().max()
+            
+            # Round to 3 decimal places for comparison
+            max_diff_rounded = round(max_diff, 3)
+            
+            logger.info(f"Iteration {iteration}: Maximum score change = {max_diff_rounded:.6f}")
+            
+            # Check for convergence
+            if max_diff_rounded <= convergence_threshold:
+                stable_iterations += 1
+                logger.info(f"Stable iteration {stable_iterations}/{convergence_count}")
+                
+                if stable_iterations >= convergence_count:
+                    logger.info(f"Convergence achieved after {iteration} iterations")
+                    break
+            else:
+                # Reset counter if scores changed significantly
+                stable_iterations = 0
+        
+        # Store current scores for next iteration
+        previous_scores.append(updated_df['participant_likelihood'].copy())
+        current_df = updated_df
+        
+        # If we've reached max iterations without convergence
+        if iteration == max_iterations:
+            logger.warning(
+                f"Maximum iterations ({max_iterations}) reached without convergence. "
+                f"Last maximum change: {max_diff_rounded:.6f}"
+            )
+    
+    return current_df
 
 
 #------------------------------------------------------------------------------
@@ -636,6 +731,7 @@ def load_kegg_reaction_data(data_path: str) -> Dict:
 def map_chebi_to_kegg(recommendations_df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Map ChEBI IDs to KEGG Compound IDs and filter for high-scoring matches.
+    If a ChEBI ID maps to multiple KEGG IDs, duplicate the row for each KEGG ID.
     
     Parameters
     ----------
@@ -650,23 +746,61 @@ def map_chebi_to_kegg(recommendations_df: pd.DataFrame) -> Tuple[pd.DataFrame, p
     # Load ChEBI to KEGG mapping
     chebi_to_kegg_map = load_chebi2kegg_dict()
     
-    # Add KEGG IDs to chemical recommendations if available
+    # Create a new DataFrame to store expanded rows
+    expanded_rows = []
+    
+    # Process each row in the recommendations DataFrame
     if not recommendations_df.empty and 'annotation' in recommendations_df.columns:
-        # Map ChEBI IDs to KEGG IDs
-        recommendations_df['KEGG_ID'] = recommendations_df['annotation'].apply(
-            lambda x: chebi_to_kegg_map.get(x, "")
-        )
+        for _, row in recommendations_df.iterrows():
+            chebi_id = row['annotation']
+            kegg_ids = chebi_to_kegg_map.get(chebi_id, [])
+            
+            # If kegg_ids is not a list, convert it to a list
+            if not isinstance(kegg_ids, list):
+                kegg_ids = [kegg_ids] if kegg_ids else []
+            
+            # If no KEGG IDs found, add the original row with empty KEGG_ID
+            if not kegg_ids:
+                row_copy = row.copy()
+                row_copy['KEGG_ID'] = ""
+                expanded_rows.append(row_copy)
+            else:
+                # Create a duplicate row for each KEGG ID
+                for kegg_id in kegg_ids:
+                    if kegg_id:  # Only add if KEGG ID is not empty
+                        row_copy = row.copy()
+                        row_copy['KEGG_ID'] = kegg_id
+                        expanded_rows.append(row_copy)
+        
+        # Create a new DataFrame from the expanded rows
+        expanded_df = pd.DataFrame(expanded_rows)
+        
+        # If expanded_df is empty, return the original DataFrame with empty KEGG_ID column
+        if expanded_df.empty:
+            recommendations_df['KEGG_ID'] = ""
+            return recommendations_df, pd.DataFrame()
+    else:
+        # If recommendations_df is empty or doesn't have 'annotation' column
+        recommendations_df['KEGG_ID'] = ""
+        return recommendations_df, pd.DataFrame()
     
     # Filter out rows with empty KEGG_ID
-    filtered_df = recommendations_df[
-        recommendations_df['KEGG_ID'].notna() & 
-        (recommendations_df['KEGG_ID'] != '')
+    filtered_df = expanded_df[
+        expanded_df['KEGG_ID'].notna() &
+        (expanded_df['KEGG_ID'] != '')
     ]
     
     # Keep rows that have the max match_score per id
-    high_score_recommendations = filtered_df[
-        filtered_df['match_score'] == filtered_df.groupby('id')['match_score'].transform('max')
-    ].reset_index(drop=True)
+    if not filtered_df.empty:
+        high_score_recommendations = filtered_df[
+            filtered_df['match_score'] == filtered_df.groupby('id')['match_score'].transform('max')
+        ].reset_index(drop=True)
+    else:
+        high_score_recommendations = pd.DataFrame()
+    
+    logger.info(f"Expanded {len(recommendations_df)} ChEBI entries to {len(expanded_df)} KEGG mappings")
+    logger.info(f"Found {len(filtered_df)} valid KEGG mappings")
+    logger.info(f"Selected {len(high_score_recommendations)} high-score recommendations")
     
     return filtered_df, high_score_recommendations
 
@@ -817,18 +951,26 @@ def run_kegg_annotation_workflow(
     init_probs = init_species_probs_from_dict(reaction_participants, counters)
     scored_df = compute_reaction_likelihoods(init_probs, kegg_recommendations_df)
     
-    # Step 8: Update participant KEGG likelihoods
-    updated_participants_df = update_participant_kegg_likelihoods(high_score_recommendations, scored_df)
+    # Step 8: Update participant KEGG likelihoods iteratively until convergence
+    updated_participants_df = update_participant_kegg_likelihoods(
+        high_score_recommendations,
+        scored_df,
+        max_iterations=50,
+        convergence_threshold=0.001,
+        convergence_count=3
+    )
     
-    logger.info("\nSample of participants with updated likelihoods:")
+    logger.info("\nSample of participants with updated likelihoods after convergence:")
     logger.info(updated_participants_df[['id', 'display_name', 'KEGG_ID', 'participant_likelihood']].head())
     
+    updated_participants_df.sort_values(by='participant_likelihood', ascending=False, inplace=True)
+    scored_df.sort_values(by='likelihood', ascending=False, inplace=True)
+
     # Optional: Save results to file
     updated_participants_df.to_csv(f"{os.path.splitext(model_file)[0]}_participant_likelihoods.csv", index=False)
     scored_df.to_csv(f"{os.path.splitext(model_file)[0]}_reaction_likelihoods.csv", index=False)
     
     logger.info("KEGG annotation workflow completed successfully.")
-
 
 #------------------------------------------------------------------------------
 # Main Execution
