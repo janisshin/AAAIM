@@ -8,7 +8,6 @@ using KEGG database references. It includes methods for mapping ChEBI IDs to KEG
 compound IDs, extracting reaction participants, and computing likelihood scores
 for candidate reactions.
 
-Author: AAAIM Team
 """
 
 import os
@@ -352,6 +351,9 @@ def init_species_probs_from_dict(
     species_match_probs = {}
 
     for rxn_id, query_species_list in reaction_participants.items():
+        if rxn_id not in counters:   # skip if missing
+            continue  
+
         candidate_counter = counters[rxn_id]
         species_probs_for_rxn = {}
 
@@ -840,7 +842,7 @@ def extract_reaction_participants(model_info: Dict, recommendations_df: pd.DataF
 
 def run_kegg_annotation_workflow(
     model_file: str,
-    recommendations_file: str,
+    recommendations_df: pd.DataFrame,
     kegg_features_file: str,
     entity_type: str = 'reaction',
     database: str = 'kegg',
@@ -853,7 +855,7 @@ def run_kegg_annotation_workflow(
     ----------
     model_file : str
         Path to the SBML model file
-    recommendations_file : str
+    recommendations_df : str
         Path to the recommendations CSV file
     kegg_features_file : str
         Path to the KEGG reaction features file
@@ -876,17 +878,10 @@ def run_kegg_annotation_workflow(
     # Step 1: Extract model information
     all_entity_ids = get_all_reaction_ids(model_file)
     model_info = extract_model_info(model_file, all_entity_ids, entity_type)
-    
-    # Load recommendations
-    try:
-        recommendations_df = pd.read_csv(recommendations_file)
-    except FileNotFoundError:
-        logger.error(f"Recommendations file not found: {recommendations_file}")
-        return
-    
+        
     # Step 2: Map ChEBI IDs to KEGG Compound IDs
     logger.info("Step 2: Map ChEBI IDs to KEGG Compound IDs")
-    filtered_df, high_score_recommendations = map_chebi_to_kegg(recommendations_df)
+    _, high_score_recommendations = map_chebi_to_kegg(recommendations_df)
     
     logger.info("\nSample of ChEBI to KEGG mapping:")
     logger.info(high_score_recommendations[['id', 'display_name', 'annotation', 'KEGG_ID', 'match_score']].head())
@@ -980,18 +975,67 @@ def main():
     """Main function to run the KEGG reaction annotation workflow."""
     # Configuration
     model_file = "tests/glycolysis_part1.xml"
-    recommendations_file = "recommendations_correctedChEBI.csv"
     kegg_features_file = "data/kegg/kegg_reaction_features.lzma"
     llm_model = "meta-llama/llama-3.1-8b-instruct"
-    
+    top_k = 10
+    # recommendations_file = "recommendations_correctedChEBI.csv"
+
     # Print header
     logger.info("AAAIM KEGG Reaction Annotation Example")
     logger.info("=" * 50)
     
+    # first annotate model using ChEBI
+    print("Step 1: Identifying the chemical species")
+    try:    
+        recommendations_df, metrics = annotate_model(
+            model_file=model_file,
+            llm_model=llm_model,
+            entity_type="chemical",
+            database="chebi",
+            method="rag",
+            top_k=top_k,
+        )
+        # Display annotation results
+        if not recommendations_df.empty:
+            print("Annotation Results:")
+            print(f"Total entities in model: {metrics['total_entities']}")
+            print(f"Entities with predictions: {metrics['entities_with_predictions']}")
+            print(f"Annotation rate: {metrics['annotation_rate']:.1%}")
+            
+            if not pd.isna(metrics['accuracy']):
+                print(f"Accuracy (where existing annotations available): {metrics['accuracy']:.1%}")
+            else:
+                print("Accuracy: N/A (no existing annotations to compare against)")
+            
+            print(f"Total time: {metrics['total_time']:.2f}s")
+            print()
+            
+            # Show sample recommendations
+            print("Sample Annotation Recommendations:")
+            sample_df = recommendations_df[['id', 'display_name', 'annotation', 'annotation_label', 'match_score', 'existing']]# .head(5)
+            print(sample_df.to_string(index=False))
+            print()
+            
+            # Save results
+            file_name = model_file.split('.')[0]
+            output_file = f"{file_name}_initial_chemical_recommendations.csv"
+            recommendations_df.to_csv(output_file, index=False)
+            print(f"Full annotation results saved to: {output_file}")
+            
+        else:
+            print("No annotation recommendations generated.")
+            if 'error' in metrics:
+                print(f"Error: {metrics['error']}")
+
+    except Exception as e:
+        print(f"Processing failed: {e}")
+        import traceback
+        traceback.print_exc()
+
     # Run the workflow
     run_kegg_annotation_workflow(
         model_file=model_file,
-        recommendations_file=recommendations_file,
+        recommendations_df=recommendations_df,
         kegg_features_file=kegg_features_file,
         llm_model=llm_model
     )
