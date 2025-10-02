@@ -494,6 +494,7 @@ def compute_reaction_likelihoods(
 
     # Rescale so each group of candidate reaction likelihoods sums to 1
     group_sums = result_df.groupby('id')['likelihood'].transform('sum')
+    group_sums = group_sums.replace(0, 1)
     result_df['likelihood'] = result_df['likelihood'] / group_sums
     
     return result_df
@@ -555,6 +556,7 @@ def update_participant_likelihoods_singleiter(
                         # Accumulate likelihood (we'll take the max later)
                         current_likelihood = updated_participants_df.at[idx, 'participant_likelihood']
                         updated_participants_df.at[idx, 'participant_likelihood'] = max(current_likelihood, reaction_likelihood)
+                        # updated_participants_df.at[idx, 'participant_likelihood'] += reaction_likelihood
     
     # Normalize likelihoods per participant group (same id)
     for participant_id in updated_participants_df['id'].unique():
@@ -566,7 +568,7 @@ def update_participant_likelihoods_singleiter(
     return updated_participants_df
 
 
-def update_participant_kegg_likelihoods(
+def update_participant_likelihoods(
     participant_df: pd.DataFrame,
     reaction_likelihood_df: pd.DataFrame,
     reaction_participants,
@@ -661,12 +663,7 @@ def update_participant_kegg_likelihoods(
         )
         # Create new columns in the dataframe
         updated_kegg_recommendations_df['participants'] = updated_kegg_recommendations_df['annotation'].apply(get_participants)
-        updated_kegg_recommendations_df['participant_ids'] = updated_kegg_recommendations_df['annotation'].apply(get_participant_ids)
-        # updated_participants_df
-        
-        
-        # Build a set of counters to account for all the species in the list
-        
+        updated_kegg_recommendations_df['participant_ids'] = updated_kegg_recommendations_df['annotation'].apply(get_participant_ids)        
         
         # Build participant counters for the updated recommendations
         merged_participants = (
@@ -678,10 +675,7 @@ def update_participant_kegg_likelihoods(
             lambda s: Counter(p.strip() for p in s.split(";") if p.strip())
         )
         init_probs = init_species_probs_from_dict(reaction_participants, counters)
-        updated_kegg_recommendations_df = compute_reaction_likelihoods(init_probs, updated_kegg_recommendations_df)
-
-        # Update reaction_likelihood_df for next iteration
-        reaction_likelihood_df = updated_kegg_recommendations_df
+        updated_reaction_likelihood_df = compute_reaction_likelihoods(init_probs, updated_kegg_recommendations_df)
 
         # Calculate the maximum change in likelihood scores
         if 'participant_likelihood' in current_participants_df.columns:
@@ -719,6 +713,9 @@ def update_participant_kegg_likelihoods(
         previous_scores.append(updated_participants_df['participant_likelihood'].copy())
         current_participants_df = updated_participants_df_with_kegg
         
+        current_participants_df.to_csv(f'participants_likelihood_iter{iteration}.csv', index=False) ## Delete
+        updated_reaction_likelihood_df.to_csv(f'reaction_likelihood_iter{iteration}.csv', index=False) ## Delete
+
         # If we've reached max iterations without convergence
         if iteration == max_iterations:
             logger.warning(
@@ -1017,7 +1014,7 @@ def run_kegg_annotation_workflow(
     scored_df = compute_reaction_likelihoods(init_probs, kegg_recommendations_df)
     
     # Step 8: Update participant KEGG likelihoods iteratively until convergence
-    updated_participants_df = update_participant_kegg_likelihoods(
+    updated_participants_df = update_participant_likelihoods(
         high_score_recommendations,
         scored_df,
         reaction_participants,
@@ -1054,7 +1051,6 @@ def main():
     kegg_features_file = "data/kegg/kegg_reaction_features.lzma"
     llm_model = "meta-llama/llama-3.1-8b-instruct"
     top_k = 10
-    # recommendations_file = "recommendations_correctedChEBI.csv"
 
     # Print header
     logger.info("AAAIM KEGG Reaction Annotation Example")
@@ -1064,8 +1060,8 @@ def main():
     print("Step 1: Identifying the chemical species")
     
     file_name = model_file.split('.')[0]
-    recommendations_df = pd.read_csv(f"{file_name}_initial_chemical_recommendations.csv")
-
+    #recommendations_df = pd.read_csv(f"{file_name}_initial_chemical_recommendations.csv")
+    recommendations_df = pd.read_csv(f"recommendations_correctedChEBI.csv")
 
     # Run the workflow
     run_kegg_annotation_workflow(
