@@ -41,7 +41,7 @@ from core.model_info import (
     get_all_reaction_ids
 )
 from core.annotation_workflow import map_reactions_to_kegg, _generate_recommendation_table
-
+# from temp_functions import compute_reaction_likelihoods, participant_likelihoods_to_probs
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -79,21 +79,6 @@ COFACTORS_TO_IGNORE = {
 #------------------------------------------------------------------------------
 
 def extract_classifications(raw_text: str, classification: str) -> str:
-    """
-    Extract and clean text from different classification formats.
-    
-    Parameters
-    ----------
-    raw_text : str
-        The raw text to process
-    classification : str
-        The type of classification to extract ('brite', 'orthology', or 'definition')
-        
-    Returns
-    -------
-    str
-        Cleaned and formatted text as a semicolon-separated string
-    """
     lines = raw_text.splitlines()
     clean_lines = []
 
@@ -178,19 +163,6 @@ def extract_classifications(raw_text: str, classification: str) -> str:
 #------------------------------------------------------------------------------
 
 def normalize(prob_dict: Dict[str, float]) -> Dict[str, float]:
-    """
-    Normalize a probability dictionary so values sum to 1.
-    
-    Parameters
-    ----------
-    prob_dict : Dict[str, float]
-        Dictionary mapping keys to probability values
-        
-    Returns
-    -------
-    Dict[str, float]
-        Normalized probability dictionary
-    """
     total = sum(prob_dict.values())
     if total > 0:
         for key in prob_dict:
@@ -199,23 +171,6 @@ def normalize(prob_dict: Dict[str, float]) -> Dict[str, float]:
 
 
 def is_plausible_match(query_species: str, cand_species: str, threshold: int = 80) -> bool:
-    """
-    Determine if a candidate species could match the query species based on name similarity.
-    
-    Parameters
-    ----------
-    query_species : str
-        The query species name
-    cand_species : str
-        The candidate species name
-    threshold : int, optional
-        Minimum similarity score (0-100) to consider a match, by default 80
-        
-    Returns
-    -------
-    bool
-        True if the match is plausible, False otherwise
-    """
     max_score = fuzz.partial_ratio(query_species.lower(), cand_species.lower())
     return max_score >= threshold
 
@@ -225,24 +180,6 @@ def update_species_probs(
     candidate_reactions: List, 
     candidate_probs: Dict
 ) -> Dict[str, float]:
-    """
-    Update the species match probabilities for a single query species
-    based on the candidate reaction probabilities.
-    
-    Parameters
-    ----------
-    query_species : str
-        The query species name
-    candidate_reactions : List
-        List of candidate reactions
-    candidate_probs : Dict
-        Dictionary mapping candidate reactions to probabilities
-        
-    Returns
-    -------
-    Dict[str, float]
-        Dictionary mapping candidate species to updated probabilities
-    """
     updated_probs = {}
 
     # Loop over each candidate reaction
@@ -268,21 +205,6 @@ def update_species_probs(
 
 
 def choose_best_annotation(species_probs: Dict[str, float]) -> Optional[str]:
-    """
-    Choose the best annotation for a query species based on
-    the current species match probabilities.
-    
-    Parameters
-    ----------
-    species_probs : Dict[str, float]
-        Mapping from candidate species to probabilities
-        
-    Returns
-    -------
-    Optional[str]
-        The candidate species with the highest probability.
-        Returns None if no candidates are available.
-    """
     if not species_probs:
         return None  # no plausible matches
     
@@ -295,24 +217,6 @@ def has_converged(
     updated_annotations: Dict[str, str], 
     previous_annotations: Dict[str, str]
 ) -> bool:
-    """
-    Check if the EM algorithm has converged for a query reaction.
-    
-    Convergence occurs when the annotations of all species do not change
-    from the previous iteration.
-    
-    Parameters
-    ----------
-    updated_annotations : Dict[str, str]
-        Mapping from query species to current annotation
-    previous_annotations : Dict[str, str]
-        Mapping from query species to previous annotation
-        
-    Returns
-    -------
-    bool
-        True if converged, False otherwise
-    """
     # If there were no previous annotations, we haven't converged yet
     if not previous_annotations:
         return False
@@ -325,26 +229,10 @@ def has_converged(
     
     return True  # All species unchanged, converged
 
-
 def init_species_probs_from_dict(
     reaction_participants: Dict[str, List[str]], 
     counters: pd.Series
 ) -> Dict[str, Dict[str, Dict[str, float]]]:
-    """
-    Initialize species match probabilities for each reaction.
-
-    Parameters
-    ----------
-    reaction_participants : Dict[str, List[str]]
-        Mapping from reaction_id to list of query participants
-    counters : pd.Series
-        Series mapping reaction_id to Counter of candidate species
-
-    Returns
-    -------
-    Dict[str, Dict[str, Dict[str, float]]]
-        Nested dictionary: reaction_id -> {query_species: {candidate_species: prob}}
-    """
     species_match_probs = {}
 
     for rxn_id, query_species_list in reaction_participants.items():
@@ -379,157 +267,220 @@ def init_species_probs_from_dict(
 #------------------------------------------------------------------------------
 
 def get_participants(annotation: str) -> str:
-    """
-    Extract participant names from a KEGG reaction annotation.
-    
-    Parameters
-    ----------
-    annotation : str
-        KEGG reaction annotation
-        
-    Returns
-    -------
-    str
-        Semicolon-separated list of participant names
-    """
     kegg_id = annotation.split(':')[1] if ':' in annotation else annotation
     definition = kegg_reaction_features.get(kegg_id, {}).get("DEFINITION", "")
     return extract_classifications(definition, 'definition')
 
 
 def get_participant_ids(annotation: str) -> str:
-    """
-    Extract participant IDs from a KEGG reaction annotation.
-    
-    Parameters
-    ----------
-    annotation : str
-        KEGG reaction annotation
-        
-    Returns
-    -------
-    str
-        Semicolon-separated list of participant IDs
-    """
     kegg_id = annotation.split(':')[1] if ':' in annotation else annotation
     definition = kegg_reaction_features.get(kegg_id, {}).get("EQUATION", "")
     return extract_classifications(definition, 'definition')
 
 
+def participant_likelihoods_to_probs(
+    participant_df: pd.DataFrame
+) -> Dict[str, Dict[str, Dict[str, float]]]:
+    probs = {}
+    
+    # Group by reaction ID to process each reaction's participants
+    for rxn_id in participant_df['id'].unique():
+        # Convert reaction ID to the format 'J1', 'J2', etc.
+        numeric_id = ''.join(filter(str.isdigit, rxn_id))
+        if numeric_id:
+            formatted_rxn_id = f'J{numeric_id}'
+            rxn_mask = participant_df['id'] == rxn_id
+            rxn_participants = participant_df[rxn_mask]
+            
+            # Build probability dictionary for this reaction
+            if formatted_rxn_id not in probs:
+                probs[formatted_rxn_id] = {}
+            
+            # Process each participant
+            for _, row in rxn_participants.iterrows():
+                if pd.notna(row['KEGG_ID']) and pd.notna(row['participant_likelihood']):
+                    query_species = row['annotation_label']
+                    kegg_id = row['KEGG_ID']
+                    
+                    # Initialize nested structure if needed
+                    if formatted_rxn_id not in probs:
+                        probs[formatted_rxn_id] = {}
+                    if query_species not in probs[formatted_rxn_id]:
+                        probs[formatted_rxn_id][query_species] = {}
+                    
+                    # Store the likelihood as probability
+                    probs[formatted_rxn_id][query_species][kegg_id] = row['participant_likelihood']
+    
+    return probs
+
 def compute_reaction_likelihoods(
     init_probs: Dict[str, Dict[str, Dict[str, float]]], 
-    kegg_recommendations_df: pd.DataFrame
+    kegg_recommendations_df: pd.DataFrame,
+    prev_likelihoods: pd.DataFrame = None,
+    iteration: int = 0
 ) -> pd.DataFrame:
-    """
-    Compute likelihood scores for each candidate reaction given initial species probabilities.
-
-    Parameters
-    ----------
-    init_probs : Dict[str, Dict[str, Dict[str, float]]]
-        Nested dictionary: reaction_id -> {query_species: {candidate_species: prob}}
-    kegg_recommendations_df : pd.DataFrame
-        DataFrame with columns: ['id', 'annotation', 'participants', 'participant_ids']
-
-    Returns
-    -------
-    pd.DataFrame
-        Same as input, with an extra column 'likelihood' containing the computed likelihood score
-    """
+    print("Starting likelihood computation...")
+    print(f"Total reactions to process: {len(kegg_recommendations_df)}")
+    print(f"Total reactions in init_probs: {len(init_probs)}")
+    print("\nDumping init_probs contents:")
+    for rid, data in init_probs.items():
+        print(f"\nReaction {rid}:")
+        for species, probs in data.items():
+            print(f"  {species} -> {probs}")
     def fuzzy_jaccard(set_a: Set[str], set_b: Set[str], threshold: int = 70) -> float:
         """
         Compute fuzzy Jaccard similarity between two sets of strings.
-        
-        Parameters
-        ----------
-        set_a : Set[str]
-            First set of strings
-        set_b : Set[str]
-            Second set of strings
-        threshold : int, optional
-            Minimum similarity to count as a match (0-100), by default 70
-            
-        Returns
-        -------
-        float
-            Fuzzy Jaccard similarity score (0-1)
         """
+        if not set_a or not set_b:
+            return 0.0
+            
         overlap = 0
         for a in set_a:
             best = max((fuzz.ratio(a, b) / 100 for b in set_b), default=0)
             if best * 100 >= threshold:
                 overlap += best  # fractional overlap
+        
         denom = len(set_a) + len(set_b) - overlap
         return overlap / denom if denom > 0 else 0
 
-    likelihoods = []
+    # Create a copy to avoid modifying the original
+    result_df = kegg_recommendations_df.copy()
+    # Initialize likelihood column
+    result_df['likelihood'] = 0.0
     
-    for _, row in kegg_recommendations_df.iterrows():
+    # Process each reaction
+    for idx, row in result_df.iterrows():
         rxn_id = row['id']
-        candidate_participants = set(row['participants'].split("; "))
-        filtered_candidate_participants = candidate_participants.copy()
+        
+        # Skip if participants column is missing or empty
+        if pd.isna(row['participants']) or not row['participants']:
+            continue
+            
+        # Get and filter candidate participants
+        candidate_participants = set(str(row['participants']).split("; "))
+        
+        # Convert cofactors to lowercase for case-insensitive comparison
+        ## JANISTAG THIS IS A PROBLEM
+        filtered_candidate_participants = {
+            p for p in candidate_participants 
+            if p and not any(c in p for c in ['ATP', 'ADP', 'AMP', 'NAD', 'NADP'])  # Direct check for common cofactors
+        }
+        
+        print(f"\nProcessing reaction {rxn_id}")
+        print(f"Candidate participants before filtering: {candidate_participants}")
+        print(f"Filtered candidate participants: {filtered_candidate_participants}")
 
         # --- 1. Compute species-level match probability ---
         prob_product = 1.0
-        if rxn_id in init_probs:
-            query_participants = set([i[0] for i in init_probs[rxn_id].items()])
-            if not (query_participants & COFACTORS_TO_IGNORE):
-                filtered_candidate_participants -= COFACTORS_TO_IGNORE
-            species_probs = init_probs[rxn_id]
-            for _, cand_dict in species_probs.items():
-                match_probs = [cand_dict[cand] for cand in filtered_candidate_participants if cand in cand_dict]
-                prob_product *= max(match_probs) if match_probs else 1e-6
+        query_participants = set()
+        
+        def standardize_name(name):
+            """Standardize species names for comparison"""
+            name = name.lower()
+            name = name.replace('α-', 'alpha-').replace('β-', 'beta-')
+            name = name.replace('α', 'alpha-').replace('β', 'beta-')  # Handle cases without hyphen
+            name = name.replace('-', ' ')
+            return name
+
+        # Get all available query species and their KEGG IDs from init_probs
+        query_participants = set()
+        kegg_id_to_prob = {}
+        
+        print("\nAvailable query species and their KEGG IDs:")
+        for reaction_name, species_dict in init_probs.items():
+            for species_name, kegg_dict in species_dict.items():
+                for kegg_id, prob in kegg_dict.items():
+                    print(f"{species_name} -> {kegg_id}: {prob}")
+                    kegg_id_to_prob[kegg_id] = prob
+
+        # Now check if any of the candidate participants' KEGG IDs match our known IDs
+        print("\nProcessing candidate participants:")
+        for participant in filtered_candidate_participants:
+            print(f"Checking participant: {participant}")
+            # Parse KEGG ID from participant string if present
+            if "KEGG:" in participant:
+                kegg_id = participant.split("KEGG:")[-1].strip()
+                if kegg_id in kegg_id_to_prob:
+                    prob = kegg_id_to_prob[kegg_id]
+                    prob_product *= prob
+                    query_participants.add(participant)
+                    print(f"  Found matching KEGG ID {kegg_id} with probability {prob}")
+            else:
+                # Try to match by name if no KEGG ID
+                std_participant = standardize_name(participant)
+                for reaction_name, species_dict in init_probs.items():
+                    for species_name, kegg_dict in species_dict.items():
+                        if standardize_name(species_name) == std_participant:
+                            prob = max(kegg_dict.values())
+                            prob_product *= prob
+                            query_participants.add(participant)
+                            print(f"  Matched by name to {species_name} with probability {prob}")
+
+        if not query_participants:
+            print("  No matches found in init_probs")
+            prob_product = 1e-6  # Default low probability for no matches
+
+        print(f"Matched participants: {query_participants}")
+        print(f"Final prob_product: {prob_product}")
+
+        # --- 2. Compute Jaccard similarity ---
+        filtered_query_participants = {
+            p for p in query_participants 
+            if p and not any(c in p for c in ['ATP', 'ADP', 'AMP', 'NAD', 'NADP'])
+        }
+        
+        print(f"Filtered query participants: {filtered_query_participants}")
+        
+        if filtered_query_participants and filtered_candidate_participants:
+            jaccard_score = fuzzy_jaccard(
+                filtered_query_participants, 
+                filtered_candidate_participants
+            )
         else:
-            prob_product = 1e-6
+            print("Warning: Empty participant sets after filtering")
+            jaccard_score = 0.0
 
-        # --- 2. Compute Jaccard penalty for extra participants ---
-        jaccard_score = fuzzy_jaccard(query_participants, filtered_candidate_participants)
+        # --- 3. Combine scores ---
+        new_likelihood = prob_product * jaccard_score
+        
+        # Blend with previous likelihood if available
+        if prev_likelihoods is not None and not prev_likelihoods.empty:
+            prev_row = prev_likelihoods[prev_likelihoods['id'] == row['id']]
+            if not prev_row.empty:
+                prev_likelihood = prev_row['likelihood'].iloc[0]
+                # Exponential decay factor - gives more weight to new likelihoods in later iterations
+                alpha = min(0.1 + (iteration * 0.1), 0.9)  # Increases from 0.1 to 0.9
+                blended_likelihood = (alpha * new_likelihood + (1 - alpha) * prev_likelihood)
+                new_likelihood = blended_likelihood
+        
+        print(f"Final scores for {rxn_id}:")
+        print(f"prob_product: {prob_product}")
+        print(f"jaccard_score: {jaccard_score}")
+        print(f"new_likelihood: {new_likelihood}")
+        result_df.at[idx, 'likelihood'] = new_likelihood
 
-        # --- 3. Combine both scores ---
-        likelihood = prob_product * jaccard_score
-        likelihoods.append(likelihood)
-
-    # Create a copy to avoid modifying the original
-    result_df = kegg_recommendations_df.copy()
-    result_df['likelihood'] = likelihoods
-
-    # Rescale so each group of candidate reaction likelihoods sums to 1
+    # Normalize likelihoods within each reaction group
     group_sums = result_df.groupby('id')['likelihood'].transform('sum')
-    group_sums = group_sums.replace(0, 1)
-    result_df['likelihood'] = result_df['likelihood'] / group_sums
+    print("\nGroup sums before normalization:")
+    for rid in result_df['id'].unique():
+        print(f"{rid}: {group_sums[result_df['id'] == rid].iloc[0]}")
+    
+    mask = group_sums > 0  # Avoid division by zero
+    result_df.loc[mask, 'likelihood'] = result_df.loc[mask, 'likelihood'] / group_sums[mask]
     
     return result_df
-
 
 def update_participant_likelihoods_singleiter(
     participant_df: pd.DataFrame,
     reaction_likelihood_df: pd.DataFrame
 ) -> pd.DataFrame:
-    """
-    Perform a single iteration of updating each candidate participant's KEGG ID
-    with their likelihood based on whether that KEGG ID shows up in the reaction likelihood dataframe.
-    
-    Parameters
-    ----------
-    participant_df : pd.DataFrame
-        DataFrame containing participant information with columns including 'id' and 'KEGG_ID'
-    reaction_likelihood_df : pd.DataFrame
-        DataFrame containing reaction likelihoods with columns including 'annotation',
-        'participant_ids', and 'likelihood'
-        
-    Returns
-    -------
-    pd.DataFrame
-        Updated participant DataFrame with added 'participant_likelihood' column
-    """
     # Create a copy of the input dataframe to avoid modifying the original
     updated_participants_df = participant_df.copy()
     
-    # Initialize a new column for participant likelihoods if it doesn't exist
+    # Initialize or preserve participant likelihoods
     if 'participant_likelihood' not in updated_participants_df.columns:
         updated_participants_df['participant_likelihood'] = 0.0
-    else:
-        # Reset likelihoods for new iteration
-        updated_participants_df['participant_likelihood'] = 0.0
+    # Don't reset existing likelihoods - we'll update them based on new evidence
     
     # Create a mapping from KEGG_ID to participant rows
     kegg_id_to_indices = {}
@@ -553,10 +504,12 @@ def update_participant_likelihoods_singleiter(
             for participant_id in participant_ids:
                 if participant_id in kegg_id_to_indices:
                     for idx in kegg_id_to_indices[participant_id]:
-                        # Accumulate likelihood (we'll take the max later)
+                        # Blend new evidence with existing likelihood
+                        # Using exponential moving average with alpha=0.7 to favor newer evidence
+                        alpha = 0.7
                         current_likelihood = updated_participants_df.at[idx, 'participant_likelihood']
-                        updated_participants_df.at[idx, 'participant_likelihood'] = max(current_likelihood, reaction_likelihood)
-                        # updated_participants_df.at[idx, 'participant_likelihood'] += reaction_likelihood
+                        blended_likelihood = (alpha * reaction_likelihood + (1 - alpha) * current_likelihood)
+                        updated_participants_df.at[idx, 'participant_likelihood'] = blended_likelihood
     
     # Normalize likelihoods per participant group (same id)
     for participant_id in updated_participants_df['id'].unique():
@@ -581,40 +534,6 @@ def update_participant_likelihoods(
     convergence_count: int = 3,
     cofactors_to_ignore: Set = None
 ) -> pd.DataFrame:
-    """
-    Iteratively update each candidate participant's KEGG ID with their likelihood
-    based on whether that KEGG ID shows up in the reaction likelihood dataframe.
-    Continues until convergence criteria are met.
-    
-    Parameters
-    ----------
-    participant_df : pd.DataFrame
-        DataFrame containing participant information with columns including 'id' and 'KEGG_ID'
-    reaction_likelihood_df : pd.DataFrame
-        DataFrame containing reaction likelihoods with columns including 'annotation',
-        'participant_ids', and 'likelihood'
-    model_file : str
-        Path to the SBML model file
-    model_info : Dict
-        Dictionary containing model information
-    entity_type : str, optional
-        Type of entity to annotate, by default 'reaction'
-    database : str, optional
-        Database to use for annotation, by default 'kegg'
-    max_iterations : int, optional
-        Maximum number of iterations to perform, by default 100
-    convergence_threshold : float, optional
-        Threshold for considering scores stable (to 3 decimal places), by default 0.001
-    convergence_count : int, optional
-        Number of consecutive stable iterations required for convergence, by default 3
-    cofactors_to_ignore : Set, optional
-        Set of cofactor IDs to ignore, by default None
-        
-    Returns
-    -------
-    pd.DataFrame
-        Updated participant DataFrame with added 'participant_likelihood' column
-    """
     current_participants_df = participant_df.copy()
     
     # Keep track of previous scores for convergence check
@@ -624,10 +543,23 @@ def update_participant_likelihoods(
     logger.info("Starting iterative participant likelihood updates")
     
     for iteration in range(1, max_iterations + 1):
+        # Log likelihood distribution before update
+        logger.info(f"\nIteration {iteration} - Before update:")
+        if 'participant_likelihood' in current_participants_df.columns:
+            likelihood_stats = current_participants_df.groupby('id')['participant_likelihood'].agg(['mean', 'min', 'max'])
+            for idx, row in likelihood_stats.iterrows():
+                logger.info(f"ID {idx}: mean={row['mean']:.4f}, min={row['min']:.4f}, max={row['max']:.4f}")
+
         # Perform a single iteration
         updated_participants_df = update_participant_likelihoods_singleiter(
             current_participants_df, reaction_likelihood_df
         )
+        
+        # Log likelihood distribution after update
+        logger.info(f"\nIteration {iteration} - After update:")
+        likelihood_stats = updated_participants_df.groupby('id')['participant_likelihood'].agg(['mean', 'min', 'max'])
+        for idx, row in likelihood_stats.iterrows():
+            logger.info(f"ID {idx}: mean={row['mean']:.4f}, min={row['min']:.4f}, max={row['max']:.4f}")
         
         # Map ChEBI IDs to KEGG Compound IDs
         logger.info(f"Iteration {iteration}: Mapping ChEBI IDs to KEGG Compound IDs")
@@ -665,21 +597,22 @@ def update_participant_likelihoods(
         updated_kegg_recommendations_df['participants'] = updated_kegg_recommendations_df['annotation'].apply(get_participants)
         updated_kegg_recommendations_df['participant_ids'] = updated_kegg_recommendations_df['annotation'].apply(get_participant_ids)        
         
-        # Build participant counters for the updated recommendations
-        merged_participants = (
-            updated_kegg_recommendations_df
-            .groupby("id")["participants"]
-            .agg("; ".join)  # concatenate strings with "; "
+        # Convert updated participant likelihoods to probabilities for next iteration
+        logger.info(f"Iteration {iteration}: Converting participant likelihoods to probabilities")
+        updated_probs = participant_likelihoods_to_probs(updated_participants_df_with_kegg)
+        
+        # Compute updated reaction likelihoods using the new probabilities
+        logger.info(f"Iteration {iteration}: Computing updated reaction likelihoods")
+        updated_reaction_likelihood_df = compute_reaction_likelihoods(
+            updated_probs, 
+            updated_kegg_recommendations_df,
+            reaction_likelihood_df,  # Pass previous likelihoods
+            iteration
         )
-        counters = merged_participants.apply(
-            lambda s: Counter(p.strip() for p in s.split(";") if p.strip())
-        )
-        init_probs = init_species_probs_from_dict(reaction_participants, counters)
-        updated_reaction_likelihood_df = compute_reaction_likelihoods(init_probs, updated_kegg_recommendations_df)
 
         # Calculate the maximum change in likelihood scores
         if 'participant_likelihood' in current_participants_df.columns:
-            # Merge dataframes to compare scores
+            # Merge dataframes to compare scoress
             comparison_df = current_participants_df.merge(
                 updated_participants_df[['id', 'KEGG_ID', 'participant_likelihood']],
                 on=['id', 'KEGG_ID'],
@@ -709,21 +642,24 @@ def update_participant_likelihoods(
                 # Reset counter if scores changed significantly
                 stable_iterations = 0
         
-        # Store current scores for next iteration
+        # Update state for next iteration
         previous_scores.append(updated_participants_df['participant_likelihood'].copy())
-        current_participants_df = updated_participants_df_with_kegg
+        current_participants_df = updated_participants_df_with_kegg  # Update participants
+        reaction_likelihood_df = updated_reaction_likelihood_df  # Use new reaction likelihoods in next iteration
         
-        current_participants_df.to_csv(f'participants_likelihood_iter{iteration}.csv', index=False) ## Delete
-        updated_reaction_likelihood_df.to_csv(f'reaction_likelihood_iter{iteration}.csv', index=False) ## Delete
+        # Save iteration results
+        updated_participants_df_with_kegg.to_csv(f'participants_likelihood_iter{iteration}.csv', index=False)
+        updated_reaction_likelihood_df.to_csv(f'reaction_likelihood_iter{iteration}.csv', index=False)
 
         # If we've reached max iterations without convergence
         if iteration == max_iterations:
             logger.warning(
                 f"Maximum iterations ({max_iterations}) reached without convergence. "
-                f"Last maximum change: {max_diff_rounded:.6f}"
-            )
+                
+            ) # f"Last maximum change: {max_diff_rounded:.6f}"
+
     
-    return current_participants_df
+    return updated_participants_df_with_kegg, updated_reaction_likelihood_df
 
 
 #------------------------------------------------------------------------------
@@ -731,19 +667,7 @@ def update_participant_likelihoods(
 #------------------------------------------------------------------------------
 
 def check_environment(model_file: str) -> bool:
-    """
-    Check if the environment is properly set up for running the workflow.
     
-    Parameters
-    ----------
-    model_file : str
-        Path to the SBML model file
-        
-    Returns
-    -------
-    bool
-        True if environment is properly set up, False otherwise
-    """
     # Check if required databases are available
     available_dbs = get_available_databases()
     logger.info(f"Available databases: {available_dbs}")
@@ -775,19 +699,6 @@ def check_environment(model_file: str) -> bool:
 
 
 def load_kegg_reaction_data(data_path: str) -> Dict:
-    """
-    Load KEGG reaction features from the compressed file.
-    
-    Parameters
-    ----------
-    data_path : str
-        Path to the KEGG reaction features file
-        
-    Returns
-    -------
-    Dict
-        Dictionary containing KEGG reaction features
-    """
     try:
         with lzma.open(data_path, 'rb') as f:
             return pickle.load(f)
@@ -797,25 +708,19 @@ def load_kegg_reaction_data(data_path: str) -> Dict:
 
 
 def map_chebi_to_kegg(recommendations_df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    """
-    Map ChEBI IDs to KEGG Compound IDs and filter for high-scoring matches.
-    If a ChEBI ID maps to multiple KEGG IDs, duplicate the row for each KEGG ID.
-    
-    Parameters
-    ----------
-    recommendations_df : pd.DataFrame
-        DataFrame containing ChEBI recommendations
-        
-    Returns
-    -------
-    Tuple[pd.DataFrame, pd.DataFrame]
-        Tuple containing (filtered_df, high_score_recommendations)
-    """
     # Load ChEBI to KEGG mapping
     chebi_to_kegg_map = load_chebi2kegg_dict()
     
     # Create a new DataFrame to store expanded rows
     expanded_rows = []
+    
+    # Keep track of existing KEGG IDs and likelihoods
+    existing_mappings = {}
+    if 'KEGG_ID' in recommendations_df.columns and 'participant_likelihood' in recommendations_df.columns:
+        for _, row in recommendations_df.iterrows():
+            if pd.notna(row['KEGG_ID']) and row['KEGG_ID'] != '':
+                key = (row['id'], row['annotation'], row['KEGG_ID'])
+                existing_mappings[key] = row['participant_likelihood']
     
     # Process each row in the recommendations DataFrame
     if not recommendations_df.empty and 'annotation' in recommendations_df.columns:
@@ -838,6 +743,10 @@ def map_chebi_to_kegg(recommendations_df: pd.DataFrame) -> Tuple[pd.DataFrame, p
                     if kegg_id:  # Only add if KEGG ID is not empty
                         row_copy = row.copy()
                         row_copy['KEGG_ID'] = kegg_id
+                        # Preserve existing likelihood if available
+                        key = (row['id'], row['annotation'], kegg_id)
+                        if key in existing_mappings:
+                            row_copy['participant_likelihood'] = existing_mappings[key]
                         expanded_rows.append(row_copy)
         
         # Create a new DataFrame from the expanded rows
@@ -847,15 +756,18 @@ def map_chebi_to_kegg(recommendations_df: pd.DataFrame) -> Tuple[pd.DataFrame, p
         if expanded_df.empty:
             recommendations_df['KEGG_ID'] = ""
             return recommendations_df, pd.DataFrame()
+            
+        # Combine existing recommendations with new mappings
+        combined_df = pd.concat([recommendations_df, expanded_df]).drop_duplicates(subset=['id', 'annotation', 'KEGG_ID'])
     else:
         # If recommendations_df is empty or doesn't have 'annotation' column
         recommendations_df['KEGG_ID'] = ""
         return recommendations_df, pd.DataFrame()
     
     # Filter out rows with empty KEGG_ID
-    filtered_df = expanded_df[
-        expanded_df['KEGG_ID'].notna() &
-        (expanded_df['KEGG_ID'] != '')
+    filtered_df = combined_df[
+        combined_df['KEGG_ID'].notna() &
+        (combined_df['KEGG_ID'] != '')
     ]
     
     # Keep rows that have the max match_score per id
@@ -874,21 +786,6 @@ def map_chebi_to_kegg(recommendations_df: pd.DataFrame) -> Tuple[pd.DataFrame, p
 
 
 def extract_reaction_participants(model_info: Dict, recommendations_df: pd.DataFrame) -> Dict[str, List[str]]:
-    """
-    Extract reaction participants from model information.
-    
-    Parameters
-    ----------
-    model_info : Dict
-        Dictionary containing model information
-    recommendations_df : pd.DataFrame
-        DataFrame containing recommendations
-        
-    Returns
-    -------
-    Dict[str, List[str]]
-        Dictionary mapping reaction IDs to lists of participant names
-    """
     reaction_participants = {}
     
     for reaction in model_info['reactions']:
@@ -914,24 +811,6 @@ def run_kegg_annotation_workflow(
     database: str = 'kegg',
     llm_model: str = "meta-llama/llama-3.1-8b-instruct"
 ) -> None:
-    """
-    Run the KEGG reaction annotation workflow.
-    
-    Parameters
-    ----------
-    model_file : str
-        Path to the SBML model file
-    recommendations_df : str
-        Path to the recommendations CSV file
-    kegg_features_file : str
-        Path to the KEGG reaction features file
-    entity_type : str, optional
-        Type of entity to annotate, by default 'reaction'
-    database : str, optional
-        Database to use for annotation, by default 'kegg'
-    llm_model : str, optional
-        LLM model to use, by default "meta-llama/llama-3.1-8b-instruct"
-    """
     # Check environment and prerequisites
     if not check_environment(model_file):
         logger.error("Environment check failed. Please fix the issues and try again.")
@@ -1014,7 +893,7 @@ def run_kegg_annotation_workflow(
     scored_df = compute_reaction_likelihoods(init_probs, kegg_recommendations_df)
     
     # Step 8: Update participant KEGG likelihoods iteratively until convergence
-    updated_participants_df = update_participant_likelihoods(
+    updated_participants_df, updated_reactions_df = update_participant_likelihoods(
         high_score_recommendations,
         scored_df,
         reaction_participants,
@@ -1035,8 +914,8 @@ def run_kegg_annotation_workflow(
     scored_df.sort_values(by='likelihood', ascending=False, inplace=True)
 
     # Optional: Save results to file
-    updated_participants_df.to_csv(f"{os.path.splitext(model_file)[0]}_participant_likelihoods.csv", index=False)
-    scored_df.to_csv(f"{os.path.splitext(model_file)[0]}_reaction_likelihoods.csv", index=False)
+    # updated_participants_df.to_csv(f"{os.path.splitext(model_file)[0]}_participant_likelihoods.csv", index=False)
+    # scored_df.to_csv(f"{os.path.splitext(model_file)[0]}_reaction_likelihoods.csv", index=False)
     
     logger.info("KEGG annotation workflow completed successfully.")
 
@@ -1045,7 +924,6 @@ def run_kegg_annotation_workflow(
 #------------------------------------------------------------------------------
 
 def main():
-    """Main function to run the KEGG reaction annotation workflow."""
     # Configuration
     model_file = "tests/glycolysis_part1.xml"
     kegg_features_file = "data/kegg/kegg_reaction_features.lzma"
@@ -1060,7 +938,7 @@ def main():
     print("Step 1: Identifying the chemical species")
     
     file_name = model_file.split('.')[0]
-    #recommendations_df = pd.read_csv(f"{file_name}_initial_chemical_recommendations.csv")
+    # recommendations_df = pd.read_csv("glycolysis_part1.xml_recommendations.csv")
     recommendations_df = pd.read_csv(f"recommendations_correctedChEBI.csv")
 
     # Run the workflow
