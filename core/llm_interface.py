@@ -13,6 +13,28 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# TODO: Automatic entity type detection
+SYSTEM_PROMPT_AUTO = """You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized or canonical names for ontology lookup. 
+If lacking information about details, try your best to give the most likely general name.
+
+Here is one example:
+Species: A, B, D
+Model: "citric acid cycle model"
+ // Display Names:
+A is "acetyl-CoA";
+B is "citrate";
+C is "CoA";
+ // Reactions:
+A + oxaloacetate => B + C;
+E + F => D;
+
+This should return:
+A: "acetyl-CoA", "acetyl coenzyme A"
+B: "citric acid", "sodium citrate", "citrate(4−)"
+D: "UNK"
+Reason: the reaction is likely to be the TCA cycle, where A is the substrate and B is an intermediate. D is unknown because no display names are given for its reactants."""
+
+
 # System prompt for chemical annotation
 SYSTEM_PROMPT_CHEMICAL = """You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized or canonical chemical names for ontology lookup on ChEBI. 
 All given species are chemical entities. For complexes, only consider the chemical components. If lacking information about details, try your best to give the most likely general name.
@@ -119,8 +141,7 @@ J2: "Aconitase"
 J3: "Isocitrate dehydrogenase"
 Reason: these reactions match the reactions found in the TCA cycle """
 
-# Backward compatibility
-SYSTEM_PROMPT = SYSTEM_PROMPT_CHEMICAL
+SYSTEM_PROMPT = SYSTEM_PROMPT_AUTO
 
 def get_system_prompt(entity_type: str = "chemical") -> str:
     """
@@ -171,8 +192,8 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
                     {"role": "system", "content": developer_prompt},
                     {"role": "user", "content": prompt}
                 ],
-                temperature=0.2,
-                max_tokens=10000
+                # temperature=0.2,
+                # max_tokens=10000 # this changes to max_completion_tokens for gpt-5
             )
         except Exception as e:
             print(f"Error querying OpenAI: {e}")
@@ -186,8 +207,8 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
                     {"role": "system", "content": developer_prompt},
                     {"role": "user", "content": prompt}
                 ],
-                temperature=0.2,
-                max_tokens=10000
+                # temperature=0.2,
+                # max_tokens=10000
             )
         except Exception as e:
             print(f"Error querying OpenRouter: {e}")
@@ -202,7 +223,7 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
                     {"role": "user", "content": prompt}
                 ],
                 # max_tokens=10000,
-                temperature=0.2
+                # temperature=0.2
             )
         except Exception as e:
             print(f"Error querying Llama: {e}")

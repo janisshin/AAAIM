@@ -253,7 +253,7 @@ python load_data.py --database kegg --model default
 
   - **Entity Type**: `uniprot`
   - Only proteins for human (9606) and mouse (10090) are supported for now.
-- **KEGG**: Compount/reaction annotation
+- **KEGG**: Compound/reaction annotation
 
   - For reaction substrates and products.
 
