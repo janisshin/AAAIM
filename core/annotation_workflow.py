@@ -33,7 +33,8 @@ def annotate_single_model(model_file: str,
                   max_entities: int = None,
                   entity_type: str = "chemical",
                   database: str = "chebi",
-                  tax_id: str = None) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+                  tax_id: str = None,
+                  chunk_size: int = 50) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """
     Annotate a single model that has no or limited existing annotations.
     
@@ -49,6 +50,7 @@ def annotate_single_model(model_file: str,
         entity_type: Type of entities to annotate ("chemical", "gene", "protein")
         database: Target database ("chebi", "ncbigene", "uniprot")
         tax_id: For gene/protein annotations, the organism's tax_id for species-specific lookup
+        chunk_size: Size of chunks to split large models into (default: 50, None for no chunking)
         
     Returns:
         Tuple of (recommendations_df, metrics_dict)
@@ -124,31 +126,96 @@ def annotate_single_model(model_file: str,
     
     # Format prompt for LLM
     logger.info(f">>>Step 3: Querying LLM ({llm_model})...<<<")
-    prompt = format_prompt(model_file, entities_to_evaluate, entity_type)
     
-    if not prompt:
-        logger.error("Failed to format prompt")
-        return pd.DataFrame(), {"error": "Failed to format prompt"}
-    
-    llm_start = time.time()
-    try:
-        # Get appropriate system prompt for entity type
-        system_prompt = get_system_prompt(entity_type)
-        result = query_llm(prompt, system_prompt, model=llm_model, entity_type=entity_type)
-        llm_time = time.time() - llm_start
+    if chunk_size and len(entities_to_evaluate) > chunk_size:
+        logger.info(f"Breaking {len(entities_to_evaluate)} entities into chunks of {chunk_size}")
         
-        if not result:
-            logger.error("No response from LLM")
-            return pd.DataFrame(), {"error": "No response from LLM"}
+        # Break down large models into chunks
+        species_chunks = []
+        for i in range(0, len(entities_to_evaluate), chunk_size):
+            chunk = entities_to_evaluate[i:i + chunk_size]
+            species_chunks.append(chunk)
         
-        logger.info(f"LLM response received in {llm_time:.2f}s")
+        # Process each chunk and accumulate results
+        all_synonyms_dict = {}
+        all_reasons = []
+        total_llm_time = 0
         
-    except Exception as e:
-        logger.error(f"LLM query failed: {e}")
-        return pd.DataFrame(), {"error": f"LLM query failed: {e}"}
-    
-    # Parse LLM response
-    synonyms_dict, reason = parse_llm_response(result)
+        for chunk_idx, chunk in enumerate(species_chunks):
+            logger.info(f"Processing chunk {chunk_idx + 1}/{len(species_chunks)} ({len(chunk)} entities)")
+            
+            # Format prompt for this chunk
+            prompt = format_prompt(model_file, chunk, entity_type)
+            
+            if not prompt:
+                logger.error(f"Failed to format prompt for chunk {chunk_idx + 1}")
+                continue
+            
+            llm_start = time.time()
+            try:
+                # Get appropriate system prompt for entity type
+                system_prompt = get_system_prompt(entity_type)
+                result = query_llm(prompt, system_prompt, model=llm_model, entity_type=entity_type)
+                chunk_llm_time = time.time() - llm_start
+                total_llm_time += chunk_llm_time
+                
+                if not result:
+                    logger.error(f"No response from LLM for chunk {chunk_idx + 1}")
+                    continue
+                
+                logger.info(f"Chunk {chunk_idx + 1} LLM response received in {chunk_llm_time:.2f}s")
+                
+            except Exception as e:
+                logger.error(f"LLM query failed for chunk {chunk_idx + 1}: {e}")
+                continue
+            
+            # Parse LLM response
+            chunk_synonyms_dict, chunk_reason = parse_llm_response(result)
+            
+            # Accumulate synonyms
+            all_synonyms_dict.update(chunk_synonyms_dict)
+            
+            # Accumulate reasons
+            if chunk_reason:
+                all_reasons.append(f"Chunk {chunk_idx + 1}: {chunk_reason}")
+        
+        # Combine all reasons
+        if all_reasons:
+            reason = ' '.join(all_reasons)
+        else:
+            reason = ""
+        
+        # Use accumulated synonyms
+        synonyms_dict = all_synonyms_dict
+        llm_time = total_llm_time
+        
+    else:
+        # Single prompt for all entities
+        prompt = format_prompt(model_file, entities_to_evaluate, entity_type)
+        
+        if not prompt:
+            logger.error("Failed to format prompt")
+            return pd.DataFrame(), {"error": "Failed to format prompt"}
+        
+        llm_start = time.time()
+        try:
+            # Get appropriate system prompt for entity type
+            system_prompt = get_system_prompt(entity_type)
+            result = query_llm(prompt, system_prompt, model=llm_model, entity_type=entity_type)
+            llm_time = time.time() - llm_start
+            
+            if not result:
+                logger.error("No response from LLM")
+                return pd.DataFrame(), {"error": "No response from LLM"}
+            
+            logger.info(f"LLM response received in {llm_time:.2f}s")
+            
+        except Exception as e:
+            logger.error(f"LLM query failed: {e}")
+            return pd.DataFrame(), {"error": f"LLM query failed: {e}"}
+        
+        # Parse LLM response
+        synonyms_dict, reason = parse_llm_response(result)
     
     if not synonyms_dict:
         logger.error("Failed to parse LLM response")

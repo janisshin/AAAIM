@@ -471,7 +471,8 @@ def evaluate_single_model(model_file: str,
                          verbose: bool = True,
                          tax_id: str = None,
                          tax_name: str = None,
-                         bqbiol_qualifiers: list = None) -> Optional[pd.DataFrame]:
+                         bqbiol_qualifiers: list = None,
+                         chunk_size: int = 50) -> Optional[pd.DataFrame]:
     """
     Generate species evaluation statistics for one model.
     
@@ -491,6 +492,7 @@ def evaluate_single_model(model_file: str,
         tax_id: For gene/protein annotations, the organism's tax_id for species-specific lookup
         tax_name: For gene/protein annotations, the organism's tax_name for species-specific lookup
         bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
+        chunk_size: Size of chunks to split large models into, if None, no chunking is done
 
     Returns:
         DataFrame with evaluation results or None if failed
@@ -529,22 +531,72 @@ def evaluate_single_model(model_file: str,
         if verbose:
             logger.info(f"Evaluating {len(specs_to_evaluate)} entities in {model_name}")
         
-        # Run annotation with access to LLM results
-    
-        # Extract model context and query LLM
-        model_info = extract_model_info(model_file, specs_to_evaluate, entity_type)
-        prompt = format_prompt(model_file, specs_to_evaluate, entity_type)
-        
-        # Query LLM and get response
-        llm_start = time.time()
-        # Get appropriate system prompt for entity type
-        system_prompt = get_system_prompt(entity_type)
-        llm_response = query_llm(prompt, system_prompt, model=llm_model, entity_type=entity_type)
-        llm_time = time.time() - llm_start
-        
-        # Parse LLM response
-        synonyms_dict, reason = parse_llm_response(llm_response)
-        
+        # Break down large models into chunks
+        if chunk_size:
+            species_chunks = []
+            if len(specs_to_evaluate) > chunk_size:
+                if verbose:
+                    logger.info(f"Breaking {model_name} into {len(specs_to_evaluate)} species into chunks of {chunk_size}")
+                for i in range(0, len(specs_to_evaluate), chunk_size):
+                    chunk = specs_to_evaluate[i:i + chunk_size]
+                    species_chunks.append(chunk)
+            else:
+                species_chunks = [specs_to_evaluate]
+            
+            # Process each chunk and accumulate results
+            all_synonyms_dict = {}
+            all_reasons = []
+            total_llm_time = 0
+            
+            for chunk_idx, chunk in enumerate(species_chunks):
+                if verbose and len(species_chunks) > 1:
+                    logger.info(f"Processing chunk {chunk_idx + 1}/{len(species_chunks)} ({len(chunk)} species)")
+                
+                # Extract model context and format prompt for this chunk
+                prompt = format_prompt(model_file, chunk, entity_type)
+                
+                # Query LLM and get response
+                llm_start = time.time()
+                # Get appropriate system prompt for entity type
+                system_prompt = get_system_prompt(entity_type)
+                llm_response = query_llm(prompt, system_prompt, model=llm_model, entity_type=entity_type)
+                chunk_llm_time = time.time() - llm_start
+                total_llm_time += chunk_llm_time
+                
+                # Parse LLM response
+                chunk_synonyms_dict, chunk_reason = parse_llm_response(llm_response)
+                
+                # Accumulate synonyms
+                all_synonyms_dict.update(chunk_synonyms_dict)
+                
+                # Accumulate reasons
+                if chunk_reason:
+                    all_reasons.append(f"Chunk {chunk_idx + 1}: {chunk_reason}")
+            
+            # Combine all reasons
+            if all_reasons:
+                reason = ' '.join(all_reasons)
+            else:
+                reason = ""
+            
+            # Use accumulated synonyms for database search
+            synonyms_dict = all_synonyms_dict
+            llm_time = total_llm_time
+        else:
+            # Extract model context and query LLM
+            model_info = extract_model_info(model_file, specs_to_evaluate, entity_type)
+            prompt = format_prompt(model_file, specs_to_evaluate, entity_type)
+            
+            # Query LLM and get response
+            llm_start = time.time()
+            # Get appropriate system prompt for entity type
+            system_prompt = get_system_prompt(entity_type)
+            llm_response = query_llm(prompt, system_prompt, model=llm_model, entity_type=entity_type)
+            llm_time = time.time() - llm_start
+            
+            # Parse LLM response
+            synonyms_dict, reason = parse_llm_response(llm_response)
+
         # Search database
         search_start = time.time()
         with suppress_outputs(verbose):
@@ -628,7 +680,8 @@ def evaluate_models_in_folder(model_dir: str,
                              verbose: bool = False,
                              tax_id: str = None,
                              tax_dict_file: str = None,
-                             bqbiol_qualifiers: list = None) -> pd.DataFrame:
+                             bqbiol_qualifiers: list = None,
+                             chunk_size: int = 50) -> pd.DataFrame:
     """
     Generate species evaluation statistics for multiple models in a directory.
     Replicates evaluate_models from AMAS test_LLM_synonyms_plain.ipynb
@@ -741,7 +794,8 @@ def evaluate_models_in_folder(model_dir: str,
             verbose=verbose,
             tax_id=tax_id,
             tax_name=tax_name,
-            bqbiol_qualifiers=bqbiol_qualifiers
+            bqbiol_qualifiers=bqbiol_qualifiers,
+            chunk_size=chunk_size
         )
         
         if result_df is not None:
@@ -1906,3 +1960,66 @@ def _detect_and_count_other_ontologies(model_file: str, qualifier: str, model_ty
             check_annotations_for_species(qual_species)
     
     return ontology_counts
+
+def find_models_with_many_species(model_dir: str,
+                                 threshold: int = 50,
+                                 entity_type: str = "chemical",
+                                 database: str = "chebi",
+                                 tax_id: str = None,
+                                 bqbiol_qualifiers: list = None,
+                                 verbose: bool = True) -> pd.DataFrame:
+    """
+    Find models that have more than a specified threshold of species to evaluate.
+    
+    Args:
+        model_dir: Directory containing SBML model files
+        threshold: Minimum number of species to consider a "large" model (default: 50)
+        entity_type: Type of entity ("chemical", "gene", "protein")
+        database: Database to check ("chebi", "ncbigene", "uniprot")
+        tax_id: Taxonomy ID for NCBI gene / UniProt search
+        bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
+        verbose: If True, show detailed logging
+        
+    Returns:
+        DataFrame with columns: model_file, num_species, model_name
+    """
+    # Configure verbosity
+    _configure_verbosity(verbose)
+    
+    model_files = [f for f in os.listdir(model_dir) if f.endswith('.xml') or f.endswith('.sbml')]
+    model_files.sort()
+    
+    large_models = []
+    
+    for model_file in model_files:
+        model_path = os.path.join(model_dir, model_file)
+        
+        try:
+            # Get existing annotations to determine number of species
+            if entity_type == "chemical" and database == "chebi":
+                existing_annotations, _ = find_species_with_formulas(model_path, bqbiol_qualifiers)
+            elif entity_type == "gene" and database == "ncbigene":
+                existing_annotations, _ = find_species_with_gene_annotations(model_path, bqbiol_qualifiers, tax_id)
+            elif entity_type == "protein" and database == "uniprot":
+                existing_annotations, _ = find_species_with_protein_annotations(model_path, bqbiol_qualifiers, tax_id)
+            else:
+                continue
+                
+            num_species = len(existing_annotations)
+            
+            if num_species > threshold:
+                large_models.append({
+                    'model_file': model_file,
+                    'num_species': num_species
+                })
+                if verbose:
+                    logger.info(f"Found large model: {model_file} with {num_species} species")
+                    
+        except Exception as e:
+            if verbose:
+                logger.warning(f"Error processing {model_file}: {e}")
+            continue
+    
+    df = pd.DataFrame(large_models)
+    
+    return df

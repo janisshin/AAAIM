@@ -1,6 +1,6 @@
 # AAAIM (Auto-Annotator via AI for Modeling)
 
-AAAIM is a LLM-powered system for annotating biosimulation models with standardized ontology terms. It supports both chemical and gene entity annotation.
+AAAIM is a LLM-powered system for annotating biosimulation models with standardized ontology terms. It currently supports chemical, gene and protein annotation for species, and KEGG annotation for reactions in SBML models.
 
 ## Installation
 
@@ -11,10 +11,6 @@ AAAIM is a LLM-powered system for annotating biosimulation models with standardi
 pip install -r requirements.txt
 ```
 
-## Quick Start
-
-### Environment Variables
-
 Set up your LLM provider API keys:
 
 ```bash
@@ -23,18 +19,22 @@ export OPENAI_API_KEY="your-openai-key"
 
 # For OpenRouter models (meta-llama/llama-3.3-70b-instruct:free)
 export OPENROUTER_API_KEY="your-openrouter-key"
+
+# For LlaMa models (Llama-3.3-70B-Instruct)
+export LLAMA_API_KEY="your-llama-key"
 ```
 
 Alternatively, you can setup an `.env` file that looks like the following:
 
 ```bash
-LLAMA_API_KEY=<your-llama-api-key-here>
+OPENAI_API_KEY=<your-openai-api-key-here>
 OPENROUTER_API_KEY=<your-openrouter-api-key-here>
+LLAMA_API_KEY=<your-llama-api-key-here>
 ```
 
 ## Usage
 
-AAAIM currently provides two main workflows for both chemical and gene annotation:
+AAAIM currently provides two main workflows for model annotation:
 
 ### 1. Annotation Workflow (for new models)
 
@@ -42,6 +42,7 @@ AAAIM currently provides two main workflows for both chemical and gene annotatio
 - **Input**: All species in the model
 - **Output**: Annotation recommendations for all species
 - **Metrics**: Accuracy is NA when no existing annotations available
+- **Large Models**: Automatically splits models with >50 entities into chunks to avoid LLM context limits
 
 #### Chemical Annotation (ChEBI)
 
@@ -99,6 +100,7 @@ recommendations_df.to_csv("protein_annotation_results.csv", index=False)
 - **Input**: Only species that already have annotations
 - **Output**: Validation and improvement recommendations
 - **Metrics**: Accuracy calculated against existing annotations
+- **Large Models**: Automatically splits models with >50 entities into chunks to avoid LLM context limits
 
 #### Chemical Curation
 
@@ -172,7 +174,7 @@ update_annotation(
 
 A summary of added/removed annotations will be printed after update.
 
-### Advanced Usage
+### 4. Advanced Usage
 
 ```python
 # More control over parameters
@@ -183,7 +185,8 @@ recommendations_df, metrics = annotate_model(
     entity_type = "gene",				 # type of entities to annotate ("chemical", "gene")
     database = "ncbigene",				 # database to use ("chebi", "ncbigene")
     method = "direct",					 # method used to find the ontology ID ("direct", "rag")
-    top_k = 3						 # number of top candidates to return per entity (based on scores)
+    top_k = 3,						 # number of top candidates to return per entity (based on scores)
+    chunk_size = 50					 # split large models into chunks of 50 entities (None for no chunking)
 )
 
 # Direct access to qualifier tracking functions
