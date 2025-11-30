@@ -47,7 +47,7 @@ def annotate_single_model(model_file: str,
         method: Method to use for database search ("direct", "rag")
         top_k: Number of top candidates to return per species
         max_entities: Maximum number of entities to annotate (None for all)
-        entity_type: Type of entities to annotate ("chemical", "gene", "protein")
+        entity_type: Type of entities to annotate ("chemical", "gene", "protein", "auto")
         database: Target database ("chebi", "ncbigene", "uniprot")
         tax_id: For gene/protein annotations, the organism's tax_id for species-specific lookup
         chunk_size: Size of chunks to split large models into (default: 50, None for no chunking)
@@ -145,7 +145,7 @@ def annotate_single_model(model_file: str,
             logger.info(f"Processing chunk {chunk_idx + 1}/{len(species_chunks)} ({len(chunk)} entities)")
             
             # Format prompt for this chunk
-            prompt = format_prompt(model_file, chunk, entity_type)
+            prompt = format_prompt(model_file, chunk, entity_type, top_k)
             
             if not prompt:
                 logger.error(f"Failed to format prompt for chunk {chunk_idx + 1}")
@@ -170,7 +170,7 @@ def annotate_single_model(model_file: str,
                 continue
             
             # Parse LLM response
-            chunk_synonyms_dict, chunk_reason = parse_llm_response(result)
+            chunk_synonyms_dict, chunk_entity_type_dict, chunk_reason = parse_llm_response(result, entity_type)
             
             # Accumulate synonyms
             all_synonyms_dict.update(chunk_synonyms_dict)
@@ -191,7 +191,7 @@ def annotate_single_model(model_file: str,
         
     else:
         # Single prompt for all entities
-        prompt = format_prompt(model_file, entities_to_evaluate, entity_type)
+        prompt = format_prompt(model_file, entities_to_evaluate, entity_type, top_k)
         
         if not prompt:
             logger.error("Failed to format prompt")
@@ -215,7 +215,7 @@ def annotate_single_model(model_file: str,
             return pd.DataFrame(), {"error": f"LLM query failed: {e}"}
         
         # Parse LLM response
-        synonyms_dict, reason = parse_llm_response(result)
+        synonyms_dict, entity_type_dict, reason = parse_llm_response(result, entity_type)
     
     if not synonyms_dict:
         logger.error("Failed to parse LLM response")

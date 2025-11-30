@@ -13,8 +13,8 @@ class EntityType(Enum):
     CHEMICAL = "chemical"
     GENE = "gene" 
     PROTEIN = "protein"
-    REACTION = "reaction"
-    TRANSITION = "transition"
+    COMPLEX = "complex"
+    # REACTION = "reaction"
     UNKNOWN = "unknown"
 
 # Model Types
@@ -63,10 +63,10 @@ DATABASE_URIS: Dict[DatabaseID, str] = {
 # Entity Type to Database Mapping
 ENTITY_DATABASE_MAPPING: Dict[EntityType, List[DatabaseID]] = {
     EntityType.CHEMICAL: [DatabaseID.CHEBI],
-    EntityType.GENE: [DatabaseID.NCBIGENE, DatabaseID.GO],
-    EntityType.PROTEIN: [DatabaseID.UNIPROT, DatabaseID.GO],
-    EntityType.REACTION: [DatabaseID.RHEA, DatabaseID.EC, DatabaseID.KEGG],
-    EntityType.TRANSITION: [DatabaseID.PUBMED, DatabaseID.GO],
+    EntityType.GENE: [DatabaseID.NCBIGENE],
+    EntityType.PROTEIN: [DatabaseID.UNIPROT],
+    EntityType.COMPLEX: [DatabaseID.CHEBI, DatabaseID.UNIPROT, DatabaseID.NCBIGENE],
+    # EntityType.REACTION: [DatabaseID.RHEA, DatabaseID.EC, DatabaseID.KEGG],
 }
 
 # Confidence Thresholds

@@ -10,30 +10,46 @@ import time
 from typing import Dict, List, Tuple, Any
 from openai import OpenAI
 import logging
+from utils.constants import EntityType
 
 logger = logging.getLogger(__name__)
 
-# TODO: Automatic entity type detection
-SYSTEM_PROMPT_AUTO = """You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized or canonical names for ontology lookup. 
+# Helper function to get entity type options from enum
+def _get_entity_type_options() -> str:
+    """Get comma-separated list of entity types from EntityType enum."""
+    # Exclude REACTION from auto-detection as they're not applicable to species
+    exclude_types = ['reaction']
+    types = [e.value for e in EntityType if e.value not in exclude_types]
+    return ', '.join(types)
+
+# Automatic entity type detection
+SYSTEM_PROMPT_AUTO = f"""You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized or canonical names for ontology lookup, and determine the entity type for each species.
+
+For each species, identify whether it is chemical, gene, protein, or unknown. Specify the entity type in parentheses after the species ID, followed by synonyms.
+
+Entity types should be one of: [{_get_entity_type_options()}]. Note that amino acids and tRNAs are considered as chemical.
+
 If lacking information about details, try your best to give the most likely general name.
 
 Here is one example:
-Species: A, B, D
-Model: "citric acid cycle model"
- // Display Names:
-A is "acetyl-CoA";
-B is "citrate";
-C is "CoA";
- // Reactions:
-A + oxaloacetate => B + C;
-E + F => D;
+Species to annotate: A, B, E
+Model: "glycolysis model"
+// Display Names:
+A is "glucose";
+B is "ATP";
+C is "glucose-6-phosphate";
+D is "ADP";
+E is "hexokinase";
+
+// Reactions:
+A + B -> C + D; kcat * E * A * B
 
 This should return:
-A: "acetyl-CoA", "acetyl coenzyme A"
-B: "citric acid", "sodium citrate", "citrate(4−)"
-D: "UNK"
-Reason: the reaction is likely to be the TCA cycle, where A is the substrate and B is an intermediate. D is unknown because no display names are given for its reactants."""
-
+A (chemical): "glucose", "D-glucose"
+B (chemical): "ATP", "adenosine triphosphate"
+E (protein): "hexokinase", "ATP:D-hexose 6-phosphotransferase"
+Reason: This reaction represents the first step of glycolysis, where hexokinase (E) catalyzes the phosphorylation of glucose (A) by ATP (B) to form glucose-6-phosphate (C) and ADP (D).
+"""
 
 # System prompt for chemical annotation
 SYSTEM_PROMPT_CHEMICAL = """You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized or canonical chemical names for ontology lookup on ChEBI. 
@@ -148,12 +164,14 @@ def get_system_prompt(entity_type: str = "chemical") -> str:
     Get the appropriate system prompt based on entity type.
     
     Args:
-        entity_type: Type of entity ("chemical", "gene", "protein")
+        entity_type: Type of entity ("chemical", "gene", "protein", "auto")
         
     Returns:
         System prompt string
     """
-    if entity_type == "chemical":
+    if entity_type == "auto":
+        return SYSTEM_PROMPT_AUTO
+    elif entity_type == "chemical":
         return SYSTEM_PROMPT_CHEMICAL
     elif entity_type == "gene":
         return SYSTEM_PROMPT_GENE
@@ -237,29 +255,33 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
         print("No response or empty response from LLM.")
         return ""
 
-def parse_llm_response(response) -> Tuple[Dict[str, List[str]], str]:
+def parse_llm_response(response, entity_type: str = "auto") -> Tuple[Dict[str, List[str]], Dict[str, str], str]:
     """
-    Parse the LLM response to extract species synonyms in the format:
-    SpeciesA: "name1", "name2", ...
-    SpeciesB: "name1", name2, ...
+    Parse the LLM response to extract species synonyms and entity types in the format:
+    SpeciesA (chemical): "name1", "name2", ...
+    SpeciesB (gene): "name1", name2, ...
     Reason: ...
     
-    Exact replication of parse_llm_response from AMAS test_LLM_synonyms_plain.ipynb
+    Extended to support automatic entity type detection.
     
     Args:
         response: The raw response string from the LLM
+        entity_type: The entity type being used ("auto" for automatic detection, 
+                     or specific type like "chemical", "gene", "protein")
         
     Returns:
         Tuple containing:
         - Dictionary mapping species IDs to lists of synonyms
+        - Dictionary mapping species IDs to entity types
         - Reason string
     """
     # Remove markdown code block syntax if present
     response = re.sub(r'```.*?\n', '', response)
     response = re.sub(r'```\s*$', '', response)
     
-    # Initialize the dictionary and reason
+    # Initialize the dictionaries and reason
     synonyms_dict = {}
+    entity_type_dict = {}
     reason = ""
     
     # Split response into lines
@@ -290,13 +312,32 @@ def parse_llm_response(response) -> Tuple[Dict[str, List[str]], str]:
         if not line:
             continue
 
-        # Parse species lines (in format "SpeciesA: "name1", "name2", ...)
-        parts = line.split(':', 1)
-        if len(parts) != 2:
-            continue
-
-        species_id = parts[0].strip()
-        names_str = parts[1].strip()
+        # Try to parse with entity type format: "SpeciesA (entity_type): names..."
+        entity_type_pattern = r'^([A-Za-z0-9_]+)\s*\((\w+)\):\s*(.+)$'
+        entity_type_match = re.match(entity_type_pattern, line)
+        
+        if entity_type_match:
+            # Format with entity type
+            species_id = entity_type_match.group(1).strip()
+            detected_type = entity_type_match.group(2).strip().lower() 
+            names_str = entity_type_match.group(3).strip()
+            # Only use detected type if in auto mode, otherwise use specified entity_type
+            if entity_type == "auto":
+                entity_type_dict[species_id] = detected_type
+            else:
+                entity_type_dict[species_id] = entity_type
+        else:
+            # Standard format without entity type: "SpeciesA: names..."
+            parts = line.split(':', 1)
+            if len(parts) != 2:
+                continue
+            species_id = parts[0].strip()
+            names_str = parts[1].strip()
+            # Use specified entity_type, or "unknown" only if in auto mode
+            if entity_type == "auto":
+                entity_type_dict[species_id] = "unknown"
+            else:
+                entity_type_dict[species_id] = entity_type
 
         # Extract all synonyms, handling both quoted and unquoted names
         names = []
@@ -333,4 +374,4 @@ def parse_llm_response(response) -> Tuple[Dict[str, List[str]], str]:
             f.write(str(response))
         print(f"Error response saved to: {error_file}")
 
-    return synonyms_dict, reason 
+    return synonyms_dict, entity_type_dict, reason 

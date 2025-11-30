@@ -10,13 +10,15 @@ __pycache__
 .DS_Store
 AMAS_ref/
 chroma_ref/
-LLM-plan.md
-README_ChEBI_RAG.md
+docs/
 chroma_storage/
-results/
-scratch.ipynb
+tests/prev_results/
+tests/autoType/
 
 **/chebi_kegg.json
 **/chebi.owl.gz
 **/kegg_compound_flats
 **/reaction_flats
+
+# subfolders for LLM response cache
+tests/results/**

@@ -94,6 +94,41 @@ recommendations_df, metrics = annotate_model(
 recommendations_df.to_csv("protein_annotation_results.csv", index=False)
 ```
 
+#### Automatic Entity Type Detection
+
+AAAIM supports automatic detection of entity types (chemical, gene, protein, complex, or unknown) for models with mixed entity types:
+
+```python
+from core import annotate_model
+
+# Annotate all species in a model by automatic type detection
+# The LLM will determine the entity type for each species
+recommendations_df, metrics = annotate_model(
+    model_file="path/to/model.xml",
+    entity_type="auto",
+    database=["chebi", "uniprot"]  # choose from these databases
+)
+
+# The results will include a 'type' column indicating the detected entity type
+# Species with unknown types are included in results but with empty predictions
+print(recommendations_df[['species_id', 'type', 'synonyms_LLM', 'predictions_names']])
+
+# Save results
+recommendations_df.to_csv("auto_annotation_results.csv", index=False)
+```
+
+**How it works:**
+
+- The LLM analyzes each species in context (display names, reactions, model notes) to determine its type
+- Detected types: `chemical`, `gene`, `protein`, `complex`, or `unknown`
+- Database matching is performed using the appropriate database for each detected type
+- The `database` parameter accepts a list to specify which databases to use:
+  - Chemicals → ChEBI
+  - Genes → NCBI Gene
+  - Proteins → UniProt
+  - Complexes → ChEBI, UniProt, or NCBI Gene
+- Species with `unknown` type are included in results with their LLM-suggested synonyms but no database matches
+
 ### 2. Curation Workflow (for models with existing annotations)
 
 - **Purpose**: Evaluate and improve existing annotations
@@ -182,10 +217,10 @@ recommendations_df, metrics = annotate_model(
     model_file = "path/to/model.xml",
     llm_model = "meta-llama/llama-3.3-70b-instruct:free",       # the LLM model used to predict annotations
     max_entities = 100,					 # maximum number of entities to annotate (None for all)
-    entity_type = "gene",				 # type of entities to annotate ("chemical", "gene")
-    database = "ncbigene",				 # database to use ("chebi", "ncbigene")
+    entity_type = "gene",				 # type of entities to annotate ("chemical", "gene", "protein", "auto")
+    database = "ncbigene",				 # database to use ("chebi", "ncbigene", "uniprot") or list for auto mode
     method = "direct",					 # method used to find the ontology ID ("direct", "rag")
-    top_k = 3,						 # number of top candidates to return per entity (based on scores)
+    top_k = 3,						 # number of LLM synonyms and top database candidates to return per entity
     chunk_size = 50					 # split large models into chunks of 50 entities (None for no chunking)
 )
 
@@ -215,6 +250,45 @@ for species_id, annotation_ids in annotations.items():
 # Using "tests/test_models/BIOMD0000000190.xml"
 python examples/simple_example.py
 ```
+
+### 5. Evaluation and Results Analysis
+
+AAAIM provides tools for evaluating annotation quality and analyzing results:
+
+```python
+from utils.evaluation import evaluate_single_model, print_evaluation_results
+
+# Evaluate a single model and get detailed results with a 'type' column
+result_df = evaluate_single_model(
+    model_file="path/to/model.xml",
+    llm_model="gpt-4o-mini",
+    method="direct",
+    top_k=3,
+    entity_type="auto",  # or "chemical", "gene", "protein"
+    database=["chebi", "uniprot"]  # for auto mode, or single database for specific type
+)
+
+# The result DataFrame includes a 'type' column showing detected entity types
+print(result_df[['species_id', 'type', 'synonyms_LLM', 'predictions_names', 'accuracy']])
+
+# Print summary statistics from a results CSV file
+print_evaluation_results(
+    results_csv="results.csv",
+    ref_results_csv="reference_results.csv",  # optional: filter to only species in reference
+    bqbiol_qualifiers=['is', 'isVersionOf'],  # optional: filter by annotation qualifiers
+    entity_types=['chemical', 'protein']  # optional: filter by detected entity types
+)
+```
+
+**Output columns:**
+
+- `detected_entity_type`: Detected entity type (chemical, gene, protein, complex, or unknown)
+- `synonyms_LLM`: LLM-suggested synonyms for the species
+- `predictions`: Top-k database IDs matched for this species
+- `predictions_names`: Corresponding names for the predicted IDs
+- `exist_annotation_id`: Existing annotation IDs from the model (if any)
+- `exist_annotation_name`: Names of existing annotations
+- `accuracy`: Match accuracy between predictions and existing annotations
 
 ## Methods
 
@@ -248,17 +322,34 @@ python load_data.py --database kegg --model default
 
   - **Entity Type**: `chemical`
   - All terms in ChEBI are included.
+  - Used for: small molecules, metabolites, compounds
 - **NCBI Gene**: Gene annotation
 
   - **Entity Type**: `gene`
   - Only genes for common species are supported (those included in bigg models).
+  - Used for: genes, DNA sequences, gene symbols
 - **UniProt**: Protein annotation
 
-  - **Entity Type**: `uniprot`
+  - **Entity Type**: `protein`
   - Only proteins for human (9606) and mouse (10090) are supported for now.
+  - Used for: proteins, enzymes
 - **KEGG**: Compound/reaction annotation
 
   - For reaction substrates and products.
+
+### Entity Type to Database Mapping
+
+When using `entity_type="auto"`, AAAIM automatically selects the appropriate database(s) based on the detected entity type:
+
+| Detected Type | Default Databases         | Usage                                          |
+| ------------- | ------------------------- | ---------------------------------------------- |
+| `chemical`  | ChEBI                     | Small molecules, metabolites, compounds        |
+| `gene`      | NCBI Gene                 | Genes, DNA sequences, gene symbols             |
+| `protein`   | UniProt                   | Proteins, enzymes                              |
+| `complex`   | ChEBI, UniProt, NCBI Gene | Protein complexes, chemical complexes          |
+| `unknown`   | None                      | LLM synonyms included but no database matching |
+
+You can restrict which databases are used by providing a `database` list parameter. For example, `database=["chebi", "uniprot"]` will only use ChEBI for chemicals and UniProt for proteins, but will not search NCBI Gene even if genes are detected.
 
 ### Future Support
 
