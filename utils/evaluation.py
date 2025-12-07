@@ -646,6 +646,7 @@ def evaluate_single_model(model_file: str,
                 total_llm_time += chunk_llm_time
                 
                 # Parse LLM response
+                # print(f"System prompt: \n{system_prompt}")
                 # print(f"LLM response: \n{llm_response}")
                 chunk_synonyms_dict, chunk_entity_type_dict, chunk_reason = parse_llm_response(llm_response, entity_type)
                 # print(f"Chunk synonyms dict: {chunk_synonyms_dict}")
@@ -1019,12 +1020,12 @@ def evaluate_models_in_folder(model_dir: str,
         if result_df is not None:
             all_results.append(result_df)
             
-            # Save intermediate results in a subfolder
-            intermediate_dir = output_path / "intermediate"
-            intermediate_dir.mkdir(parents=True, exist_ok=True)
-            intermediate_file = intermediate_dir / f"{output_file}_{actual_idx}.csv"
-            result_df.to_csv(intermediate_file, index=False)
-            logger.info(f"Saved intermediate results to: {intermediate_file}")
+            # # Save intermediate results in a subfolder
+            # intermediate_dir = output_path / "intermediate"
+            # intermediate_dir.mkdir(parents=True, exist_ok=True)
+            # intermediate_file = intermediate_dir / f"{output_file}_{actual_idx}.csv"
+            # result_df.to_csv(intermediate_file, index=False)
+            # logger.info(f"Saved intermediate results to: {intermediate_file}")
         else:
             logger.warning(f"Skipping {model_file} - no results generated")
     

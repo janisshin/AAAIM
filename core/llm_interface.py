@@ -24,12 +24,9 @@ def _get_entity_type_options() -> str:
 
 # Automatic entity type detection
 SYSTEM_PROMPT_AUTO = f"""You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized or canonical names for ontology lookup, and determine the entity type for each species.
-
-For each species, identify whether it is chemical, gene, protein, or unknown. Specify the entity type in parentheses after the species ID, followed by synonyms.
-
-Entity types should be one of: [{_get_entity_type_options()}]. Note that amino acids and tRNAs are considered as chemical.
-
-If lacking information about details, try your best to give the most likely general name.
+For each species, identify whether it is chemical, protein, or complex. Specify the entity type in parentheses after the species ID, followed by synonyms.
+Entity types should be one of: [{_get_entity_type_options()}]. Note that amino acids and tRNAs are considered as chemical. Try your best to give the most likely names without modifications (e.g., no "phosphorylated") or extra information (e.g., no “protein”, “complex”, or localization terms like “nuclear”).
+For complexes, consider both the protein and chemical components, and list them all separately with commas.
 
 Here is one example:
 Species to annotate: A, B, E
@@ -94,7 +91,8 @@ Reason: the reaction is likely to be the TCA cycle, where A is the substrate and
 # Reason: the reaction is likely to be the TCA cycle, where A is the substrate and B is an intermediate. D is unknown because no display names are given for its reactants."""
 
 # System prompt for gene annotation
-SYSTEM_PROMPT_GENE = """You are a biomedical knowledge assistant. Your task is to normalize species names from biochemical models into standardized gene names or common gene symbols for ontology lookup on NCBI Gene. Only consider them as gene entities, return "UNK" if not or unsure.
+SYSTEM_PROMPT_GENE = """You are a biomedical knowledge assistant. Your task is to normalize species names from biochemical models into standardized gene names or common gene symbols for ontology lookup on NCBI Gene. 
+All given species are genes. For complexes, only consider the gene components. If lacking information about details, try your best to give the most likely general name.
 
 Here is one example:
 Species: G1, G2, G3
@@ -115,25 +113,22 @@ G3: "CHUK", "IKK1", "BPS2"
 Reason: This appears to be a regulatory motif in the NF-κB signaling pathway. G1 is the p65 subunit (RELA), G2 is the p50 subunit (NFKB1), and G3 is IKK, a kinase that phosphorylates p50."""
 
 # System prompt for protein annotation
-SYSTEM_PROMPT_PROTEIN = """You are a biomedical knowledge assistant. Your task is to normalize species names from biochemical models into standardized protein names or common protein symbols for ontology lookup on UniProt. Only consider them as protein entities, return "UNK" if not or unsure.
-
+SYSTEM_PROMPT_PROTEIN = """You are a biomedical knowledge assistant. Your task is to normalize species names from biochemical models into standardized protein names for ontology lookup on UniProt.
+All given species are proteins. For complexes, only consider the protein components and separate their names with commas. Try your best to give the most likely protein names without modifications (e.g., no "phosphorylated") or extra information (e.g., no “protein”, “complex”, or localization terms like “nuclear”).
 Here is one example:
-Species: P1, P2, P3
-Model: "EGFR signaling pathway"
- // Display Names:
-P1 is "EGFR";
-P2 is "RAS";
-P3 is "AKT";
- // Reactions:
-P1 + ligand => P1_activated;
-P1_activated => P2_activated;
-P2_activated => P3_activated;
+Species: C1, C2
+Model: "NF-κB signaling pathway"
+// Display Names:  
+C1 is "NFκB (nuclear)";  
+C2 is "IKK complex";  
+// Reactions:  
+C2 => phosphorylates C1;  
+C1 (cytoplasmic) => C1 (nuclear);  
 
 This should return:
-P1: "EGFR", "ERBB1", "HER1"
-P2: "KRAS", "HRAS", "NRAS"
-P3: "AKT1", "PKB", "RAC"
-Reason: This appears to be an EGFR signaling pathway. P1 is the epidermal growth factor receptor (EGFR), P2 is a RAS protein family member, and P3 is AKT kinase."""
+C1: NFKB1, RELA  
+C2: CHUK, IKBKB, IKBKG
+Reason: “NFkB (nuclear)” refers to the activated NF-κB complex, typically composed of NFKB1 (p50) and RELA (p65). The “IKK complex” consists of CHUK (IKKα), IKBKB (IKKβ), and IKBKG (NEMO). Extra terms like “nuclear” are ignored, and only the UniProt protein names of the components are listed, separated by commas."""
 
 # System prompt for reaction and enzyme annotation
 SYSTEM_PROMPT_REACTION = """You are a biomedical knowledge assistant. Your task is to normalize reaction and enzyme names from biochemical models into standardized or canonical reaction or enzyme names for ontology lookup on KEGG. 

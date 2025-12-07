@@ -658,6 +658,7 @@ def _get_uniprot_recommendations_direct(species_ids: List[str], synonyms_dict, t
         # Query for each synonym and each tax_id
         for synonym in synonyms:
             norm_synonym = remove_symbols(synonym.lower())
+            # print(f"Norm synonym: {norm_synonym}, synonym: {synonym}")
             for tid in tax_ids_to_search:
                 try:
                     names_dict = load_uniprot_names_dict(tax_id=tid)
@@ -667,6 +668,7 @@ def _get_uniprot_recommendations_direct(species_ids: List[str], synonyms_dict, t
                 for ref_name, uniprot_ids in names_dict.items():
                     if norm_synonym == ref_name.lower():
                         for uniprot_id in uniprot_ids:
+                            # print(f"Uniprot id: {uniprot_id}, ref_name: {ref_name}")
                             uniprot_name = label_dict.get(uniprot_id, uniprot_id)
                             if uniprot_id not in all_candidates:
                                 all_candidates.append(uniprot_id)

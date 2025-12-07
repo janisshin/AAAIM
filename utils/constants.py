@@ -11,7 +11,7 @@ from typing import Dict, List
 class EntityType(Enum):
     """Types of biological entities that can be annotated."""
     CHEMICAL = "chemical"
-    GENE = "gene" 
+    # GENE = "gene" 
     PROTEIN = "protein"
     COMPLEX = "complex"
     # REACTION = "reaction"
@@ -63,7 +63,7 @@ DATABASE_URIS: Dict[DatabaseID, str] = {
 # Entity Type to Database Mapping
 ENTITY_DATABASE_MAPPING: Dict[EntityType, List[DatabaseID]] = {
     EntityType.CHEMICAL: [DatabaseID.CHEBI],
-    EntityType.GENE: [DatabaseID.NCBIGENE],
+    # EntityType.GENE: [DatabaseID.NCBIGENE],
     EntityType.PROTEIN: [DatabaseID.UNIPROT],
     EntityType.COMPLEX: [DatabaseID.CHEBI, DatabaseID.UNIPROT, DatabaseID.NCBIGENE],
     # EntityType.REACTION: [DatabaseID.RHEA, DatabaseID.EC, DatabaseID.KEGG],
