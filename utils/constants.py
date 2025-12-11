@@ -87,6 +87,28 @@ DEFAULT_TIMEOUT = 30
 DEFAULT_CACHE_TTL_HOURS = 24
 MAX_CACHE_SIZE_MB = 1000 
 
+# Words to remove from LLM synonyms before database search
+# These are modification/descriptor words that should not be part of standardized names
+SYNONYM_WORDS_TO_REMOVE: List[str] = [
+    # Modification states
+    "phosphorylated", "phospho", "dephosphorylated",
+    "acetylated", "methylated", "ubiquitinated", "sumoylated",
+    "glycosylated", "palmitoylated", "farnesylated",
+    "oxidized", "reduced",
+    # Activation states
+    "active", "inactive", "activated", "inactivated", "bound", "unbound",
+    # Entity type descriptors
+    "protein", "complex", "enzyme", "receptor", "kinase", "phosphatase",
+    "ligand", "substrate", "cofactor", "inhibitor", "activator",
+    # Localization terms  
+    "nuclear", "cytoplasmic", "cytosolic", "mitochondrial", "membrane",
+    "plasma membrane", "endoplasmic reticulum", "golgi", "extracellular",
+    "intracellular", "luminal", "peroxisomal", "lysosomal",
+    # Other descriptors
+    "total", "free", "basal", "degraded", "truncated", "mutant",
+    "wild-type", "recombinant", "endogenous", "exogenous",
+]
+
 # REF files
 REF_CHEBI2LABEL = "chebi2label.lzma"
 REF_NAMES2CHEBI = "cleannames2chebi.lzma"
