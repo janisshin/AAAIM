@@ -23,33 +23,34 @@ def _get_entity_type_options() -> str:
     return ', '.join(types)
 
 # Automatic entity type detection
-SYSTEM_PROMPT_AUTO = f"""You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized or canonical names for ontology lookup, and determine the entity type for each species.
-For each species, identify whether it is chemical, protein, or complex. Specify the entity type in parentheses after the species ID, followed by synonyms.
-Entity types should be one of: [{_get_entity_type_options()}]. Note that amino acids and tRNAs are considered as chemical. Try your best to give the most likely names without modifications (e.g., no "phosphorylated") or extra information (e.g., no “protein”, “complex”, or localization terms like “nuclear”).
-For complexes, consider both the protein and chemical components, and list them all separately with commas.
+SYSTEM_PROMPT_AUTO = f"""You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized names for ontology lookup, and determine the entity type for each species.
+For each species, identify entity type from the following options: [{_get_entity_type_options()}]. Specify the entity type in parentheses after the species ID, followed by synonyms. Note that amino acids and tRNAs are considered as chemical. 
+For complexes, do not give the name of the complex, only list standardized names of the chemical and protein components, separated by commas (no other symbols like “:” or “-”). E.g., for "EGF-EGFR^2", return "EGF", "EGFR".
+Try your best to give the most likely terminology without modifications (e.g., no "phosphorylated") or extra information (e.g., no “protein”, “complex”, or localization terms like “nuclear”).
 
 Here is one example:
-Species to annotate: A, B, E
-Model: "glycolysis model"
+Species to annotate: A, B, C, D
+Model: "hexokinase reaction"
 // Display Names:
 A is "glucose";
 B is "ATP";
-C is "glucose-6-phosphate";
-D is "ADP";
-E is "hexokinase";
+C is "hexokinase (cytoplasmic)";
+D is "glucose-ATP-hexokinase complex (active)";
 
 // Reactions:
-A + B -> C + D; kcat * E * A * B
+A + B + C -> D;
+D -> products;
 
 This should return:
 A (chemical): "glucose", "D-glucose"
 B (chemical): "ATP", "adenosine triphosphate"
-E (protein): "hexokinase", "ATP:D-hexose 6-phosphotransferase"
-Reason: This reaction represents the first step of glycolysis, where hexokinase (E) catalyzes the phosphorylation of glucose (A) by ATP (B) to form glucose-6-phosphate (C) and ADP (D).
+C (protein): "Hexokinase-1", "HK1"
+D (complex): "glucose", "ATP", "Hexokinase-1"
+Reason: A and B are small-molecule substrates (chemicals), C is the enzyme (protein), and D represents the enzyme–substrate complex. For the complex D, the complex name and extra info (“complex”, “active”) are removed, and only the standardized names of its components are listed.
 """
 
 # System prompt for chemical annotation
-SYSTEM_PROMPT_CHEMICAL = """You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized or canonical chemical names for ontology lookup on ChEBI. 
+SYSTEM_PROMPT_CHEMICAL = """You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized names for ontology lookup on ChEBI. 
 All given species are chemical entities. For complexes, only consider the chemical components. If lacking information about details, try your best to give the most likely general name.
 
 Here is one example:
@@ -114,7 +115,9 @@ Reason: This appears to be a regulatory motif in the NF-κB signaling pathway. G
 
 # System prompt for protein annotation
 SYSTEM_PROMPT_PROTEIN = """You are a biomedical knowledge assistant. Your task is to normalize species names from biochemical models into standardized protein names for ontology lookup on UniProt.
-All given species are proteins. For complexes, only consider the protein components and separate their names with commas. Try your best to give the most likely protein names without modifications (e.g., no "phosphorylated") or extra information (e.g., no “protein”, “complex”, or localization terms like “nuclear”).
+All given species are proteins. For complexes, only consider the protein components and separate their names with commas (no other symbols like “:” or “-”). E.g., for "EGF-EGFR^2", return "EGF", "EGFR".
+Try your best to give the most likely standardized terminology without modifications (e.g., no "phosphorylated") or extra information (e.g., no “protein”, “complex”, or localization terms like “nuclear”).
+
 Here is one example:
 Species: C1, C2
 Model: "NF-κB signaling pathway"
