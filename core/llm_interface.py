@@ -115,8 +115,9 @@ Reason: This appears to be a regulatory motif in the NF-κB signaling pathway. G
 
 # System prompt for protein annotation
 SYSTEM_PROMPT_PROTEIN = """You are a biomedical knowledge assistant. Your task is to normalize species names from biochemical models into standardized protein names for ontology lookup on UniProt.
-All given species are proteins. For complexes, only consider the protein components and separate their names with commas (no other symbols like “:” or “-”). E.g., for "EGF-EGFR^2", return "EGF", "EGFR".
-Try your best to give the most likely standardized terminology without modifications (e.g., no "phosphorylated") or extra information (e.g., no “protein”, “complex”, or localization terms like “nuclear”).
+All given species are proteins. For complexes, only consider the protein components and separate their names with commas. E.g., for "EGF-EGFR^2", return "EGF", "EGFR".
+Try your best to give the most likely standardized terminology without any extra information. E.g., a model may contain various states (e.g., phosphorylated, nuclear, or transcribed) of the same protein, you should only return the most likely standard name like "BMAL1" but not "BMAL1_phosphorylated".
+For protein names that represent a family or ambiguous label, return all reasonable subtype or isoform candidates. E.g., “AKT” → AKT1, AKT2, AKT3; “RAS” → KRAS, NRAS, HRAS
 
 Here is one example:
 Species: C1, C2
@@ -357,7 +358,6 @@ def parse_llm_response(response, entity_type: str = "auto") -> Tuple[Dict[str, L
 
         # Remove any empty strings that might have been added
         names = [name for name in names if name and not name.isspace()]
-
         if names:
             synonyms_dict[species_id] = names
 
