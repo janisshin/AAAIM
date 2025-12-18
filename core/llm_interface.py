@@ -8,9 +8,14 @@ import os
 import re
 import time
 from typing import Dict, List, Tuple, Any
-from openai import OpenAI
+from openai import OpenAI, RateLimitError, APIError
 import logging
 from utils.constants import EntityType
+
+# Default retry settings for rate limit errors (429)
+DEFAULT_MAX_RETRIES = 5
+DEFAULT_INITIAL_DELAY = 10  # seconds
+DEFAULT_MAX_DELAY = 120  # seconds (2 minutes max wait)
 
 logger = logging.getLogger(__name__)
 
@@ -182,16 +187,105 @@ def get_system_prompt(entity_type: str = "chemical") -> str:
         logger.warning(f"Unknown entity type {entity_type}, using chemical prompt")
         return SYSTEM_PROMPT_CHEMICAL
 
-def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", entity_type: str = "chemical"):
+def _make_api_call_with_retry(client, model: str, messages: list, 
+                               max_retries: int = DEFAULT_MAX_RETRIES,
+                               initial_delay: float = DEFAULT_INITIAL_DELAY,
+                               max_delay: float = DEFAULT_MAX_DELAY,
+                               api_name: str = "API"):
+    """
+    Make an API call with retry logic for rate limit errors (429).
+    
+    Args:
+        client: OpenAI client instance
+        model: Model name
+        messages: List of message dicts for the API
+        max_retries: Maximum number of retry attempts
+        initial_delay: Initial delay in seconds before first retry
+        max_delay: Maximum delay between retries
+        api_name: Name of the API for logging
+        
+    Returns:
+        API response or None on failure
+    """
+    delay = initial_delay
+    last_exception = None
+    
+    for attempt in range(max_retries + 1):
+        try:
+            response = client.chat.completions.create(
+                model=model,
+                messages=messages
+            )
+            return response
+            
+        except RateLimitError as e:
+            last_exception = e
+            if attempt < max_retries:
+                # Extract wait time from error message if available
+                wait_time = delay
+                error_msg = str(e)
+                
+                # Try to parse retry-after from error message
+                if "retry after" in error_msg.lower():
+                    try:
+                        # Look for patterns like "retry after X seconds" or "try again in X"
+                        import re
+                        match = re.search(r'(\d+)\s*(?:seconds?|s)', error_msg.lower())
+                        if match:
+                            suggested_wait = int(match.group(1))
+                            wait_time = max(wait_time, suggested_wait + 1)  # Add 1s buffer
+                    except:
+                        pass
+                
+                # Cap at max_delay
+                wait_time = min(wait_time, max_delay)
+                
+                print(f"Rate limit error (429) from {api_name}. Attempt {attempt + 1}/{max_retries + 1}. "
+                      f"Waiting {wait_time:.1f}s before retry...")
+                time.sleep(wait_time)
+                
+                # Exponential backoff for next attempt
+                delay = min(delay * 2, max_delay)
+            else:
+                print(f"Rate limit error (429) from {api_name}. Max retries ({max_retries}) exceeded.")
+                
+        except APIError as e:
+            # Handle other API errors (500, 502, 503, etc.)
+            last_exception = e
+            if e.status_code in [500, 502, 503, 504] and attempt < max_retries:
+                wait_time = min(delay, max_delay)
+                print(f"API error ({e.status_code}) from {api_name}. Attempt {attempt + 1}/{max_retries + 1}. "
+                      f"Waiting {wait_time:.1f}s before retry...")
+                time.sleep(wait_time)
+                delay = min(delay * 2, max_delay)
+            else:
+                print(f"API error from {api_name}: {e}")
+                break
+                
+        except Exception as e:
+            # Non-retryable error
+            print(f"Error querying {api_name}: {e}")
+            return None
+    
+    # All retries exhausted
+    if last_exception:
+        print(f"All retries exhausted for {api_name}. Last error: {last_exception}")
+    return None
+
+
+def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", entity_type: str = "chemical",
+              max_retries: int = DEFAULT_MAX_RETRIES, initial_delay: float = DEFAULT_INITIAL_DELAY):
     """
     Query the OpenAI LLM with the formatted prompt.
-    Exact replication of query_llm from AMAS test_LLM_synonyms_plain.ipynb
+    Includes automatic retry with exponential backoff for rate limit errors (429).
     
     Args:
         prompt: The formatted prompt to send to the LLM
         developer_prompt: The system prompt (if None, will use appropriate prompt for entity_type)
         model: The model to use for the LLM, e.g., "meta-llama/llama-3.3-70b-instruct:free"
         entity_type: Type of entity for prompt selection if developer_prompt is None
+        max_retries: Maximum number of retry attempts for rate limit errors (default: 5)
+        initial_delay: Initial delay in seconds before first retry (default: 10)
 
     Returns:
         String response from LLM or empty string on error
@@ -199,52 +293,36 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
     if developer_prompt is None:
         developer_prompt = get_system_prompt(entity_type)
     
+    messages = [
+        {"role": "system", "content": developer_prompt},
+        {"role": "user", "content": prompt}
+    ]
+    
     response = None
     if model.startswith("gpt"):
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        try:
-            response = client.chat.completions.create(
-                model=model,
-                messages=[
-                    {"role": "system", "content": developer_prompt},
-                    {"role": "user", "content": prompt}
-                ],
-                # temperature=0.2,
-                # max_tokens=10000 # this changes to max_completion_tokens for gpt-5
-            )
-        except Exception as e:
-            print(f"Error querying OpenAI: {e}")
-            return ""
+        response = _make_api_call_with_retry(
+            client, model, messages, 
+            max_retries=max_retries, 
+            initial_delay=initial_delay,
+            api_name="OpenAI"
+        )
     elif model.startswith("meta-llama"):
         client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.getenv("OPENROUTER_API_KEY"))
-        try:
-            response = client.chat.completions.create(
-                model=model,
-                messages=[
-                    {"role": "system", "content": developer_prompt},
-                    {"role": "user", "content": prompt}
-                ],
-                # temperature=0.2,
-                # max_tokens=10000
-            )
-        except Exception as e:
-            print(f"Error querying OpenRouter: {e}")
-            return ""
+        response = _make_api_call_with_retry(
+            client, model, messages,
+            max_retries=max_retries,
+            initial_delay=initial_delay,
+            api_name="OpenRouter"
+        )
     elif model.startswith("Llama"):
         client = OpenAI(base_url="https://api.llama.com/compat/v1", api_key=os.getenv("LLAMA_API_KEY"))
-        try:
-            response = client.chat.completions.create(
-                model=model,
-                messages=[
-                    {"role": "system", "content": developer_prompt},
-                    {"role": "user", "content": prompt}
-                ],
-                # max_tokens=10000,
-                # temperature=0.2
-            )
-        except Exception as e:
-            print(f"Error querying Llama: {e}")
-            return ""
+        response = _make_api_call_with_retry(
+            client, model, messages,
+            max_retries=max_retries,
+            initial_delay=initial_delay,
+            api_name="Llama API"
+        )
     else:
         raise ValueError(f"Model {model} not supported")
     

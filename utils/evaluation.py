@@ -17,8 +17,90 @@ import sys
 from typing import Dict, List, Optional, Tuple, Any, Union
 from pathlib import Path
 import logging
+from collections import deque
+from threading import Lock
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_distances
+
+
+class RateLimiter:
+    """
+    Rate limiter for API calls with support for request count limits.
+    Designed to comply with Llama API limits (10 requests/min, 250k tokens/min).
+    """
+    def __init__(self, max_requests_per_minute: int = 10, verbose: bool = True):
+        """
+        Initialize the rate limiter.
+        
+        Args:
+            max_requests_per_minute: Maximum number of requests allowed per minute (default: 10)
+            verbose: If True, print rate limiting messages
+        """
+        self.max_requests_per_minute = max_requests_per_minute
+        self.request_timestamps = deque()
+        self.lock = Lock()
+        self.verbose = verbose
+    
+    def wait_if_needed(self):
+        """
+        Wait if we're approaching rate limits.
+        Call this before making an API request.
+        """
+        with self.lock:
+            current_time = time.time()
+            minute_ago = current_time - 60
+            
+            # Remove timestamps older than 1 minute
+            while self.request_timestamps and self.request_timestamps[0] < minute_ago:
+                self.request_timestamps.popleft()
+            
+            requests_in_last_minute = len(self.request_timestamps)
+            
+            # Check if we need to wait
+            if requests_in_last_minute >= self.max_requests_per_minute:
+                # Wait until the oldest request is more than a minute old
+                oldest_timestamp = self.request_timestamps[0]
+                wait_time = 60 - (current_time - oldest_timestamp) + 0.5  # Add 0.5s buffer
+                if wait_time > 0:
+                    if self.verbose:
+                        print(f"Rate limit reached ({requests_in_last_minute} requests in last minute). Waiting {wait_time:.1f}s...")
+                    time.sleep(wait_time)
+            
+            # Record this request
+            self.request_timestamps.append(time.time())
+    
+    def reset(self):
+        """Reset the rate limiter state."""
+        with self.lock:
+            self.request_timestamps.clear()
+
+
+# Global rate limiter instance (can be shared across function calls)
+_global_rate_limiter: Optional[RateLimiter] = None
+
+
+def get_rate_limiter(max_requests_per_minute: int = 10, verbose: bool = True) -> RateLimiter:
+    """
+    Get or create a global rate limiter instance.
+    
+    Args:
+        max_requests_per_minute: Maximum requests per minute
+        verbose: If True, print rate limiting messages
+        
+    Returns:
+        RateLimiter instance
+    """
+    global _global_rate_limiter
+    if _global_rate_limiter is None or _global_rate_limiter.max_requests_per_minute != max_requests_per_minute:
+        _global_rate_limiter = RateLimiter(max_requests_per_minute, verbose)
+    return _global_rate_limiter
+
+
+def reset_rate_limiter():
+    """Reset the global rate limiter."""
+    global _global_rate_limiter
+    if _global_rate_limiter is not None:
+        _global_rate_limiter.reset()
 
 from core.model_info import find_species_with_chebi_annotations, find_species_with_annotations_and_qualifiers, extract_model_info, format_prompt, find_species_with_ncbigene_annotations, find_species_with_uniprot_annotations, get_species_display_names, detect_model_format
 from core.llm_interface import SYSTEM_PROMPT, query_llm, parse_llm_response, get_system_prompt
@@ -528,7 +610,8 @@ def evaluate_single_model(model_file: str,
                          tax_name: str = None,
                          bqbiol_qualifiers: list = None,
                          chunk_size: int = 50,
-                         max_try: int = 1) -> Optional[pd.DataFrame]:
+                         max_try: int = 1,
+                         rate_limiter: RateLimiter = None) -> Optional[pd.DataFrame]:
     """
     Generate species evaluation statistics for one model.
     
@@ -550,6 +633,7 @@ def evaluate_single_model(model_file: str,
         bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
         chunk_size: Size of chunks to split large models into, if None, no chunking is done
         max_try: Maximum number of retry attempts for species with empty predictions (default: 1, no retry)
+        rate_limiter: RateLimiter instance for controlling API request rate (optional)
 
     Returns:
         DataFrame with evaluation results or None if failed
@@ -642,6 +726,10 @@ def evaluate_single_model(model_file: str,
                 # Extract model context and format prompt for this chunk
                 prompt = format_prompt(model_file, chunk, entity_type, top_k)
                 
+                # Apply rate limiting before LLM call
+                if rate_limiter is not None:
+                    rate_limiter.wait_if_needed()
+                
                 # Query LLM and get response
                 llm_start = time.time()
                 # Get appropriate system prompt for entity type
@@ -679,6 +767,10 @@ def evaluate_single_model(model_file: str,
             # Extract model context and query LLM
             model_info = extract_model_info(model_file, specs_to_evaluate, entity_type)
             prompt = format_prompt(model_file, specs_to_evaluate, entity_type, top_k)
+            
+            # Apply rate limiting before LLM call
+            if rate_limiter is not None:
+                rate_limiter.wait_if_needed()
             
             # Query LLM and get response
             llm_start = time.time()
@@ -891,6 +983,10 @@ def evaluate_single_model(model_file: str,
                 current_try += 1
                 if verbose:
                     logger.info(f"Retry {current_try}/{max_try}: Re-querying LLM for {len(species_with_empty_preds)} species with empty predictions")
+                
+                # Apply rate limiting before retry LLM call
+                if rate_limiter is not None:
+                    rate_limiter.wait_if_needed()
                 
                 # Re-query LLM for species with empty predictions
                 retry_llm_start = time.time()
@@ -1117,7 +1213,8 @@ def evaluate_models_in_folder(model_dir: str,
                              tax_dict_file: str = None,
                              bqbiol_qualifiers: list = None,
                              chunk_size: int = 50,
-                             max_try: int = 1) -> pd.DataFrame:
+                             max_try: int = 1,
+                             rate_limit_rpm: int = 10) -> pd.DataFrame:
     """
     Generate species evaluation statistics for multiple models in a directory.
     Replicates evaluate_models from AMAS test_LLM_synonyms_plain.ipynb
@@ -1143,12 +1240,19 @@ def evaluate_models_in_folder(model_dir: str,
         bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
         chunk_size: Size of chunks to split large models into, if None, no chunking is done (default: 50)
         max_try: Maximum number of retry attempts for species with empty predictions (default: 1, no retry)
+        rate_limit_rpm: Maximum LLM API requests per minute (default: 10 for Llama API)
         
     Returns:
         Combined DataFrame with all evaluation results
     """
     # Configure verbosity
     _configure_verbosity(verbose)
+    
+    # Initialize rate limiter for API calls
+    rate_limiter = None
+    if rate_limit_rpm and rate_limit_rpm > 0:
+        rate_limiter = RateLimiter(max_requests_per_minute=rate_limit_rpm, verbose=True)
+        print(f"Rate limiting enabled: max {rate_limit_rpm} LLM requests per minute")
     
     if tax_id:
         logger.info(f"Using organism-specific search for tax_id: {tax_id}")
@@ -1221,6 +1325,7 @@ def evaluate_models_in_folder(model_dir: str,
             f.write(f"bqbiol_qualifiers: {bqbiol_qualifiers}\n")
             f.write(f"chunk_size: {chunk_size}\n")
             f.write(f"max_try: {max_try}\n")
+            f.write(f"rate_limit_rpm: {rate_limit_rpm}\n")
             f.write(f"\nTimestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
         
         print(f"Saved configuration to {config_file}")
@@ -1264,7 +1369,8 @@ def evaluate_models_in_folder(model_dir: str,
             tax_name=tax_name,
             bqbiol_qualifiers=bqbiol_qualifiers,
             chunk_size=chunk_size,
-            max_try=max_try
+            max_try=max_try,
+            rate_limiter=rate_limiter
         )
         
         if result_df is not None:
@@ -1276,8 +1382,8 @@ def evaluate_models_in_folder(model_dir: str,
             # intermediate_file = intermediate_dir / f"{output_file}_{actual_idx}.csv"
             # result_df.to_csv(intermediate_file, index=False)
             # logger.info(f"Saved intermediate results to: {intermediate_file}")
-        else:
-            logger.warning(f"Skipping {model_file} - no results generated")
+        # else:
+            # logger.warning(f"Skipping {model_file} - no results generated")
     
     # Combine all results
     if all_results:
