@@ -20,6 +20,7 @@ import chromadb
 from chromadb.utils import embedding_functions
 from utils.constants import REF_CHEBI2LABEL, REF_NAMES2CHEBI, REF_NCBIGENE2LABEL, REF_NAMES2NCBIGENE, REF_UNIPROT2LABEL, REF_NAMES2UNIPROT
 from utils.constants import REF_CHEBI2KEGG_COMPOUND, REF_KEGG_REACTION2NAME, REF_KEGG2EC, REF_KEGG_REACTION_FEATURES, REF_KEGG_PARSED_REACTIONS
+# from utils.constants import SYNONYM_WORDS_TO_REMOVE
 from core.data_types import Recommendation, ReactionRecommendation
 
 
@@ -371,6 +372,76 @@ def remove_symbols(text: str) -> str:
     """
     return re.sub(r'[^a-zA-Z0-9]', '', text)
 
+
+# def clean_synonym(synonym: str) -> str:
+#     """
+#     Clean a synonym by removing unwanted words and normalizing.
+    
+#     This function:
+#     1. Converts to lowercase
+#     # 2. Removes words from SYNONYM_WORDS_TO_REMOVE (case-insensitive, whole word match)
+#     3. Removes symbols (keeps only alphanumeric characters)
+    
+#     Args:
+#         synonym: The synonym string to clean
+        
+#     Returns:
+#         Cleaned and normalized synonym
+#     """
+#     if not synonym or synonym == 'UNK':
+#         return synonym
+    
+#     # Convert to lowercase
+#     text = synonym.lower()
+    
+#     # # Remove unwanted words (whole word match, case-insensitive)
+#     # # Sort by length descending to remove longer phrases first (e.g., "plasma membrane" before "membrane")
+#     # words_to_remove = sorted(SYNONYM_WORDS_TO_REMOVE, key=len, reverse=True)
+#     # for word in words_to_remove:
+#     #     # Use word boundary to match whole words only
+#     #     # Handle multi-word phrases and single words
+#     #     pattern = r'\b' + re.escape(word.lower()) + r'\b'
+#     #     text = re.sub(pattern, '', text)
+    
+#     # # Remove extra whitespace
+#     # text = ' '.join(text.split())
+    
+#     # # Strip leading/trailing whitespace and common punctuation artifacts
+#     # text = text.strip(' -_,;:')
+    
+#     return text
+
+
+# def clean_synonyms(synonyms: List[str]) -> List[str]:
+#     """
+#     Clean a list of synonyms by removing unwanted words and normalizing.
+    
+#     If cleaning removes all content from a synonym, the normalized original 
+#     (lowercase, symbols removed) is kept to avoid losing potentially useful terms.
+    
+#     Args:
+#         synonyms: List of synonym strings to clean
+        
+#     Returns:
+#         List of cleaned synonyms (duplicates are removed)
+#     """
+#     cleaned = []
+#     seen = set()
+    
+#     for synonym in synonyms:
+#         clean_syn = clean_synonym(synonym)
+        
+#         # If cleaning removed everything, use the normalized original
+#         if not clean_syn:
+#             clean_syn = synonym.lower().strip()
+        
+#         if clean_syn and clean_syn not in seen:
+#             cleaned.append(clean_syn)
+#             seen.add(clean_syn)
+    
+#     return cleaned if cleaned else synonyms  # Return original if all cleaned to empty
+
+
 def extract_classifications(raw_text, classification):
     """
     classification (str): either 'brite' or 'orthology'
@@ -473,6 +544,7 @@ def _get_chebi_recommendations_direct(species_ids: List[str], synonyms_dict, top
             recommendations.append(recommendation)
             continue
         
+        
         all_candidates = []
         all_candidate_names = []
         hit_count = {}  # Dictionary to track how many times each candidate appears
@@ -557,6 +629,10 @@ def _get_ncbigene_recommendations_direct(species_ids: List[str], synonyms_dict, 
             )
             recommendations.append(recommendation)
             continue
+        
+        # # Clean synonyms to remove unwanted words before search
+        # cleaned_synonyms = clean_synonyms(synonyms)
+        
         all_candidates = []
         all_candidate_names = []
         hit_count = {}
@@ -647,6 +723,10 @@ def _get_uniprot_recommendations_direct(species_ids: List[str], synonyms_dict, t
             )
             recommendations.append(recommendation)
             continue
+        
+        # # Clean synonyms to remove unwanted words before search
+        # cleaned_synonyms = clean_synonyms(synonyms)
+        
         all_candidates = []
         all_candidate_names = []
         hit_count = {}
@@ -655,9 +735,10 @@ def _get_uniprot_recommendations_direct(species_ids: List[str], synonyms_dict, t
             tax_ids_to_search = tax_id
         else:
             tax_ids_to_search = [tax_id]
-        # Query for each synonym and each tax_id
+        # Query for each cleaned synonym and each tax_id
         for synonym in synonyms:
             norm_synonym = remove_symbols(synonym.lower())
+            # print(f"Norm synonym: {norm_synonym}, synonym: {synonym}")
             for tid in tax_ids_to_search:
                 try:
                     names_dict = load_uniprot_names_dict(tax_id=tid)
@@ -667,6 +748,7 @@ def _get_uniprot_recommendations_direct(species_ids: List[str], synonyms_dict, t
                 for ref_name, uniprot_ids in names_dict.items():
                     if norm_synonym == ref_name.lower():
                         for uniprot_id in uniprot_ids:
+                            # print(f"Uniprot id: {uniprot_id}, ref_name: {ref_name}")
                             uniprot_name = label_dict.get(uniprot_id, uniprot_id)
                             if uniprot_id not in all_candidates:
                                 all_candidates.append(uniprot_id)
@@ -871,11 +953,14 @@ def _get_kegg_recommendations_direct(reaction_ids: List[str], synonyms_dict, top
             recommendations.append(recommendation)
             continue
         
+        # # Clean synonyms to remove unwanted words before search
+        # cleaned_synonyms = clean_synonyms(synonyms)
+        
         all_candidates = []
         all_candidate_names = []
         hit_count = {}
         
-        # Query for each synonym
+        # Query for each cleaned synonym
         for synonym in synonyms:
             norm_synonym = remove_symbols(synonym.lower())
             
@@ -1232,6 +1317,10 @@ def get_species_recommendations_rag(
                 )
                 recommendations.append(recommendation)
                 continue
+            
+            # # Clean synonyms for non-chemical databases
+            # search_synonyms = clean_synonyms(synonyms)
+            
             agg_candidates = {}
             agg_names = {}
             for tid in tax_id:
@@ -1317,6 +1406,13 @@ def get_species_recommendations_rag(
             )
             recommendations.append(recommendation)
             continue
+        
+        # # Clean synonyms for non-chemical databases
+        # if database != "chebi":
+        #     search_synonyms = clean_synonyms(synonyms)
+        # else:
+        #     search_synonyms = synonyms
+        
         all_candidates = []
         all_candidate_names = []
         candidate_scores = {}

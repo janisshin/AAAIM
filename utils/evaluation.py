@@ -14,17 +14,99 @@ import re
 import warnings
 import contextlib
 import sys
-from typing import Dict, List, Optional, Tuple, Any
+from typing import Dict, List, Optional, Tuple, Any, Union
 from pathlib import Path
 import logging
+from collections import deque
+from threading import Lock
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_distances
+
+
+class RateLimiter:
+    """
+    Rate limiter for API calls with support for request count limits.
+    Designed to comply with Llama API limits (10 requests/min, 250k tokens/min).
+    """
+    def __init__(self, max_requests_per_minute: int = 10, verbose: bool = True):
+        """
+        Initialize the rate limiter.
+        
+        Args:
+            max_requests_per_minute: Maximum number of requests allowed per minute (default: 10)
+            verbose: If True, print rate limiting messages
+        """
+        self.max_requests_per_minute = max_requests_per_minute
+        self.request_timestamps = deque()
+        self.lock = Lock()
+        self.verbose = verbose
+    
+    def wait_if_needed(self):
+        """
+        Wait if we're approaching rate limits.
+        Call this before making an API request.
+        """
+        with self.lock:
+            current_time = time.time()
+            minute_ago = current_time - 60
+            
+            # Remove timestamps older than 1 minute
+            while self.request_timestamps and self.request_timestamps[0] < minute_ago:
+                self.request_timestamps.popleft()
+            
+            requests_in_last_minute = len(self.request_timestamps)
+            
+            # Check if we need to wait
+            if requests_in_last_minute >= self.max_requests_per_minute:
+                # Wait until the oldest request is more than a minute old
+                oldest_timestamp = self.request_timestamps[0]
+                wait_time = 60 - (current_time - oldest_timestamp) + 0.5  # Add 0.5s buffer
+                if wait_time > 0:
+                    if self.verbose:
+                        print(f"Rate limit reached ({requests_in_last_minute} requests in last minute). Waiting {wait_time:.1f}s...")
+                    time.sleep(wait_time)
+            
+            # Record this request
+            self.request_timestamps.append(time.time())
+    
+    def reset(self):
+        """Reset the rate limiter state."""
+        with self.lock:
+            self.request_timestamps.clear()
+
+
+# Global rate limiter instance (can be shared across function calls)
+_global_rate_limiter: Optional[RateLimiter] = None
+
+
+def get_rate_limiter(max_requests_per_minute: int = 10, verbose: bool = True) -> RateLimiter:
+    """
+    Get or create a global rate limiter instance.
+    
+    Args:
+        max_requests_per_minute: Maximum requests per minute
+        verbose: If True, print rate limiting messages
+        
+    Returns:
+        RateLimiter instance
+    """
+    global _global_rate_limiter
+    if _global_rate_limiter is None or _global_rate_limiter.max_requests_per_minute != max_requests_per_minute:
+        _global_rate_limiter = RateLimiter(max_requests_per_minute, verbose)
+    return _global_rate_limiter
+
+
+def reset_rate_limiter():
+    """Reset the global rate limiter."""
+    global _global_rate_limiter
+    if _global_rate_limiter is not None:
+        _global_rate_limiter.reset()
 
 from core.model_info import find_species_with_chebi_annotations, find_species_with_annotations_and_qualifiers, extract_model_info, format_prompt, find_species_with_ncbigene_annotations, find_species_with_uniprot_annotations, get_species_display_names, detect_model_format
 from core.llm_interface import SYSTEM_PROMPT, query_llm, parse_llm_response, get_system_prompt
 from core.data_types import Recommendation
 from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, clear_chromadb_cache
-from utils.constants import REF_CHEBI2LABEL, REF_NCBIGENE2LABEL, REF_UNIPROT2LABEL, REF_CHEBI2FORMULA, CHEBI_URI_PATTERNS, NCBIGENE_URI_PATTERNS, UNIPROT_URI_PATTERNS, ModelType
+from utils.constants import REF_CHEBI2LABEL, REF_NCBIGENE2LABEL, REF_UNIPROT2LABEL, REF_CHEBI2FORMULA, CHEBI_URI_PATTERNS, NCBIGENE_URI_PATTERNS, UNIPROT_URI_PATTERNS, ModelType, ENTITY_DATABASE_MAPPING, EntityType, DatabaseID
 
 REF_RESULTS = "/Users/luna/Desktop/CRBM/AMAS_proj/Results/biomd_species_accuracy_AMAS.csv"
 
@@ -457,13 +539,68 @@ def find_species_with_protein_annotations(model_file: str, bqbiol_qualifiers: li
     # Return all species that have UniProt annotations
     return existing_annotations, qualifier_annotations
 
+def _get_database_for_entity_type(entity_type: str, 
+                                   allowed_databases: Optional[List[str]] = None) -> Optional[str]:
+    """
+    Get the appropriate database for an entity type.
+    
+    Args:
+        entity_type: Detected entity type (chemical, gene, protein, unknown)
+        allowed_databases: List of allowed database names provided by user (e.g., ["chebi", "uniprot"])
+        
+    Returns:
+        Database name to use, or None if no valid database found
+    """
+    # Map string entity type to EntityType enum
+    entity_type_lower = entity_type.lower()
+    entity_type_enum = None
+    
+    if entity_type_lower == "chemical":
+        entity_type_enum = EntityType.CHEMICAL
+    elif entity_type_lower == "gene":
+        entity_type_enum = EntityType.GENE
+    elif entity_type_lower == "protein":
+        entity_type_enum = EntityType.PROTEIN
+    elif entity_type_lower == "complex":
+        entity_type_enum = EntityType.COMPLEX
+    elif entity_type_lower == "unknown":
+        return None
+    else:
+        logger.warning(f"Unknown entity type: {entity_type}")
+        return None
+    
+    # Get default databases for this entity type from constants
+    if entity_type_enum not in ENTITY_DATABASE_MAPPING:
+        logger.warning(f"No database mapping found for entity type: {entity_type}")
+        return None
+    
+    valid_databases = ENTITY_DATABASE_MAPPING[entity_type_enum]
+    
+    # If allowed_databases is provided, filter to only use those
+    if allowed_databases:
+        # Convert DatabaseID enums to lowercase strings for comparison
+        allowed_databases_lower = [db.lower() for db in allowed_databases]
+        
+        # Find the first valid database that's in the allowed list
+        for db_id in valid_databases:
+            db_name = db_id.value.lower()
+            if db_name in allowed_databases_lower:
+                return db_name
+        
+        # No valid database found in allowed list
+        logger.warning(f"No valid database found for entity type '{entity_type}' in allowed databases: {allowed_databases}")
+        return None
+    else:
+        # Use first default database for this entity type
+        return valid_databases[0].value.lower()
+
 def evaluate_single_model(model_file: str, 
                          llm_model: str = 'meta-llama/llama-3.3-70b-instruct:free',
                          method: str = "direct",
                          top_k: int = 3,
                          max_entities: int = None,
                          entity_type: str = "chemical",
-                         database: str = "chebi",
+                         database: Union[str, List[str]] = "chebi",
                          model_type: str = "default",
                          save_llm_results: bool = True,
                          save_llm_results_folder: str = None,
@@ -471,7 +608,10 @@ def evaluate_single_model(model_file: str,
                          verbose: bool = True,
                          tax_id: str = None,
                          tax_name: str = None,
-                         bqbiol_qualifiers: list = None) -> Optional[pd.DataFrame]:
+                         bqbiol_qualifiers: list = None,
+                         chunk_size: int = 50,
+                         max_try: int = 1,
+                         rate_limiter: RateLimiter = None) -> Optional[pd.DataFrame]:
     """
     Generate species evaluation statistics for one model.
     
@@ -481,8 +621,8 @@ def evaluate_single_model(model_file: str,
         method: Method to use for database search ("direct", "rag")
         top_k: Number of top candidates to return per species
         max_entities: Maximum number of entities to evaluate (None for all)
-        entity_type: Type of entities to annotate
-        database: Target database
+        entity_type: Type of entities to annotate ("chemical", "gene", "protein", "auto")
+        database: Target database or list of databases (e.g., "chebi" or ["chebi", "uniprot"])
         model_type: Type of embedding model ("default", "openai")
         save_llm_results: Whether to save LLM results to files
         save_llm_results_folder: Custom folder name for LLM results. If None, uses timestamp.
@@ -491,6 +631,9 @@ def evaluate_single_model(model_file: str,
         tax_id: For gene/protein annotations, the organism's tax_id for species-specific lookup
         tax_name: For gene/protein annotations, the organism's tax_name for species-specific lookup
         bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
+        chunk_size: Size of chunks to split large models into, if None, no chunking is done
+        max_try: Maximum number of retry attempts for species with empty predictions (default: 1, no retry)
+        rate_limiter: RateLimiter instance for controlling API request rate (optional)
 
     Returns:
         DataFrame with evaluation results or None if failed
@@ -504,9 +647,37 @@ def evaluate_single_model(model_file: str,
             logger.info(f"Evaluating model: {model_name}")
             if tax_id:
                 logger.info(f"Using organism-specific search for tax_id: {tax_id}")
+            else:
+                tax_id = 9606
+                logger.info(f"Using default tax_id: {tax_id}")
         
         # Get existing annotations to determine entities to evaluate
-        if entity_type == "chemical" and database == "chebi":
+        existing_annotations = {}
+        qualifier_annotations = {}
+        
+        if entity_type == "auto":
+            # For auto mode, collect existing annotations from all specified databases
+            allowed_databases = [database] if isinstance(database, str) else database
+            
+            for db in allowed_databases:
+                if db == "chebi":
+                    chebi_annotations, chebi_qualifiers = find_species_with_formulas(model_file, bqbiol_qualifiers)
+                    existing_annotations.update(chebi_annotations)
+                    qualifier_annotations.update(chebi_qualifiers)
+                elif db == "ncbigene":
+                    gene_annotations, gene_qualifiers = find_species_with_gene_annotations(model_file, bqbiol_qualifiers, tax_id)
+                    existing_annotations.update(gene_annotations)
+                    qualifier_annotations.update(gene_qualifiers)
+                elif db == "uniprot":
+                    protein_annotations, protein_qualifiers = find_species_with_protein_annotations(model_file, bqbiol_qualifiers, tax_id)
+                    existing_annotations.update(protein_annotations)
+                    qualifier_annotations.update(protein_qualifiers)
+            
+            if not existing_annotations:
+                if verbose:
+                    logger.warning(f"No existing annotations found in {model_name} for databases: {allowed_databases}")
+                return None
+        elif entity_type == "chemical" and database == "chebi":
             existing_annotations, qualifier_annotations = find_species_with_formulas(model_file, bqbiol_qualifiers)
         elif entity_type == "gene" and database == "ncbigene":
             existing_annotations, qualifier_annotations = find_species_with_gene_annotations(model_file, bqbiol_qualifiers, tax_id)
@@ -516,6 +687,7 @@ def evaluate_single_model(model_file: str,
             if verbose:
                 logger.warning(f"Entity type {entity_type} with database {database} not yet supported")
             return None
+        
         if not existing_annotations:
             if verbose:
                 logger.warning(f"No existing annotations found in {model_name}")
@@ -529,52 +701,463 @@ def evaluate_single_model(model_file: str,
         if verbose:
             logger.info(f"Evaluating {len(specs_to_evaluate)} entities in {model_name}")
         
-        # Run annotation with access to LLM results
-    
-        # Extract model context and query LLM
-        model_info = extract_model_info(model_file, specs_to_evaluate, entity_type)
-        prompt = format_prompt(model_file, specs_to_evaluate, entity_type)
-        
-        # Query LLM and get response
-        llm_start = time.time()
-        # Get appropriate system prompt for entity type
-        system_prompt = get_system_prompt(entity_type)
-        llm_response = query_llm(prompt, system_prompt, model=llm_model, entity_type=entity_type)
-        llm_time = time.time() - llm_start
-        
-        # Parse LLM response
-        synonyms_dict, reason = parse_llm_response(llm_response)
-        
+        # Break down large models into chunks
+        if chunk_size:
+            species_chunks = []
+            if len(specs_to_evaluate) > chunk_size:
+                if verbose:
+                    logger.info(f"Breaking {model_name} into {len(specs_to_evaluate)} species into chunks of {chunk_size}")
+                for i in range(0, len(specs_to_evaluate), chunk_size):
+                    chunk = specs_to_evaluate[i:i + chunk_size]
+                    species_chunks.append(chunk)
+            else:
+                species_chunks = [specs_to_evaluate]
+            
+            # Process each chunk and accumulate results
+            all_synonyms_dict = {}
+            all_entity_type_dict = {}
+            all_reasons = []
+            total_llm_time = 0
+            
+            for chunk_idx, chunk in enumerate(species_chunks):
+                if verbose and len(species_chunks) > 1:
+                    logger.info(f"Processing chunk {chunk_idx + 1}/{len(species_chunks)} ({len(chunk)} species)")
+                
+                # Extract model context and format prompt for this chunk
+                prompt = format_prompt(model_file, chunk, entity_type, top_k)
+                
+                # Apply rate limiting before LLM call
+                if rate_limiter is not None:
+                    rate_limiter.wait_if_needed()
+                
+                # Query LLM and get response
+                llm_start = time.time()
+                # Get appropriate system prompt for entity type
+                system_prompt = get_system_prompt(entity_type)
+                llm_response = query_llm(prompt, system_prompt, model=llm_model, entity_type=entity_type)
+                chunk_llm_time = time.time() - llm_start
+                total_llm_time += chunk_llm_time
+                
+                # Parse LLM response
+                chunk_synonyms_dict, chunk_entity_type_dict, chunk_reason = parse_llm_response(llm_response, entity_type)
+
+                # Accumulate synonyms and entity types
+                all_synonyms_dict.update(chunk_synonyms_dict)
+                all_entity_type_dict.update(chunk_entity_type_dict)
+                
+                # Accumulate reasons
+                if chunk_reason:
+                    all_reasons.append(f"Chunk {chunk_idx + 1}: {chunk_reason}")
+                
+                if verbose:
+                    logger.info(f"LLM response: \n{llm_response}")
+                    logger.info(f"Chunk synonyms dict: {chunk_synonyms_dict}")
+            
+            # Combine all reasons
+            if all_reasons:
+                reason = ' '.join(all_reasons)
+            else:
+                reason = ""
+            
+            # Use accumulated synonyms for database search
+            synonyms_dict = all_synonyms_dict
+            entity_type_dict = all_entity_type_dict
+            llm_time = total_llm_time
+        else:
+            # Extract model context and query LLM
+            model_info = extract_model_info(model_file, specs_to_evaluate, entity_type)
+            prompt = format_prompt(model_file, specs_to_evaluate, entity_type, top_k)
+            
+            # Apply rate limiting before LLM call
+            if rate_limiter is not None:
+                rate_limiter.wait_if_needed()
+            
+            # Query LLM and get response
+            llm_start = time.time()
+            # Get appropriate system prompt for entity type
+            system_prompt = get_system_prompt(entity_type)
+            llm_response = query_llm(prompt, system_prompt, model=llm_model, entity_type=entity_type)
+            llm_time = time.time() - llm_start
+            # Parse LLM response
+            synonyms_dict, entity_type_dict, reason = parse_llm_response(llm_response, entity_type)
+
         # Search database
         search_start = time.time()
-        with suppress_outputs(verbose):
-            if method == "direct":
-                if database == "chebi":
-                    recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
-                elif database == "ncbigene":
-                    recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
-                elif database == "uniprot":
-                    recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
-                else:
+        
+        # Handle auto entity type detection
+        if entity_type == "auto":
+            # Convert database to list if it's a string
+            allowed_databases = [database] if isinstance(database, str) else database
+            
+            # Group species by detected entity type
+            species_by_type = {}
+            for species_id in specs_to_evaluate:
+                detected_type = entity_type_dict.get(species_id, "unknown")
+                if detected_type not in species_by_type:
+                    species_by_type[detected_type] = []
+                species_by_type[detected_type].append(species_id)
+            
+            if verbose:
+                logger.info(f"Detected entity types: {dict((k, len(v)) for k, v in species_by_type.items())}")
+            
+            # Process each entity type group
+            all_recommendations = []
+            for detected_type, species_list in species_by_type.items():
+                # For unknown entity types, create empty recommendations but don't skip
+                if detected_type == "unknown":
                     if verbose:
-                        logger.error(f"Database {database} not supported")
-                    return None
-            elif method == "rag":
-                if database == "chebi":
-                    recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k, model_type=model_type)
-                elif database == "ncbigene":
-                    recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k, model_type=model_type)
-                elif database == "uniprot":
-                    recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k, model_type=model_type)
-                else:
+                        logger.warning(f"There are {len(species_list)} species with unknown entity type: {species_list}")
+                    # Create empty recommendations for unknown species
+                    for species_id in species_list:
+                        empty_rec = Recommendation(
+                            id=species_id,
+                            synonyms=synonyms_dict.get(species_id, []),
+                            candidates=[],
+                            candidate_names=[],
+                            match_score=[]
+                        )
+                        all_recommendations.append(empty_rec)
+                    continue
+                
+                # Special handling for complexes: query ALL provided databases
+                if detected_type == "complex":
                     if verbose:
-                        logger.error(f"Database {database} not supported")
-                    return None
-            else:
+                        logger.info(f"Searching all databases {allowed_databases} for {len(species_list)} complex entities")
+                    
+                    for species_id in species_list:
+                        all_candidates = []
+                        all_candidate_names = []
+                        all_scores = []
+                        species_synonyms = synonyms_dict.get(species_id, [])
+                        
+                        # Search each allowed database for this complex
+                        for db in allowed_databases:
+                            with suppress_outputs(verbose):
+                                if method == "direct":
+                                    if db == "chebi":
+                                        db_recs = get_species_recommendations_direct([species_id], synonyms_dict, database="chebi", top_k=top_k)
+                                    elif db == "ncbigene":
+                                        db_recs = get_species_recommendations_direct([species_id], synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
+                                    elif db == "uniprot":
+                                        db_recs = get_species_recommendations_direct([species_id], synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
+                                    else:
+                                        continue
+                                elif method == "rag":
+                                    if db == "chebi":
+                                        db_recs = get_species_recommendations_rag([species_id], synonyms_dict, database="chebi", top_k=top_k, model_type=model_type)
+                                    elif db == "ncbigene":
+                                        db_recs = get_species_recommendations_rag([species_id], synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                                    elif db == "uniprot":
+                                        db_recs = get_species_recommendations_rag([species_id], synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                                    else:
+                                        continue
+                                else:
+                                    continue
+                            
+                            # Collect results from this database
+                            if db_recs:
+                                for rec in db_recs:
+                                    if rec.id == species_id:
+                                        all_candidates.extend(rec.candidates)
+                                        all_candidate_names.extend(rec.candidate_names)
+                                        all_scores.extend(rec.match_score)
+                        
+                        # Create combined recommendation for this complex (no top_k limit)
+                        complex_rec = Recommendation(
+                            id=species_id,
+                            synonyms=species_synonyms,
+                            candidates=all_candidates,
+                            candidate_names=all_candidate_names,
+                            match_score=all_scores
+                        )
+                        all_recommendations.append(complex_rec)
+                    continue
+                
+                # Get appropriate database for this entity type
+                target_database = _get_database_for_entity_type(detected_type, allowed_databases)
+                
+                if target_database is None:
+                    if verbose:
+                        logger.warning(f"No valid database found for entity type '{detected_type}' in {allowed_databases} for {len(species_list)} species")
+                    # Create empty recommendations for species without valid database
+                    for species_id in species_list:
+                        empty_rec = Recommendation(
+                            id=species_id,
+                            synonyms=synonyms_dict.get(species_id, []),
+                            candidates=[],
+                            candidate_names=[],
+                            match_score=[]
+                        )
+                        all_recommendations.append(empty_rec)
+                    continue
+                
                 if verbose:
-                    logger.error(f"Invalid method: {method}")
-                return None
+                    logger.info(f"Searching {target_database} for {len(species_list)} {detected_type} entities")
+                
+                # Search the appropriate database
+                with suppress_outputs(verbose):
+                    if method == "direct":
+                        if target_database == "chebi":
+                            group_recommendations = get_species_recommendations_direct(species_list, synonyms_dict, database="chebi", top_k=top_k)
+                        elif target_database == "ncbigene":
+                            group_recommendations = get_species_recommendations_direct(species_list, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
+                        elif target_database == "uniprot":
+                            group_recommendations = get_species_recommendations_direct(species_list, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
+                        else:
+                            if verbose:
+                                logger.error(f"Database {target_database} not supported")
+                            continue
+                    elif method == "rag":
+                        if target_database == "chebi":
+                            group_recommendations = get_species_recommendations_rag(species_list, synonyms_dict, database="chebi", top_k=top_k, model_type=model_type)
+                        elif target_database == "ncbigene":
+                            group_recommendations = get_species_recommendations_rag(species_list, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                        elif target_database == "uniprot":
+                            group_recommendations = get_species_recommendations_rag(species_list, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                        else:
+                            if verbose:
+                                logger.error(f"Database {target_database} not supported")
+                            continue
+                    else:
+                        if verbose:
+                            logger.error(f"Invalid method: {method}")
+                        continue
+                
+                if group_recommendations:
+                    all_recommendations.extend(group_recommendations)
+            
+            recommendations = all_recommendations
+        else:
+            # Standard single entity type workflow
+            # Ensure database is a string for non-auto mode
+            if isinstance(database, list):
+                if verbose:
+                    logger.warning(f"Multiple databases provided but entity_type is not 'auto'. Using first database: {database[0]}")
+                database = database[0]
+            
+            with suppress_outputs(verbose):
+                if method == "direct":
+                    if database == "chebi":
+                        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
+                    elif database == "ncbigene":
+                        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
+                    elif database == "uniprot":
+                        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
+                    else:
+                        if verbose:
+                            logger.error(f"Database {database} not supported")
+                        return None
+                elif method == "rag":
+                    if database == "chebi":
+                        recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k, model_type=model_type)
+                    elif database == "ncbigene":
+                        recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                    elif database == "uniprot":
+                        recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                    else:
+                        if verbose:
+                            logger.error(f"Database {database} not supported")
+                        return None
+                else:
+                    if verbose:
+                        logger.error(f"Invalid method: {method}")
+                    return None
+        
         search_time = time.time() - search_start
+        
+        # Retry logic for species with empty predictions
+        if max_try > 1 and recommendations:
+            current_try = 1
+            while current_try < max_try:
+                # Identify species with empty predictions
+                species_with_empty_preds = []
+                for rec in recommendations:
+                    if not rec.candidates:
+                        species_with_empty_preds.append(rec.id)
+                
+                if not species_with_empty_preds:
+                    if verbose:
+                        logger.info(f"All species have predictions after {current_try} attempt(s)")
+                    break
+                
+                current_try += 1
+                if verbose:
+                    logger.info(f"Retry {current_try}/{max_try}: Re-querying LLM for {len(species_with_empty_preds)} species with empty predictions")
+                
+                # Apply rate limiting before retry LLM call
+                if rate_limiter is not None:
+                    rate_limiter.wait_if_needed()
+                
+                # Re-query LLM for species with empty predictions
+                retry_llm_start = time.time()
+                retry_prompt = format_prompt(model_file, species_with_empty_preds, entity_type, top_k)
+                retry_system_prompt = get_system_prompt(entity_type)
+                retry_llm_response = query_llm(retry_prompt, retry_system_prompt, model=llm_model, entity_type=entity_type)
+                retry_llm_time = time.time() - retry_llm_start
+                llm_time += retry_llm_time
+                
+                # Parse retry LLM response
+                retry_synonyms_dict, retry_entity_type_dict, retry_reason = parse_llm_response(retry_llm_response, entity_type)
+                
+                if verbose:
+                    logger.info(f"Retry LLM response: \n{retry_llm_response}")
+                    logger.info(f"Retry synonyms dict: {retry_synonyms_dict}")
+                
+                # Update synonyms_dict and entity_type_dict with retry results
+                for species_id in species_with_empty_preds:
+                    if species_id in retry_synonyms_dict:
+                        synonyms_dict[species_id] = retry_synonyms_dict[species_id]
+                    if species_id in retry_entity_type_dict:
+                        entity_type_dict[species_id] = retry_entity_type_dict[species_id]
+                
+                # Re-search database for species with empty predictions
+                retry_search_start = time.time()
+                retry_recommendations = []
+                
+                if entity_type == "auto":
+                    allowed_databases = [database] if isinstance(database, str) else database
+                    
+                    # Group retry species by detected entity type
+                    retry_species_by_type = {}
+                    for species_id in species_with_empty_preds:
+                        detected_type = entity_type_dict.get(species_id, "unknown")
+                        if detected_type not in retry_species_by_type:
+                            retry_species_by_type[detected_type] = []
+                        retry_species_by_type[detected_type].append(species_id)
+                    
+                    for detected_type, species_list in retry_species_by_type.items():
+                        if detected_type == "unknown":
+                            for species_id in species_list:
+                                empty_rec = Recommendation(
+                                    id=species_id,
+                                    synonyms=synonyms_dict.get(species_id, []),
+                                    candidates=[],
+                                    candidate_names=[],
+                                    match_score=[]
+                                )
+                                retry_recommendations.append(empty_rec)
+                            continue
+                        
+                        if detected_type == "complex":
+                            for species_id in species_list:
+                                all_candidates = []
+                                all_candidate_names = []
+                                all_scores = []
+                                species_synonyms = synonyms_dict.get(species_id, [])
+                                
+                                for db in allowed_databases:
+                                    with suppress_outputs(verbose):
+                                        if method == "direct":
+                                            if db == "chebi":
+                                                db_recs = get_species_recommendations_direct([species_id], synonyms_dict, database="chebi", top_k=top_k)
+                                            elif db == "ncbigene":
+                                                db_recs = get_species_recommendations_direct([species_id], synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
+                                            elif db == "uniprot":
+                                                db_recs = get_species_recommendations_direct([species_id], synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
+                                            else:
+                                                continue
+                                        elif method == "rag":
+                                            if db == "chebi":
+                                                db_recs = get_species_recommendations_rag([species_id], synonyms_dict, database="chebi", top_k=top_k, model_type=model_type)
+                                            elif db == "ncbigene":
+                                                db_recs = get_species_recommendations_rag([species_id], synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                                            elif db == "uniprot":
+                                                db_recs = get_species_recommendations_rag([species_id], synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                                            else:
+                                                continue
+                                        else:
+                                            continue
+                                    
+                                    if db_recs:
+                                        for rec in db_recs:
+                                            if rec.id == species_id:
+                                                all_candidates.extend(rec.candidates)
+                                                all_candidate_names.extend(rec.candidate_names)
+                                                all_scores.extend(rec.match_score)
+                                
+                                complex_rec = Recommendation(
+                                    id=species_id,
+                                    synonyms=species_synonyms,
+                                    candidates=all_candidates,
+                                    candidate_names=all_candidate_names,
+                                    match_score=all_scores
+                                )
+                                retry_recommendations.append(complex_rec)
+                            continue
+                        
+                        target_database = _get_database_for_entity_type(detected_type, allowed_databases)
+                        
+                        if target_database is None:
+                            for species_id in species_list:
+                                empty_rec = Recommendation(
+                                    id=species_id,
+                                    synonyms=synonyms_dict.get(species_id, []),
+                                    candidates=[],
+                                    candidate_names=[],
+                                    match_score=[]
+                                )
+                                retry_recommendations.append(empty_rec)
+                            continue
+                        
+                        with suppress_outputs(verbose):
+                            if method == "direct":
+                                if target_database == "chebi":
+                                    group_recommendations = get_species_recommendations_direct(species_list, synonyms_dict, database="chebi", top_k=top_k)
+                                elif target_database == "ncbigene":
+                                    group_recommendations = get_species_recommendations_direct(species_list, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
+                                elif target_database == "uniprot":
+                                    group_recommendations = get_species_recommendations_direct(species_list, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
+                                else:
+                                    continue
+                            elif method == "rag":
+                                if target_database == "chebi":
+                                    group_recommendations = get_species_recommendations_rag(species_list, synonyms_dict, database="chebi", top_k=top_k, model_type=model_type)
+                                elif target_database == "ncbigene":
+                                    group_recommendations = get_species_recommendations_rag(species_list, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                                elif target_database == "uniprot":
+                                    group_recommendations = get_species_recommendations_rag(species_list, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                                else:
+                                    continue
+                            else:
+                                continue
+                        
+                        if group_recommendations:
+                            retry_recommendations.extend(group_recommendations)
+                else:
+                    # Standard single entity type workflow for retry
+                    db = database if isinstance(database, str) else database[0]
+                    with suppress_outputs(verbose):
+                        if method == "direct":
+                            if db == "chebi":
+                                retry_recommendations = get_species_recommendations_direct(species_with_empty_preds, synonyms_dict, database="chebi", top_k=top_k)
+                            elif db == "ncbigene":
+                                retry_recommendations = get_species_recommendations_direct(species_with_empty_preds, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
+                            elif db == "uniprot":
+                                retry_recommendations = get_species_recommendations_direct(species_with_empty_preds, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
+                        elif method == "rag":
+                            if db == "chebi":
+                                retry_recommendations = get_species_recommendations_rag(species_with_empty_preds, synonyms_dict, database="chebi", top_k=top_k, model_type=model_type)
+                            elif db == "ncbigene":
+                                retry_recommendations = get_species_recommendations_rag(species_with_empty_preds, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                            elif db == "uniprot":
+                                retry_recommendations = get_species_recommendations_rag(species_with_empty_preds, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                
+                retry_search_time = time.time() - retry_search_start
+                search_time += retry_search_time
+                
+                # Update recommendations with retry results
+                if retry_recommendations:
+                    # Create a map of retry recommendations by species_id
+                    retry_rec_map = {rec.id: rec for rec in retry_recommendations}
+                    
+                    # Update original recommendations with retry results
+                    for i, rec in enumerate(recommendations):
+                        if rec.id in retry_rec_map and retry_rec_map[rec.id].candidates:
+                            recommendations[i] = retry_rec_map[rec.id]
+                    
+                    if verbose:
+                        updated_count = sum(1 for rec in retry_recommendations if rec.candidates)
+                        logger.info(f"Updated {updated_count} species with new predictions from retry")
         
         total_time = llm_time + search_time
         
@@ -586,13 +1169,13 @@ def evaluate_single_model(model_file: str,
         # Convert to evaluation format with LLM results
         result_df = _convert_format(
             recommendations, existing_annotations, model_name, 
-            synonyms_dict, reason, total_time, llm_time, search_time, entity_type, database, tax_id, tax_name, model_file, bqbiol_qualifiers, qualifier_annotations
+            synonyms_dict, reason, total_time, llm_time, search_time, entity_type, database, tax_id, tax_name, model_file, bqbiol_qualifiers, qualifier_annotations, entity_type_dict
         )
         
         # Save LLM results if requested
         if save_llm_results:
-            _save_llm_results(model_file, llm_model, output_dir, synonyms_dict, reason, entity_type, save_llm_results_folder)
-        
+            _save_llm_results(model_file, llm_model, output_dir, synonyms_dict, reason, entity_type, save_llm_results_folder, entity_type_dict)
+
         return result_df
         
     except Exception as e:
@@ -628,7 +1211,10 @@ def evaluate_models_in_folder(model_dir: str,
                              verbose: bool = False,
                              tax_id: str = None,
                              tax_dict_file: str = None,
-                             bqbiol_qualifiers: list = None) -> pd.DataFrame:
+                             bqbiol_qualifiers: list = None,
+                             chunk_size: int = 50,
+                             max_try: int = 1,
+                             rate_limit_rpm: int = 10) -> pd.DataFrame:
     """
     Generate species evaluation statistics for multiple models in a directory.
     Replicates evaluate_models from AMAS test_LLM_synonyms_plain.ipynb
@@ -652,12 +1238,21 @@ def evaluate_models_in_folder(model_dir: str,
         tax_id: For gene/protein annotations, the organism's tax_id for species-specific lookup
         tax_dict_file: File containing taxonomy information for model files
         bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
+        chunk_size: Size of chunks to split large models into, if None, no chunking is done (default: 50)
+        max_try: Maximum number of retry attempts for species with empty predictions (default: 1, no retry)
+        rate_limit_rpm: Maximum LLM API requests per minute (default: 10 for Llama API)
         
     Returns:
         Combined DataFrame with all evaluation results
     """
     # Configure verbosity
     _configure_verbosity(verbose)
+    
+    # Initialize rate limiter for API calls
+    rate_limiter = None
+    if rate_limit_rpm and rate_limit_rpm > 0:
+        rate_limiter = RateLimiter(max_requests_per_minute=rate_limit_rpm, verbose=True)
+        print(f"Rate limiting enabled: max {rate_limit_rpm} LLM requests per minute")
     
     if tax_id:
         logger.info(f"Using organism-specific search for tax_id: {tax_id}")
@@ -702,7 +1297,38 @@ def evaluate_models_in_folder(model_dir: str,
         timestamp = time.strftime('%Y%m%d_%H%M')
         save_llm_results_folder = f"{llm_name}/{entity_type}/{timestamp}"
 
-    print(f"LLM results will be saved to: {output_dir + save_llm_results_folder}")
+    print(f"LLM results will be saved to: {output_dir +  save_llm_results_folder}")
+    
+    # Save configuration to config.txt
+    if save_llm_results:
+        config_dir = os.path.join(output_dir, save_llm_results_folder)
+        os.makedirs(config_dir, exist_ok=True)
+        config_file = os.path.join(config_dir, 'config.txt')
+        
+        with open(config_file, 'w') as f:
+            f.write("Evaluation Configuration\n")
+            f.write("=" * 80 + "\n\n")
+            f.write(f"model_dir: {model_dir}\n")
+            f.write(f"num_models: {num_models}\n")
+            f.write(f"llm_model: {llm_model}\n")
+            f.write(f"method: {method}\n")
+            f.write(f"top_k: {top_k}\n")
+            f.write(f"max_entities: {max_entities}\n")
+            f.write(f"entity_type: {entity_type}\n")
+            f.write(f"database: {database}\n")
+            f.write(f"model_type: {model_type}\n")
+            f.write(f"output_dir: {output_dir}\n")
+            f.write(f"output_file: {output_file}\n")
+            f.write(f"start_at: {start_at}\n")
+            f.write(f"tax_id: {tax_id}\n")
+            f.write(f"tax_dict_file: {tax_dict_file}\n")
+            f.write(f"bqbiol_qualifiers: {bqbiol_qualifiers}\n")
+            f.write(f"chunk_size: {chunk_size}\n")
+            f.write(f"max_try: {max_try}\n")
+            f.write(f"rate_limit_rpm: {rate_limit_rpm}\n")
+            f.write(f"\nTimestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+        
+        print(f"Saved configuration to {config_file}")
 
     # Evaluate each model
     for idx, model_file in enumerate(model_files):
@@ -741,20 +1367,23 @@ def evaluate_models_in_folder(model_dir: str,
             verbose=verbose,
             tax_id=tax_id,
             tax_name=tax_name,
-            bqbiol_qualifiers=bqbiol_qualifiers
+            bqbiol_qualifiers=bqbiol_qualifiers,
+            chunk_size=chunk_size,
+            max_try=max_try,
+            rate_limiter=rate_limiter
         )
         
         if result_df is not None:
             all_results.append(result_df)
             
-            # Save intermediate results in a subfolder
-            intermediate_dir = output_path / "intermediate"
-            intermediate_dir.mkdir(parents=True, exist_ok=True)
-            intermediate_file = intermediate_dir / f"{output_file}_{actual_idx}.csv"
-            result_df.to_csv(intermediate_file, index=False)
-            logger.info(f"Saved intermediate results to: {intermediate_file}")
-        else:
-            logger.warning(f"Skipping {model_file} - no results generated")
+            # # Save intermediate results in a subfolder
+            # intermediate_dir = output_path / "intermediate"
+            # intermediate_dir.mkdir(parents=True, exist_ok=True)
+            # intermediate_file = intermediate_dir / f"{output_file}_{actual_idx}.csv"
+            # result_df.to_csv(intermediate_file, index=False)
+            # logger.info(f"Saved intermediate results to: {intermediate_file}")
+        # else:
+            # logger.warning(f"Skipping {model_file} - no results generated")
     
     # Combine all results
     if all_results:
@@ -779,12 +1408,13 @@ def _convert_format(recommendations: List[Recommendation],
                                    llm_time: float,
                                    search_time: float,
                                    entity_type: str = "chemical",
-                                   database: str = "chebi",
+                                   database: Union[str, List[str]] = "chebi",
                                    tax_id: str = None,
                                    tax_name: str = None,
                                    model_file: str = None,
                                    bqbiol_qualifiers: List[str] = None,
-                                   qualifier_annotations: Dict[str, List[str]] = None) -> pd.DataFrame:
+                                   qualifier_annotations: Dict[str, List[str]] = None,
+                                   entity_type_dict: Dict[str, str] = None) -> pd.DataFrame:
     """
     Convert AAAIM recommendations to evaluation format with LLM results.
     
@@ -808,85 +1438,107 @@ def _convert_format(recommendations: List[Recommendation],
     Returns:
         DataFrame in evaluation format
     """
-    # Load required dictionaries based on database
-    if database == "chebi":
-        label_dict = load_chebi_label_dict()
+    # Convert database to list
+    allowed_databases = [database] if isinstance(database, str) else database
+    
+    # Load required dictionaries based on database(s)
+    label_dict = {}
+    formula_dict = {}
+    has_chebi = "chebi" in allowed_databases
+    has_ncbigene = "ncbigene" in allowed_databases
+    has_uniprot = "uniprot" in allowed_databases
+    
+    # Load all relevant label dictionaries
+    if has_chebi:
+        label_dict.update(load_chebi_label_dict())
         formula_dict = load_chebi_formula_dict()
+    if has_ncbigene:
+        label_dict.update(load_ncbigene_label_dict())
+    if has_uniprot:
+        label_dict.update(load_uniprot_label_dict(tax_id))
+    
+    # Initialize stats dictionary
+    stats = {
+        'recall_formula': {},
+        'precision_formula': {},
+        'recall_exact': {},
+        'precision_exact': {}
+    }
+    
+    # Calculate statistics per species based on entity type or database used
+    for species_id in existing_annotations.keys():
+        existing_ids = existing_annotations.get(species_id, [])
+        predicted_ids = []
+        detected_type = entity_type_dict.get(species_id, entity_type) if entity_type_dict else entity_type
         
-        # Prepare reference data for statistics calculation
-        refs_chebi = existing_annotations
-        refs_formula = {}
-        for species_id, chebi_ids in existing_annotations.items():
-            formulas = []
-            for chebi_id in chebi_ids:
+        for rec in recommendations:
+            if rec.id == species_id:
+                predicted_ids = rec.candidates
+                break
+        
+        # Calculate exact match recall and precision
+        if existing_ids:
+            matches = set(predicted_ids) & set(existing_ids)
+            recall_exact = len(matches) / len(existing_ids)
+        else:
+            recall_exact = 0
+        
+        if predicted_ids:
+            matches = set(predicted_ids) & set(existing_ids)
+            precision_exact = len(matches) / len(predicted_ids)
+        else:
+            precision_exact = 0
+        
+        stats['recall_exact'][species_id] = recall_exact
+        stats['precision_exact'][species_id] = precision_exact
+        
+        # For chemicals with ChEBI, also calculate formula-based metrics
+        if detected_type == "chemical" and has_chebi:
+            # Get formulas for existing ChEBI IDs
+            existing_formulas = []
+            for chebi_id in existing_ids:
                 if chebi_id in formula_dict:
                     formula = formula_dict[chebi_id]
                     if formula:
-                        formulas.append(formula)
-            refs_formula[species_id] = formulas
-        
-        # Calculate statistics
-        stats = get_species_statistics(recommendations, refs_formula, refs_chebi, model_mean=False)
-    
-    elif database == "ncbigene" or database == "uniprot":
-        if database == "ncbigene":
-            label_dict = load_ncbigene_label_dict()
-        elif database == "uniprot":
-            label_dict = load_uniprot_label_dict(tax_id)
-        
-        refs_gene = existing_annotations
-        refs_formula = {}  # Empty for gene annotations
-        
-        # Calculate statistics (simplified for genes)
-        stats = {
-            'recall_formula': {species_id: 0 for species_id in existing_annotations.keys()},
-            'precision_formula': {species_id: 0 for species_id in existing_annotations.keys()},
-            'recall_exact': {},  # Will be calculated below
-            'precision_exact': {}  # Will be calculated below
-        }
-        
-        # Calculate gene-based recall and precision
-        for species_id in existing_annotations.keys():
-            existing_ids = existing_annotations.get(species_id, [])
-            predicted_ids = []
-            for rec in recommendations:
-                if rec.id == species_id:
-                    predicted_ids = rec.candidates
-                    break
+                        existing_formulas.append(formula)
             
-            if existing_ids:
-                matches = set(predicted_ids) & set(existing_ids)
-                recall = len(matches) / len(existing_ids) if existing_ids else 0
+            # Get formulas for predicted ChEBI IDs
+            predicted_formulas = []
+            for chebi_id in predicted_ids:
+                if chebi_id in formula_dict:
+                    formula = formula_dict[chebi_id]
+                    if formula:
+                        predicted_formulas.append(formula)
+            
+            # Calculate formula-based recall
+            if existing_formulas:
+                formula_matches = set(predicted_formulas) & set(existing_formulas)
+                recall_formula = len(formula_matches) / len(set(existing_formulas))
             else:
-                recall = 0
+                recall_formula = recall_exact  # Fall back to exact if no formulas
             
-            if predicted_ids:
-                matches = set(predicted_ids) & set(existing_ids)
-                precision = len(matches) / len(predicted_ids) if predicted_ids else 0
+            # Calculate formula-based precision
+            if predicted_formulas:
+                formula_matches = set(predicted_formulas) & set(existing_formulas)
+                precision_formula = len(formula_matches) / len(set(predicted_formulas))
             else:
-                precision = 0
+                precision_formula = precision_exact  # Fall back to exact if no formulas
             
-            stats['recall_exact'][species_id] = recall
-            stats['precision_exact'][species_id] = precision
-    
-    else:
-        # Default/unknown database
-        label_dict = {}
-        stats = {
-            'recall_formula': {species_id: 0 for species_id in existing_annotations.keys()},
-            'precision_formula': {species_id: 0 for species_id in existing_annotations.keys()},
-            'recall_exact': {species_id: 0 for species_id in existing_annotations.keys()},
-            'precision_exact': {species_id: 0 for species_id in existing_annotations.keys()}
-        }
+            stats['recall_formula'][species_id] = recall_formula
+            stats['precision_formula'][species_id] = precision_formula
+        else:
+            # For non-chemical entities, formula metrics equal exact metrics
+            stats['recall_formula'][species_id] = recall_exact
+            stats['precision_formula'][species_id] = precision_exact
     
     # Get display names from the model file if available
     display_names = {}
     if model_file is not None:
         display_names = get_species_display_names(model_file, entity_type)
     
-    # Convert to AMAS format
+    # Convert to table format
     result_rows = []
-    for rec in recommendations:
+    for idx, rec in enumerate(recommendations):
         species_id = rec.id
         
         # Get existing annotation names
@@ -916,10 +1568,17 @@ def _convert_format(recommendations: List[Recommendation],
         precision_exact = stats['precision_exact'].get(species_id, 0) if isinstance(stats['precision_exact'], dict) else 0
 
         # Calculate accuracy (1 if recall > 0, 0 otherwise)
-        # For chemical entities, use recall_formula; for gene entities, use recall_exact
-        if entity_type == "chemical":
+        # For chemical entities, use recall_formula; for gene/protein entities, use recall_exact
+        # For auto mode, check the detected entity type
+        if entity_type == "auto":
+            detected_type = entity_type_dict.get(species_id, "unknown") if entity_type_dict else "unknown"
+            if detected_type == "chemical":
+                accuracy = 1 if recall_formula > 0 else 0
+            else:  # gene, protein, or unknown
+                accuracy = 1 if recall_exact > 0 else 0
+        elif entity_type == "chemical":
             accuracy = 1 if recall_formula > 0 else 0
-        else:  # gene or other entity types
+        else:  # gene, protein, or other entity types
             accuracy = 1 if recall_exact > 0 else 0
         
         # Use display name from SBML if available
@@ -937,14 +1596,21 @@ def _convert_format(recommendations: List[Recommendation],
             specific_qualifier = ', '.join(existing_qualifiers) if existing_qualifiers else 'is'
         else:
             specific_qualifier = 'is'  # Default for new predictions
+            
+        # Only include reason for the first species in the model to save space
+        species_reason = reason if idx == 0 else ''
         
+        # Get detected entity type if available
+        detected_entity_type = entity_type_dict.get(species_id, entity_type) if entity_type_dict else entity_type
+
         # Create row in AMAS format
         row = {
             'model': model_name,
             'species_id': species_id,
             'display_name': display_name,
+            'detected_entity_type': detected_entity_type, 
             'synonyms_LLM': llm_synonyms,
-            'reason': reason,
+            'reason': species_reason,
             'exist_annotation_id': existing_ids,
             'exist_annotation_name': exist_annotation_name,
             'predictions': predictions,
@@ -960,7 +1626,7 @@ def _convert_format(recommendations: List[Recommendation],
             'query_time': search_time,
             'tax_id': tax_id,
             'tax_name': tax_name,
-            'qualifier': specific_qualifier
+            'qualifier': specific_qualifier,
         }
         result_rows.append(row)
     
@@ -968,7 +1634,7 @@ def _convert_format(recommendations: List[Recommendation],
 
 def _save_llm_results(model_file: str, llm_model: str, output_dir: str, 
                      synonyms_dict: Dict[str, List[str]], reason: str, entity_type: str, 
-                     save_llm_results_folder: str = None):
+                     save_llm_results_folder: str = None, entity_type_dict: Dict[str, str] = None):
     """
     Save LLM results to file.
     
@@ -980,6 +1646,7 @@ def _save_llm_results(model_file: str, llm_model: str, output_dir: str,
         reason: LLM reasoning
         entity_type: Type of entity being annotated
         save_llm_results_folder: Custom folder name for LLM results. If None, uses timestamp.
+        entity_type_dict: Dictionary mapping species IDs to detected entity types (optional)
     """
     model_name = Path(model_file).stem
     if llm_model == "meta-llama/llama-3.3-70b-instruct:free":
@@ -1008,21 +1675,24 @@ def _save_llm_results(model_file: str, llm_model: str, output_dir: str,
     with open(output_file, 'w') as f:
         f.write(f"Model: {model_name}\n")
         f.write(f"LLM: {llm_model}\n")
+        f.write(f"Entity Type: {entity_type}\n")
         f.write(f"Timestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}\n\n")
         f.write("Synonyms:\n")
         for species_id, synonyms in synonyms_dict.items():
-            f.write(f"{species_id}: {synonyms}\n")
+            detected_type = entity_type_dict.get(species_id, entity_type) if entity_type_dict else entity_type
+            f.write(f"{species_id} ({detected_type}): {synonyms}\n")
         f.write(f"\nReason: {reason}\n")
     print(f"LLM results saved to: {output_file}")
 
-def print_evaluation_results(results_csv: str, ref_results_csv = REF_RESULTS):
+def print_evaluation_results(results_csv: str, ref_results_csv = None, bqbiol_qualifiers: List[str] = None, entity_types: List[str] = None):
     """
     Print evaluation results summary.
-    Replicates print_results from AMAS test_LLM_synonyms_plain.ipynb
     
     Args:
         results_csv: Path to results CSV file
         ref_results_csv: Path to reference results CSV file to filter against
+        bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
+        entity_types: List of entity types to filter for (e.g. ['chemical', 'protein'])
     """
     if not os.path.exists(results_csv):
         print(f"Results file not found: {results_csv}")
@@ -1053,6 +1723,32 @@ def print_evaluation_results(results_csv: str, ref_results_csv = REF_RESULTS):
             print(f"Reference file is empty: {ref_results_csv}")
     else:
         print(f"Showing all results")
+    
+    # Filter results by qualifiers if provided
+    if bqbiol_qualifiers:
+        print(f"Filtering results by qualifiers: {bqbiol_qualifiers}")
+        # Handle both comma- and space-separated, or single, or repeated qualifiers
+        def all_qualifiers_in(row):
+            qualifier_str = str(row['qualifier']).strip()
+            # If no ',' present, split by whitespace to catch single or multi by space, else split by comma
+            if ',' in qualifier_str:
+                qualifiers = [q.strip() for q in qualifier_str.split(',')]
+            else:
+                qualifiers = [qualifier_str]
+            return qualifiers and all(q in bqbiol_qualifiers for q in qualifiers)
+        df = df[df.apply(all_qualifiers_in, axis=1)]
+    
+    # Filter results by entity types if provided
+    if entity_types:
+        print(f"Filtering results by entity types: {entity_types}")
+        if 'detected_entity_type' in df.columns:
+            df = df[df['detected_entity_type'].isin(entity_types)]
+        else:
+            print("Warning: No entity type column found in results")
+        
+        if df.empty:
+            print(f"No results found for entity types: {entity_types}")
+            return
     
     print("Number of models assessed: %d" % df['model'].nunique())
     print("Number of models with predictions: %d" % df[df['predictions'] != '[]']['model'].nunique())
@@ -1173,11 +1869,12 @@ def process_saved_llm_responses(response_folder: str,
                                method: str = "direct",
                                top_k: int = 3,
                                entity_type: str = "chemical",
-                               database: str = "chebi",
+                               database: Union[str, List[str]] = "chebi",
                                tax_id: str = None,
                                bqbiol_qualifiers: List[str] = None,
                                output_dir: str = './results/', 
                                output_file: str = 'reprocessed_results.csv',
+                               model_type: str = "default",
                                verbose: bool = False) -> pd.DataFrame:
     """
     Process saved LLM response files to generate species evaluation statistics,
@@ -1189,12 +1886,13 @@ def process_saved_llm_responses(response_folder: str,
         prev_results_csv: Path to previous results CSV from evaluate_models
         method: Method to use for database search ("direct", "rag")
         top_k: Number of top candidates to retrieve per species
-        entity_type: Type of entity being annotated
-        database: Database being used
+        entity_type: Type of entity being annotated ("chemical", "gene", "protein", "auto")
+        database: Database being used (string for single database, list for auto mode)
         tax_id: Taxonomy ID for NCBI gene / UniProt search, list or string
         bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
         output_dir: Path to directory where results should be saved
         output_file: Name of the output CSV file
+        model_type: Type of embedding model ("default", "openai") for RAG method
         verbose: If True, show detailed logging. If False, minimize output.
         
     Returns:
@@ -1248,26 +1946,6 @@ def process_saved_llm_responses(response_folder: str,
         with open(os.path.join(response_folder, response_file), 'r') as f:
             content = f.read()
         
-        # # Extract response part
-        # # First try format with "RESULT:"
-        # result_match = re.search(r'RESULT:\s*([\s\S]*)', content)
-        # if result_match:
-        #     result = result_match.group(1).strip()
-        # else:
-        #     # Try format with "Synonyms:" section
-        #     synonyms_match = re.search(r'Synonyms:\s*([\s\S]*?)(?=Reason:|$)', content)
-        #     reason_match = re.search(r'Reason:\s*([\s\S]*)', content)
-             
-        #     if synonyms_match:
-        #         synonyms_text = synonyms_match.group(1).strip()
-        #         reason_text = reason_match.group(1).strip() if reason_match else ""
-        #         # Reconstruct the result in the format expected by parse_llm_response
-        #         result = synonyms_text + '\nReason: ' + reason_text
-        #     else:
-        #         print(f"Could not find parseable content in {response_file}, skipping")
-        #         parse_errors.append(f"{response_file}: Could not find parseable content")
-        #         continue
-        
         # Find the model name as it appears in the previous results
         if model_name not in model_data:
             # try .sbml
@@ -1280,8 +1958,8 @@ def process_saved_llm_responses(response_folder: str,
 
         # Parse the LLM response
         try:
-            # synonyms_dict, reason = parse_llm_response(result)
-            synonyms_dict, reason = parse_llm_response(content)
+            # synonyms_dict, entity_type_dict, reason = parse_llm_response(result)
+            synonyms_dict, entity_type_dict, reason = parse_llm_response(content, entity_type)
         except Exception as e:
             logger.error(f"Error parsing LLM response for {response_file}: {e}")
             parse_errors.append(f"{response_file}: Error parsing LLM response - {str(e)}")
@@ -1302,45 +1980,208 @@ def process_saved_llm_responses(response_folder: str,
             
             # print(f"Evaluating {len(specs_to_evaluate)} species for {model_name} (intersection of {len(species_from_prev_results)} prev and {len(species_with_llm_synonyms)} LLM)")
             
-            # Time the ChEBI dictionary search
+            # Time the database search
             query_start_time = time.time()
-            with suppress_outputs(verbose):
-                if method == "direct":
-                    if database == "chebi":
-                        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
-                    elif database == "ncbigene":
-                        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
-                    elif database == "uniprot":
-                        recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
+            
+            # Handle auto entity type detection
+            if entity_type == "auto":
+                # Convert database to list if it's a string
+                allowed_databases = [database] if isinstance(database, str) else database
+                
+                # Group species by detected entity type
+                species_by_type = {}
+                for species_id in specs_to_evaluate:
+                    detected_type = entity_type_dict.get(species_id, "unknown")
+                    if detected_type not in species_by_type:
+                        species_by_type[detected_type] = []
+                    species_by_type[detected_type].append(species_id)
+                
+                if verbose:
+                    logger.info(f"Detected entity types: {dict((k, len(v)) for k, v in species_by_type.items())}")
+                
+                # Process each entity type group
+                all_recommendations = []
+                for detected_type, species_list in species_by_type.items():
+                    # For unknown entity types, create empty recommendations
+                    if detected_type == "unknown":
+                        if verbose:
+                            logger.warning(f"There are {len(species_list)} species with unknown entity type")
+                        for species_id in species_list:
+                            empty_rec = Recommendation(
+                                id=species_id,
+                                synonyms=synonyms_dict.get(species_id, []),
+                                candidates=[],
+                                candidate_names=[],
+                                match_score=[]
+                            )
+                            all_recommendations.append(empty_rec)
+                        continue
+                    
+                    # Special handling for complexes: query ALL provided databases
+                    if detected_type == "complex":
+                        if verbose:
+                            logger.info(f"Searching all databases {allowed_databases} for {len(species_list)} complex entities")
+                        
+                        for species_id in species_list:
+                            all_candidates = []
+                            all_candidate_names = []
+                            all_scores = []
+                            species_synonyms = synonyms_dict.get(species_id, [])
+                            
+                            # Search each allowed database for this complex
+                            for db in allowed_databases:
+                                with suppress_outputs(verbose):
+                                    if method == "direct":
+                                        if db == "chebi":
+                                            db_recs = get_species_recommendations_direct([species_id], synonyms_dict, database="chebi", top_k=top_k)
+                                        elif db == "ncbigene":
+                                            db_recs = get_species_recommendations_direct([species_id], synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
+                                        elif db == "uniprot":
+                                            db_recs = get_species_recommendations_direct([species_id], synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
+                                        else:
+                                            continue
+                                    elif method == "rag":
+                                        if db == "chebi":
+                                            db_recs = get_species_recommendations_rag([species_id], synonyms_dict, database="chebi", top_k=top_k, model_type=model_type)
+                                        elif db == "ncbigene":
+                                            db_recs = get_species_recommendations_rag([species_id], synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                                        elif db == "uniprot":
+                                            db_recs = get_species_recommendations_rag([species_id], synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                                        else:
+                                            continue
+                                    else:
+                                        continue
+                                
+                                # Collect results from this database
+                                if db_recs:
+                                    for rec in db_recs:
+                                        if rec.id == species_id:
+                                            all_candidates.extend(rec.candidates)
+                                            all_candidate_names.extend(rec.candidate_names)
+                                            all_scores.extend(rec.match_score)
+                            
+                            # Create combined recommendation for this complex (no top_k limit)
+                            complex_rec = Recommendation(
+                                id=species_id,
+                                synonyms=species_synonyms,
+                                candidates=all_candidates,
+                                candidate_names=all_candidate_names,
+                                match_score=all_scores
+                            )
+                            all_recommendations.append(complex_rec)
+                        continue
+                    
+                    # Get appropriate database for this entity type
+                    target_database = _get_database_for_entity_type(detected_type, allowed_databases)
+                    
+                    if target_database is None:
+                        if verbose:
+                            logger.warning(f"No valid database found for entity type '{detected_type}' in {allowed_databases} for {len(species_list)} species")
+                        # Create empty recommendations for species without valid database
+                        for species_id in species_list:
+                            empty_rec = Recommendation(
+                                id=species_id,
+                                synonyms=synonyms_dict.get(species_id, []),
+                                candidates=[],
+                                candidate_names=[],
+                                match_score=[]
+                            )
+                            all_recommendations.append(empty_rec)
+                        continue
+                    
+                    if verbose:
+                        logger.info(f"Searching {target_database} for {len(species_list)} {detected_type} entities")
+                    
+                    # Search the appropriate database
+                    with suppress_outputs(verbose):
+                        if method == "direct":
+                            if target_database == "chebi":
+                                group_recommendations = get_species_recommendations_direct(species_list, synonyms_dict, database="chebi", top_k=top_k)
+                            elif target_database == "ncbigene":
+                                group_recommendations = get_species_recommendations_direct(species_list, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
+                            elif target_database == "uniprot":
+                                group_recommendations = get_species_recommendations_direct(species_list, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
+                            else:
+                                if verbose:
+                                    logger.error(f"Database {target_database} not supported")
+                                continue
+                        elif method == "rag":
+                            if target_database == "chebi":
+                                group_recommendations = get_species_recommendations_rag(species_list, synonyms_dict, database="chebi", top_k=top_k, model_type=model_type)
+                            elif target_database == "ncbigene":
+                                group_recommendations = get_species_recommendations_rag(species_list, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                            elif target_database == "uniprot":
+                                group_recommendations = get_species_recommendations_rag(species_list, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                            else:
+                                if verbose:
+                                    logger.error(f"Database {target_database} not supported")
+                                continue
+                        else:
+                            if verbose:
+                                logger.error(f"Invalid method: {method}")
+                            continue
+                    
+                    if group_recommendations:
+                        all_recommendations.extend(group_recommendations)
+                
+                recommendations = all_recommendations
+            else:
+                # Standard single entity type workflow
+                with suppress_outputs(verbose):
+                    if method == "direct":
+                        if database == "chebi":
+                            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
+                        elif database == "ncbigene":
+                            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
+                        elif database == "uniprot":
+                            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
+                        else:
+                            print(f"Database {database} not supported")
+                            return None
+                    elif method == "rag":
+                        if database == "chebi":
+                            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k, model_type=model_type)
+                        elif database == "ncbigene":
+                            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                        elif database == "uniprot":
+                            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k, model_type=model_type)
+                        else:
+                            print(f"Database {database} not supported")
+                            return None
                     else:
-                        print(f"Database {database} not supported")
+                        print(f"Invalid method: {method}")
                         return None
-                elif method == "rag":
-                    if database == "chebi":
-                        recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
-                    elif database == "ncbigene":
-                        recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
-                    elif database == "uniprot":
-                        recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
-                    else:
-                        print(f"Database {database} not supported")
-                        return None
-                else:
-                    print(f"Invalid method: {method}")
-                    return None
+            
             query_end_time = time.time()
             dict_search_time = query_end_time - query_start_time
             
             # Get existing annotations for statistics calculation
-            if entity_type == "chemical" and database == "chebi":
+            existing_annotations = {}
+            qualifier_annotations = {}
+            
+            if entity_type == "auto":
+                # For auto mode, collect existing annotations from all specified databases
+                allowed_databases = [database] if isinstance(database, str) else database
+                
+                for db in allowed_databases:
+                    if db == "chebi":
+                        chebi_annotations, chebi_qualifiers = find_species_with_formulas(model_file, bqbiol_qualifiers)
+                        existing_annotations.update(chebi_annotations)
+                        qualifier_annotations.update(chebi_qualifiers)
+                    elif db == "ncbigene":
+                        gene_annotations, gene_qualifiers = find_species_with_gene_annotations(model_file, bqbiol_qualifiers, tax_id)
+                        existing_annotations.update(gene_annotations)
+                        qualifier_annotations.update(gene_qualifiers)
+                    elif db == "uniprot":
+                        protein_annotations, protein_qualifiers = find_species_with_protein_annotations(model_file, bqbiol_qualifiers, tax_id)
+                        existing_annotations.update(protein_annotations)
+                        qualifier_annotations.update(protein_qualifiers)
+            elif entity_type == "chemical" and database == "chebi":
                 existing_annotations, qualifier_annotations = find_species_with_formulas(model_file, bqbiol_qualifiers)
             elif entity_type == "gene" and database == "ncbigene":
                 existing_annotations, qualifier_annotations = find_species_with_gene_annotations(model_file, bqbiol_qualifiers, tax_id)
             elif entity_type == "protein" and database == "uniprot":
                 existing_annotations, qualifier_annotations = find_species_with_protein_annotations(model_file, bqbiol_qualifiers, tax_id)
-            else:
-                existing_annotations = {}
-                qualifier_annotations = {}
             
             # Filter existing_annotations to match the species we're actually evaluating
             existing_annotations = {species_id: existing_annotations[species_id] 
@@ -1354,7 +2195,7 @@ def process_saved_llm_responses(response_folder: str,
             result_df = _convert_format(
                 recommendations, existing_annotations, model_name, 
                 synonyms_dict, reason, previous_llm_time + dict_search_time, 
-                previous_llm_time, dict_search_time, entity_type, database, tax_id, model_file=model_file, bqbiol_qualifiers=bqbiol_qualifiers, qualifier_annotations=qualifier_annotations
+                previous_llm_time, dict_search_time, entity_type, database, tax_id, tax_name=None, model_file=model_file, bqbiol_qualifiers=bqbiol_qualifiers, qualifier_annotations=qualifier_annotations, entity_type_dict=entity_type_dict
             )
             
             if not result_df.empty:
@@ -1391,7 +2232,7 @@ def process_saved_llm_responses(response_folder: str,
         print("No results generated for any models")
         return pd.DataFrame()
 
-def compare_results(*csv_paths: str, ref_results_csv: str = REF_RESULTS) -> dict:
+def compare_results(*csv_paths: str, ref_results_csv: str = None) -> dict:
     """
     Compare results from multiple CSVs by filtering to only include common models and species.
     Prints detailed statistics for each CSV and a summary comparison table.
@@ -1867,7 +2708,7 @@ def _detect_and_count_other_ontologies(model_file: str, qualifier: str, model_ty
             if species.isSetAnnotation():
                 annotation_str = species.getAnnotation().toXMLString()
                 
-                # Check if this species has the qualifier
+                # Check if this species has the qualifier in bqbiol
                 qualifier_match = re.search(
                     r'<bqbiol:{}[^>]*?>.*?</bqbiol:{}>'.format(
                         re.escape(qualifier), re.escape(qualifier)
@@ -1876,8 +2717,21 @@ def _detect_and_count_other_ontologies(model_file: str, qualifier: str, model_ty
                     flags=re.DOTALL
                 )
                 
+                # Also check for bqmodel qualifier (incorrect usage)
+                model_qualifier_match = re.search(
+                    r'<bqmodel:{}[^>]*?>.*?</bqmodel:{}>'.format(
+                        re.escape(qualifier), re.escape(qualifier)
+                    ), 
+                    annotation_str, 
+                    flags=re.DOTALL
+                )
+                
                 if qualifier_match:
                     qualifier_content = qualifier_match.group(0)
+                    extract_ontologies_from_qualifier_content(qualifier_content)
+                
+                if model_qualifier_match:
+                    qualifier_content = model_qualifier_match.group(0)
                     extract_ontologies_from_qualifier_content(qualifier_content)
     
     # Handle different model types
@@ -1906,3 +2760,66 @@ def _detect_and_count_other_ontologies(model_file: str, qualifier: str, model_ty
             check_annotations_for_species(qual_species)
     
     return ontology_counts
+
+def find_models_with_many_species(model_dir: str,
+                                 threshold: int = 50,
+                                 entity_type: str = "chemical",
+                                 database: str = "chebi",
+                                 tax_id: str = None,
+                                 bqbiol_qualifiers: list = None,
+                                 verbose: bool = True) -> pd.DataFrame:
+    """
+    Find models that have more than a specified threshold of species to evaluate.
+    
+    Args:
+        model_dir: Directory containing SBML model files
+        threshold: Minimum number of species to consider a "large" model (default: 50)
+        entity_type: Type of entity ("chemical", "gene", "protein")
+        database: Database to check ("chebi", "ncbigene", "uniprot")
+        tax_id: Taxonomy ID for NCBI gene / UniProt search
+        bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
+        verbose: If True, show detailed logging
+        
+    Returns:
+        DataFrame with columns: model_file, num_species, model_name
+    """
+    # Configure verbosity
+    _configure_verbosity(verbose)
+    
+    model_files = [f for f in os.listdir(model_dir) if f.endswith('.xml') or f.endswith('.sbml')]
+    model_files.sort()
+    
+    large_models = []
+    
+    for model_file in model_files:
+        model_path = os.path.join(model_dir, model_file)
+        
+        try:
+            # Get existing annotations to determine number of species
+            if entity_type == "chemical" and database == "chebi":
+                existing_annotations, _ = find_species_with_formulas(model_path, bqbiol_qualifiers)
+            elif entity_type == "gene" and database == "ncbigene":
+                existing_annotations, _ = find_species_with_gene_annotations(model_path, bqbiol_qualifiers, tax_id)
+            elif entity_type == "protein" and database == "uniprot":
+                existing_annotations, _ = find_species_with_protein_annotations(model_path, bqbiol_qualifiers, tax_id)
+            else:
+                continue
+                
+            num_species = len(existing_annotations)
+            
+            if num_species > threshold:
+                large_models.append({
+                    'model_file': model_file,
+                    'num_species': num_species
+                })
+                if verbose:
+                    logger.info(f"Found large model: {model_file} with {num_species} species")
+                    
+        except Exception as e:
+            if verbose:
+                logger.warning(f"Error processing {model_file}: {e}")
+            continue
+    
+    df = pd.DataFrame(large_models)
+    
+    return df

@@ -40,7 +40,7 @@ def main():
     print("=" * 50)
     
     # Configuration
-    model_file = "tests/glycol_p1.xml"
+    model_file = "tests/glycolysis_part1.xml"
     # model_file = "tests/test_models/BIOMD0000000190.xml"
     file_name = model_file.split('.')[0]
 
@@ -154,7 +154,7 @@ def main():
         import traceback
         traceback.print_exc()"""
 
-    ## this line below should be deleted eventually
+    # this line below should be deleted eventually
     recommendations_df = pd.read_csv('recommendations_correctedChEBI.csv')
 
     print("\nStep 2: Map ChEBI IDs to KEGG Compound IDs")
@@ -183,7 +183,9 @@ def main():
 
     print("\nStep 3: Begin rule-based matching to identify reactions")
     reactions, _ = extract_reactions_from_sbml(model_file, list(high_score_recommendations['id'].unique()))
+    print(f"Reactions: {reactions}")
     normalized_reactions = map_reactions_to_kegg(reactions, high_score_recommendations[['id', 'KEGG_ID']], spectators=False)
+    print(f"Normalized reactions: {normalized_reactions}")
 
     # Get KEGG recommendations
     match_results = database_search._get_kegg_recommendations_rulebased(

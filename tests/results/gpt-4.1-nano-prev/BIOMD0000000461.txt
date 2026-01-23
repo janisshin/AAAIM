@@ -1,9 +1,0 @@
-Model: BIOMD0000000461
-LLM: gpt-4.1-nano
-Timestamp: 2025-06-02 17:48:00
-
-Synonyms:
-IPTG: ['isopropyl β-D-1-thiogalactopyranoside', 'IPTG', 'inducer']
-x: ['UNK']
-
-Reason: "x" appears as a generic placeholder or variable, not a chemical entity.

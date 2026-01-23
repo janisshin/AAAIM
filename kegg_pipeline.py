@@ -169,7 +169,7 @@ def identify_species_with_llm(model_file: str, species_ids: List[str], llm_model
     from core.model_info import format_prompt
     
     # Format prompt for LLM
-    prompt = format_prompt(model_file, species_ids, entity_type="chemical")
+    prompt = format_prompt(model_file, species_ids, entity_type="chemical", top_k=3)
     
     if not prompt:
         logger.error("Failed to format prompt")
@@ -186,7 +186,7 @@ def identify_species_with_llm(model_file: str, species_ids: List[str], llm_model
             return {}
         
         # Parse LLM response
-        synonyms_dict, reason = parse_llm_response(result)
+        synonyms_dict, entity_type_dict, reason = parse_llm_response(result, entity_type="chemical")
         
         if not synonyms_dict:
             logger.error("Failed to parse LLM response")
