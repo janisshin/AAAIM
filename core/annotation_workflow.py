@@ -289,7 +289,7 @@ def annotate_single_model(model_file: str,
     
     return recommendations_df, metrics
 
-def _generate_recommendation_table(model_file: str, 
+def _generate_recommendation_table(model_file: str,
                                  recommendations: List[Recommendation],
                                  existing_annotations: Dict[str, List[str]],
                                  model_info: Dict[str, Any],
@@ -301,17 +301,27 @@ def _generate_recommendation_table(model_file: str,
     
     Args:
         model_file: Path to model file
-        recommendations: List of Recommendation objects
+        recommendations: List of Recommendation or ReactionRecommendation objects
         existing_annotations: Dictionary of existing annotations (may be empty)
         model_info: Model information dictionary
         entity_type: Type of entity being annotated
         database: Database being used for search
+        qualifier_annotations: Dictionary of qualifier annotations
 
     Returns:
         DataFrame in AMAS format
     """
+    from core.data_types import ReactionRecommendation
+    
     rows = []
     filename = Path(model_file).name
+    
+    # Check if we're dealing with ReactionRecommendation objects
+    is_reaction_recommendation = (
+        recommendations and
+        len(recommendations) > 0 and
+        isinstance(recommendations[0], ReactionRecommendation)
+    )
     
     for rec in recommendations:
         if not rec.candidates:
@@ -363,8 +373,8 @@ def _generate_recommendation_table(model_file: str,
             # Determine if this is an existing annotation
             existing = 1 if candidate in existing_annotations.get(rec.id, []) else 0
             
-            # match score
-            match_score = rec.match_score[i]
+            # match score - handle potential index out of range
+            match_score = rec.match_score[i] if i < len(rec.match_score) else 0.0
             
             # Determine update action - for new annotations, suggest adding top candidates
             if existing:
@@ -386,12 +396,13 @@ def _generate_recommendation_table(model_file: str,
                 'id': rec.id,
                 'display_name': model_info["display_names"].get(rec.id, rec.id),
                 'annotation': candidate_display,
-                'annotation_label': rec.candidate_names[i],
+                'annotation_label': rec.candidate_names[i] if i < len(rec.candidate_names) else candidate,
                 'match_score': match_score,
                 'existing': existing,
                 'update_annotation': update_action,
                 'qualifier': specific_qualifier
             }
+            
             rows.append(row)
     
     return pd.DataFrame(rows)
@@ -645,8 +656,7 @@ def map_reactions_to_kegg(rxn_list: List[str], id_df: pd.DataFrame, spectators=F
             List of Counter objects representing all possible KEGG ID mappings
         """
         # For each metabolite in the counter, get possible KEGG IDs
-        id_choices = []
-        
+        id_choices = dict()
         for met, coeff in counter.items():
             # Try to find KEGG IDs for this metabolite
             try:
@@ -654,12 +664,16 @@ def map_reactions_to_kegg(rxn_list: List[str], id_df: pd.DataFrame, spectators=F
                 
                 if isinstance(kegg_ids, pd.Series) or (isinstance(kegg_ids, list) & len(kegg_ids) > 1):
                     # Multiple KEGG IDs for this metabolite
-                    choices = [(kid[0], coeff) for kid in kegg_ids.tolist()]
+                    choices = set([kid for kid in kegg_ids.tolist()])
                 else:
                     # Single KEGG ID
-                    choices = [(kegg_ids, coeff)]
-                    
-                id_choices.append(choices)
+                    choices = set([kegg_ids])
+                
+                id_choices[met] = {
+                    'coeff': coeff,
+                    'candidates': choices
+                }
+                # id_choices.append(choices)
             except (KeyError, IndexError):
                 # Metabolite not found in mapping, skip it
                 logger.debug(f"No KEGG mapping found for metabolite: {met}")
@@ -667,13 +681,8 @@ def map_reactions_to_kegg(rxn_list: List[str], id_df: pd.DataFrame, spectators=F
         
         if not id_choices:
             return []
-            
-        # Generate all possible combinations of KEGG IDs
-        counters = []
-        for combo in itertools.product(*id_choices):
-            counters.append(Counter(dict(combo)))
-            
-        return counters
+                       
+        return id_choices
 
     # Process each reaction
     output = []

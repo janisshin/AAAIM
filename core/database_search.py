@@ -359,7 +359,6 @@ def load_kegg_parsed_reactions_dict() -> Dict[str, Dict[str, Any]]:
     return _KEGG_PARSED_REACTIONS_DICT
 
 
-
 def remove_symbols(text: str) -> str:
     """
     Remove all characters except numbers and letters.
@@ -472,7 +471,6 @@ def extract_classifications(raw_text, classification):
                 clean_lines.append(parts[1].strip())
             else:
                 clean_lines.append(stripped)
-        return "; ".join(clean_lines)
     
     elif classification == 'orthology':
         for line in lines:
@@ -482,8 +480,52 @@ def extract_classifications(raw_text, classification):
                 # Remove the EC info if present
                 name = parts[1].split(" [EC:")[0].strip()
                 clean_lines.append(name)
-        return "; ".join(clean_lines)
+
+    elif classification == 'definition':
+        parts = []
+        buf = ""
+        paren_level = 0  # Track nested parentheses
+
+        i = 0
+        while i < len(raw_text):
+            c = raw_text[i]
+
+            # Track parentheses
+            if c == '(':
+                paren_level += 1
+            elif c == ')':
+                paren_level -= 1
+
+            # Split points: + outside parentheses or <=>
+            if c == '+' and paren_level == 0:
+                parts.append(buf.strip())
+                buf = ""
+            elif raw_text[i:i+3] == '<=>' and paren_level == 0:
+                parts.append(buf.strip())
+                buf = ""
+                i += 2  # skip the next two chars of <=>
+            elif raw_text[i:i+2] == '->' and paren_level == 0:
+                parts.append(buf.strip())
+                buf = ""
+                i += 1  
+            else:
+                buf += c
+
+            i += 1
+
+        # Add remaining buffer
+        if buf:
+            parts.append(buf.strip())
+        # parts = [p for p in parts if p]
+        strip_dollars = [p.lstrip("$") for p in parts if p]
+        clean_lines = [re.sub(r'^[\d\w\(\)\+\-]+?\s+', '', p.strip()) for p in strip_dollars]
     
+    return "; ".join(set(clean_lines))
+    
+
+
+
+
 
 def get_species_recommendations_direct(species_ids: List[str], synonyms_dict, database: str = "chebi", tax_id: Any = None, top_k: int = 3) -> List[Recommendation]:
     """
@@ -800,6 +842,25 @@ def _get_kegg_recommendations_rulebased(normalized_reactions, cofactors_to_ignor
     Returns:
         List of Recommendation objects with candidates and match scores
     """
+    def split_recommendation(rec: ReactionRecommendation) -> List[ReactionRecommendation]:
+        """Split one ReactionRecommendation into multiple per candidate."""
+        new_recs = []
+        for cand, cand_name, score in zip(rec.candidates, rec.candidate_names, rec.match_score):
+            new_recs.append(
+                ReactionRecommendation(
+                    id=rec.id,
+                    synonyms=rec.synonyms,
+                    candidates=[cand],              # single candidate
+                    candidate_names=[cand_name],    # single name
+                    match_score=[score],            # single score
+                    substrates=rec.substrates,
+                    products=rec.products,
+                    equation=rec.equation,
+                    metadata=rec.metadata
+                )
+            )
+        return new_recs
+    
     try:
         logger.info(f"Loading KEGG reaction data...")
         # Load KEGG reaction data
@@ -819,25 +880,25 @@ def _get_kegg_recommendations_rulebased(normalized_reactions, cofactors_to_ignor
             model_prods = reaction_id.get('products', Counter())
             
             # Check if reactions only contain cofactors
-            model_sub_keys = {key for counter in model_subs for key in counter.keys()}
-            model_prod_keys = {key for counter in model_prods for key in counter.keys()}
+            model_sub_keys = {key for v in model_subs.values() for key in v['candidates']}
+            model_prod_keys = {key for v in model_prods.values() for key in v['candidates']}
             
             only_cofactors_subs = all(key in cofactors_to_ignore for key in model_sub_keys)
             only_cofactors_prods = all(key in cofactors_to_ignore for key in model_prod_keys)
             
             # If either substrates or products only contain cofactors, don't ignore cofactors in filtering
             if only_cofactors_subs or only_cofactors_prods:
-                filtered_reaction_list = filter_kegg_reactions(model_subs, model_prods)
+                filtered_reaction_list = filter_kegg_reactions(model_sub_keys, model_prod_keys)
             else:
                 # Otherwise, try both with and without ignoring cofactors
-                filtered_reaction_list = filter_kegg_reactions(model_subs, model_prods) + \
-                    filter_kegg_reactions(model_subs, model_prods, cofactors_to_ignore=cofactors_to_ignore)
+                filtered_reaction_list = filter_kegg_reactions(model_sub_keys, model_prod_keys) + \
+                    filter_kegg_reactions(model_sub_keys, model_prod_keys, cofactors_to_ignore=cofactors_to_ignore)
                 filtered_reaction_list = set(filtered_reaction_list)
             matches = []
 
             # in case there are multiple candidates for a substrate or product group,
             # create a list of cartesian products of substrate and product groups
-            cartesian_products = list(product(model_subs, model_prods))
+            # cartesian_products = list(product(model_subs, model_prods))
             # Compare with each KEGG reaction
             for kegg_id in filtered_reaction_list:
                 kegg_subs = Counter(set(kegg_parsed_reactions_dict.get(kegg_id, kegg_id).get('substrates', [])))
@@ -904,7 +965,8 @@ def _get_kegg_recommendations_rulebased(normalized_reactions, cofactors_to_ignor
                 candidate_names=candidate_names,
                 match_score=match_scores
             )
-            recommendations.append(recommendation)
+
+            recommendations.extend(split_recommendation(recommendation))
             
         return recommendations
         
@@ -1060,7 +1122,7 @@ def _get_kegg_recommendations_RAG(reaction_ids: List[str], top_k: int = None, sp
     pass
 
 
-def filter_kegg_reactions(model_subs: List[Counter], model_prods: List[Counter], cofactors_to_ignore={}) -> List[Dict[str, Any]]:
+def filter_kegg_reactions(model_sub_keys: List[Counter], model_prod_keys: List[Counter], cofactors_to_ignore={}) -> List[Dict[str, Any]]:
     """
     Filter KEGG reactions based on substrate and product matching.
     
@@ -1075,8 +1137,6 @@ def filter_kegg_reactions(model_subs: List[Counter], model_prods: List[Counter],
     """
     kegg_parsed_reactions_dict = load_kegg_parsed_reactions_dict() # load_kegg_reaction_features_dict
     # Get unique keys from the model substrates and products
-    model_sub_keys = {key for counter in model_subs for key in counter.keys() if key not in cofactors_to_ignore}
-    model_prod_keys = {key for counter in model_prods for key in counter.keys() if key not in cofactors_to_ignore}
     
     filtered_reactions = []
     partial_matches = []
@@ -1268,7 +1328,8 @@ def get_species_recommendations_rag(
     collection_name: str = None,
     top_k: int = 3,
     database: str = "chebi",
-    tax_id: str = None
+    tax_id: str = None,
+    reaction_participants: List[str] = None
 ) -> List[Recommendation]:
     """
     Find recommendations using RAG embeddings.
@@ -1288,6 +1349,7 @@ def get_species_recommendations_rag(
     """
     persist_directory = os.path.join(get_data_dir(), persist_directory)
     recommendations = []
+
     # Helper to get collection for a given tax_id
     def get_collection_for_taxid(tid):
         if database == "ncbigene":
@@ -1385,6 +1447,14 @@ def get_species_recommendations_rag(
         except Exception as e:
             logger.error(f"Could not access ChEBI RAG collection '{collection_name}': {e}")
             raise
+    elif database == "kegg":
+        if collection_name is None and model_type == "default":
+            collection_name = "kegg_reactions_default"
+        try:
+            client, collection = get_chromadb_client(persist_directory, collection_name, model_type)
+        except Exception as e:
+            logger.error(f"Could not access KEGG RAG collection '{collection_name}': {e}")
+            raise
     else:
         logger.error(f"Database {database} not supported for RAG search")
         return []
@@ -1417,13 +1487,25 @@ def get_species_recommendations_rag(
         all_candidate_names = []
         candidate_scores = {}
         candidate_names = {}  # Keep track of candidate names separately
+        
         for synonym in synonyms:
             try:
-                results = collection.query(
-                    query_texts=[synonym],
-                    n_results=top_k,
-                    include=["metadatas", "distances"]
-                )
+                if database=='kegg':
+                    #  model_info -> reactions
+                    # split each string by ':' and then extract the participants
+                    query = f"Reaction type: {synonym}\nParticipants:{reaction_participants}"
+                    # cake
+                    results = collection.query(
+                        query_texts=[query],
+                        n_results=top_k,
+                        include=["metadatas", "distances"]
+                    )
+                else:
+                    results = collection.query(
+                        query_texts=[synonym],
+                        n_results=top_k,
+                        include=["metadatas", "distances"]
+                    )
                 for metadata, distance in zip(results['metadatas'][0], results['distances'][0]):
                     if database == "chebi":
                         db_id = metadata.get('chebi_id', 'Unknown')
@@ -1431,6 +1513,8 @@ def get_species_recommendations_rag(
                         db_id = metadata.get('ncbigene_id', 'Unknown')
                     elif database == "uniprot":
                         db_id = metadata.get('uniprot_id', 'Unknown')
+                    elif database == "kegg":
+                        db_id = metadata.get('kegg_id', 'Unknown')
                     else:
                         db_id = metadata.get('id', 'Unknown')
                     db_name = metadata.get('name', 'Unknown')

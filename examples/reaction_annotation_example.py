@@ -105,54 +105,6 @@ def main():
     # Example 1: Reaction Annotation Workflow
     print("\nEXAMPLE 1. Reaction Annotation Workflow (for models without reaction annotations)")
     print("-" * 60)
-    
-    # first annotate model using ChEBI
-    """print("Step 1: Identifying the chemical species")
-    try:    
-        recommendations_df, metrics = annotate_model(
-            model_file=model_file,
-            llm_model=llm_model,
-            entity_type="chemical",
-            database="chebi",
-            method="rag",
-            top_k=top_k,
-        )
-        # Display annotation results
-        if not recommendations_df.empty:
-            print("Annotation Results:")
-            print(f"Total entities in model: {metrics['total_entities']}")
-            print(f"Entities with predictions: {metrics['entities_with_predictions']}")
-            print(f"Annotation rate: {metrics['annotation_rate']:.1%}")
-            
-            if not pd.isna(metrics['accuracy']):
-                print(f"Accuracy (where existing annotations available): {metrics['accuracy']:.1%}")
-            else:
-                print("Accuracy: N/A (no existing annotations to compare against)")
-            
-            print(f"Total time: {metrics['total_time']:.2f}s")
-            print()
-            
-            # Show sample recommendations
-            print("Sample Annotation Recommendations:")
-            sample_df = recommendations_df[['id', 'display_name', 'annotation', 'annotation_label', 'match_score', 'existing']].head(5)
-            print(sample_df.to_string(index=False))
-            print()
-            
-            
-            # Save results
-            output_file = f"{file_name}_recommendations.csv"
-            recommendations_df.to_csv(output_file, index=False)
-            print(f"Full annotation results saved to: {output_file}")
-            
-        else:
-            print("No annotation recommendations generated.")
-            if 'error' in metrics:
-                print(f"Error: {metrics['error']}")
-
-    except Exception as e:
-        print(f"Processing failed: {e}")
-        import traceback
-        traceback.print_exc()"""
 
     # this line below should be deleted eventually
     recommendations_df = pd.read_csv('recommendations_correctedChEBI.csv')
@@ -212,67 +164,205 @@ def main():
     else:
         print("\nNo KEGG reaction recommendations generated.")
 
+
+def init_species_probs(query_reaction, candidate_reactions):
+    """
+    Initialize species match probabilities for a query reaction
+    given a set of candidate reference reactions.
+
+    Returns a dictionary mapping each query species to a dictionary of
+    candidate species and their initial probabilities.
+    """
+    species_match_probs = {}
+
+    for query_species in query_reaction.participants:
+
+        # Collect all candidate species that could plausibly match this query species
+        possible_matches = set()
+        for candidate in candidate_reactions:
+            for cand_species in candidate.participants:
+                if is_plausible_match(query_species, cand_species):
+                    possible_matches.add(cand_species)
+
+        # Initialize probabilities
+        if possible_matches:
+            prob = 1.0 / len(possible_matches)
+            species_match_probs[query_species] = {s: prob for s in possible_matches}
+        else:
+            # No plausible matches found; start with empty dict
+            species_match_probs[query_species] = {}
+
+    return species_match_probs
+
+
+# Example helper function (very simple)
+def is_plausible_match(query_species, cand_species):
+    """
+    Decide if a candidate species could match the query species.
+    For now, match if names are identical or similar.
+    """
+    return query_species.lower() == cand_species.lower()
+
+def normalize(prob_dict):
+    total = sum(prob_dict.values())
+    if total > 0:
+        for key in prob_dict:
+            prob_dict[key] /= total
+    return prob_dict
+
+def update_species_probs(query_species, candidate_reactions, candidate_probs):
+    """
+    Update the species match probabilities for a single query species
+    based on the candidate reaction probabilities.
     
+    Returns a dictionary mapping candidate species to updated probabilities.
+    """
+    updated_probs = {}
+
+    # Loop over each candidate reaction
+    for candidate in candidate_reactions:
+        prob_candidate = candidate_probs.get(candidate, 0.0)
+        
+        # Loop over each species in the candidate reaction
+        for cand_species in candidate.participants:
+            # Check if this candidate species could match the query species
+            if is_plausible_match(query_species, cand_species):
+                # Accumulate probability weighted by candidate reaction probability
+                if cand_species not in updated_probs:
+                    updated_probs[cand_species] = 0.0
+                updated_probs[cand_species] += prob_candidate
+
+    # Normalize the probabilities so they sum to 1
+    total = sum(updated_probs.values())
+    if total > 0:
+        for species in updated_probs:
+            updated_probs[species] /= total
+
+    return updated_probs
+
+def choose_best_annotation(species_probs):
+    """
+    Choose the best annotation for a query species based on
+    the current species match probabilities.
+    
+    Parameters:
+        species_probs (dict): Mapping from candidate species to probabilities.
+        
+    Returns:
+        str: The candidate species with the highest probability.
+             Returns None if no candidates are available.
+    """
+    if not species_probs:
+        return None  # no plausible matches
+    
+    # Find the candidate with the maximum probability
+    best_species = max(species_probs, key=species_probs.get)
+    return best_species
+
+def has_converged(updated_annotations, previous_annotations):
+    """
+    Check if the EM algorithm has converged for a query reaction.
+    
+    Convergence occurs when the annotations of all species do not change
+    from the previous iteration.
+    
+    Parameters:
+        updated_annotations (dict): Mapping from query species to current annotation.
+        previous_annotations (dict): Mapping from query species to previous annotation.
+        
+    Returns:
+        bool: True if converged, False otherwise.
+    """
+    # If there were no previous annotations, we haven't converged yet
+    if not previous_annotations:
+        return False
+    
+    # Compare updated vs previous for all species
+    for species, new_annotation in updated_annotations.items():
+        old_annotation = previous_annotations.get(species)
+        if new_annotation != old_annotation:
+            return False  # At least one species changed, not converged
+    
+    return True  # All species unchanged, converged
+
+
+
+
+def amend_reaction_and_species_annotations(model_info, recommendations_df, top_k=10, max_iter=10):
+
+    # get reaction recommendations
+
+
+    # 2. Initialize probabilities for each candidate reaction
+    #    (e.g., uniform distribution to start)
+    recommendations_df['match_score_norm'] = (
+        recommendations_df['match_score'] /
+        recommendations_df.groupby('id')['match_score'].transform('sum')
+        )
+
+    # 3. Initialize species match probabilities
+    #    For each query participant, assign probabilities over candidate participants
+    species_match_probs = init_species_probs(query_reaction, candidate_reactions)
+    
+    for iteration in range(max_iter):
+
+        # ---- Expectation Step ----
+        # Compute how likely each candidate mapping explains the query reaction
+        for candidate in candidate_reactions:
+            candidate_probs[candidate] = compute_match_likelihood(
+                query_reaction, candidate, species_match_probs
+            )
+        normalize(candidate_probs)
+
+        # Update species match probabilities using weighted candidates
+        for query_species in query_reaction.participants:
+            species_match_probs[query_species] = update_species_probs(
+                query_species, candidate_reactions, candidate_probs
+            )
+
+        # ---- Maximization Step ----
+        # Assign best annotation for each query species based on match probabilities
+        updated_annotations = {}
+        for query_species in query_reaction.participants:
+            updated_annotations[query_species] = choose_best_annotation(
+                species_match_probs[query_species]
+            )
+
+        # ---- Check convergence ----
+        if has_converged(updated_annotations, query_reaction.annotations):
+            break
+
+        # Update query reaction with new annotations
+        query_reaction.annotations = updated_annotations
+
+    return query_reaction.annotations
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     print("Time to update the file with annotations!")
     
-    """
-    chebi_annotated_model = model_file.split('.')[0]+'_annotated.xml'
     
-    if os.path.exists(output_file):
-        update_annotation(
-            original_model_path=model_file,
-            recommendation_table="recommendations.csv",  # or a pandas DataFrame
-            new_model_path=chebi_annotated_model,
-            qualifier="is"  # (optional) bqbiol qualifier, default is 'is'
-            )
-    else: 
-        return
-    
-    if os.path.exists(kegg_output_file):
-        try: 
-            update_annotation(
-                original_model_path=chebi_annotated_model,
-                recommendation_table="kegg_reaction_recommendations.csv",  # or a pandas DataFrame
-                new_model_path=model_file.split('.')[0]+'_annotated.xml',
-                qualifier="is"  # (optional) bqbiol qualifier, default is 'is'
-                )
-        except Exception as e:
-            print(f"Reaction annotation failed: {e}")
-    else: 
-        return"""
-    
-    """
-    # Example 2: Reaction Curation Workflow (for models with existing reaction annotations)
-    print("\n2. Reaction Curation Workflow (for models with existing reaction annotations)")
-    print("-" * 65)
-
-    try:
-        # Try to curate existing reaction annotations
-        curation_df, curation_metrics = curate_model(
-            model_file=model_file,
-            llm_model="gpt-4o-mini",
-            entity_type="reaction", 
-            database="kegg",
-            method="direct"
-        )
-        
-        if not curation_df.empty:
-            print(f"Generated {len(curation_df)} reaction curation recommendations")
-            print("\nSample curations:")
-            print(curation_df[['id', 'display_name', 'annotation', 'annotation_label', 'existing']].head())
-            
-            # Save results
-            output_file = "reaction_curation_results.csv"
-            curation_df.to_csv(output_file, index=False)
-            print(f"\nResults saved to: {output_file}")
-            
-            print(f"\nCuration metrics: {curation_metrics}")
-        else:
-            print("No existing reaction annotations found in model - curation not applicable")
-        
-    except Exception as e:
-        print(f"Reaction curation failed: {e}")
-    """
 
 
 
