@@ -10,7 +10,7 @@ __pycache__
 .DS_Store
 AMAS_ref/
 chroma_ref/
-docs/
+notes/
 chroma_storage/
 tests/prev_results/
 tests/autoType/

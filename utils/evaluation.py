@@ -749,9 +749,9 @@ def evaluate_single_model(model_file: str,
                 if chunk_reason:
                     all_reasons.append(f"Chunk {chunk_idx + 1}: {chunk_reason}")
                 
-                if verbose:
-                    logger.info(f"LLM response: \n{llm_response}")
-                    logger.info(f"Chunk synonyms dict: {chunk_synonyms_dict}")
+                # if verbose:
+                #     logger.info(f"LLM response: \n{llm_response}")
+                #     logger.info(f"Chunk synonyms dict: {chunk_synonyms_dict}")
             
             # Combine all reasons
             if all_reasons:
@@ -999,9 +999,9 @@ def evaluate_single_model(model_file: str,
                 # Parse retry LLM response
                 retry_synonyms_dict, retry_entity_type_dict, retry_reason = parse_llm_response(retry_llm_response, entity_type)
                 
-                if verbose:
-                    logger.info(f"Retry LLM response: \n{retry_llm_response}")
-                    logger.info(f"Retry synonyms dict: {retry_synonyms_dict}")
+                # if verbose:
+                #     logger.info(f"Retry LLM response: \n{retry_llm_response}")
+                #     logger.info(f"Retry synonyms dict: {retry_synonyms_dict}")
                 
                 # Update synonyms_dict and entity_type_dict with retry results
                 for species_id in species_with_empty_preds:
@@ -1694,6 +1694,7 @@ def print_evaluation_results(results_csv: str, ref_results_csv = None, bqbiol_qu
         bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
         entity_types: List of entity types to filter for (e.g. ['chemical', 'protein'])
     """
+    decimal_places = 3
     if not os.path.exists(results_csv):
         print(f"Results file not found: {results_csv}")
         return
@@ -1755,51 +1756,51 @@ def print_evaluation_results(results_csv: str, ref_results_csv = None, bqbiol_qu
     print("Number of annotations evaluated: %d" % len(df))    
     # Calculate per-model averages
     model_accuracy = df.groupby('model')['accuracy'].mean().mean()
-    print("Average accuracy (per model): %.02f" % model_accuracy)
+    print(f"Average accuracy (per model): {round(model_accuracy, decimal_places)}")
     
     recall_formula = df.groupby('model')['recall_formula'].mean().mean()
-    print("Ave. recall (formula): %.02f" % recall_formula)
+    print(f"Ave. recall (formula): {round(recall_formula, decimal_places)}")
     
     precision_formula = df.groupby('model')['precision_formula'].mean().mean()
-    print("Ave. precision (formula): %.02f" % precision_formula)
+    print(f"Ave. precision (formula): {round(precision_formula, decimal_places)}")
     
     recall_exact = df.groupby('model')['recall_exact'].mean().mean()
-    print("Ave. recall (exact): %.02f" % recall_exact)
+    print(f"Ave. recall (exact): {round(recall_exact, decimal_places)}")
     
     precision_exact = df.groupby('model')['precision_exact'].mean().mean()
-    print("Ave. precision (exact): %.02f" % precision_exact)
+    print(f"Ave. precision (exact): {round(precision_exact, decimal_places)}")
     
     # Calculate per-species averages
     species_accuracy = df['accuracy'].mean()
-    print("Average accuracy (per species): %.02f" % species_accuracy)
+    print(f"Average accuracy (per species): {round(species_accuracy, decimal_places)}")
     
     species_recall_formula = df['recall_formula'].mean()
-    print("Ave. recall (formula, per species): %.02f" % species_recall_formula)
+    print(f"Ave. recall (formula, per species): {round(species_recall_formula, decimal_places)}")
     
     species_precision_formula = df['precision_formula'].mean()
-    print("Ave. precision (formula, per species): %.02f" % species_precision_formula)
+    print(f"Ave. precision (formula, per species): {round(species_precision_formula, decimal_places)}")
     
     species_recall_exact = df['recall_exact'].mean()
-    print("Ave. recall (exact, per species): %.02f" % species_recall_exact)
+    print(f"Ave. recall (exact, per species): {round(species_recall_exact, decimal_places)}")
     
     species_precision_exact = df['precision_exact'].mean()
-    print("Ave. precision (exact, per species): %.02f" % species_precision_exact)
+    print(f"Ave. precision (exact, per species): {round(species_precision_exact, decimal_places)}")
 
     # Total time
     mean_processing_time = df.groupby('model')['total_time'].first().mean()
-    print("Ave. total time (per model): %.02f" % mean_processing_time)
+    print(f"Ave. total time (per model): {round(mean_processing_time, decimal_places)}")
     
     # Total time per element
     num_elements = df.groupby('model').size().mean()
     mean_processing_time_per_element = mean_processing_time / num_elements if num_elements > 0 else 0
-    print("Ave. total time (per element, per model): %.02f" % mean_processing_time_per_element)
+    print(f"Ave. total time (per element, per model): {round(mean_processing_time_per_element, decimal_places)}")
 
     # LLM time
     mean_llm_time = df.groupby('model')['llm_time'].first().mean()
-    print("Ave. LLM time (per model): %.02f" % mean_llm_time)
+    print(f"Ave. LLM time (per model): {round(mean_llm_time, decimal_places)}")
     
     mean_llm_time_per_element = mean_llm_time / num_elements if num_elements > 0 else 0
-    print("Ave. LLM time (per element, per model): %.02f" % mean_llm_time_per_element)
+    print(f"Ave. LLM time (per element, per model): {round(mean_llm_time_per_element, decimal_places)}")
     
     # Average number of predictions per species
     def safe_eval_predictions(x):
@@ -1817,7 +1818,7 @@ def print_evaluation_results(results_csv: str, ref_results_csv = None, bqbiol_qu
     df['parsed_predictions'] = df['predictions'].apply(safe_eval_predictions)
     df['num_predictions'] = df['parsed_predictions'].apply(len)
     average_predictions = df['num_predictions'].mean()
-    print(f"Average number of predictions per species: {average_predictions:.2f}")
+    print(f"Average number of predictions per species: {round(average_predictions, decimal_places)}")
 
 def calculate_species_statistics(recommendations: List[Recommendation],
                                 existing_annotations: Dict[str, List[str]]) -> Dict[str, Dict[str, float]]:
