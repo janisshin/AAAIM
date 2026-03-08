@@ -127,6 +127,11 @@ def annotate_single_model(model_file: str,
     # Format prompt for LLM
     logger.info(f">>>Step 3: Querying LLM ({llm_model})...<<<")
     
+    # Track conversation context for potential feedback rounds
+    all_prompts = []
+    all_responses = []
+    system_prompt = get_system_prompt(entity_type)
+
     if chunk_size and len(entities_to_evaluate) > chunk_size:
         logger.info(f"Breaking {len(entities_to_evaluate)} entities into chunks of {chunk_size}")
         
@@ -151,10 +156,10 @@ def annotate_single_model(model_file: str,
                 logger.error(f"Failed to format prompt for chunk {chunk_idx + 1}")
                 continue
             
+            all_prompts.append(prompt)
+            
             llm_start = time.time()
             try:
-                # Get appropriate system prompt for entity type
-                system_prompt = get_system_prompt(entity_type)
                 result = query_llm(prompt, system_prompt, model=llm_model, entity_type=entity_type)
                 chunk_llm_time = time.time() - llm_start
                 total_llm_time += chunk_llm_time
@@ -163,6 +168,7 @@ def annotate_single_model(model_file: str,
                     logger.error(f"No response from LLM for chunk {chunk_idx + 1}")
                     continue
                 
+                all_responses.append(result)
                 logger.info(f"Chunk {chunk_idx + 1} LLM response received in {chunk_llm_time:.2f}s")
                 
             except Exception as e:
@@ -197,10 +203,10 @@ def annotate_single_model(model_file: str,
             logger.error("Failed to format prompt")
             return pd.DataFrame(), {"error": "Failed to format prompt"}
         
+        all_prompts.append(prompt)
+        
         llm_start = time.time()
         try:
-            # Get appropriate system prompt for entity type
-            system_prompt = get_system_prompt(entity_type)
             result = query_llm(prompt, system_prompt, model=llm_model, entity_type=entity_type)
             llm_time = time.time() - llm_start
             
@@ -208,6 +214,7 @@ def annotate_single_model(model_file: str,
                 logger.error("No response from LLM")
                 return pd.DataFrame(), {"error": "No response from LLM"}
             
+            all_responses.append(result)
             logger.info(f"LLM response received in {llm_time:.2f}s")
             
         except Exception as e:
@@ -278,14 +285,32 @@ def annotate_single_model(model_file: str,
     metrics = _calculate_metrics(
         recommendations_df, existing_annotations, max_entities, len(all_entity_ids), total_time, llm_time, search_time
     )
-        
-    logger.info(f"Annotation completed in {total_time:.2f}s")
-    logger.info(f"Generated {len(recommendations_df)} recommendations")
-    
-    recommendations_df.to_csv(f"{Path(model_file).name}_recommendations.csv", index=False)
-    logger.info(f"Recommendations saved to {Path(model_file).name}_recommendations.csv")
-    
-    return recommendations_df, metrics
+
+    csv_path = f"{Path(model_file).name}_recommendations.csv"
+    recommendations_df.to_csv(csv_path, index=False)
+    print(f"Recommendations saved to {csv_path}")
+    logger.info(f"Annotation completed in {total_time:.2f}s – {len(recommendations_df)} recommendations")
+
+    from core.feedback import AnnotationResult, build_initial_conversation
+    combined_prompt = "\n\n".join(all_prompts)
+    combined_response = "\n\n".join(all_responses)
+
+    return AnnotationResult(
+        recommendations_df, metrics,
+        model_file=model_file,
+        conversation_history=build_initial_conversation(system_prompt, combined_prompt, combined_response),
+        entities_to_evaluate=entities_to_evaluate,
+        entity_type=entity_type,
+        database=database,
+        method=method,
+        llm_model=llm_model,
+        top_k=top_k,
+        tax_id=tax_id,
+        existing_annotations=existing_annotations,
+        qualifier_annotations=qualifier_annotations,
+        model_info=model_info,
+        csv_path=csv_path,
+    )
 
 def _generate_recommendation_table(model_file: str, 
                                  recommendations: List[Recommendation],

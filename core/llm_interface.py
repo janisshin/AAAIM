@@ -57,6 +57,7 @@ Reason: A and B are small-molecule substrates (chemicals), C is the enzyme (prot
 # System prompt for chemical annotation
 SYSTEM_PROMPT_CHEMICAL = """You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized names for ontology lookup on ChEBI. 
 All given species are chemical entities. For complexes, only consider the chemical components. If lacking information about details, try your best to give the most likely general name.
+Do not include modifications or extra information (e.g., no “dissolved”, “anion”, or localization terms like “nuclear”).
 
 Here is one example:
 Species: A, B, D
@@ -331,6 +332,61 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
     else:
         print("No response or empty response from LLM.")
         return ""
+
+def query_llm_with_history(messages: list, model: str = "gpt-4o-mini",
+                           max_retries: int = DEFAULT_MAX_RETRIES,
+                           initial_delay: float = DEFAULT_INITIAL_DELAY) -> str:
+    """
+    Query the LLM with a full conversation history (multi-turn).
+    
+    Used by the feedback loop to send the original prompt, the LLM's prior
+    response, and user feedback as a coherent conversation so the LLM can
+    revise its output.
+    
+    Args:
+        messages: List of message dicts (role/content) representing the full
+                  conversation so far, including system, user, assistant, and
+                  feedback turns.
+        model: LLM model identifier.
+        max_retries: Retry attempts for rate-limit / transient errors.
+        initial_delay: Initial backoff delay in seconds.
+
+    Returns:
+        The assistant's response text, or empty string on failure.
+    """
+    response = None
+    if model.startswith("gpt"):
+        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        response = _make_api_call_with_retry(
+            client, model, messages,
+            max_retries=max_retries, initial_delay=initial_delay,
+            api_name="OpenAI"
+        )
+    elif model.startswith("meta-llama"):
+        client = OpenAI(base_url="https://openrouter.ai/api/v1",
+                        api_key=os.getenv("OPENROUTER_API_KEY"))
+        response = _make_api_call_with_retry(
+            client, model, messages,
+            max_retries=max_retries, initial_delay=initial_delay,
+            api_name="OpenRouter"
+        )
+    elif model.startswith("Llama"):
+        client = OpenAI(base_url="https://api.llama.com/compat/v1",
+                        api_key=os.getenv("LLAMA_API_KEY"))
+        response = _make_api_call_with_retry(
+            client, model, messages,
+            max_retries=max_retries, initial_delay=initial_delay,
+            api_name="Llama API"
+        )
+    else:
+        raise ValueError(f"Model {model} not supported")
+
+    if response is not None and hasattr(response, "choices") and response.choices:
+        return response.choices[0].message.content
+    else:
+        print("No response or empty response from LLM.")
+        return ""
+
 
 def parse_llm_response(response, entity_type: str = "auto") -> Tuple[Dict[str, List[str]], Dict[str, str], str]:
     """

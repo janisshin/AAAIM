@@ -34,7 +34,21 @@ LLAMA_API_KEY=<your-llama-api-key-here>
 
 ## Usage
 
-AAAIM currently provides two main workflows for model annotation:
+AAAIM provides two main workflows plus an interactive feedback mechanism.
+
+Both `annotate_model` and `curate_model` return an `AnnotationResult` object.
+It holds `recommendations_df` and `metrics` as attributes and also supports
+tuple unpacking for backward compatibility:
+
+```python
+# Both styles work:
+result = annotate_model("model.xml", ...)
+recommendations_df, metrics = annotate_model("model.xml", ...)
+```
+
+A recommendations CSV is saved automatically after every run and after every
+feedback revision. The filename printed to the console tells you where it was
+written.
 
 ### 1. Annotation Workflow (for new models)
 
@@ -49,15 +63,11 @@ AAAIM currently provides two main workflows for model annotation:
 ```python
 from core import annotate_model
 
-# Annotate all chemical species in a model
-recommendations_df, metrics = annotate_model(
+result = annotate_model(
     model_file="path/to/model.xml",
     entity_type="chemical",
     database="chebi"
 )
-
-# Save results
-recommendations_df.to_csv("chemical_annotation_results.csv", index=False)
 ```
 
 #### Gene Annotation (NCBI Gene)
@@ -65,16 +75,12 @@ recommendations_df.to_csv("chemical_annotation_results.csv", index=False)
 ```python
 from core import annotate_model
 
-# Annotate all gene species in a model
-recommendations_df, metrics = annotate_model(
+result = annotate_model(
     model_file="path/to/model.xml",
     entity_type="gene",
     database="ncbigene",
     tax_id="9606"  # for human
 )
-
-# Save results
-recommendations_df.to_csv("gene_annotation_results.csv", index=False)
 ```
 
 #### Protein Annotation (UniProt)
@@ -82,16 +88,12 @@ recommendations_df.to_csv("gene_annotation_results.csv", index=False)
 ```python
 from core import annotate_model
 
-# Annotate all gene species in a model
-recommendations_df, metrics = annotate_model(
+result = annotate_model(
     model_file="path/to/model.xml",
     entity_type="protein",
     database="uniprot",
     tax_id="9606"  # for human
 )
-
-# Save results
-recommendations_df.to_csv("protein_annotation_results.csv", index=False)
 ```
 
 #### Automatic Entity Type Detection
@@ -101,20 +103,14 @@ AAAIM supports automatic detection of entity types (chemical, gene, protein, com
 ```python
 from core import annotate_model
 
-# Annotate all species in a model by automatic type detection
-# The LLM will determine the entity type for each species
-recommendations_df, metrics = annotate_model(
+result = annotate_model(
     model_file="path/to/model.xml",
     entity_type="auto",
     database=["chebi", "uniprot"]  # choose from these databases
 )
 
 # The results will include a 'type' column indicating the detected entity type
-# Species with unknown types are included in results but with empty predictions
-print(recommendations_df[['species_id', 'type', 'synonyms_LLM', 'predictions_names']])
-
-# Save results
-recommendations_df.to_csv("auto_annotation_results.csv", index=False)
+print(result.recommendations_df[['species_id', 'type', 'synonyms_LLM', 'predictions_names']])
 ```
 
 **How it works:**
@@ -142,15 +138,14 @@ recommendations_df.to_csv("auto_annotation_results.csv", index=False)
 ```python
 from core import curate_model
 
-# Curate existing chemical annotations
-curations_df, metrics = curate_model(
+result = curate_model(
     model_file="path/to/model.xml",
     entity_type="chemical",
     database="chebi"
 )
 
-print(f"Chemical entities with existing annotations: {metrics['total_entities']}")
-print(f"Accuracy: {metrics['accuracy']:.1%}")
+print(f"Chemical entities with existing annotations: {result.metrics['total_entities']}")
+print(f"Accuracy: {result.metrics['accuracy']:.1%}")
 ```
 
 #### Gene Curation
@@ -158,15 +153,14 @@ print(f"Accuracy: {metrics['accuracy']:.1%}")
 ```python
 from core import curate_model
 
-# Curate existing gene annotations
-curations_df, metrics = curate_model(
+result = curate_model(
     model_file="path/to/model.xml",
     entity_type="gene",
     database="ncbigene"
 )
 
-print(f"Gene entities with existing annotations: {metrics['total_entities']}")
-print(f"Accuracy: {metrics['accuracy']:.1%}")
+print(f"Gene entities with existing annotations: {result.metrics['total_entities']}")
+print(f"Accuracy: {result.metrics['accuracy']:.1%}")
 ```
 
 #### Protein Curation
@@ -174,19 +168,69 @@ print(f"Accuracy: {metrics['accuracy']:.1%}")
 ```python
 from core import curate_model
 
-# Curate existing gene annotations
-curations_df, metrics = curate_model(
+result = curate_model(
     model_file="path/to/model.xml",
     entity_type="protein",
     database="uniprot",
     tax_id=9606  # for human
 )
 
-print(f"Gene entities with existing annotations: {metrics['total_entities']}")
-print(f"Accuracy: {metrics['accuracy']:.1%}")
+print(f"Protein entities with existing annotations: {result.metrics['total_entities']}")
+print(f"Accuracy: {result.metrics['accuracy']:.1%}")
 ```
 
-### 3. Updating Model Annotations After Review
+### 3. User Feedback
+
+After reviewing the initial recommendations you can iteratively refine them.
+The previous prompt, LLM response, and your feedback are sent back to the
+LLM for a revised set of synonyms, which then go through the retrieval
+pipeline again.
+
+#### Single revision
+
+```python
+result = annotate_model("model.xml", entity_type="chemical", database="chebi")
+
+# Provide feedback
+result = result.revise("Species X should be glucose-6-phosphate, not glucose")
+```
+
+#### Interactive loop
+
+```python
+result.feedback_loop()          # console prompt; press Enter to accept
+```
+
+A custom callback can replace the console prompt (useful for GUIs or
+notebooks):
+
+```python
+def my_feedback(df, iteration):
+    # display df in your UI, collect text
+    return user_text   # return "" or None to stop
+
+result.feedback_loop(get_feedback_fn=my_feedback)
+```
+
+#### Versioned CSV output
+
+Every revision writes a new file so that earlier recommendations are
+never lost:
+
+```
+model.xml_recommendations.csv       ← initial run
+model.xml_recommendations_v1.csv    ← after 1st revision
+model.xml_recommendations_v2.csv    ← after 2nd revision
+```
+
+#### Advanced control
+
+`result.revise()` and `result.feedback_loop()` use the same database,
+method, LLM model, and other parameters from the initial run by default.
+For advanced use you can also call the lower-level helpers directly; see
+`core/feedback.py` for the full API.
+
+### 4. Updating Model Annotations After Review
 
 After running `annotate_model` or `curate_model`, you can review the resulting CSV file and edit the `update_annotation` column for each entity:
 
@@ -209,11 +253,11 @@ update_annotation(
 
 A summary of added/removed annotations will be printed after update.
 
-### 4. Advanced Usage
+### 5. Advanced Usage
 
 ```python
 # More control over parameters
-recommendations_df, metrics = annotate_model(
+result = annotate_model(
     model_file = "path/to/model.xml",
     llm_model = "meta-llama/llama-3.3-70b-instruct:free",       # the LLM model used to predict annotations
     max_entities = 100,					 # maximum number of entities to annotate (None for all)
@@ -251,7 +295,7 @@ for species_id, annotation_ids in annotations.items():
 python examples/simple_example.py
 ```
 
-### 5. Evaluation and Results Analysis
+### 6. Evaluation and Results Analysis
 
 AAAIM provides tools for evaluating annotation quality and analyzing results:
 
@@ -319,35 +363,33 @@ python load_data.py --database kegg --model default
 ### Currently Supported
 
 - **ChEBI**: Chemical Entities of Biological Interest
-
   - **Entity Type**: `chemical`
   - All terms in ChEBI are included.
   - Used for: small molecules, metabolites, compounds
 - **NCBI Gene**: Gene annotation
-
   - **Entity Type**: `gene`
   - Only genes for common species are supported (those included in bigg models).
   - Used for: genes, DNA sequences, gene symbols
 - **UniProt**: Protein annotation
-
   - **Entity Type**: `protein`
   - Only proteins for human (9606) and mouse (10090) are supported for now.
   - Used for: proteins, enzymes
 - **KEGG**: Compound/reaction annotation
-
   - For reaction substrates and products.
 
 ### Entity Type to Database Mapping
 
 When using `entity_type="auto"`, AAAIM automatically selects the appropriate database(s) based on the detected entity type:
 
+
 | Detected Type | Default Databases         | Usage                                          |
 | ------------- | ------------------------- | ---------------------------------------------- |
-| `chemical`  | ChEBI                     | Small molecules, metabolites, compounds        |
-| `gene`      | NCBI Gene                 | Genes, DNA sequences, gene symbols             |
-| `protein`   | UniProt                   | Proteins, enzymes                              |
-| `complex`   | ChEBI, UniProt, NCBI Gene | Protein complexes, chemical complexes          |
-| `unknown`   | None                      | LLM synonyms included but no database matching |
+| `chemical`    | ChEBI                     | Small molecules, metabolites, compounds        |
+| `gene`        | NCBI Gene                 | Genes, DNA sequences, gene symbols             |
+| `protein`     | UniProt                   | Proteins, enzymes                              |
+| `complex`     | ChEBI, UniProt, NCBI Gene | Protein complexes, chemical complexes          |
+| `unknown`     | None                      | LLM synonyms included but no database matching |
+
 
 You can restrict which databases are used by providing a `database` list parameter. For example, `database=["chebi", "uniprot"]` will only use ChEBI for chemicals and UniProt for proteins, but will not search NCBI Gene even if genes are detected.
 
@@ -365,7 +407,7 @@ You can restrict which databases are used by providing a `database` list paramet
   - `cleannames2chebi.lzma`: Mapping from clean names to ChEBI IDs
   - `chebi2label.lzma`: Mapping from ChEBI IDs to labels
   - `chebi2names.lzma`: ChEBI synonyms used for RAG approach
-- **Source**: ChEBI ontology downloaded from https://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl.gz.
+- **Source**: ChEBI ontology downloaded from [https://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl.gz](https://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl.gz).
 
 ### NCBI gene Data
 
@@ -374,7 +416,7 @@ You can restrict which databases are used by providing a `database` list paramet
   - `names2ncbigene_bigg_organisms_protein-coding.lzma`: Mapping from names to NCBI gene IDs, only include protein-coding genes from 18 species covered in Bigg models for file size considerations
   - `ncbigene2label_bigg_organisms_protein-coding.lzma`: Mapping from NCBI gene IDs to labels (primary name)
   - `ncbigene2names_tax{tax_id}_protein-coding.lzma`: NCBI gene synonyms for tax_id used for RAG approach
-- **Source**: Data are obtained from the NCBI gene FTP site: https://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/.
+- **Source**: Data are obtained from the NCBI gene FTP site: [https://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/](https://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/).
 
 ### UniProt Data
 
@@ -383,7 +425,7 @@ You can restrict which databases are used by providing a `database` list paramet
   - `names2uniprot_human+mouse.lzma`: Mapping from synonyms to UniProt IDs, only include human and mouse proteins for now
   - `uniprot2label_human+mouse.lzma`: Mapping from UniProt IDs to labels (primary name)
   - `uniprot2names_tax{tax_id}.lzma`: Uniprot synonyms for tax_id used for RAG approach
-- **Source**: Data are obtained from the UniProt site: https://www.uniprot.org/help/downloads (Reviewed (Swiss-Prot) xml).
+- **Source**: Data are obtained from the UniProt site: [https://www.uniprot.org/help/downloads](https://www.uniprot.org/help/downloads) (Reviewed (Swiss-Prot) xml).
 
 ### KEGG Data
 
@@ -391,7 +433,7 @@ You can restrict which databases are used by providing a `database` list paramet
 - **Files**:
   - `chebi_to_kegg_map.lzma`: Mapping from ChEBI IDs to KEGG compound IDs.
   - `parsed_kegg_reactions.lzma`: Dict of KEGG reactions and their attributes
-- **Source**: Data are obtained from the KEGG site: https://rest.kegg.jp.
+- **Source**: Data are obtained from the KEGG site: [https://rest.kegg.jp](https://rest.kegg.jp).
 
 ## File Structure
 
@@ -401,6 +443,7 @@ aaaim/
 │   ├── __init__.py              # Main interface exports
 │   ├── annotation_workflow.py   # Annotation workflow (models without annotations)
 │   ├── curation_workflow.py     # Curation workflow (models with annotations)
+│   ├── feedback.py             # Feedback module (AnnotationResult, revise, feedback_loop)
 │   ├── model_info.py           # Model parsing and context
 │   ├── llm_interface.py        # LLM interaction
 │   ├── database_search.py      # Database search functions
@@ -427,3 +470,4 @@ aaaim/
 - **Multi-Database Support**: GO, Rhea, mapping between ontologies
 - **Improve RAG for NCBI Gene**: Test on other embedding models for genes
 - **Web Interface**: User-friendly annotation tool
+

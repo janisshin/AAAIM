@@ -12,13 +12,14 @@ AMAS_ref/
 chroma_ref/
 notes/
 chroma_storage/
-tests/prev_results/
-tests/autoType/
 
 **/chebi_kegg.json
 **/chebi.owl.gz
 **/kegg_compound_flats
 **/reaction_flats
 
-# subfolders for LLM response cache
 tests/results/**
+tests/prev_results/
+tests/autoType/
+
+analysis/**

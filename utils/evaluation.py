@@ -1337,13 +1337,13 @@ def evaluate_models_in_folder(model_dir: str,
         
         model_path = os.path.join(model_dir, model_file)
         tax_name = None
-        if tax_id == 9606:
+        if tax_id == 9606 or tax_id == "9606":
             tax_name = "Homo sapiens"
-        elif tax_id == 511145:
+        elif tax_id == 511145 or tax_id == "511145":
             tax_name = "Escherichia coli"
-        elif tax_id == 10090:
+        elif tax_id == 10090 or tax_id == "10090":
             tax_name = "Mus musculus"
-        elif tax_id == 10116:
+        elif tax_id == 10116 or tax_id == "10116":
             tax_name = "Rattus norvegicus"
         if tax_dict_file:
             tax_id, tax_name = get_model_taxonomy(model_file, tax_dict_file)

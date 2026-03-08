@@ -17,7 +17,7 @@ pip install -r requirements.txt
 Set at least one LLM API key (in your shell or a `.env` file):
 
 ```bash
-OPENAI_API_KEY=<your-openai-key>          # gpt-4o-mini, gpt-4.1-nano
+OPENAI_API_KEY=<your-openai-key>          # gpt-4o-mini, gpt-5-mini
 OPENROUTER_API_KEY=<your-openrouter-key>  # llama-3.3-70b (free tier available)
 LLAMA_API_KEY=<your-llama-key>            # Llama-3.3-70B-Instruct
 ```
@@ -30,13 +30,12 @@ LLAMA_API_KEY=<your-llama-key>            # Llama-3.3-70B-Instruct
 from core import annotate_model
 
 # Annotate all species — entity types are detected automatically
-recommendations_df, metrics = annotate_model(
+result = annotate_model(
     model_file="path/to/model.xml",
     entity_type="auto",               # detects chemical / gene / protein / complex
     database=["chebi", "uniprot"]     # databases to search
 )
-
-recommendations_df.to_csv("recommendations.csv", index=False)
+# A CSV is saved automatically.
 ```
 
 Run the bundled example (uses a test SBML model):
@@ -50,13 +49,37 @@ For models with existing annotations (curation/validation workflow):
 ```python
 from core import curate_model
 
-curations_df, metrics = curate_model(
+result = curate_model(
     model_file="path/to/model.xml",
     entity_type="chemical",
     database="chebi"
 )
-print(f"Accuracy: {metrics['accuracy']:.1%}")
+print(f"Accuracy: {result.metrics['accuracy']:.1%}")
 ```
+
+---
+
+## User Feedback
+
+After reviewing the initial recommendations, you can refine them with
+natural-language feedback. The LLM receives your feedback together with
+the full conversation history and produces revised synonyms, which are
+then re-matched against the database.
+
+```python
+result = annotate_model("model.xml", entity_type="chemical", database="chebi")
+
+# Single revision
+result = result.revise("Species X should be glucose-6-phosphate, not glucose")
+
+# Interactive loop (console prompt; press Enter to accept)
+result.feedback_loop()
+```
+
+Each revision saves a versioned CSV (`*_recommendations_v1.csv`,
+`*_recommendations_v2.csv`, …) so you can always revert to an earlier
+version.
+
 
 ---
 
@@ -106,6 +129,7 @@ See [docs/README.md](docs/README.md) for:
 
 - All parameters for `annotate_model` / `curate_model`
 - Per-database annotation examples
+- Feedback API reference
 - Evaluation utilities
 - Data file descriptions
 - Supported embedding models for RAG

@@ -13,9 +13,12 @@ from .annotation_workflow import print_results, normalize_reactions
 from .update_model import update_annotation
 from .database_search import load_chebi2kegg_dict, load_kegg_reaction_features_dict
 
+# Feedback module
+from .feedback import AnnotationResult
+
 # Individual components
 from .model_info import find_species_with_chebi_annotations, find_species_with_annotations_and_qualifiers, find_species_with_ncbigene_annotations, extract_model_info, format_prompt, get_species_display_names, get_all_species_ids, detect_model_format
-from .llm_interface import SYSTEM_PROMPT, SYSTEM_PROMPT_CHEMICAL, SYSTEM_PROMPT_GENE, get_system_prompt, query_llm, parse_llm_response
+from .llm_interface import SYSTEM_PROMPT, SYSTEM_PROMPT_CHEMICAL, SYSTEM_PROMPT_GENE, get_system_prompt, query_llm, query_llm_with_history, parse_llm_response
 from .database_search import get_species_recommendations_direct, search_database, get_available_databases, Recommendation
 
 __all__ = [
@@ -26,6 +29,9 @@ __all__ = [
     'curate_single_model',
     'print_results',
     'update_annotation',
+
+    # Feedback
+    'AnnotationResult',
     
     # Individual components
     'get_all_species_ids',
@@ -41,9 +47,10 @@ __all__ = [
     'SYSTEM_PROMPT_GENE',
     'get_system_prompt',
     'query_llm',
+    'query_llm_with_history',
     'parse_llm_response',
     'get_species_recommendations_direct',
     'search_database',
     'get_available_databases',
     'Recommendation'
-] 
+]

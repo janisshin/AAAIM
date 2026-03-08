@@ -2,7 +2,7 @@
 """
 Simple AAAIM Example
 
-Shows both annotation (for models without annotations) and curation (for models with existing annotations).
+Shows annotation, curation, user feedback, and model update workflows.
 """
 
 import os
@@ -21,7 +21,7 @@ from core import annotate_model, curate_model, print_results, update_annotation
 
 def main():
     """
-    Simple example of using AAAIM to annotate and curate models.
+    Simple example of using AAAIM to annotate, curate, and refine models.
     """
     print("AAAIM Simple Annotation & Curation Example")
     print("=" * 50)
@@ -50,11 +50,11 @@ def main():
     print()
     
     try:
-        # Example 1: Curation workflow (for models with existing annotations)
+        # ── Example 1: Curation workflow ────────────────────────────────
         print("EXAMPLE 1: Curation workflow (models with existing annotations)")
         print("-" * 60)
         
-        recommendations_df, metrics = curate_model(
+        result_curate = curate_model(
             model_file=model_curation_file,
             llm_model=llm_model,
             max_entities=max_entities,
@@ -63,30 +63,32 @@ def main():
         )
         
         # Display curation results
-        if not recommendations_df.empty:
+        if not result_curate.recommendations_df.empty:
             print("Curation Results:")
-            print(f"Total entities with existing annotations: {metrics['total_entities']}")
-            print(f"Entities with predictions: {metrics['entities_with_predictions']}")
-            print(f"Accuracy: {metrics['accuracy']:.1%}")
-            print(f"Total time: {metrics['total_time']:.2f}s")
+            print(f"Total entities with existing annotations: {result_curate.metrics['total_entities']}")
+            print(f"Entities with predictions: {result_curate.metrics['entities_with_predictions']}")
+            print(f"Accuracy: {result_curate.metrics['accuracy']:.1%}")
+            print(f"Total time: {result_curate.metrics['total_time']:.2f}s")
             print()
             
             # Show sample recommendations
             print("Sample Curation Recommendations:")
-            sample_df = recommendations_df[['id', 'display_name', 'annotation', 'annotation_label', 'match_score', 'existing']].head(5)
+            sample_df = result_curate.recommendations_df[
+                ['id', 'display_name', 'annotation', 'annotation_label', 'match_score', 'existing']
+            ].head(5)
             print(sample_df.to_string(index=False))
             print()
         else:
-            if 'error' in metrics:
-                print(f"Curation failed: {metrics['error']}")
+            if 'error' in result_curate.metrics:
+                print(f"Curation failed: {result_curate.metrics['error']}")
         
         print("\n" + "="*60 + "\n")
         
-        # Example 2: Annotation workflow (for models without existing annotations)
+        # ── Example 2: Annotation workflow ──────────────────────────────
         print("EXAMPLE 2: Annotation workflow (all species)")
         print("-" * 80)
         
-        recommendations_df2, metrics2 = annotate_model(
+        result = annotate_model(
             model_file=model_file,
             llm_model=llm_model,
             max_entities=max_entities,
@@ -95,45 +97,65 @@ def main():
         )
         
         # Display annotation results
-        if not recommendations_df2.empty:
+        if not result.recommendations_df.empty:
             print("Annotation Results:")
-            print(f"Total entities in model: {metrics2['total_entities']}")
-            print(f"Entities with predictions: {metrics2['entities_with_predictions']}")
-            print(f"Annotation rate: {metrics2['annotation_rate']:.1%}")
+            print(f"Total entities in model: {result.metrics['total_entities']}")
+            print(f"Entities with predictions: {result.metrics['entities_with_predictions']}")
+            print(f"Annotation rate: {result.metrics['annotation_rate']:.1%}")
             
-            if not pd.isna(metrics2['accuracy']):
-                print(f"Accuracy (where existing annotations available): {metrics2['accuracy']:.1%}")
+            if not pd.isna(result.metrics['accuracy']):
+                print(f"Accuracy (where existing annotations available): {result.metrics['accuracy']:.1%}")
             else:
                 print("Accuracy: N/A (no existing annotations to compare against)")
             
-            print(f"Total time: {metrics2['total_time']:.2f}s")
+            print(f"Total time: {result.metrics['total_time']:.2f}s")
             print()
             
             # Show sample recommendations
             print("Sample Annotation Recommendations:")
-            sample_df2 = recommendations_df2[['id', 'display_name', 'annotation', 'annotation_label', 'match_score', 'existing']].head(5)
-            print(sample_df2.to_string(index=False))
+            sample_df = result.recommendations_df[
+                ['id', 'display_name', 'annotation', 'annotation_label', 'match_score', 'existing']
+            ].head(5)
+            print(sample_df.to_string(index=False))
             print()
             
         else:
             print("No annotation recommendations generated.")
-            if 'error' in metrics2:
-                print(f"Error: {metrics2['error']}")
+            if 'error' in result.metrics:
+                print(f"Error: {result.metrics['error']}")
             sys.exit()
 
-        # Next step: Update model with new annotations
-        print("Next step: Updating model with new annotations")
+        # ── Example 3: User Feedback ────────────────────────────────────
+        print("EXAMPLE 3: User feedback to revise recommendations")
         print("-" * 80)
-        print("A recommendation table was generated in previous step for the user to inspect:", model_file+'_recommendations.csv')
-        print("User can now give instructions by editing the last column of the recommendation table.")
+        print("Providing feedback: 'Species A should be ATP, not adenosine'")
+        result = result.revise("Species A should be ATP, not adenosine")
+
+        print("\nRevised recommendations:")
+        sample_df = result.recommendations_df[
+            ['id', 'display_name', 'annotation', 'annotation_label', 'match_score']
+        ].head(5)
+        print(sample_df.to_string(index=False))
+        print()
+        # For interactive feedback in a terminal, use:
+        #   result.feedback_loop()
+
+        print("\n" + "="*60 + "\n")
+
+        # ── Example 4: Update model ─────────────────────────────────────
+        print("EXAMPLE 4: Updating model with new annotations")
         print("-" * 80)
-        print("Assuming that the user want to delete the first annotation and add the second one in the table...")
-        recommendations_df2.loc[0, 'update_annotation'] = 'delete'
-        recommendations_df2.loc[1, 'update_annotation'] = 'add'
+        print("A recommendation table was generated for the user to inspect:", 
+              model_file+'_recommendations.csv')
+        print("User can edit the 'update_annotation' column of the CSV.")
+        print("-" * 80)
+        print("Assuming the user wants to delete the first annotation and add the second...")
+        result.recommendations_df.loc[0, 'update_annotation'] = 'delete'
+        result.recommendations_df.loc[1, 'update_annotation'] = 'add'
         print("-" * 80)
         update_annotation(
             original_model_path=model_file,
-            recommendation_table=recommendations_df2,
+            recommendation_table=result.recommendations_df,
             new_model_path=model_file+'_updated.xml'
         )
         print("Model updated successfully")
@@ -146,4 +168,4 @@ def main():
         traceback.print_exc()
 
 if __name__ == "__main__":
-    main() 
+    main()
