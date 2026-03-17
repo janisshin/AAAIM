@@ -913,7 +913,7 @@ def extract_model_info(model_file: str, species_ids: List[str], entity_type: str
         "model_notes": model_notes
     }
 
-def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "chemical", top_k: int = 3) -> str:
+def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "chemical", top_k: int = 3, context: bool = True) -> str:
     """
     Format the information for the LLM prompt.
     Adapts format based on model type (SBML, SBML-fbc, SBML-qual).
@@ -924,6 +924,8 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
         entity_type: Type of entity ("chemical" for species, "gene" for gene products, "protein" for protein products,
                         "reaction" for reactions, "auto" for automatic entity type detection)
         top_k: Number of synonyms to request from LLM (default: 3)
+        context: If True, include full model context (model name, reactions, notes). 
+                 If False, only include display names. (default: True)
         
     Returns:
         Formatted prompt string
@@ -954,7 +956,8 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
         if entity_type == "auto":
             # Auto entity type detection for SBML-qual models
             prompt = f"Now annotate these species:\nSpecies to annotate: {', '.join(species_ids)}\n"
-            prompt += f'Model: "{model_info["model_name"]}"\n'
+            if context:
+                prompt += f'Model: "{model_info["model_name"]}"\n'
             
             if has_display_names:
                 prompt += "// Display Names:\n"
@@ -962,12 +965,12 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
                     if name and name.strip():
                         prompt += f'{sid}:"{name}"; '
             
-            if has_reactions:
+            if context and has_reactions:
                 prompt += "\n"
                 prompt += "// Boolean Transitions (target = rule):\n"
                 prompt += '\n'.join(model_info["reactions"]) + "\n"
             
-            if has_notes:
+            if context and has_notes:
                 prompt += "\n"
                 prompt += f'// Notes:\n"{model_info["model_notes"]}"\n'
             
@@ -981,7 +984,8 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
         
         # SBML-qual models have boolean transitions
         prompt = f"Now annotate these:\n{entity_type.title()} to annotate: {', '.join(species_ids)}\n"
-        prompt += f'Model: "{model_info["model_name"]}"\n'
+        if context:
+            prompt += f'Model: "{model_info["model_name"]}"\n'
         
         if has_display_names:
             prompt += "// Display Names:\n"
@@ -989,12 +993,12 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
                 if name and name.strip():
                     prompt += f'{sid}:"{name}"; '
         
-        if has_reactions:
+        if context and has_reactions:
             prompt += "\n"
             prompt += "// Boolean Transitions (target = rule):\n"
             prompt += '\n'.join(model_info["reactions"]) + "\n"
         
-        if has_notes:
+        if context and has_notes:
             prompt += "\n"
             prompt += f'// Notes:\n"{model_info["model_notes"]}"\n'
         
@@ -1007,7 +1011,8 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
         if entity_type == "auto":
             # Auto entity type detection for SBML-fbc models
             prompt = f"Now annotate these species:\nSpecies to annotate: {', '.join(species_ids)}\n"
-            prompt += f'Model: "{model_info["model_name"]}"\n'
+            if context:
+                prompt += f'Model: "{model_info["model_name"]}"\n'
             
             if has_display_names:
                 prompt += "// Display Names:\n"
@@ -1015,12 +1020,12 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
                     if name and name.strip():
                         prompt += f'{sid}:"{name}"; '
             
-            if has_reactions:
+            if context and has_reactions:
                 prompt += "\n"
                 prompt += "// Reactions:\n"
                 prompt += '\n'.join(model_info["reactions"]) + "\n"
             
-            if has_notes:
+            if context and has_notes:
                 prompt += "\n"
                 prompt += f'// Notes:\n"{model_info["model_notes"]}"\n'
             
@@ -1035,7 +1040,8 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
         elif entity_type == "gene" or entity_type == "protein":
             # SBML-fbc models don't have reactions for genes or proteins
             prompt = f"Now annotate these:\n{entity_type.title()} to annotate: {', '.join(species_ids)}\n"
-            prompt += f'Model: "{model_info["model_name"]}"\n'
+            if context:
+                prompt += f'Model: "{model_info["model_name"]}"\n'
             
             if has_display_names:
                 prompt += "// Display Names:\n"
@@ -1043,7 +1049,7 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
                     if name and name.strip():
                         prompt += f'{sid}:"{name}"; '
             
-            if has_notes:
+            if context and has_notes:
                 prompt += "\n"
                 prompt += f'// Notes:\n"{model_info["model_notes"]}"\n'
             
@@ -1052,9 +1058,10 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
             prompt += 'SpeciesA: "name1", "name2", …\nSpeciesB: …\nReason: …'
             return prompt
         
-        else: # same as SBML
+        else: # FBC, chemicals, same as SBML
             prompt = f"Now annotate these:\n{entity_type.title()} to annotate: {', '.join(species_ids)}\n"
-            prompt += f'Model: "{model_info["model_name"]}"\n'
+            if context:
+                prompt += f'Model: "{model_info["model_name"]}"\n'
             
             if has_display_names:
                 prompt += "// Display Names:\n"
@@ -1062,12 +1069,12 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
                     if name and name.strip():
                         prompt += f'{sid}:"{name}"; '
             
-            if has_reactions:
+            if context and has_reactions:
                 prompt += "\n"
                 prompt += "// Reactions:\n"
                 prompt += '\n'.join(model_info["reactions"]) + "\n"
             
-            if has_notes:
+            if context and has_notes:
                 prompt += "\n"
                 prompt += f'// Notes:\n"{model_info["model_notes"]}"\n'
             
@@ -1086,7 +1093,8 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
 
             prompt = "Now annotate these metabolic reactions using KEGG data:\n"
             prompt += f"Reactions to annotate: {', '.join(reaction_ids)}\n"
-            prompt += f'Model: "{model_info["model_name"]}"\n'
+            if context:
+                prompt += f'Model: "{model_info["model_name"]}"\n'
             
             if has_reaction_display_names:
                 prompt += "// Display Names:\n"
@@ -1094,12 +1102,12 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
                     if name and name.strip():
                         prompt += f'{rid}:"{name}"; '
             
-            if has_reactions:
+            if context and has_reactions:
                 prompt += "\n"
                 prompt += "// Reactions:\n"
                 prompt += '\n'.join(model_info["reactions"]) + "\n"
             
-            if has_notes:
+            if context and has_notes:
                 prompt += "\n"
                 prompt += f'// Notes:\n"{model_info["model_notes"]}"\n'
             
@@ -1111,7 +1119,8 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
         elif entity_type == "auto":
             # Auto entity type detection for regular SBML models
             prompt = f"Now annotate these species:\nSpecies to annotate: {', '.join(species_ids)}\n"
-            prompt += f'Model: "{model_info["model_name"]}"\n'
+            if context:
+                prompt += f'Model: "{model_info["model_name"]}"\n'
             
             if has_display_names:
                 prompt += "// Display Names:\n"
@@ -1119,12 +1128,12 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
                     if name and name.strip():
                         prompt += f'{sid}:"{name}"; '
             
-            if has_reactions:
+            if context and has_reactions:
                 prompt += "\n"
                 prompt += "// Reactions:\n"
                 prompt += '\n'.join(model_info["reactions"]) + "\n"
             
-            if has_notes:
+            if context and has_notes:
                 prompt += "\n"
                 prompt += f'// Notes:\n"{model_info["model_notes"]}"\n'
             
@@ -1138,7 +1147,8 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
         
         else:
             prompt = f"Now annotate these:\n{entity_type.title()} to annotate: {', '.join(species_ids)}\n"
-            prompt += f'Model: "{model_info["model_name"]}"\n'
+            if context:
+                prompt += f'Model: "{model_info["model_name"]}"\n'
             
             if has_display_names:
                 prompt += "// Display Names:\n"
@@ -1146,16 +1156,21 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
                     if name and name.strip():
                         prompt += f'{sid}:"{name}"; '
             
-            if has_reactions:
+            if context and has_reactions:
                 prompt += "\n"
                 prompt += "// Reactions:\n"
                 prompt += '\n'.join(model_info["reactions"]) + "\n"
             
-            if has_notes:
+            if context and has_notes:
                 prompt += "\n"
                 prompt += f'// Notes:\n"{model_info["model_notes"]}"\n'
             
-            prompt += f"\nReturn up to {top_k} standardized names or common synonyms for each {entity_type}, ranked by likelihood. Provide components names for complexes, which may exceed the limit of {top_k}.\n"
-            prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type}s after 'Reason:' by the end.\n\n"
-            prompt += 'SpeciesA: "name1", "name2", …\nSpeciesB: …\nReason: …'
+            if context:
+                prompt += f"\nReturn up to {top_k} standardized names or common synonyms for each {entity_type}, ranked by likelihood. Provide components names for complexes, which may exceed the limit of {top_k}.\n"
+                prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type}s after 'Reason:' by the end.\n\n"
+                prompt += 'SpeciesA: "name1", "name2", …\nSpeciesB: …\nReason: …'
+            else:
+                prompt += f"\nReturn up to {top_k} standardized names or common synonyms for each {entity_type}, ranked by likelihood. Provide components names for complexes, which may exceed the limit of {top_k}.\n"
+                prompt += f"Use the below format, do not include any other text except the synonyms.\n\n"
+                prompt += 'SpeciesA: "name1", "name2", …\nSpeciesB: …'
             return prompt 

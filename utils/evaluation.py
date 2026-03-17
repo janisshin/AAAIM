@@ -611,7 +611,8 @@ def evaluate_single_model(model_file: str,
                          bqbiol_qualifiers: list = None,
                          chunk_size: int = 50,
                          max_try: int = 1,
-                         rate_limiter: RateLimiter = None) -> Optional[pd.DataFrame]:
+                         rate_limiter: RateLimiter = None,
+                         context: bool = True) -> Optional[pd.DataFrame]:
     """
     Generate species evaluation statistics for one model.
     
@@ -634,6 +635,7 @@ def evaluate_single_model(model_file: str,
         chunk_size: Size of chunks to split large models into, if None, no chunking is done
         max_try: Maximum number of retry attempts for species with empty predictions (default: 1, no retry)
         rate_limiter: RateLimiter instance for controlling API request rate (optional)
+        context: If True, include full model context in prompt. If False, only use display names. (default: True)
 
     Returns:
         DataFrame with evaluation results or None if failed
@@ -724,8 +726,8 @@ def evaluate_single_model(model_file: str,
                     logger.info(f"Processing chunk {chunk_idx + 1}/{len(species_chunks)} ({len(chunk)} species)")
                 
                 # Extract model context and format prompt for this chunk
-                prompt = format_prompt(model_file, chunk, entity_type, top_k)
-                
+                prompt = format_prompt(model_file, chunk, entity_type, top_k, context=context)
+                # print(f"Prompt: {prompt}")
                 # Apply rate limiting before LLM call
                 if rate_limiter is not None:
                     rate_limiter.wait_if_needed()
@@ -734,7 +736,9 @@ def evaluate_single_model(model_file: str,
                 llm_start = time.time()
                 # Get appropriate system prompt for entity type
                 system_prompt = get_system_prompt(entity_type)
+                # print(f"System prompt: {system_prompt}")
                 llm_response = query_llm(prompt, system_prompt, model=llm_model, entity_type=entity_type)
+                # llm_response = "test"
                 chunk_llm_time = time.time() - llm_start
                 total_llm_time += chunk_llm_time
                 
@@ -766,7 +770,7 @@ def evaluate_single_model(model_file: str,
         else:
             # Extract model context and query LLM
             model_info = extract_model_info(model_file, specs_to_evaluate, entity_type)
-            prompt = format_prompt(model_file, specs_to_evaluate, entity_type, top_k)
+            prompt = format_prompt(model_file, specs_to_evaluate, entity_type, top_k, context=context)
             
             # Apply rate limiting before LLM call
             if rate_limiter is not None:
@@ -990,7 +994,7 @@ def evaluate_single_model(model_file: str,
                 
                 # Re-query LLM for species with empty predictions
                 retry_llm_start = time.time()
-                retry_prompt = format_prompt(model_file, species_with_empty_preds, entity_type, top_k)
+                retry_prompt = format_prompt(model_file, species_with_empty_preds, entity_type, top_k, context=context)
                 retry_system_prompt = get_system_prompt(entity_type)
                 retry_llm_response = query_llm(retry_prompt, retry_system_prompt, model=llm_model, entity_type=entity_type)
                 retry_llm_time = time.time() - retry_llm_start
@@ -1214,7 +1218,8 @@ def evaluate_models_in_folder(model_dir: str,
                              bqbiol_qualifiers: list = None,
                              chunk_size: int = 50,
                              max_try: int = 1,
-                             rate_limit_rpm: int = 10) -> pd.DataFrame:
+                             rate_limit_rpm: int = 10,
+                             context: bool = True) -> pd.DataFrame:
     """
     Generate species evaluation statistics for multiple models in a directory.
     Replicates evaluate_models from AMAS test_LLM_synonyms_plain.ipynb
@@ -1241,6 +1246,8 @@ def evaluate_models_in_folder(model_dir: str,
         chunk_size: Size of chunks to split large models into, if None, no chunking is done (default: 50)
         max_try: Maximum number of retry attempts for species with empty predictions (default: 1, no retry)
         rate_limit_rpm: Maximum LLM API requests per minute (default: 10 for Llama API)
+        context: If True, include full model context (model name, reactions, notes) in prompt.
+                 If False, only use display names. (default: True)
         
     Returns:
         Combined DataFrame with all evaluation results
@@ -1326,6 +1333,7 @@ def evaluate_models_in_folder(model_dir: str,
             f.write(f"chunk_size: {chunk_size}\n")
             f.write(f"max_try: {max_try}\n")
             f.write(f"rate_limit_rpm: {rate_limit_rpm}\n")
+            f.write(f"context: {context}\n")
             f.write(f"\nTimestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
         
         print(f"Saved configuration to {config_file}")
@@ -1370,7 +1378,8 @@ def evaluate_models_in_folder(model_dir: str,
             bqbiol_qualifiers=bqbiol_qualifiers,
             chunk_size=chunk_size,
             max_try=max_try,
-            rate_limiter=rate_limiter
+            rate_limiter=rate_limiter,
+            context=context
         )
         
         if result_df is not None:
@@ -1383,7 +1392,7 @@ def evaluate_models_in_folder(model_dir: str,
             # result_df.to_csv(intermediate_file, index=False)
             # logger.info(f"Saved intermediate results to: {intermediate_file}")
         # else:
-            # logger.warning(f"Skipping {model_file} - no results generated")
+        #     logger.warning(f"Skipping {model_file} - no results generated")
     
     # Combine all results
     if all_results:
@@ -1753,8 +1762,19 @@ def print_evaluation_results(results_csv: str, ref_results_csv = None, bqbiol_qu
     
     print("Number of models assessed: %d" % df['model'].nunique())
     print("Number of models with predictions: %d" % df[df['predictions'] != '[]']['model'].nunique())
-    print("Number of annotations evaluated: %d" % len(df))    
+    print("Number of annotations evaluated: %d" % len(df)) 
+
+    # NA and UNK rate for synonyms_LLM
+    n_NA = (df['synonyms_LLM']=='[]').sum()
+    n_UNK = (df['synonyms_LLM'].str.contains('UNK')).sum()
+    NA_rate = n_NA / len(df)
+    UNK_rate = n_UNK / len(df)
+    print(f"NA rate for synonyms_LLM: {round(NA_rate, decimal_places)}")
+    print(f"UNK rate for synonyms_LLM: {round(UNK_rate, decimal_places)}")
+    
     # Calculate per-model averages
+    print("--------------------------------")
+    print("Per-model statistics:")
     model_accuracy = df.groupby('model')['accuracy'].mean().mean()
     print(f"Average accuracy (per model): {round(model_accuracy, decimal_places)}")
     
@@ -1771,6 +1791,8 @@ def print_evaluation_results(results_csv: str, ref_results_csv = None, bqbiol_qu
     print(f"Ave. precision (exact): {round(precision_exact, decimal_places)}")
     
     # Calculate per-species averages
+    print("--------------------------------")
+    print("Per-species statistics:")
     species_accuracy = df['accuracy'].mean()
     print(f"Average accuracy (per species): {round(species_accuracy, decimal_places)}")
     
@@ -1786,6 +1808,8 @@ def print_evaluation_results(results_csv: str, ref_results_csv = None, bqbiol_qu
     species_precision_exact = df['precision_exact'].mean()
     print(f"Ave. precision (exact, per species): {round(species_precision_exact, decimal_places)}")
 
+    print("--------------------------------")
+    print("Time:")
     # Total time
     mean_processing_time = df.groupby('model')['total_time'].first().mean()
     print(f"Ave. total time (per model): {round(mean_processing_time, decimal_places)}")
