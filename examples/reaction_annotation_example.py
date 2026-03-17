@@ -134,7 +134,7 @@ def main():
             
             # Show sample recommendations
             print("Sample Annotation Recommendations:")
-            sample_df = recommendations_df[['id', 'display_name', 'annotation', 'annotation_label', 'match_score', 'existing']].head(5)
+            sample_df = recommendations_df[['id', 'display_name', 'curated_name', 'annotation', 'annotation_label', 'match_score', 'status']].head(5)
             print(sample_df.to_string(index=False))
             print()
             
@@ -259,7 +259,7 @@ def main():
         if not curation_df.empty:
             print(f"Generated {len(curation_df)} reaction curation recommendations")
             print("\nSample curations:")
-            print(curation_df[['id', 'display_name', 'annotation', 'annotation_label', 'existing']].head())
+            print(curation_df[['id', 'display_name', 'curated_name', 'annotation', 'annotation_label', 'status']].head())
             
             # Save results
             output_file = "reaction_curation_results.csv"

@@ -11,6 +11,7 @@ import pandas as pd
 from typing import Dict, List, Optional, Tuple, Any
 from pathlib import Path
 import logging
+import warnings
 
 from core.model_info import find_species_with_chebi_annotations, find_species_with_annotations_and_qualifiers, find_species_with_ncbigene_annotations, find_species_with_uniprot_annotations, extract_model_info, format_prompt
 from core.llm_interface import get_system_prompt, query_llm, parse_llm_response
@@ -18,6 +19,9 @@ from core.data_types import Recommendation
 from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, load_uniprot_label_dict, load_ncbigene_label_dict, load_chebi_label_dict
 
 logger = logging.getLogger(__name__)
+
+# Suppress pandas FutureWarning noise (e.g., concat dtype changes)
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 def curate_single_model(model_file: str, 
                   llm_model: str = "Llama-3.3-70B-Instruct",
@@ -201,7 +205,10 @@ def curate_single_model(model_file: str,
         return pd.DataFrame(), {"error": "Failed to parse LLM response"}
     
     logger.info(f"Parsed synonyms for {len(synonyms_dict)} entities")
-    
+
+    if reason:
+        print(f"LLM Reason: {reason}")
+
     # Search database
     logger.info(f">>>Step 4: Searching {database} database...<<<")
     search_start = time.time()
@@ -241,7 +248,8 @@ def curate_single_model(model_file: str,
     # Generate recommendation table
     logger.info(">>>Step 5: Generating recommendation table...<<<")
     recommendations_df = _generate_recommendation_table(
-        model_file, recommendations, existing_annotations, model_info, entity_type, database, qualifier_annotations
+        model_file, recommendations, existing_annotations, model_info, entity_type, database, qualifier_annotations,
+        synonyms_dict=synonyms_dict, reason=reason
     )
     
     # Step 9: Calculate metrics
@@ -282,7 +290,9 @@ def _generate_recommendation_table(model_file: str,
                                  model_info: Dict[str, Any],
                                  entity_type: str = "chemical",
                                  database: str = "chebi",
-                                 qualifier_annotations: Dict[str, List[str]] = None) -> pd.DataFrame:
+                                 qualifier_annotations: Dict[str, List[str]] = None,
+                                 synonyms_dict: Dict[str, List[str]] = None,
+                                 reason: str = "") -> pd.DataFrame:
     """
     Generate AMAS-compatible recommendation table.
     
@@ -292,36 +302,42 @@ def _generate_recommendation_table(model_file: str,
         existing_annotations: Dictionary of existing annotations
         model_info: Model information dictionary
         entity_type: Type of entity being annotated
+        database: Database being used for search
+        qualifier_annotations: Dictionary of qualifier annotations
+        synonyms_dict: Dictionary mapping species IDs to LLM-suggested synonyms
+        reason: LLM reasoning text
         
     Returns:
         DataFrame in AMAS format
     """
     rows = []
     filename = Path(model_file).name
-    
-    # Track which (species_id, annotation) pairs are already in the table
+    if synonyms_dict is None:
+        synonyms_dict = {}
+    if qualifier_annotations is None:
+        qualifier_annotations = {}
+
     seen_pairs = set()
     for rec in recommendations:
+        curated_name = synonyms_dict.get(rec.id, [""])[0]
+
         if not rec.candidates:
-            # Get qualifier information for this species
-            # For existing annotations, show the qualifier used
-            # For new predictions, show 'is' as default
             if qualifier_annotations and rec.id in qualifier_annotations and qualifier_annotations[rec.id]:
-                # Get all qualifiers for this species
                 all_qualifiers = list(qualifier_annotations[rec.id].values())
                 specific_qualifier = ', '.join(all_qualifiers) if all_qualifiers else 'is'
             else:
-                specific_qualifier = 'is'  # Default for new predictions
+                specific_qualifier = 'is'
             
             row = {
                 'file': filename,
                 'type': entity_type,
                 'id': rec.id,
                 'display_name': model_info["display_names"].get(rec.id, rec.id),
+                'curated_name': curated_name,
                 'annotation': '',
                 'annotation_label': '',
                 'match_score': 0.0,
-                'existing': 0,
+                'status': '',
                 'update_annotation': 'ignore',
                 'qualifier': specific_qualifier
             }
@@ -329,16 +345,17 @@ def _generate_recommendation_table(model_file: str,
             continue
         for i, candidate in enumerate(rec.candidates):
             candidate_display = f"{database.upper()}:{candidate}"
-            existing = 1 if candidate in existing_annotations.get(rec.id, []) else 0
+            is_existing = candidate in existing_annotations.get(rec.id, [])
             match_score = rec.match_score[i]
-            if existing:
+
+            if is_existing:
+                status = 'original and predicted'
                 update_action = 'keep'
             else:
+                status = 'predicted only'
                 update_action = 'ignore'
-            
-            # Get qualifier information for this species
-            # One annotation per row: use the specific qualifier for this candidate if it exists; otherwise 'is'
-            if existing == 1 and qualifier_annotations:
+
+            if is_existing and qualifier_annotations:
                 specific_qualifier = qualifier_annotations.get(rec.id, {}).get(candidate, 'is')
             else:
                 specific_qualifier = 'is'
@@ -348,58 +365,76 @@ def _generate_recommendation_table(model_file: str,
                 'type': entity_type,
                 'id': rec.id,
                 'display_name': model_info["display_names"].get(rec.id, rec.id),
+                'curated_name': curated_name,
                 'annotation': candidate_display,
                 'annotation_label': rec.candidate_names[i],
                 'match_score': match_score,
-                'existing': existing,
+                'status': status,
                 'update_annotation': update_action,
                 'qualifier': specific_qualifier
             }
             rows.append(row)
             seen_pairs.add((rec.id, candidate))
+
     # Add rows for existing annotations not predicted
+    if database == "chebi":
+        lbl_dict = load_chebi_label_dict()
+    elif database == "ncbigene":
+        lbl_dict = load_ncbigene_label_dict()
+    elif database == "uniprot":
+        lbl_dict = load_uniprot_label_dict()
+    else:
+        lbl_dict = {}
+
     for species_id, ann_list in existing_annotations.items():
         for ann in ann_list:
             if (species_id, ann) not in seen_pairs:
                 candidate_display = f"{database.upper()}:{ann}"
-                
-                # Get qualifier information for this species
-                # For existing annotations, show the qualifier used for this specific annotation
+                curated_name = synonyms_dict.get(species_id, [""])[0]
+
                 if qualifier_annotations:
                     specific_qualifier = qualifier_annotations.get(species_id, {}).get(ann, 'is')
                 else:
                     specific_qualifier = 'is'
-                
-                # get the label for existing annotation
-                if database == "chebi":
-                    dict = load_chebi_label_dict()
-                elif database == "ncbigene":
-                    dict = load_ncbigene_label_dict()
-                elif database == "uniprot":
-                    dict = load_uniprot_label_dict()
-                if ann in dict:
-                    label = dict[ann]
-                else:
-                    logger.warning(f"Annotation {ann} not found in {database} label dictionary")
-                    label = ann
-                
+
+                label = lbl_dict.get(ann, ann)
+
                 row = {
                     'file': filename,
                     'type': entity_type,
                     'id': species_id,
                     'display_name': model_info["display_names"].get(species_id, species_id),
+                    'curated_name': curated_name,
                     'annotation': candidate_display,
                     'annotation_label': label,
                     'match_score': None,
-                    'existing': 1,
+                    'status': 'original only',
                     'update_annotation': 'keep',
                     'qualifier': specific_qualifier
                 }
                 rows.append(row)
-    # Order rows by id
+
     df = pd.DataFrame(rows)
     if not df.empty and 'id' in df.columns:
-        df = df.sort_values(by=['id']).reset_index(drop=True)
+        status_order = {'original and predicted': 0, 'original only': 1, 'predicted only': 2, '': 3}
+        df['_status_order'] = df['status'].map(status_order).fillna(3)
+        df = df.sort_values(by=['id', '_status_order']).reset_index(drop=True)
+        df = df.drop(columns=['_status_order'])
+
+    if reason:
+        reason_row = pd.DataFrame([{
+            'file': filename, 'type': '', 'id': 'Reason:',
+            'display_name': reason, 'curated_name': '',
+            'annotation': '', 'annotation_label': '',
+            'match_score': None, 'status': '',
+            'update_annotation': '', 'qualifier': ''
+        }])
+        if df.empty:
+            df = reason_row
+        else:
+            reason_row = reason_row.reindex(columns=df.columns)
+            df = pd.concat([reason_row, df], ignore_index=True)
+
     return df
 
 def _calculate_metrics(recommendations_df: pd.DataFrame,
@@ -437,14 +472,18 @@ def _calculate_metrics(recommendations_df: pd.DataFrame,
     
     if max_entities is None:
         max_entities = len(existing_annotations)
+
+    # Filter out Reason row for metrics calculation
+    df = recommendations_df[recommendations_df['id'] != 'Reason:'] if not recommendations_df.empty else recommendations_df
+
+    entities_with_predictions = df[df['annotation'] != '']['id'].nunique()
+    annotation_rate = entities_with_predictions / max_entities if max_entities > 0 else 0.0
     
-    entities_with_predictions = recommendations_df[recommendations_df['annotation'] != '']['id'].nunique()
-    annotation_rate = entities_with_predictions / max_entities if max_entities > 0 else np.nan
-    
-    # Calculate accuracy based on existing annotations
-    total_predictions = len(recommendations_df[recommendations_df['annotation'] != ''])
-    matches = len(recommendations_df[recommendations_df['existing'] == 1])
-    accuracy = matches / entities_with_predictions if entities_with_predictions > 0 else 0
+    # Accuracy = matches / entities with existing annotations
+    total_predictions = len(df[df['annotation'] != ''])
+    matches = len(df[df['status'] == 'original and predicted'])
+    entities_with_existing = len(existing_annotations)
+    accuracy = matches / entities_with_existing if entities_with_existing > 0 else 0
     
     return {
         'total_entities': max_entities,
@@ -473,7 +512,9 @@ def print_results(results_df: pd.DataFrame):
     print("Number of models with predictions: %d" % results_df[results_df['annotation'] != '']['model'].nunique())
     
     # Calculate per-model averages
-    model_accuracy = results_df.groupby('model')['existing'].mean().mean()
+    results_df = results_df[results_df['id'] != 'Reason:'].copy()
+    results_df['_is_match'] = (results_df['status'] == 'original and predicted').astype(int)
+    model_accuracy = results_df.groupby('model')['_is_match'].mean().mean()
     print("Average accuracy (per model): %.02f" % model_accuracy)
     
     mean_processing_time = results_df.groupby('model')['total_time'].first().mean()

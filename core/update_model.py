@@ -104,6 +104,14 @@ def update_annotation(
         df = pd.read_csv(recommendation_table)
     else:
         df = recommendation_table.copy()
+    # Skip Reason row if present
+    if not df.empty and 'id' in df.columns:
+        reason_rows = df[df['id'] == 'Reason:']
+        if not reason_rows.empty:
+            reason_text = reason_rows.iloc[0].get('display_name', '')
+            # if reason_text:
+            #     print(f"LLM Reason: {reason_text}")
+        df = df[df['id'] != 'Reason:'].copy()
     # Get model type
     model_type, _ = detect_model_format(original_model_path)
     # Group by species

@@ -117,6 +117,7 @@ class AnnotationResult:
             are never overwritten.
         """
         self._revision_count += 1
+        print(f"Revising recommendations (v{self._revision_count})...")
 
         updated_df, revision_metrics, updated_history = _revise_recommendations(
             model_file=self._model_file,
@@ -172,6 +173,7 @@ class AnnotationResult:
         for _ in range(max_iterations):
             iteration = self._revision_count + 1
             feedback = get_feedback_fn(self.recommendations_df, iteration)
+            print("Feedback received: ", feedback)
 
             if not feedback or not feedback.strip():
                 print("Feedback accepted – no further revisions.")
@@ -218,6 +220,7 @@ def _format_recommendations_summary(
         return "(no recommendations)"
 
     df = recommendations_df
+    df = df[df["id"] != "Reason:"]
     if entity_ids:
         df = df[df["id"].isin(entity_ids)]
 
@@ -293,6 +296,9 @@ def _revise_recommendations(
         llm_response, entity_type
     )
 
+    if reason:
+        print(f"LLM Reason: {reason}")
+
     if not synonyms_dict:
         logger.warning(
             "LLM revision produced no parseable synonyms; keeping previous recommendations"
@@ -313,6 +319,7 @@ def _revise_recommendations(
     updated_df = _generate_recommendation_table(
         model_file, recommendations, existing_annotations,
         model_info, entity_type, database, qualifier_annotations,
+        synonyms_dict=synonyms_dict, reason=reason,
     )
 
     total_time = time.time() - start_time
@@ -375,10 +382,11 @@ def _default_get_feedback(recommendations_df: pd.DataFrame, iteration: int) -> s
     if recommendations_df.empty:
         print("  (no recommendations)")
     else:
-        cols = ["id", "display_name", "annotation", "annotation_label",
-                "match_score", "update_annotation"]
-        display_cols = [c for c in cols if c in recommendations_df.columns]
-        print(recommendations_df[display_cols].to_string(index=False))
+        display_df = recommendations_df[recommendations_df['id'] != 'Reason:'] if 'id' in recommendations_df.columns else recommendations_df
+        cols = ["id", "display_name", "curated_name", "annotation", "annotation_label",
+                "match_score", "status", "update_annotation"]
+        display_cols = [c for c in cols if c in display_df.columns]
+        print(display_df[display_cols].to_string(index=False))
 
     print("\nProvide feedback to revise recommendations.")
     print("Press Enter with no input to accept and finish.\n")
