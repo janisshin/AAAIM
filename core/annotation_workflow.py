@@ -8,7 +8,7 @@ for all species in a model.
 
 import time
 import pandas as pd
-from typing import Dict, List, Optional, Tuple, Any
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Set, Tuple
 from pathlib import Path
 import logging
 import numpy as np
@@ -19,8 +19,29 @@ from core.model_info import find_species_with_chebi_annotations, find_species_wi
 from core.model_info import get_all_reaction_ids
 from core.llm_interface import get_system_prompt, query_llm, parse_llm_response
 from core.data_types import Recommendation
-from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, load_chebi_label_dict, load_ncbigene_label_dict, load_uniprot_label_dict, load_kegg_label_dict
-from core.database_search import cancel_spectators, extract_classifications
+from core.database_search import (
+    cancel_spectators,
+    extract_classifications,
+    get_species_recommendations_direct,
+    get_species_recommendations_rag,
+    load_chebi2kegg_dict,
+    load_chebi_label_dict,
+    load_kegg_label_dict,
+    load_ncbigene_label_dict,
+    load_uniprot_label_dict,
+    _get_kegg_recommendations_rulebased,
+    score_model_against_kegg_reaction,
+)
+from core.hierarchy_relaxation import (
+    build_kegg_mapping_dataframe,
+    load_chebi_parent_map,
+    merge_chebi_to_kegg_mapping,
+    normalize_chebi,
+    select_relaxations_by_global_improvement,
+    select_metabolites_to_relax,
+    should_continue_iteration,
+    unified_reaction_objective,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -556,8 +577,62 @@ def filter_and_count(kegg_list, cofactors_to_ignore):
             continue  # skip unmapped
         if kegg_id: # not in cofactors_to_ignore:
             counter[kegg_id] += 1  # track stoichiometry
-    return counter      
-    
+    return counter
+
+
+def parse_reaction_equation(rxn_str: str) -> Tuple[Counter, Counter]:
+    """
+    Parse a reaction equation string into reactant and product metabolite Counters.
+
+    Same rules as ``map_reactions_to_kegg`` (``+`` terms, optional stoichiometry).
+    """
+    if "=>" in rxn_str or "->" in rxn_str:
+        lhs, rhs = re.split(r"=>|->", rxn_str)
+    else:
+        return Counter(), Counter()
+
+    def parse_metabolites(side: str) -> Counter:
+        side = side.strip()
+        if not side:
+            return Counter()
+        result = Counter()
+        for term in side.split("+"):
+            parts = term.strip().split()
+            if len(parts) == 1:
+                coeff = 1
+                met = parts[0]
+            else:
+                try:
+                    coeff = float(parts[0])
+                except ValueError:
+                    coeff = 1
+                    met = term.strip()
+                else:
+                    met = parts[-1]
+            met = met.lstrip("$")
+            result[met] += coeff
+        return result
+
+    reactants = parse_metabolites(lhs)
+    products = parse_metabolites(rhs)
+    return reactants, products
+
+
+def collect_species_ids_from_rxn_list(rxn_list: List[str], spectators: bool = False) -> Set[str]:
+    """All metabolite species IDs appearing in ``rxn_list`` after optional spectator cancellation."""
+    out: Set[str] = set()
+    for rxn in rxn_list:
+        if ":" in rxn:
+            _, rxn_str = rxn.split(":", 1)
+        else:
+            rxn_str = rxn
+        reactants, products = parse_reaction_equation(rxn_str)
+        if not spectators:
+            reactants, products = cancel_spectators(reactants, products)
+        out.update(reactants.keys())
+        out.update(products.keys())
+    return out
+
 
 def map_reactions_to_kegg(rxn_list: List[str], id_df: pd.DataFrame, spectators=False) -> List[Dict[str, Any]]:
     """
@@ -579,68 +654,7 @@ def map_reactions_to_kegg(rxn_list: List[str], id_df: pd.DataFrame, spectators=F
     """
     # Create lookup table from DataFrame for faster mapping
     id_lookup = id_df.set_index('id')['KEGG_ID']
-    
-    def parse_reaction_equation(rxn_str: str) -> Tuple[Counter, Counter]:
-        """
-        Parse a reaction equation string into reactants and products.
-        
-        Args:
-            rxn_str: Reaction equation string (e.g., "A + 2 B -> C + D")
-            
-        Returns:
-            Tuple of (reactants_counter, products_counter) where each counter
-            maps metabolite IDs to their stoichiometric coefficients
-        """
-        # Split reaction string into left-hand side (reactants) and right-hand side (products)
-        if "=>" in rxn_str or "->" in rxn_str:
-            lhs, rhs = re.split(r"=>|->", rxn_str)
-        else:
-            return Counter(), Counter()
-        
-        def parse_metabolites(side: str) -> Counter:
-            """
-            Parse one side of a reaction equation into a Counter of metabolites.
-            
-            Args:
-                side: String representing one side of a reaction equation
-                
-            Returns:
-                Counter mapping metabolite IDs to their stoichiometric coefficients
-            """
-            side = side.strip()
-            if not side:  # Empty or all whitespace
-                return Counter()
-            
-            result = Counter()
-            # Process each metabolite term (separated by +)
-            for term in side.split("+"):
-                parts = term.strip().split()
-                
-                if len(parts) == 1:
-                    # No explicit coefficient (assumed to be 1)
-                    coeff = 1
-                    met = parts[0]
-                else:
-                    # First part is coefficient, last part is metabolite ID
-                    try:
-                        coeff = float(parts[0])
-                    except ValueError:
-                        # If conversion fails, assume coefficient is 1
-                        coeff = 1
-                        met = term.strip()
-                    else:
-                        met = parts[-1]
-                
-                # Remove $ prefix if present (sometimes used in model IDs)
-                met = met.lstrip('$')
-                result[met] += coeff
-                
-            return result
-        
-        reactants = parse_metabolites(lhs)
-        products = parse_metabolites(rhs)
-        return reactants, products
-    
+
     def map_metabolites_to_kegg(counter: Counter, mapping_df: pd.Series) -> List[Counter]:
         """
         Map metabolite IDs to KEGG IDs while preserving stoichiometry.
@@ -667,7 +681,7 @@ def map_reactions_to_kegg(rxn_list: List[str], id_df: pd.DataFrame, spectators=F
                     choices = set([kid for kid in kegg_ids.tolist()])
                 else:
                     # Single KEGG ID
-                    choices = set([kegg_ids])
+                    choices = [kegg_ids]
                 
                 id_choices[met] = {
                     'coeff': coeff,
@@ -717,6 +731,487 @@ def map_reactions_to_kegg(rxn_list: List[str], id_df: pd.DataFrame, spectators=F
         })
     
     return output
+
+
+def _participant_species_from_normalized_reaction(nr: Dict[str, Any]) -> Set[str]:
+    s: Set[str] = set()
+    for side in ("substrates", "products"):
+        block = nr.get(side, {})
+        if isinstance(block, dict):
+            s.update(block.keys())
+    return s
+
+
+def _aggregate_best_penalized_scores(match_results: List[Any]) -> float:
+    """
+    Mean penalized score over score-eligible reactions:
+    - include mappable reactions by best penalized match
+    - include failed_mapping reactions with default low score
+    - exclude non_mappable reactions
+    """
+    best_by_rxn: Dict[str, float] = {}
+    classification_by_rxn: Dict[str, str] = {}
+    failed_default_by_rxn: Dict[str, float] = {}
+    for rec in match_results:
+        rid = rec.id
+        meta = getattr(rec, "metadata", None) or {}
+        rtype = str(meta.get("reaction_type", "mappable"))
+        classification_by_rxn[rid] = rtype
+        if rtype == "failed_mapping":
+            failed_default_by_rxn[rid] = float(meta.get("failed_default_score", 0.0))
+        if rtype != "mappable":
+            continue
+        if not rec.match_score:
+            continue
+        sc = float(rec.match_score[0])
+        prev = best_by_rxn.get(rid)
+        if prev is None or sc > prev:
+            best_by_rxn[rid] = sc
+    scored: List[float] = []
+    for rid, rtype in classification_by_rxn.items():
+        if rtype == "non_mappable":
+            continue
+        if rtype == "failed_mapping":
+            scored.append(float(failed_default_by_rxn.get(rid, 0.0)))
+            continue
+        if rid in best_by_rxn:
+            scored.append(float(best_by_rxn[rid]))
+    if not scored:
+        return 0.0
+    return sum(scored) / len(scored)
+
+
+def _reaction_coverage_stats(match_results: List[Any]) -> Dict[str, Any]:
+    """Coverage counts and percentages by reaction classification."""
+    reaction_type_by_id: Dict[str, str] = {}
+    for rec in match_results:
+        rid = rec.id
+        meta = getattr(rec, "metadata", None) or {}
+        reaction_type_by_id[rid] = str(meta.get("reaction_type", "mappable"))
+    total = len(reaction_type_by_id)
+    counts = {
+        "mappable": 0,
+        "failed_mapping": 0,
+        "non_mappable": 0,
+    }
+    for rtype in reaction_type_by_id.values():
+        if rtype in counts:
+            counts[rtype] += 1
+    successful_mapped = counts["mappable"]
+    denom = float(total) if total else 1.0
+    return {
+        "counts": counts,
+        "percent_mappable": 100.0 * counts["mappable"] / denom,
+        "percent_successfully_mapped": 100.0 * max(successful_mapped, 0) / denom,
+        "percent_failed_mapping": 100.0 * counts["failed_mapping"] / denom,
+        "percent_non_mappable": 100.0 * counts["non_mappable"] / denom,
+    }
+
+
+def _top_kegg_reference_from_matches(match_results: List[Any]) -> Dict[str, str]:
+    """Best-scoring KEGG reaction id per model reaction id from split recommendations."""
+    best: Dict[str, Tuple[str, float]] = {}
+    for rec in match_results:
+        if not rec.candidates or not rec.match_score:
+            continue
+        rid = rec.id
+        kid = rec.candidates[0]
+        sc = float(rec.match_score[0])
+        prev = best.get(rid)
+        if prev is None or sc > prev[1]:
+            best[rid] = (kid, sc)
+    return {rid: t[0] for rid, t in best.items()}
+
+
+def _species_ids_for_chebi_relax_targets(
+    chebi_hit: Set[str],
+    species_ids: Iterable[str],
+    species_to_chebi: Mapping[str, str],
+    relax_level: Mapping[str, int],
+    max_relax_level: int,
+) -> Set[str]:
+    """Map ChEBI ids from ``select_metabolites_to_relax`` to relaxable model species ids."""
+    ch_norm = {str(c).strip() for c in chebi_hit if str(c).strip()}
+    out: Set[str] = set()
+    for sid in species_ids:
+        if int(relax_level.get(sid, 0)) >= max_relax_level:
+            continue
+        ch = str(species_to_chebi.get(sid, "")).strip()
+        if ch in ch_norm:
+            out.add(sid)
+    return out
+
+
+def _leave_one_out_penalized_matcher_factory(
+    nr: Dict[str, Any],
+    ref_kegg: str,
+    part: Set[str],
+    species_to_chebi: Mapping[str, str],
+    relax_level: Mapping[str, int],
+    merged_kegg: Mapping[str, Set[str]],
+    parent_map: Mapping[str, Set[str]],
+    max_ancestor_depth: int,
+    cofactors: Set[str],
+    spectators: bool,
+    penalty_lam: float,
+    max_relax_level: int,
+):
+    """
+    Leave-one-ChEBI-out matcher returning **penalized** objective only (no raw scores
+    in control flow that uses this closure).
+    """
+    reaction_relax_levels = {sid: int(relax_level.get(sid, 0) or 0) for sid in part}
+
+    def reaction_matcher(exclude_chebi: Optional[str]) -> float:
+        sub_c = _kegg_counters_from_normalized_block(
+            nr.get("substrates"),
+            species_to_chebi,
+            relax_level,
+            merged_kegg,
+            parent_map,
+            max_ancestor_depth,
+            exclude_chebi,
+        )
+        prod_c = _kegg_counters_from_normalized_block(
+            nr.get("products"),
+            species_to_chebi,
+            relax_level,
+            merged_kegg,
+            parent_map,
+            max_ancestor_depth,
+            exclude_chebi,
+        )
+        base = score_model_against_kegg_reaction(
+            sub_c,
+            prod_c,
+            ref_kegg,
+            cofactors_to_ignore=cofactors,
+            spectators=spectators,
+        )[0]
+        return unified_reaction_objective(
+            base,
+            reaction_relax_levels if reaction_relax_levels else None,
+            lam=penalty_lam,
+            max_relax_level=max_relax_level,
+        )
+
+    return reaction_matcher
+
+
+def _kegg_counters_from_normalized_block(
+    block: Any,
+    species_to_chebi: Mapping[str, str],
+    relax_level: Mapping[str, int],
+    merged_kegg: Mapping[str, Set[str]],
+    parent_map: Mapping[str, Set[str]],
+    max_ancestor_depth: int,
+    exclude_chebi: Optional[str],
+) -> Counter:
+    """
+    Rebuild KEGG compound counters for one side of a normalized reaction using
+    ``normalize_chebi`` at each species' current relaxation level.
+
+    When ``exclude_chebi`` is set, species annotated with that ChEBI are omitted
+    (leave-one-ChEBI-out for problematic-metabolite detection).
+    """
+    ctr: Counter = Counter()
+    if not isinstance(block, dict):
+        return ctr
+    ex = (exclude_chebi or "").strip()
+    for met_id, v in block.items():
+        if not isinstance(v, dict):
+            continue
+        ch = str(species_to_chebi.get(met_id, "")).strip()
+        if ex and ch == ex:
+            continue
+        coeff = float(v.get("coeff", 1))
+        lvl = int(relax_level.get(met_id, 0))
+        keggs = (
+            normalize_chebi(ch, merged_kegg, parent_map, level=lvl, max_depth=max_ancestor_depth)
+            if ch
+            else set()
+        )
+        for kid in keggs:
+            if kid:
+                ctr[kid] += coeff
+    return ctr
+
+
+def map_reactions_to_kegg_with_relaxation(
+    rxn_list: List[str],
+    species_recommendations_df: pd.DataFrame,
+    *,
+    parent_map: Optional[Mapping[str, Set[str]]] = None,
+    chebi_to_kegg: Optional[Mapping[str, Any]] = None,
+    obo_path: Optional[str] = None,
+    parent_map_gz: Optional[str] = None,
+    spectators: bool = False,
+    max_relax_level: int = 2,
+    max_ancestor_depth: int = 2,
+    score_gain_threshold: float = 0.0,
+    score_tolerance: float = 1e-3,
+    max_relaxation_rounds: int = 8,
+    cofactors_to_ignore: Optional[Set[str]] = None,
+    top_k: Optional[int] = None,
+    penalty_lam: float = 0.1,
+    run_matching: bool = True,
+) -> Tuple[List[Dict[str, Any]], List[Any], Dict[str, int]]:
+    """
+    Single iterative loop: normalize → penalized KEGG matching → relax targets → converge.
+
+    **Per iteration**
+
+    1. Build ``normalized_reactions`` via ``map_reactions_to_kegg`` (ChEBI→KEGG at
+       current ``relax_level`` per species).
+    2. ``_get_kegg_recommendations_rulebased`` computes raw similarity internally and
+       ranks only on ``unified_reaction_objective``; aggregate ``score`` for control
+       flow is the mean best penalized score per model reaction.
+    3. ``select_metabolites_to_relax`` (unmapped ∪ score-sensitive) yields ChEBI terms;
+       these map back to **species ids** in ``to_relax`` only (no global relaxation).
+    4. ``should_continue_iteration`` stops when ``to_relax`` is empty and the penalized
+       aggregate is stable vs ``previous_best_score`` (initialized to ``-inf``).
+    5. Increment ``relax_level`` only for species in ``to_relax`` (capped at
+       ``max_relax_level``).
+
+    Args:
+        rxn_list: Reaction strings ``"RID: lhs -> rhs"`` as for map_reactions_to_kegg.
+        species_recommendations_df: Must include ``id`` (species) and ``annotation``
+            (ChEBI ID). Optional ``match_score`` selects the best ChEBI per species.
+        parent_map: Optional precomputed child→parents map; otherwise loaded via
+            ``load_chebi_parent_map`` (gz or OBO under data/chebi/).
+        chebi_to_kegg: Optional raw ChEBI→KEGG dict; defaults to
+            ``load_chebi2kegg_dict()``.
+        score_gain_threshold: Minimum score increase (leave-one-out minus baseline)
+            required to flag a ChEBI term as score-sensitive.
+        score_tolerance: Stop when there is nothing to relax and the mean best penalized
+            score per reaction changes by less than this vs the previous iteration.
+        run_matching: If False, performs a single mapping pass and returns an empty
+            match list (no refinement).
+
+    Returns:
+        (normalized_reactions, kegg_match_results, species_relax_level_by_id)
+    """
+    if species_recommendations_df is None or species_recommendations_df.empty:
+        return [], [], {}
+
+    required_cols = {"id", "annotation"}
+    if not required_cols.issubset(species_recommendations_df.columns):
+        raise ValueError(
+            f"species_recommendations_df must contain columns {required_cols}, "
+            f"got {set(species_recommendations_df.columns)}"
+        )
+
+    df = species_recommendations_df.dropna(subset=["annotation"])
+    df = df[df["annotation"].astype(str).str.strip() != ""]
+    if df.empty:
+        return [], [], {}
+
+    if "match_score" in df.columns:
+        sdf = df.sort_values("match_score", ascending=False)
+    else:
+        sdf = df
+    species_to_chebi = (
+        sdf.drop_duplicates(subset=["id"], keep="first")
+        .set_index("id")["annotation"]
+        .astype(str)
+        .to_dict()
+    )
+
+    if parent_map is None:
+        parent_map = load_chebi_parent_map(obo_path=obo_path, gz_path=parent_map_gz)
+    if chebi_to_kegg is None:
+        chebi_to_kegg = load_chebi2kegg_dict()
+
+    merged_kegg = merge_chebi_to_kegg_mapping(chebi_to_kegg)
+
+    relax_level: Dict[str, int] = {sid: 0 for sid in species_to_chebi}
+
+    cofactors = cofactors_to_ignore if cofactors_to_ignore is not None else set()
+    normalized_reactions: List[Dict[str, Any]] = []
+    match_results: List[Any] = []
+
+    max_iterations = 1 if not run_matching else max(1, int(max_relaxation_rounds))
+    previous_best_score: float = float("-inf")
+
+    def compute_global_score(levels: Mapping[str, int]) -> float:
+        """Evaluate the full-model global objective at the provided relaxation levels."""
+        trial_id_kegg_df = build_kegg_mapping_dataframe(
+            species_to_chebi.keys(),
+            species_to_chebi,
+            levels,
+            merged_kegg,
+            parent_map,
+            max_ancestor_depth=max_ancestor_depth,
+        )
+        trial_normalized_reactions = map_reactions_to_kegg(
+            rxn_list, trial_id_kegg_df, spectators=spectators
+        )
+        trial_match_results = _get_kegg_recommendations_rulebased(
+            trial_normalized_reactions,
+            cofactors_to_ignore=cofactors,
+            top_k=top_k,
+            spectators=spectators,
+            relaxation_levels_by_entity=levels,
+            penalty_lam=penalty_lam,
+            max_relax_level=max_relax_level,
+        )
+        return float(_aggregate_best_penalized_scores(trial_match_results))
+
+    for _iteration in range(max_iterations):
+        # --- Step 1: build normalized reactions ---
+        id_kegg_df = build_kegg_mapping_dataframe(
+            species_to_chebi.keys(),
+            species_to_chebi,
+            relax_level,
+            merged_kegg,
+            parent_map,
+            max_ancestor_depth=max_ancestor_depth,
+        )
+        normalized_reactions = map_reactions_to_kegg(
+            rxn_list, id_kegg_df, spectators=spectators
+        )
+
+        if not run_matching:
+            match_results = []
+            break
+
+        # --- Step 2: KEGG matching (raw similarity inside matcher; ranking = penalized only) ---
+        match_results = _get_kegg_recommendations_rulebased(
+            normalized_reactions,
+            cofactors_to_ignore=cofactors,
+            top_k=top_k,
+            spectators=spectators,
+            relaxation_levels_by_entity=relax_level,
+            penalty_lam=penalty_lam,
+            max_relax_level=max_relax_level,
+        )
+        score = _aggregate_best_penalized_scores(match_results)
+        coverage = _reaction_coverage_stats(match_results)
+        logger.info(f"Reaction coverage: {coverage}")
+
+        # --- Step 3: build candidate species (unmapped + optionally problematic) ---
+        participants_union: Set[str] = set()
+        for nr in normalized_reactions:
+            participants_union |= _participant_species_from_normalized_reaction(nr)
+        if not participants_union:
+            participants_union = collect_species_ids_from_rxn_list(rxn_list, spectators=spectators)
+        participants_union &= set(species_to_chebi.keys())
+
+        candidate_species: Set[str] = set()
+        top_ref = _top_kegg_reference_from_matches(match_results)
+        species_in_any_part: Set[str] = set()
+
+        for nr in normalized_reactions:
+            part = _participant_species_from_normalized_reaction(nr) & set(species_to_chebi.keys())
+            if not part:
+                continue
+            species_in_any_part |= part
+            chebi_union = sorted(
+                {
+                    str(species_to_chebi[s]).strip()
+                    for s in part
+                    if str(species_to_chebi.get(s, "")).strip()
+                }
+            )
+            if not chebi_union:
+                continue
+
+            ref_kegg = top_ref.get(nr.get("id"))
+            if ref_kegg:
+                matcher = _leave_one_out_penalized_matcher_factory(
+                    nr,
+                    ref_kegg,
+                    part,
+                    species_to_chebi,
+                    relax_level,
+                    merged_kegg,
+                    parent_map,
+                    max_ancestor_depth,
+                    cofactors,
+                    spectators,
+                    penalty_lam,
+                    max_relax_level,
+                )
+            else:
+                matcher = None
+
+            chebi_to_relax = select_metabolites_to_relax(
+                chebi_union,
+                merged_kegg,
+                parent_map,
+                matcher,
+                score_threshold=score_gain_threshold,
+                participant_species=part,
+                species_to_chebi=species_to_chebi,
+                relax_level=relax_level,
+                max_depth=max_ancestor_depth,
+            )
+            candidate_species |= _species_ids_for_chebi_relax_targets(
+                chebi_to_relax,
+                part,
+                species_to_chebi,
+                relax_level,
+                max_relax_level,
+            )
+
+        orphan = participants_union - species_in_any_part
+        if orphan:
+            orch_chebi = sorted(
+                {
+                    str(species_to_chebi[s]).strip()
+                    for s in orphan
+                    if str(species_to_chebi.get(s, "")).strip()
+                }
+            )
+            if orch_chebi:
+                chebi_orphan = select_metabolites_to_relax(
+                    orch_chebi,
+                    merged_kegg,
+                    parent_map,
+                    None,
+                    participant_species=orphan,
+                    species_to_chebi=species_to_chebi,
+                    relax_level=relax_level,
+                    max_depth=max_ancestor_depth,
+                )
+                candidate_species |= _species_ids_for_chebi_relax_targets(
+                    chebi_orphan,
+                    orphan,
+                    species_to_chebi,
+                    relax_level,
+                    max_relax_level,
+                )
+
+        # Global objective gate: relax only species that improve full-model score.
+        to_relax: Set[str] = set(
+            select_relaxations_by_global_improvement(
+                sorted(candidate_species),
+                relax_level,
+                compute_global_score,
+                max_relax_level=max_relax_level,
+                delta_threshold=score_gain_threshold,
+            )
+        )
+
+        # --- Step 4: convergence (penalized score + relaxation state) ---
+        if not should_continue_iteration(
+            score,
+            previous_best_score,
+            relax_level,
+            to_relax,
+            score_tolerance=score_tolerance,
+        ):
+            previous_best_score = score
+            break
+
+        previous_best_score = score
+
+        # --- Step 5: apply relaxation (only entities in to_relax) ---
+        for entity in to_relax:
+            relax_level[entity] = min(relax_level.get(entity, 0) + 1, max_relax_level)
+
+    return normalized_reactions, match_results, relax_level
+
 
 # Main interface function for users
 def annotate_model(model_file: str, **kwargs) -> Tuple[pd.DataFrame, Dict[str, Any]]:

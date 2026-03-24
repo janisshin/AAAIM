@@ -40,7 +40,7 @@ from core.model_info import (
     extract_model_info,
     get_all_reaction_ids
 )
-from core.annotation_workflow import map_reactions_to_kegg, _generate_recommendation_table
+from core.annotation_workflow import map_reactions_to_kegg_with_relaxation, _generate_recommendation_table
 
 # Configure logging
 logging.basicConfig(
@@ -1264,18 +1264,12 @@ def update_participant_likelihoods(
         
         # Map reactions to KEGG with updated participant set
         # logger.info(f"Iteration {iteration}: Mapping reactions to KEGG")
-        normalized_reactions = map_reactions_to_kegg(
+        normalized_reactions, match_results, _species_relax_levels = map_reactions_to_kegg_with_relaxation(
             reactions,
-            high_score_recommendations[['id', 'KEGG_ID']],
-            spectators=False
-        )
-        
-        # Get KEGG recommendations
-        # logger.info(f"Iteration {iteration}: Getting KEGG recommendations")
-        match_results = database_search._get_kegg_recommendations_rulebased(
-            normalized_reactions,
+            high_score_recommendations,
+            spectators=False,
             cofactors_to_ignore=cofactor_config.kegg_ids,
-            spectators=False
+            top_k=None,
         )
         
         # Generate recommendation table
@@ -1552,17 +1546,12 @@ def run_kegg_annotation_workflow(
         model_file,
         list(high_score_recommendations['id'].unique())
     )
-    normalized_reactions = map_reactions_to_kegg(
+    normalized_reactions, match_results, _species_relax_levels = map_reactions_to_kegg_with_relaxation(
         reactions,
-        high_score_recommendations[['id', 'KEGG_ID']],
-        spectators=False
-    )
-    
-    # Get KEGG recommendations
-    match_results = database_search._get_kegg_recommendations_rulebased(
-        normalized_reactions,
+        high_score_recommendations,
+        spectators=False,
         cofactors_to_ignore=cofactor_config.kegg_ids,
-        spectators=False
+        top_k=None,
     )
     
     # Build recommendation table

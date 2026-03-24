@@ -26,7 +26,7 @@ from core import normalize_reactions
 from core import load_chebi2kegg_dict, load_kegg_reaction_features_dict
 from core.update_model import update_annotation
 from core.model_info import extract_reactions_from_sbml, extract_model_info
-from core.annotation_workflow import map_reactions_to_kegg, _generate_recommendation_table
+from core.annotation_workflow import map_reactions_to_kegg_with_relaxation, _generate_recommendation_table
 from core.model_info import get_all_reaction_ids
 
 # Define common cofactors to ignore in reaction matching
@@ -136,13 +136,17 @@ def main():
     print("\nStep 3: Begin rule-based matching to identify reactions")
     reactions, _ = extract_reactions_from_sbml(model_file, list(high_score_recommendations['id'].unique()))
     print(f"Reactions: {reactions}")
-    normalized_reactions = map_reactions_to_kegg(reactions, high_score_recommendations[['id', 'KEGG_ID']], spectators=False)
+    normalized_reactions, match_results, species_relax_levels = map_reactions_to_kegg_with_relaxation(
+        reactions,
+        high_score_recommendations,
+        spectators=False,
+        cofactors_to_ignore=cofactors_to_ignore,
+        top_k=None,
+    )
     print(f"Normalized reactions: {normalized_reactions}")
+    print(f"Species relaxation levels (0=strict ChEBI→KEGG): {species_relax_levels}")
 
-    # Get KEGG recommendations
-    match_results = database_search._get_kegg_recommendations_rulebased(
-        normalized_reactions, cofactors_to_ignore = cofactors_to_ignore,
-        spectators=False)
+    # KEGG recommendations are produced inside map_reactions_to_kegg_with_relaxation
 
     # Build recommendation table
     kegg_recommendations_df = _generate_recommendation_table(model_file, 
