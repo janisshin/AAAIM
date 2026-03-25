@@ -41,6 +41,7 @@ from core.model_info import (
     get_all_reaction_ids
 )
 from core.annotation_workflow import map_reactions_to_kegg_with_relaxation, _generate_recommendation_table
+from core.species_probability import init_species_probs_from_dict
 
 # Configure logging
 logging.basicConfig(
@@ -280,15 +281,6 @@ def extract_classifications(raw_text: str, classification: str) -> str:
 # Probability and Matching Functions
 #------------------------------------------------------------------------------
 
-def normalize(prob_dict: Dict[str, float]) -> Dict[str, float]:
-    """Normalize probability dictionary to sum to 1."""
-    total = sum(prob_dict.values())
-    if total > 0:
-        for key in prob_dict:
-            prob_dict[key] /= total
-    return prob_dict
-
-
 def softmax_normalize(scores: Dict[str, float], temperature: float = 1.0) -> Dict[str, float]:
     """
     Apply softmax normalization to convert scores to probabilities.
@@ -381,84 +373,6 @@ def compute_rscore(
     rscore = 0.5 * match_ratio + 0.5 * jaccard_score
     
     return rscore
-
-
-def update_species_probs(
-    query_species: str, 
-    candidate_reactions: List, 
-    candidate_probs: Dict,
-    similarity_calc: SimilarityCalculator
-) -> Dict[str, float]:
-    """Update species probabilities based on candidate reactions."""
-    updated_probs = {}
-
-    for candidate in candidate_reactions:
-        prob_candidate = candidate_probs.get(candidate, 0.0)
-        
-        for cand_species in candidate.participants:
-            if similarity_calc.is_plausible_match(query_species, cand_species):
-                if cand_species not in updated_probs:
-                    updated_probs[cand_species] = 0.0
-                updated_probs[cand_species] += prob_candidate
-
-    return normalize(updated_probs)
-
-
-def choose_best_annotation(species_probs: Dict[str, float]) -> Optional[str]:
-    """Select the best annotation based on probability scores."""
-    if not species_probs:
-        return None
-    return max(species_probs, key=species_probs.get)
-
-
-def has_converged(
-    updated_annotations: Dict[str, str], 
-    previous_annotations: Dict[str, str]
-) -> bool:
-    """Check if annotations have converged."""
-    if not previous_annotations:
-        return False
-    
-    for species, new_annotation in updated_annotations.items():
-        old_annotation = previous_annotations.get(species)
-        if new_annotation != old_annotation:
-            return False
-    
-    return True
-
-
-def init_species_probs_from_dict(
-    reaction_participants: Dict[str, List[str]], 
-    counters: pd.Series,
-    similarity_calc: SimilarityCalculator
-) -> Dict[str, Dict[str, Dict[str, float]]]:
-    """Initialize species match probabilities from reaction participants."""
-    species_match_probs = {}
-
-    for rxn_id, query_species_list in reaction_participants.items():
-        if rxn_id not in counters:
-            continue
-
-        candidate_counter = counters[rxn_id]
-        species_probs_for_rxn = {}
-
-        for query_species in query_species_list:
-            plausible = {
-                cand: count for cand, count in candidate_counter.items()
-                if similarity_calc.is_plausible_match(query_species, cand)
-            }
-
-            if plausible:
-                total = sum(plausible.values())
-                species_probs_for_rxn[query_species] = {
-                    cand: count / total for cand, count in plausible.items()
-                }
-            else:
-                species_probs_for_rxn[query_species] = {}
-
-        species_match_probs[rxn_id] = species_probs_for_rxn
-
-    return species_match_probs
 
 
 #------------------------------------------------------------------------------
@@ -1597,7 +1511,9 @@ def run_kegg_annotation_workflow(
     
     # Step 7: Initialize probabilities and compute likelihoods
     similarity_calc = SimilarityCalculator(matching_config)
-    init_probs = init_species_probs_from_dict(reaction_participants, counters, similarity_calc)
+    init_probs = init_species_probs_from_dict(
+        reaction_participants, counters, similarity_calc.is_plausible_match
+    )
     
     likelihood_calc = LikelihoodCalculator(cofactor_config, matching_config, convergence_config)
     scored_df = likelihood_calc.compute_reaction_likelihoods(init_probs, kegg_recommendations_df)
