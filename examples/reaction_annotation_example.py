@@ -15,7 +15,6 @@ import pickle
 from dotenv import load_dotenv
 load_dotenv()
 
-
 from pathlib import Path
 
 # Add parent directory to path to import AAAIM modules
@@ -28,9 +27,7 @@ from core.update_model import update_annotation
 from core.model_info import extract_reactions_from_sbml, extract_model_info
 from core.annotation_workflow import map_reactions_to_kegg_with_relaxation, _generate_recommendation_table
 from core.model_info import get_all_reaction_ids
-
-# Define common cofactors to ignore in reaction matching
-
+from core.reaction_amendment_config import CofactorConfig
 
 # Configuration
 model_file = "tests/glycolysis_part1.xml"
@@ -40,20 +37,7 @@ file_name = model_file.split('.')[0]
 # llm_model = "meta-llama/llama-3.3-70b-instruct:free"  # or "gpt-4o-mini"
 llm_model = "meta-llama/llama-3.1-8b-instruct"
 top_k = 10
-cofactors_to_ignore = {
-    'C00001',  # H2O
-    'C00080',  # H+
-    'C00007',  # O2
-    'C00027',  # H2O2
-    'C00009',  # Phosphate
-    'C00013',  # Diphosphate
-    'C00008',  # ADP
-    'C00002',  # ATP
-    'C00003',  # NAD+
-    'C00004',  # NADH
-    'C00005',  # NADPH
-    'C00006',  # NADP+
-}
+cofactors_to_ignore = CofactorConfig().kegg_ids
 
 entity_type='reaction'
 database='kegg'
