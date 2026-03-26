@@ -69,8 +69,8 @@ def run_kegg_annotation_workflow(
     logger.info("LLM model: %s", llm_model)
     logger.info("Analyzing model: %s", model_file)
 
-    all_entity_ids = get_all_reaction_ids(model_file)
-    model_info = extract_model_info(model_file, all_entity_ids, entity_type)
+    reaction_ids = get_all_reaction_ids(model_file)
+    model_info = extract_model_info(model_file, reaction_ids, entity_type)
 
     logger.info("Step 2: Map ChEBI IDs to KEGG Compound IDs")
     _, high_score_recommendations = map_chebi_to_kegg(recommendations_df)
@@ -90,11 +90,20 @@ def run_kegg_annotation_workflow(
     )
     normalized_reactions, match_results, _species_relax_levels = map_reactions_to_kegg_with_relaxation(
         reactions,
+        reaction_ids, 
         high_score_recommendations,
         spectators=False,
         cofactors_to_ignore=cofactor_config.kegg_ids,
         top_k=None,
     )
+
+    # Only keep reaction candidates that are eligible for updating.
+    allowed_reaction_types = {"mappable", "ambiguous_mapping"}
+    match_results = [
+        rec
+        for rec in match_results
+        if str((getattr(rec, "metadata", None) or {}).get("reaction_type", "mappable")) in allowed_reaction_types
+    ]
 
     kegg_recommendations_df = _generate_recommendation_table(
         model_file,
@@ -138,11 +147,11 @@ def run_kegg_annotation_workflow(
     updated_participants_df, updated_reactions_df = update_participant_likelihoods(
         high_score_recommendations,
         scored_df,
-        reaction_participants,
-        model_file=model_file,
+        model_file,
         model_info=model_info,
         kegg_features=kegg_features,
         reactions=reactions,
+        reaction_ids=reaction_ids,
         entity_type=entity_type,
         database=database,
         cofactor_config=cofactor_config,

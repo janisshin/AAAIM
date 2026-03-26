@@ -24,6 +24,7 @@ from utils.constants import REF_CHEBI2KEGG_COMPOUND, REF_KEGG_REACTION2NAME, REF
 from core.data_types import Recommendation, ReactionRecommendation
 from core.hierarchy_relaxation import unified_reaction_objective
 from core.reaction_classification import classify_reaction
+from core.kegg_definition_text import extract_classifications
 
 
 logger = logging.getLogger(__name__)
@@ -441,92 +442,6 @@ def remove_symbols(text: str) -> str:
 #             seen.add(clean_syn)
     
 #     return cleaned if cleaned else synonyms  # Return original if all cleaned to empty
-
-
-def extract_classifications(raw_text, classification):
-    """
-    classification (str): either 'brite' or 'orthology'
-    Extracts only the BRITE hierarchy (excluding [BR:...] tags, EC leaf nodes, 
-    and reaction entries).
-    """
-    lines = raw_text.splitlines()
-    clean_lines = []
-
-    if classification == 'brite':
-        for line in lines:
-            stripped = line.strip()
-            # Skip empty lines
-            if not stripped:
-                continue
-            # Skip lines with [BR:...] tags
-            if "[BR:" in stripped:
-                continue
-            # Skip EC leaf numbers (pure numbers like 2.2.1.6)
-            if re.fullmatch(r"(\d+\.)+\d+", stripped):
-                continue
-            # Skip lines that start with an R number (reaction ID)
-            if re.match(r"R\d{5}", stripped):
-                continue
-            
-            parts = stripped.split(maxsplit=1)
-            if len(parts) > 1:
-                clean_lines.append(parts[1].strip())
-            else:
-                clean_lines.append(stripped)
-    
-    elif classification == 'orthology':
-        for line in lines:
-        # Split once on spaces to remove the Kxxxxx ID
-            parts = line.split(maxsplit=1)
-            if len(parts) > 1:
-                # Remove the EC info if present
-                name = parts[1].split(" [EC:")[0].strip()
-                clean_lines.append(name)
-
-    elif classification == 'definition':
-        parts = []
-        buf = ""
-        paren_level = 0  # Track nested parentheses
-
-        i = 0
-        while i < len(raw_text):
-            c = raw_text[i]
-
-            # Track parentheses
-            if c == '(':
-                paren_level += 1
-            elif c == ')':
-                paren_level -= 1
-
-            # Split points: + outside parentheses or <=>
-            if c == '+' and paren_level == 0:
-                parts.append(buf.strip())
-                buf = ""
-            elif raw_text[i:i+3] == '<=>' and paren_level == 0:
-                parts.append(buf.strip())
-                buf = ""
-                i += 2  # skip the next two chars of <=>
-            elif raw_text[i:i+2] == '->' and paren_level == 0:
-                parts.append(buf.strip())
-                buf = ""
-                i += 1  
-            else:
-                buf += c
-
-            i += 1
-
-        # Add remaining buffer
-        if buf:
-            parts.append(buf.strip())
-        # parts = [p for p in parts if p]
-        strip_dollars = [p.lstrip("$") for p in parts if p]
-        clean_lines = [re.sub(r'^[\d\w\(\)\+\-]+?\s+', '', p.strip()) for p in strip_dollars]
-    
-    return "; ".join(set(clean_lines))
-    
-
-
-
 
 
 def get_species_recommendations_direct(species_ids: List[str], synonyms_dict, database: str = "chebi", tax_id: Any = None, top_k: int = 3) -> List[Recommendation]:
@@ -955,7 +870,7 @@ def _get_kegg_recommendations_rulebased(
                     if k not in cofactors_to_ignore
                 }
             reaction_type = classify_reaction(
-                reaction_id,
+                reaction_str,
                 filtered_species=filtered_species,
                 candidates=filtered_reaction_list,
             )

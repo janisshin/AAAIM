@@ -337,13 +337,6 @@ def _generate_recommendation_table(model_file: str,
     rows = []
     filename = Path(model_file).name
     
-    # Check if we're dealing with ReactionRecommendation objects
-    is_reaction_recommendation = (
-        recommendations and
-        len(recommendations) > 0 and
-        isinstance(recommendations[0], ReactionRecommendation)
-    )
-    
     for rec in recommendations:
         if not rec.candidates:
             # No candidates found
@@ -634,7 +627,7 @@ def collect_species_ids_from_rxn_list(rxn_list: List[str], spectators: bool = Fa
     return out
 
 
-def map_reactions_to_kegg(rxn_list: List[str], id_df: pd.DataFrame, spectators=False) -> List[Dict[str, Any]]:
+def map_reactions_to_kegg(rxn_list: List[str], reaction_ids: List[str], id_df: pd.DataFrame, spectators=False) -> List[Dict[str, Any]]:
     """
     Map reaction strings to KEGG reaction identifiers.
     
@@ -700,10 +693,7 @@ def map_reactions_to_kegg(rxn_list: List[str], id_df: pd.DataFrame, spectators=F
 
     # Process each reaction
     output = []
-    
-    # Extract reaction IDs from reaction strings
-    rxn_ids = [rxn.split(":", 1)[0] if ":" in rxn else rxn for rxn in rxn_list]
-    
+       
     for idx, rxn in enumerate(rxn_list):
         # Extract reaction string (remove ID prefix if present)
         if ":" in rxn:
@@ -724,7 +714,7 @@ def map_reactions_to_kegg(rxn_list: List[str], id_df: pd.DataFrame, spectators=F
 
         # Store mapped reaction
         output.append({
-            "id": rxn_ids[idx],
+            "id": reaction_ids[idx],
             "reaction_string": rxn_str,
             "substrates": substrates_mapped,
             "products": products_mapped
@@ -746,19 +736,19 @@ def _aggregate_best_penalized_scores(match_results: List[Any]) -> float:
     """
     Mean penalized score over score-eligible reactions:
     - include mappable reactions by best penalized match
-    - include failed_mapping reactions with default low score
+    - include ambiguous_mapping reactions with default low score
     - exclude non_mappable reactions
     """
     best_by_rxn: Dict[str, float] = {}
     classification_by_rxn: Dict[str, str] = {}
-    failed_default_by_rxn: Dict[str, float] = {}
+    ambiguous_default_by_rxn: Dict[str, float] = {}
     for rec in match_results:
         rid = rec.id
         meta = getattr(rec, "metadata", None) or {}
         rtype = str(meta.get("reaction_type", "mappable"))
         classification_by_rxn[rid] = rtype
-        if rtype == "failed_mapping":
-            failed_default_by_rxn[rid] = float(meta.get("failed_default_score", 0.0))
+        if rtype == "ambiguous_mapping":
+            ambiguous_default_by_rxn[rid] = float(meta.get("ambiguous_default_score", 0.0))
         if rtype != "mappable":
             continue
         if not rec.match_score:
@@ -771,8 +761,8 @@ def _aggregate_best_penalized_scores(match_results: List[Any]) -> float:
     for rid, rtype in classification_by_rxn.items():
         if rtype == "non_mappable":
             continue
-        if rtype == "failed_mapping":
-            scored.append(float(failed_default_by_rxn.get(rid, 0.0)))
+        if rtype == "ambiguous_mapping":
+            scored.append(float(ambiguous_default_by_rxn.get(rid, 0.0)))
             continue
         if rid in best_by_rxn:
             scored.append(float(best_by_rxn[rid]))
@@ -791,7 +781,7 @@ def _reaction_coverage_stats(match_results: List[Any]) -> Dict[str, Any]:
     total = len(reaction_type_by_id)
     counts = {
         "mappable": 0,
-        "failed_mapping": 0,
+        "ambiguous_mapping": 0,
         "non_mappable": 0,
     }
     for rtype in reaction_type_by_id.values():
@@ -801,10 +791,10 @@ def _reaction_coverage_stats(match_results: List[Any]) -> Dict[str, Any]:
     denom = float(total) if total else 1.0
     return {
         "counts": counts,
-        "percent_mappable": 100.0 * counts["mappable"] / denom,
-        "percent_successfully_mapped": 100.0 * max(successful_mapped, 0) / denom,
-        "percent_failed_mapping": 100.0 * counts["failed_mapping"] / denom,
-        "percent_non_mappable": 100.0 * counts["non_mappable"] / denom,
+        "percent_mappable": round(100.0 * counts["mappable"] / denom, 2),
+        "percent_successfully_mapped": round(100.0 * max(successful_mapped, 0) / denom, 2),
+        "percent_ambiguous_mapping": round(100.0 * counts["ambiguous_mapping"] / denom, 2),
+        "percent_non_mappable": round(100.0 * counts["non_mappable"] / denom, 2),
     }
 
 
@@ -939,6 +929,7 @@ def _kegg_counters_from_normalized_block(
 
 def map_reactions_to_kegg_with_relaxation(
     rxn_list: List[str],
+    reaction_ids: List[str],
     species_recommendations_df: pd.DataFrame,
     *,
     parent_map: Optional[Mapping[str, Set[str]]] = None,
@@ -1044,7 +1035,7 @@ def map_reactions_to_kegg_with_relaxation(
             max_ancestor_depth=max_ancestor_depth,
         )
         trial_normalized_reactions = map_reactions_to_kegg(
-            rxn_list, trial_id_kegg_df, spectators=spectators
+            rxn_list, reaction_ids, trial_id_kegg_df, spectators=spectators
         )
         trial_match_results = _get_kegg_recommendations_rulebased(
             trial_normalized_reactions,
@@ -1068,7 +1059,7 @@ def map_reactions_to_kegg_with_relaxation(
             max_ancestor_depth=max_ancestor_depth,
         )
         normalized_reactions = map_reactions_to_kegg(
-            rxn_list, id_kegg_df, spectators=spectators
+            rxn_list, reaction_ids, id_kegg_df, spectators=spectators
         )
 
         if not run_matching:

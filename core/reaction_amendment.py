@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Dict, List, Optional, Set, Tuple
+import re
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 import pandas as pd
 from rapidfuzz import fuzz
@@ -17,6 +18,34 @@ from .model_info import extract_reactions_from_sbml
 from .reaction_amendment_config import CofactorConfig, ConvergenceConfig, MatchingConfig
 
 logger = logging.getLogger(__name__)
+
+def _species_ids_from_reaction_string(reaction_str: str) -> Set[str]:
+    """
+    Extract candidate species ids from an Antimony-like reaction string.
+
+    Intended to map model species ids (as they appear in `participant_df['id']`)
+    to the reaction ids in `reaction_ids`.
+    """
+    if not reaction_str:
+        return set()
+    s = str(reaction_str)
+    # Remove comments / ids prefixes if any, keep only equation-ish content.
+    # Tokenize on word boundaries (SBML ids are typically [A-Za-z0-9_]).
+    toks = re.findall(r"\b[A-Za-z0-9_]+\b", s)
+    if not toks:
+        return set()
+    # Filter out obvious non-species tokens.
+    stop = {"to", "and", "or"}
+    out: Set[str] = set()
+    for t in toks:
+        if not t:
+            continue
+        if t.isdigit():
+            continue
+        if t.lower() in stop:
+            continue
+        out.add(t.lstrip("$"))
+    return out
 
 
 class TextNormalizer:
@@ -91,7 +120,6 @@ def softmax_normalize(scores: Dict[str, float], temperature: float = 1.0) -> Dic
 
 
 def compute_rscore(
-    query_reaction_id: str,
     reference_reaction: pd.Series,
     participant_annotations: Dict[str, str],
     participant_filter: 'ParticipantFilter',
@@ -292,7 +320,6 @@ class LikelihoodCalculator:
             
             # Compute rScore
             rscore = compute_rscore(
-                query_rxn_id,
                 row,
                 query_annotations,
                 self.participant_filter,
@@ -481,19 +508,27 @@ def update_participant_likelihoods_singleiter(
     # E-STEP: Compute expected annotation distributions
     # For each query participant, aggregate contributions from all candidate reactions
     
-    # Build mapping: participant_id -> {kegg_id -> [indices in dataframe]}
-    participant_kegg_indices = {}
+    # Build mapping: (reaction_id, participant_id) -> {kegg_id -> [indices in dataframe]}
+    # NOTE: `reaction_id` is expected to be present in `participant_df` (added by update_participant_likelihoods()).
+    participant_kegg_indices: Dict[Tuple[str, str], Dict[str, List[int]]] = {}
     for idx, row in updated_participants_df.iterrows():
         if pd.notna(row.get('KEGG_ID')) and row['KEGG_ID'] != '':
-            participant_id = row['id']
+            # If reaction_id is missing, we cannot assign this participant to a specific query reaction.
+            if 'reaction_id' not in updated_participants_df.columns:
+                continue
+            if pd.isna(row.get('reaction_id')) or row['reaction_id'] == '':
+                continue
+            reaction_id = str(row['reaction_id'])
+            participant_id = str(row['id'])
             kegg_id = row['KEGG_ID']
             
-            if participant_id not in participant_kegg_indices:
-                participant_kegg_indices[participant_id] = {}
-            if kegg_id not in participant_kegg_indices[participant_id]:
-                participant_kegg_indices[participant_id][kegg_id] = []
+            key = (reaction_id, participant_id)
+            if key not in participant_kegg_indices:
+                participant_kegg_indices[key] = {}
+            if kegg_id not in participant_kegg_indices[key]:
+                participant_kegg_indices[key][kegg_id] = []
             
-            participant_kegg_indices[participant_id][kegg_id].append(idx)
+            participant_kegg_indices[key][kegg_id].append(idx)
     
     # Build mapping: query_reaction_id -> {ref_reaction_annotation -> probability}
     reaction_probs = {}
@@ -506,15 +541,12 @@ def update_participant_likelihoods_singleiter(
             reaction_probs[query_rxn_id] = {}
         reaction_probs[query_rxn_id][ref_annotation] = prob
     
-    # For each query participant, compute weighted contributions from all reactions
-    for participant_id, kegg_dict in participant_kegg_indices.items():
-        # Extract query reaction ID from participant ID (format: reaction_id_participant_name)
-        # This assumes participant IDs contain the reaction ID
-        query_rxn_id = participant_id.split('_')[0] if '_' in participant_id else participant_id
+    # For each query participant (scoped to a reaction), compute weighted contributions from all reactions
+    for (query_rxn_id, _participant_id), kegg_dict in participant_kegg_indices.items():
         
         # Get all candidate reference reactions for this query reaction
         if query_rxn_id not in reaction_probs:
-            logger.debug(f"No reaction probabilities found for participant {participant_id}")
+            logger.debug(f"No reaction probabilities found for query reaction {query_rxn_id}")
             continue
         
         ref_reactions = reaction_probs[query_rxn_id]
@@ -565,6 +597,39 @@ def update_participant_likelihoods_singleiter(
     logger.debug(f"Updated participant likelihoods for {len(participant_kegg_indices)} participants")
     
     return updated_participants_df
+
+
+def _assign_reaction_id_rows_to_participants(
+    participant_df: pd.DataFrame,
+    species_to_reactions: Dict[str, Set[str]],
+) -> pd.DataFrame:
+    """
+    Expand participant candidates into long-form rows with explicit `reaction_id`.
+
+    If a species participates in multiple reactions, the input row is duplicated per reaction.
+    """
+    if participant_df.empty:
+        return participant_df
+    if "reaction_id" in participant_df.columns:
+        return participant_df
+
+    out_rows = []
+    for _, row in participant_df.iterrows():
+        participant_id = row.get("id")
+        candidate_reactions = species_to_reactions.get(str(participant_id), set())
+
+        if not candidate_reactions:
+            row_copy = row.copy()
+            row_copy["reaction_id"] = pd.NA
+            out_rows.append(row_copy)
+            continue
+
+        for rid in candidate_reactions:
+            row_copy = row.copy()
+            row_copy["reaction_id"] = rid
+            out_rows.append(row_copy)
+
+    return pd.DataFrame(out_rows)
 
 
 class ConvergenceChecker:
@@ -801,8 +866,8 @@ def suggest_kegg_candidates_from_reactions(
                 # Create new candidate rows for each novel KEGG ID
                 for novel_id in novel_kegg_ids:
                     new_row = template_row.copy()
+                    new_row['annotation'] = ""
                     new_row['KEGG_ID'] = novel_id
-                    new_row['annotation'] = novel_id  # Update annotation to KEGG ID
                     new_row['participant_likelihood'] = 0.0  # Will be updated in next iteration
                     new_row['match_score'] = 0 # this is an arbitrary default value 
                     new_candidate_rows.append(new_row)
@@ -819,11 +884,11 @@ def suggest_kegg_candidates_from_reactions(
 def update_participant_likelihoods(
     participant_df: pd.DataFrame,
     reaction_likelihood_df: pd.DataFrame,
-    reaction_participants: Dict,
     model_file: str,
     model_info: Dict,
     kegg_features: KEGGReactionFeatures,
     reactions: List,
+    reaction_ids: List[str],
     entity_type: str = 'reaction',
     database: str = 'kegg',
     cofactor_config: Optional[CofactorConfig] = None,
@@ -849,6 +914,23 @@ def update_participant_likelihoods(
     
     # Track all participant IDs we've seen
     all_known_participant_ids = set(current_participants_df['id'].unique())
+
+    # Add an explicit `reaction_id` column so later steps do not rely on brittle string parsing.
+    # This makes the EM updates reaction-scoped.
+    if "reaction_id" not in current_participants_df.columns:
+        # Build reaction_id -> set(species_id) from the extracted reaction strings.
+        # IMPORTANT: `reactions` is aligned with `reaction_ids` by construction in callers.
+        reaction_to_participants: Dict[str, Set[str]] = {}
+        for rid, rxn_str in zip(reaction_ids, reactions):
+            reaction_to_participants[str(rid)] = _species_ids_from_reaction_string(rxn_str)
+        species_to_reactions: Dict[str, Set[str]] = {}
+        for rid, parts in reaction_to_participants.items():
+            for pid in parts:
+                species_to_reactions.setdefault(pid, set()).add(rid)
+        current_participants_df = _assign_reaction_id_rows_to_participants(
+            current_participants_df,
+            species_to_reactions=species_to_reactions,
+        )
     
     # Track rScores for convergence checking
     prev_rscores = None
@@ -858,7 +940,14 @@ def update_participant_likelihoods(
     for iteration in range(1, convergence_config.max_iterations + 1):
         # Log statistics
         if 'participant_likelihood' in current_participants_df.columns:
-            likelihood_stats = current_participants_df.groupby('id')['participant_likelihood'].agg(['mean', 'min', 'max'])
+            if "reaction_id" in current_participants_df.columns:
+                likelihood_stats = (
+                    current_participants_df
+                    .groupby(['reaction_id', 'id'])['participant_likelihood']
+                    .agg(['mean', 'min', 'max'])
+                )
+            else:
+                likelihood_stats = current_participants_df.groupby('id')['participant_likelihood'].agg(['mean', 'min', 'max'])
             logger.info(f"Iteration {iteration} - Before update:")
             for idx, row in likelihood_stats.head().iterrows():
                 logger.debug(f"ID {idx}: mean={row['mean']:.4f}, min={row['min']:.4f}, max={row['max']:.4f}")
@@ -892,7 +981,9 @@ def update_participant_likelihoods(
                 updated_participants_df_with_kegg = pd.concat([
                     updated_participants_df_with_kegg,
                     new_kegg_candidates
-                ]).drop_duplicates(subset=['id', 'KEGG_ID']).reset_index(drop=True)
+                ]).drop_duplicates(
+                    subset=['id', 'KEGG_ID'] + (['reaction_id'] if 'reaction_id' in updated_participants_df_with_kegg.columns else [] )
+                ).reset_index(drop=True)
                 
                 # Only add valid new candidates to high_score_recommendations
                 valid_new_candidates = new_kegg_candidates[
@@ -908,7 +999,9 @@ def update_participant_likelihoods(
                     high_score_recommendations = pd.concat([
                         high_score_recommendations,
                         valid_new_candidates
-                    ]).drop_duplicates(subset=['id', 'KEGG_ID']).reset_index(drop=True)
+                    ]).drop_duplicates(
+                        subset=['id', 'KEGG_ID'] + (['reaction_id'] if 'reaction_id' in high_score_recommendations.columns else [] )
+                    ).reset_index(drop=True)
                     
                     logger.info(f"Added {len(valid_new_candidates)} valid candidates to high_score_recommendations")
         
@@ -961,11 +1054,23 @@ def update_participant_likelihoods(
         # logger.info(f"Iteration {iteration}: Mapping reactions to KEGG")
         normalized_reactions, match_results, _species_relax_levels = map_reactions_to_kegg_with_relaxation(
             reactions,
+            reaction_ids,
             high_score_recommendations,
             spectators=False,
             cofactors_to_ignore=cofactor_config.kegg_ids,
             top_k=None,
         )
+
+        # Only keep reaction candidates that are eligible for updating.
+        # The upstream matcher may emit "non_mappable" recommendations; we
+        # exclude them here so iterative matching never updates those rows.
+        allowed_reaction_types = {"mappable", "ambiguous_mapping"}
+        match_results = [
+            rec
+            for rec in match_results
+            if str((getattr(rec, "metadata", None) or {}).get("reaction_type", "mappable"))
+            in allowed_reaction_types
+        ]
         
         # Generate recommendation table
         # logger.info(f"Iteration {iteration}: Generating recommendation table")
@@ -990,16 +1095,15 @@ def update_participant_likelihoods(
         # Build participant annotations dictionary for rScore computation
         # Format: {reaction_id: {participant_id: kegg_annotation}}
         participant_annotations = {}
+        
         for _, row in updated_participants_df_with_kegg.iterrows():
             if pd.notna(row.get('KEGG_ID')) and row['KEGG_ID'] != '':
-                # Extract reaction ID from participant ID
                 participant_id = row['id']
-                # Assume format like "R_HEX1_M_glc__D_c" where reaction is before first underscore after R_
-                parts = participant_id.split('_')
-                if len(parts) >= 2:
-                    reaction_id = '_'.join(parts[:2])  # e.g., "R_HEX1"
-                else:
-                    reaction_id = participant_id
+                if 'reaction_id' not in updated_participants_df_with_kegg.columns:
+                    continue
+                if pd.isna(row.get('reaction_id')) or row['reaction_id'] == '':
+                    continue 
+                reaction_id = str(row['reaction_id'])
                 
                 if reaction_id not in participant_annotations:
                     participant_annotations[reaction_id] = {}
@@ -1012,9 +1116,12 @@ def update_participant_likelihoods(
                     current_likelihood = updated_participants_df_with_kegg[
                         (updated_participants_df_with_kegg['id'] == participant_id) &
                         (updated_participants_df_with_kegg['KEGG_ID'] == participant_annotations[reaction_id][participant_id])
+                        &
+                        (updated_participants_df_with_kegg.get('reaction_id') == reaction_id)
                     ]['participant_likelihood'].iloc[0] if len(updated_participants_df_with_kegg[
                         (updated_participants_df_with_kegg['id'] == participant_id) &
-                        (updated_participants_df_with_kegg['KEGG_ID'] == participant_annotations[reaction_id][participant_id])
+                        (updated_participants_df_with_kegg['KEGG_ID'] == participant_annotations[reaction_id][participant_id]) &
+                        (updated_participants_df_with_kegg.get('reaction_id') == reaction_id)
                     ]) > 0 else 0.0
                     
                     new_likelihood = row.get('participant_likelihood', 0.0)
@@ -1111,11 +1218,16 @@ def map_chebi_to_kegg(recommendations_df: pd.DataFrame) -> Tuple[pd.DataFrame, p
     
     expanded_rows = []
     existing_mappings = {}
+    has_reaction_id = "reaction_id" in recommendations_df.columns
+    # Extend de-duplication/keying so reaction-scoped participant rows don't collapse.
+    dedup_cols = ["id", "annotation", "KEGG_ID"] + (["reaction_id"] if has_reaction_id else [])
     
     if 'KEGG_ID' in recommendations_df.columns and 'participant_likelihood' in recommendations_df.columns:
         for _, row in recommendations_df.iterrows():
             if pd.notna(row['KEGG_ID']) and row['KEGG_ID'] != '':
-                key = (row['id'], row['annotation'], row['KEGG_ID'])
+                key = (row['id'], row['annotation'], row['KEGG_ID']) + (
+                    (row['reaction_id'],) if has_reaction_id else tuple()
+                )
                 existing_mappings[key] = row['participant_likelihood']
     
     if not recommendations_df.empty and 'annotation' in recommendations_df.columns:
@@ -1135,7 +1247,9 @@ def map_chebi_to_kegg(recommendations_df: pd.DataFrame) -> Tuple[pd.DataFrame, p
                     if kegg_id:
                         row_copy = row.copy()
                         row_copy['KEGG_ID'] = kegg_id
-                        key = (row['id'], row['annotation'], kegg_id)
+                        key = (row['id'], row['annotation'], kegg_id) + (
+                            (row['reaction_id'],) if has_reaction_id else tuple()
+                        )
                         if key in existing_mappings:
                             row_copy['participant_likelihood'] = existing_mappings[key]
                         expanded_rows.append(row_copy)
@@ -1147,7 +1261,7 @@ def map_chebi_to_kegg(recommendations_df: pd.DataFrame) -> Tuple[pd.DataFrame, p
             return recommendations_df, pd.DataFrame()
         
         combined_df = pd.concat([recommendations_df, expanded_df]).drop_duplicates(
-            subset=['id', 'annotation', 'KEGG_ID']
+            subset=dedup_cols
         )
     else:
         recommendations_df['KEGG_ID'] = ""
@@ -1181,7 +1295,7 @@ def extract_reaction_participants(
     
     for reaction in model_info['reactions']:
         reaction_id = reaction.split(':')[0].strip()
-        participant_str = extract_classifications(reaction.split(':')[1].strip(), 'definition')
+        participant_str = extract_classifications(reaction, 'definition')
         
         participant_names = []
         for participant in participant_str.split('; '):
