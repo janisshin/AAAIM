@@ -41,6 +41,11 @@ logger = logging.getLogger(__name__)
 
 load_dotenv()
 
+model_file = "tests/glycolysis_part1.xml"
+kegg_features_file = "data/kegg/kegg_reaction_features.lzma"
+llm_model = "meta-llama/llama-3.1-8b-instruct"
+recommendations_df = pd.read_csv("recommendations_correctedChEBI.csv")
+
 
 def run_kegg_annotation_workflow(
     model_file: str,
@@ -171,15 +176,12 @@ def run_kegg_annotation_workflow(
 
 
 def main() -> None:
-    model_file = "tests/glycolysis_part1.xml"
-    kegg_features_file = "data/kegg/kegg_reaction_features.lzma"
-    llm_model = "meta-llama/llama-3.1-8b-instruct"
+    
 
     logger.info("AAAIM KEGG Reaction Annotation Example")
     logger.info("=" * 50)
 
     logger.info("Step 1: Loading chemical species recommendations")
-    recommendations_df = pd.read_csv("recommendations_correctedChEBI.csv")
 
     run_kegg_annotation_workflow(
         model_file=model_file,

@@ -22,3 +22,10 @@ tests/autoType/
 
 # subfolders for LLM response cache
 tests/results/**
+
+.vscode/
+
+# testing files
+**/scratch.ipynb
+**/participants_likelihood*.csv
+**/reaction_likelihood*.csv
