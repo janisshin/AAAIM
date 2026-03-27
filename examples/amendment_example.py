@@ -9,6 +9,7 @@ likelihoods, and iterative participant updates (see core.reaction_amendment).
 """
 
 import logging
+import os
 import sys
 from collections import Counter
 from pathlib import Path
@@ -19,6 +20,7 @@ from dotenv import load_dotenv
 
 sys.path.append(str(Path(__file__).parent.parent))
 
+from core import annotate_model
 from core.model_info import extract_model_info, extract_reactions_from_sbml, get_all_reaction_ids
 from core.annotation_workflow import map_reactions_to_kegg_with_relaxation, _generate_recommendation_table
 from core.reaction_amendment_config import CofactorConfig, ConvergenceConfig, MatchingConfig
@@ -44,8 +46,66 @@ load_dotenv()
 model_file = "tests/glycolysis_part1.xml"
 kegg_features_file = "data/kegg/kegg_reaction_features.lzma"
 llm_model = "meta-llama/llama-3.1-8b-instruct"
-recommendations_df = pd.read_csv("recommendations_correctedChEBI.csv")
+# recommendations_df = pd.read_csv("recommendations_correctedChEBI.csv")
+recommendations_df = pd.read_csv("recommendations_unrelaxedChEBI.csv")
+TOP_K=10
 
+
+print(f"Model file: {model_file}")
+print(f"LLM model: {llm_model}")
+print()
+
+print(f"\nAnalyzing model: {model_file}")
+
+# Example 1: Reaction Annotation Workflow
+print("\n1. Reaction Annotation Workflow (for models without reaction annotations)")
+print("-" * 65)
+
+# first annotate model using ChEBI
+"""try:    
+    recommendations_df, metrics = annotate_model(
+        model_file=model_file,
+        llm_model=llm_model,
+        entity_type="chemical",
+        database="chebi",
+        method="rag",
+        top_k=TOP_K,
+    )
+    # Display annotation results
+    if not recommendations_df.empty:
+        print("Annotation Results:")
+        print(f"Total entities in model: {metrics['total_entities']}")
+        print(f"Entities with predictions: {metrics['entities_with_predictions']}")
+        print(f"Annotation rate: {metrics['annotation_rate']:.1%}")
+        
+        if not pd.isna(metrics['accuracy']):
+            print(f"Accuracy (where existing annotations available): {metrics['accuracy']:.1%}")
+        else:
+            print("Accuracy: N/A (no existing annotations to compare against)")
+        
+        print(f"Total time: {metrics['total_time']:.2f}s")
+        print()
+        
+        # Show sample recommendations
+        print("Sample Annotation Recommendations:")
+        sample_df = recommendations_df[['id', 'display_name', 'annotation', 'annotation_label', 'match_score', 'existing']].head(5)
+        print(sample_df.to_string(index=False))
+        print()
+        
+        # Save results
+        output_file = "recommendations.csv"
+        recommendations_df.to_csv(output_file, index=False)
+        print(f"Full chemical species annotation results saved to: {output_file}")
+        
+    else:
+        print("No annotation recommendations generated.")
+        if 'error' in metrics:
+            print(f"Error: {metrics['error']}")
+
+except Exception as e:
+    print(f"Processing failed: {e}")
+    import traceback
+    traceback.print_exc()"""
 
 def run_kegg_annotation_workflow(
     model_file: str,
@@ -177,9 +237,14 @@ def run_kegg_annotation_workflow(
 
 def main() -> None:
     
-
     logger.info("AAAIM KEGG Reaction Annotation Example")
     logger.info("=" * 50)
+
+    # Check API keys
+    if not os.getenv("OPENAI_API_KEY") and not os.getenv("OPENROUTER_API_KEY"):
+        print("Warning: No API keys found in environment.")
+        print("Set OPENAI_API_KEY or OPENROUTER_API_KEY to use LLM features.")
+        return
 
     logger.info("Step 1: Loading chemical species recommendations")
 

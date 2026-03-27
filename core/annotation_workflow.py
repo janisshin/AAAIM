@@ -34,6 +34,8 @@ from core.database_search import (
 )
 from core.hierarchy_relaxation import (
     build_kegg_mapping_dataframe,
+    iter_chebi_for_species,
+    load_chebi_child_map,
     load_chebi_parent_map,
     merge_chebi_to_kegg_mapping,
     normalize_chebi,
@@ -645,10 +647,10 @@ def map_reactions_to_kegg(rxn_list: List[str], reaction_ids: List[str], id_df: p
         - substrates: List of Counter objects with mapped substrate KEGG IDs and stoichiometry
         - products: List of Counter objects with mapped product KEGG IDs and stoichiometry
     """
-    # Create lookup table from DataFrame for faster mapping
-    id_lookup = id_df.set_index('id')['KEGG_ID']
+    # Keep full rows so we can propagate relaxation metadata when available.
+    id_lookup = id_df.copy()
 
-    def map_metabolites_to_kegg(counter: Counter, mapping_df: pd.Series) -> List[Counter]:
+    def map_metabolites_to_kegg(counter: Counter, mapping_df: pd.DataFrame) -> List[Counter]:
         """
         Map metabolite IDs to KEGG IDs while preserving stoichiometry.
         
@@ -657,7 +659,7 @@ def map_reactions_to_kegg(rxn_list: List[str], reaction_ids: List[str], id_df: p
         
         Args:
             counter: Counter mapping metabolite IDs to stoichiometric coefficients
-            mapping_df: Series mapping metabolite IDs to KEGG IDs
+            mapping_df: DataFrame mapping metabolite IDs to KEGG IDs (+ optional metadata)
             
         Returns:
             List of Counter objects representing all possible KEGG ID mappings
@@ -667,16 +669,30 @@ def map_reactions_to_kegg(rxn_list: List[str], reaction_ids: List[str], id_df: p
         for met, coeff in counter.items():
             # Try to find KEGG IDs for this metabolite
             try:
-                kegg_ids = mapping_df.loc[met]
-                
-                if isinstance(kegg_ids, pd.Series) or (isinstance(kegg_ids, list) & len(kegg_ids) > 1):
-                    # Multiple KEGG IDs for this metabolite
-                    choices = set([kid for kid in kegg_ids.tolist()])
+                met_rows = mapping_df[mapping_df["id"] == met]
+                if met_rows.empty:
+                    raise KeyError(met)
+
+                if "direction" in met_rows.columns and "distance" in met_rows.columns:
+                    choices = []
+                    for _, row in met_rows.iterrows():
+                        kid = row.get("KEGG_ID")
+                        if pd.isna(kid) or str(kid).strip() == "":
+                            continue
+                        choices.append(
+                            {
+                                "kegg_id": str(kid).strip(),
+                                "canonical_id": str(row.get("canonical_id", "")).strip(),
+                                "direction": str(row.get("direction", "exact")).strip(),
+                                "distance": int(row.get("distance", 0) or 0),
+                            }
+                        )
                 else:
-                    # Single KEGG ID
-                    choices = [kegg_ids]
+                    # Backward-compatible path when only id/KEGG_ID are present.
+                    choices = [str(kid).strip() for kid in met_rows["KEGG_ID"].tolist() if str(kid).strip()]
                 
                 id_choices[met] = {
+                    'species_id': met,
                     'coeff': coeff,
                     'candidates': choices
                 }
@@ -816,7 +832,7 @@ def _top_kegg_reference_from_matches(match_results: List[Any]) -> Dict[str, str]
 def _species_ids_for_chebi_relax_targets(
     chebi_hit: Set[str],
     species_ids: Iterable[str],
-    species_to_chebi: Mapping[str, str],
+    species_to_chebi: Mapping[str, Any],
     relax_level: Mapping[str, int],
     max_relax_level: int,
 ) -> Set[str]:
@@ -826,9 +842,10 @@ def _species_ids_for_chebi_relax_targets(
     for sid in species_ids:
         if int(relax_level.get(sid, 0)) >= max_relax_level:
             continue
-        ch = str(species_to_chebi.get(sid, "")).strip()
-        if ch in ch_norm:
-            out.add(sid)
+        for ch in iter_chebi_for_species(species_to_chebi, str(sid)):
+            if str(ch).strip() in ch_norm:
+                out.add(sid)
+                break
     return out
 
 
@@ -836,7 +853,7 @@ def _leave_one_out_penalized_matcher_factory(
     nr: Dict[str, Any],
     ref_kegg: str,
     part: Set[str],
-    species_to_chebi: Mapping[str, str],
+    species_to_chebi: Mapping[str, Any],
     relax_level: Mapping[str, int],
     merged_kegg: Mapping[str, Set[str]],
     parent_map: Mapping[str, Set[str]],
@@ -890,7 +907,7 @@ def _leave_one_out_penalized_matcher_factory(
 
 def _kegg_counters_from_normalized_block(
     block: Any,
-    species_to_chebi: Mapping[str, str],
+    species_to_chebi: Mapping[str, Any],
     relax_level: Mapping[str, int],
     merged_kegg: Mapping[str, Set[str]],
     parent_map: Mapping[str, Set[str]],
@@ -911,20 +928,48 @@ def _kegg_counters_from_normalized_block(
     for met_id, v in block.items():
         if not isinstance(v, dict):
             continue
-        ch = str(species_to_chebi.get(met_id, "")).strip()
-        if ex and ch == ex:
-            continue
         coeff = float(v.get("coeff", 1))
         lvl = int(relax_level.get(met_id, 0))
-        keggs = (
-            normalize_chebi(ch, merged_kegg, parent_map, level=lvl, max_depth=max_ancestor_depth)
-            if ch
-            else set()
-        )
-        for kid in keggs:
+        keggs_union: Set[str] = set()
+        for ch in iter_chebi_for_species(species_to_chebi, str(met_id)):
+            c = str(ch).strip()
+            if not c:
+                continue
+            if ex and c == ex:
+                continue
+            keggs_union.update(
+                normalize_chebi(
+                    c, merged_kegg, parent_map, level=lvl, max_depth=max_ancestor_depth
+                )
+            )
+        for kid in keggs_union:
             if kid:
                 ctr[kid] += coeff
     return ctr
+
+
+def _species_to_chebi_from_recommendations(df: pd.DataFrame) -> Dict[str, List[str]]:
+    """
+    Build species id → list of distinct ChEBI annotation strings.
+
+    All recommendation rows are retained (no single-row-per-id collapse). Order
+    follows ``match_score`` descending when that column exists, so higher-ranked
+    candidates appear first in each list.
+    """
+    if "match_score" in df.columns:
+        sorted_df = df.sort_values("match_score", ascending=False)
+    else:
+        sorted_df = df
+    out: Dict[str, List[str]] = {}
+    for _, row in sorted_df.iterrows():
+        sid = str(row["id"]).strip()
+        ann = str(row["annotation"]).strip()
+        if not sid or not ann:
+            continue
+        out.setdefault(sid, [])
+        if ann not in out[sid]:
+            out[sid].append(ann)
+    return out
 
 
 def map_reactions_to_kegg_with_relaxation(
@@ -939,6 +984,7 @@ def map_reactions_to_kegg_with_relaxation(
     spectators: bool = False,
     max_relax_level: int = 2,
     max_ancestor_depth: int = 2,
+    max_descendant_depth: Optional[int] = None,
     score_gain_threshold: float = 0.0,
     score_tolerance: float = 1e-3,
     max_relaxation_rounds: int = 8,
@@ -965,9 +1011,13 @@ def map_reactions_to_kegg_with_relaxation(
        ``max_relax_level``).
 
     Args:
+        max_descendant_depth: Maximum downward traversal depth used for
+            relaxation-aware ChEBI expansion. If None, defaults to
+            ``max_ancestor_depth`` for backward-compatible behavior.
         rxn_list: Reaction strings ``"RID: lhs -> rhs"`` as for map_reactions_to_kegg.
         species_recommendations_df: Must include ``id`` (species) and ``annotation``
-            (ChEBI ID). Optional ``match_score`` selects the best ChEBI per species.
+            (ChEBI ID). Optional ``match_score`` ranks rows; **all** distinct
+            ``annotation`` values per ``id`` are kept (not only the top row).
         parent_map: Optional precomputed child→parents map; otherwise loaded via
             ``load_chebi_parent_map`` (gz or OBO under data/chebi/).
         chebi_to_kegg: Optional raw ChEBI→KEGG dict; defaults to
@@ -997,23 +1047,16 @@ def map_reactions_to_kegg_with_relaxation(
     if df.empty:
         return [], [], {}
 
-    if "match_score" in df.columns:
-        sdf = df.sort_values("match_score", ascending=False)
-    else:
-        sdf = df
-    species_to_chebi = (
-        sdf.drop_duplicates(subset=["id"], keep="first")
-        .set_index("id")["annotation"]
-        .astype(str)
-        .to_dict()
-    )
+    species_to_chebi = _species_to_chebi_from_recommendations(df)
 
     if parent_map is None:
         parent_map = load_chebi_parent_map(obo_path=obo_path, gz_path=parent_map_gz)
+    child_map = load_chebi_child_map(parent_map=parent_map)
     if chebi_to_kegg is None:
         chebi_to_kegg = load_chebi2kegg_dict()
 
     merged_kegg = merge_chebi_to_kegg_mapping(chebi_to_kegg)
+    down_depth = int(max_ancestor_depth) if max_descendant_depth is None else int(max_descendant_depth)
 
     relax_level: Dict[str, int] = {sid: 0 for sid in species_to_chebi}
 
@@ -1027,12 +1070,13 @@ def map_reactions_to_kegg_with_relaxation(
     def compute_global_score(levels: Mapping[str, int]) -> float:
         """Evaluate the full-model global objective at the provided relaxation levels."""
         trial_id_kegg_df = build_kegg_mapping_dataframe(
-            species_to_chebi.keys(),
             species_to_chebi,
             levels,
             merged_kegg,
             parent_map,
             max_ancestor_depth=max_ancestor_depth,
+            child_map=child_map,
+            max_descendant_depth=down_depth,
         )
         trial_normalized_reactions = map_reactions_to_kegg(
             rxn_list, reaction_ids, trial_id_kegg_df, spectators=spectators
@@ -1045,18 +1089,25 @@ def map_reactions_to_kegg_with_relaxation(
             relaxation_levels_by_entity=levels,
             penalty_lam=penalty_lam,
             max_relax_level=max_relax_level,
+            species_to_chebi=species_to_chebi,
+            parent_map=parent_map,
+            child_map=child_map,
+            chebi_to_kegg=merged_kegg,
+            max_ancestor_depth=max_ancestor_depth,
+            max_descendant_depth=down_depth,
         )
         return float(_aggregate_best_penalized_scores(trial_match_results))
 
     for _iteration in range(max_iterations):
         # --- Step 1: build normalized reactions ---
         id_kegg_df = build_kegg_mapping_dataframe(
-            species_to_chebi.keys(),
             species_to_chebi,
             relax_level,
             merged_kegg,
             parent_map,
             max_ancestor_depth=max_ancestor_depth,
+            child_map=child_map,
+            max_descendant_depth=down_depth,
         )
         normalized_reactions = map_reactions_to_kegg(
             rxn_list, reaction_ids, id_kegg_df, spectators=spectators
@@ -1075,6 +1126,12 @@ def map_reactions_to_kegg_with_relaxation(
             relaxation_levels_by_entity=relax_level,
             penalty_lam=penalty_lam,
             max_relax_level=max_relax_level,
+            species_to_chebi=species_to_chebi,
+            parent_map=parent_map,
+            child_map=child_map,
+            chebi_to_kegg=merged_kegg,
+            max_ancestor_depth=max_ancestor_depth,
+            max_descendant_depth=down_depth,
         )
         score = _aggregate_best_penalized_scores(match_results)
         coverage = _reaction_coverage_stats(match_results)
@@ -1099,9 +1156,10 @@ def map_reactions_to_kegg_with_relaxation(
             species_in_any_part |= part
             chebi_union = sorted(
                 {
-                    str(species_to_chebi[s]).strip()
+                    c
                     for s in part
-                    if str(species_to_chebi.get(s, "")).strip()
+                    for c in iter_chebi_for_species(species_to_chebi, str(s))
+                    if c
                 }
             )
             if not chebi_union:
@@ -1149,9 +1207,10 @@ def map_reactions_to_kegg_with_relaxation(
         if orphan:
             orch_chebi = sorted(
                 {
-                    str(species_to_chebi[s]).strip()
+                    c
                     for s in orphan
-                    if str(species_to_chebi.get(s, "")).strip()
+                    for c in iter_chebi_for_species(species_to_chebi, str(s))
+                    if c
                 }
             )
             if orch_chebi:

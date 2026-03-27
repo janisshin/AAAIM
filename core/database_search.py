@@ -9,7 +9,7 @@ import os
 import re
 import lzma
 import pickle
-from typing import Any, Dict, List, Mapping, Optional, Tuple
+from typing import Any, Dict, List, Mapping, Optional, Set, Tuple
 from pathlib import Path
 from dataclasses import dataclass
 import logging
@@ -22,7 +22,12 @@ from utils.constants import REF_CHEBI2LABEL, REF_NAMES2CHEBI, REF_NCBIGENE2LABEL
 from utils.constants import REF_CHEBI2KEGG_COMPOUND, REF_KEGG_REACTION2NAME, REF_KEGG2EC, REF_KEGG_REACTION_FEATURES, REF_KEGG_PARSED_REACTIONS
 # from utils.constants import SYNONYM_WORDS_TO_REMOVE
 from core.data_types import Recommendation, ReactionRecommendation
-from core.hierarchy_relaxation import unified_reaction_objective
+from core.hierarchy_relaxation import (
+    expand_chebi_with_metadata,
+    iter_chebi_for_species,
+    kegg_ids_for_chebi_term,
+    unified_reaction_objective,
+)
 from core.reaction_classification import classify_reaction
 from core.kegg_definition_text import extract_classifications
 
@@ -606,7 +611,7 @@ def _get_ncbigene_recommendations_direct(species_ids: List[str], synonyms_dict, 
             for tid in tax_ids_to_search:
                 try:
                     names_dict = load_ncbigene_names_dict(tax_id=tid)
-                except Exception:
+                except Exception as e:
                     logger.warning(f"Error loading NCBI gene names for tax_id {tid}: {e}")
                     continue
                 for ref_name, gene_ids in names_dict.items():
@@ -756,6 +761,14 @@ def _get_kegg_recommendations_rulebased(
     relaxation_levels_by_entity: Optional[Mapping[str, int]] = None,
     penalty_lam: float = 0.0,
     max_relax_level: int = 1,
+    species_to_chebi: Optional[Mapping[str, Any]] = None,
+    parent_map: Optional[Mapping[str, set]] = None,
+    child_map: Optional[Mapping[str, set]] = None,
+    chebi_to_kegg: Optional[Mapping[str, Any]] = None,
+    max_ancestor_depth: int = 2,
+    max_descendant_depth: int = 1,
+    max_species_relax_depth: Optional[int] = None,
+    max_reaction_relax_depth: Optional[int] = None,
 ) -> List[Recommendation]:
     """
     Find KEGG reaction recommendations by matching model reactions to KEGG reactions.
@@ -787,6 +800,179 @@ def _get_kegg_recommendations_rulebased(
             )
         return new_recs
     
+    # Helper to normalize a candidate entry into a single KEGG ID string
+    def _normalize_cand_id(c):
+        if isinstance(c, (list, tuple, set)):
+            return next(iter(c)) if c else None
+        if isinstance(c, dict):
+            return c.get("kegg_id")
+        return c
+
+    def _candidate_meta(c) -> Dict[str, Any]:
+        if isinstance(c, dict):
+            return {
+                "canonical_id": str(c.get("canonical_id", "")).strip(),
+                "direction": str(c.get("direction", "exact")).strip(),
+                "distance": int(c.get("distance", 0) or 0),
+            }
+        return {"canonical_id": "", "direction": "exact", "distance": 0}
+
+    def _collect_side(side_block: Dict[str, Any], participant_relaxation: Dict[str, Dict[str, Any]]):
+        side_keys = set()
+        side_counter = Counter()
+        for species_id, v in side_block.items():
+            coeff = v.get('coeff', 1)
+            for cand in v.get('candidates', []):
+                cid = _normalize_cand_id(cand)
+                if cid is None:
+                    continue
+                side_keys.add(cid)
+                side_counter[cid] += coeff
+                meta = _candidate_meta(cand)
+                key = f"{species_id}|{cid}" if species_id else cid
+                prev = participant_relaxation.get(key)
+                if prev is None or meta["distance"] < prev["distance"]:
+                    participant_relaxation[key] = {
+                        "species_id": species_id,
+                        "canonical_id": meta["canonical_id"],
+                        "kegg_id": cid,
+                        "direction": meta["direction"],
+                        "distance": meta["distance"],
+                    }
+                elif meta["distance"] == prev["distance"]:
+                    rank = {"exact": 2, "down": 1, "up": 0}
+                    if rank.get(meta["direction"], -1) > rank.get(prev.get("direction"), -1):
+                        participant_relaxation[key] = {
+                            "species_id": species_id,
+                            "canonical_id": meta["canonical_id"],
+                            "kegg_id": cid,
+                            "direction": meta["direction"],
+                            "distance": meta["distance"],
+                        }
+        return side_keys, side_counter
+
+    def _strict_filter(sub_keys: set, prod_keys: set):
+        only_cofactors_subs = all(key in cofactors_to_ignore for key in sub_keys)
+        only_cofactors_prods = all(key in cofactors_to_ignore for key in prod_keys)
+        if only_cofactors_subs or only_cofactors_prods:
+            candidates = filter_kegg_reactions(sub_keys, prod_keys)
+            filtered_species_local = set(sub_keys) | set(prod_keys)
+        else:
+            candidates = filter_kegg_reactions(sub_keys, prod_keys) + filter_kegg_reactions(
+                sub_keys, prod_keys, cofactors_to_ignore=cofactors_to_ignore
+            )
+            candidates = set(candidates)
+            filtered_species_local = {
+                k for k in (set(sub_keys) | set(prod_keys)) if k not in cofactors_to_ignore
+            }
+        return candidates, filtered_species_local
+
+    def _build_relaxed_block(
+        side_block: Dict[str, Any],
+        *,
+        depth: int,
+        direction_limit_up: int,
+        direction_limit_down: int,
+    ) -> Dict[str, Any]:
+        out: Dict[str, Any] = {}
+        for species_id, v in side_block.items():
+            coeff = v.get("coeff", 1)
+            chebi_ids = (
+                iter_chebi_for_species(species_to_chebi or {}, str(species_id))
+                if species_to_chebi is not None
+                else []
+            )
+            if not chebi_ids or parent_map is None or chebi_to_kegg is None:
+                out[species_id] = {"species_id": species_id, "coeff": coeff, "candidates": v.get("candidates", [])}
+                continue
+            expanded_candidates: List[Dict[str, Any]] = []
+            seen: Set[Tuple[str, str, str, int]] = set()
+            for chebi_id in chebi_ids:
+                expansion = expand_chebi_with_metadata(
+                    chebi_id,
+                    parent_map,
+                    child_map=child_map,
+                    max_up_depth=min(int(depth), int(direction_limit_up)),
+                    max_down_depth=min(int(depth), int(direction_limit_down)),
+                )
+                for cid, meta in expansion.items():
+                    keggs = kegg_ids_for_chebi_term(cid, chebi_to_kegg)
+                    for kid in sorted(keggs):
+                        direction = str(meta.get("direction", "exact"))
+                        dist = int(meta.get("distance", 0))
+                        key = (kid, cid, direction, dist)
+                        if key in seen:
+                            continue
+                        seen.add(key)
+                        expanded_candidates.append(
+                            {
+                                "kegg_id": kid,
+                                "canonical_id": cid,
+                                "direction": direction,
+                                "distance": dist,
+                            }
+                        )
+            out[species_id] = {
+                "species_id": species_id,
+                "coeff": coeff,
+                "candidates": expanded_candidates,
+            }
+        return out
+
+    def _species_ids_from_equation_side(side_str: str) -> set:
+        out = set()
+        side = str(side_str or "").strip()
+        if not side:
+            return out
+        for term in side.split("+"):
+            parts = term.strip().split()
+            if not parts:
+                continue
+            if len(parts) == 1:
+                met = parts[0]
+            else:
+                try:
+                    float(parts[0])
+                except ValueError:
+                    met = term.strip()
+                else:
+                    met = parts[-1]
+            met = met.lstrip("$").strip()
+            if met:
+                out.add(met)
+        return out
+
+    def _reaction_species_ids(reaction_equation: str) -> Tuple[set, set]:
+        if "=>" in reaction_equation or "->" in reaction_equation:
+            lhs, rhs = re.split(r"=>|->", reaction_equation, maxsplit=1)
+            return _species_ids_from_equation_side(lhs), _species_ids_from_equation_side(rhs)
+        return set(), set()
+
+    def _expand_one_species(chebi_id: str, depth: int) -> List[Dict[str, Any]]:
+        if not chebi_id or parent_map is None or chebi_to_kegg is None:
+            return []
+        expansion = expand_chebi_with_metadata(
+            chebi_id,
+            parent_map,
+            child_map=child_map,
+            max_up_depth=min(int(depth), int(max_ancestor_depth)),
+            max_down_depth=min(int(depth), int(max_descendant_depth)),
+        )
+        out: List[Dict[str, Any]] = []
+        for cid, meta in expansion.items():
+            keggs = kegg_ids_for_chebi_term(cid, chebi_to_kegg)
+            for kid in sorted(keggs):
+                out.append(
+                    {
+                        "kegg_id": kid,
+                        "canonical_id": cid,
+                        "direction": str(meta.get("direction", "exact")),
+                        "distance": int(meta.get("distance", 0)),
+                    }
+                )
+        return out
+
+
     try:
         logger.info(f"Loading KEGG reaction data...")
         # Load KEGG reaction data
@@ -824,51 +1010,138 @@ def _get_kegg_recommendations_rulebased(
                     for mid in involved_met_ids
                 }
 
-            # Helper to normalize a candidate entry into a single KEGG ID string
-            def _normalize_cand_id(c):
-                if isinstance(c, (list, tuple, set)):
-                    return next(iter(c)) if c else None
-                return c
+            species_depth_cap = (
+                max(1, int(max_relax_level))
+                if max_species_relax_depth is None
+                else max(1, int(max_species_relax_depth))
+            )
+            reaction_depth_cap = (
+                max(1, int(max_relax_level))
+                if max_reaction_relax_depth is None
+                else max(1, int(max_reaction_relax_depth))
+            )
 
-            # Build sets of unique KEGG IDs (for filtering) and Counters (for scoring)
-            model_sub_keys = set()
-            sub_counter = Counter()
-            for v in model_subs.values():
-                coeff = v.get('coeff', 1)
-                for cand in v.get('candidates', []):
-                    cid = _normalize_cand_id(cand)
-                    if cid is None:
-                        continue
-                    model_sub_keys.add(cid)
-                    sub_counter[cid] += coeff
+            active_subs = dict(model_subs)
+            active_prods = dict(model_prods)
 
-            model_prod_keys = set()
-            prod_counter = Counter()
-            for v in model_prods.values():
-                coeff = v.get('coeff', 1)
-                for cand in v.get('candidates', []):
-                    cid = _normalize_cand_id(cand)
-                    if cid is None:
+            # --- Stage 1A: species-level relaxation (independent trigger) ---
+            # Trigger: species has no KEGG candidates (including dropped/unmapped species).
+            lhs_species, rhs_species = _reaction_species_ids(reaction_str)
+
+            if species_to_chebi is not None and parent_map is not None and chebi_to_kegg is not None:
+                for sid in sorted(lhs_species):
+                    entry = active_subs.get(sid)
+                    has_candidates = bool(entry and entry.get("candidates"))
+                    if has_candidates:
                         continue
-                    model_prod_keys.add(cid)
-                    prod_counter[cid] += coeff
-            
-            only_cofactors_subs = all(key in cofactors_to_ignore for key in model_sub_keys)
-            only_cofactors_prods = all(key in cofactors_to_ignore for key in model_prod_keys)
-            
-            # If either substrates or products only contain cofactors, don't ignore cofactors in filtering
-            if only_cofactors_subs or only_cofactors_prods:
-                filtered_reaction_list = filter_kegg_reactions(model_sub_keys, model_prod_keys)
-                filtered_species = set(model_sub_keys) | set(model_prod_keys)
-            else:
-                # Otherwise, try both with and without ignoring cofactors
-                filtered_reaction_list = filter_kegg_reactions(model_sub_keys, model_prod_keys) + \
-                    filter_kegg_reactions(model_sub_keys, model_prod_keys, cofactors_to_ignore=cofactors_to_ignore)
-                filtered_reaction_list = set(filtered_reaction_list)
-                filtered_species = {
-                    k for k in (set(model_sub_keys) | set(model_prod_keys))
-                    if k not in cofactors_to_ignore
-                }
+                    coeff = 1 if entry is None else entry.get("coeff", 1)
+                    chebi_ids = iter_chebi_for_species(species_to_chebi, sid)
+                    recovered: List[Dict[str, Any]] = []
+                    seen_r: Set[Tuple[str, str, str, int]] = set()
+                    for chebi_id in chebi_ids:
+                        for depth in range(1, species_depth_cap + 1):
+                            chunk = _expand_one_species(chebi_id, depth)
+                            for item in chunk:
+                                key = (
+                                    item["kegg_id"],
+                                    item["canonical_id"],
+                                    item["direction"],
+                                    item["distance"],
+                                )
+                                if key not in seen_r:
+                                    seen_r.add(key)
+                                    recovered.append(item)
+                            if chunk:
+                                break
+                    active_subs[sid] = {"species_id": sid, "coeff": coeff, "candidates": recovered}
+
+                for sid in sorted(rhs_species):
+                    entry = active_prods.get(sid)
+                    has_candidates = bool(entry and entry.get("candidates"))
+                    if has_candidates:
+                        continue
+                    coeff = 1 if entry is None else entry.get("coeff", 1)
+                    chebi_ids = iter_chebi_for_species(species_to_chebi, sid)
+                    recovered = []
+                    seen_r = set()
+                    for chebi_id in chebi_ids:
+                        for depth in range(1, species_depth_cap + 1):
+                            chunk = _expand_one_species(chebi_id, depth)
+                            for item in chunk:
+                                key = (
+                                    item["kegg_id"],
+                                    item["canonical_id"],
+                                    item["direction"],
+                                    item["distance"],
+                                )
+                                if key not in seen_r:
+                                    seen_r.add(key)
+                                    recovered.append(item)
+                            if chunk:
+                                break
+                    active_prods[sid] = {"species_id": sid, "coeff": coeff, "candidates": recovered}
+
+            # --- Stage 1B: strict reaction filtering ---
+            participant_relaxation: Dict[str, Dict[str, Any]] = {}
+            model_sub_keys, sub_counter = _collect_side(active_subs, participant_relaxation)
+            model_prod_keys, prod_counter = _collect_side(active_prods, participant_relaxation)
+            filtered_reaction_list, filtered_species = _strict_filter(model_sub_keys, model_prod_keys)
+
+            # --- Stage 2: reaction-level fallback (independent trigger) ---
+            # Trigger: species have KEGG candidates but no matching KEGG reactions.
+            if (
+                len(filtered_reaction_list) == 0
+                and species_to_chebi is not None
+                and parent_map is not None
+                and chebi_to_kegg is not None
+            ):
+                previous_nodes: set = set()
+                up_cap = max(1, int(max_ancestor_depth))
+                down_cap = max(1, int(max_descendant_depth))
+                for depth in range(1, reaction_depth_cap + 1):
+                    trial_subs = _build_relaxed_block(
+                        active_subs,
+                        depth=depth,
+                        direction_limit_up=up_cap,
+                        direction_limit_down=down_cap,
+                    )
+                    trial_prods = _build_relaxed_block(
+                        active_prods,
+                        depth=depth,
+                        direction_limit_up=up_cap,
+                        direction_limit_down=down_cap,
+                    )
+                    expanded_nodes = set()
+                    for side in (trial_subs, trial_prods):
+                        for v in side.values():
+                            for c in v.get("candidates", []):
+                                if isinstance(c, dict):
+                                    expanded_nodes.add(str(c.get("canonical_id", "")).strip())
+                    if expanded_nodes == previous_nodes and depth > 1:
+                        break
+                    previous_nodes = expanded_nodes
+
+                    trial_participant_relaxation: Dict[str, Dict[str, Any]] = {}
+                    trial_sub_keys, trial_sub_counter = _collect_side(trial_subs, trial_participant_relaxation)
+                    trial_prod_keys, trial_prod_counter = _collect_side(trial_prods, trial_participant_relaxation)
+                    trial_candidates, trial_filtered_species = _strict_filter(trial_sub_keys, trial_prod_keys)
+                    if len(trial_candidates) > 0:
+                        filtered_reaction_list = trial_candidates
+                        filtered_species = trial_filtered_species
+                        active_subs = trial_subs
+                        active_prods = trial_prods
+                        participant_relaxation = trial_participant_relaxation
+                        model_sub_keys, sub_counter = trial_sub_keys, trial_sub_counter
+                        model_prod_keys, prod_counter = trial_prod_keys, trial_prod_counter
+                        break
+
+            # Direction/distance remain in participant_relaxation for debugging; scores are
+            # not penalized for hierarchy hops (multiple relaxed candidates may coexist).
+            reaction_penalty = 0.0
+
+            # Keep selected mapping (strict or relaxed) on recommendation payload.
+            model_subs = active_subs
+            model_prods = active_prods
             reaction_type = classify_reaction(
                 reaction_str,
                 filtered_species=filtered_species,
@@ -890,18 +1163,21 @@ def _get_kegg_recommendations_rulebased(
                         spectators=spectators,
                     )
                     # Ranking / top-k: use unified objective only (raw similarity = max_score).
-                    adjusted_score = unified_reaction_objective(
+                    match_score = unified_reaction_objective(
                         max_score,
                         reaction_relax_levels if reaction_relax_levels else None,
                         lam=penalty_lam,
                         max_relax_level=max_relax_level,
                     )
+                    adjusted_score = float(match_score)
                     matches.append(
                         {
                             "model_reaction_id": reaction_label,
                             "kegg_reaction_id": kegg_id,
                             "score_forward": score_forward,
                             "score_reverse": score_reverse,
+                            "base_match_score": match_score,
+                            "reaction_penalty": reaction_penalty,
                             "match_score": adjusted_score,
                         }
                     )
@@ -939,6 +1215,11 @@ def _get_kegg_recommendations_rulebased(
                     "reaction_type": reaction_type,
                     "filtered_species_count": int(len(filtered_species)),
                     "candidate_count": int(len(filtered_reaction_list)),
+                    "participant_relaxation": sorted(
+                        participant_relaxation.values(),
+                        key=lambda x: (x.get("species_id", ""), x.get("kegg_id", "")),
+                    ),
+                    "reaction_penalty": reaction_penalty,
                     "failed_default_score": 0.0,
                 },
             )

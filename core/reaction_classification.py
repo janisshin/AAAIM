@@ -34,6 +34,8 @@ def classify_reaction(
     if not lhs or not rhs:
         return "non_mappable"
     if len(cand) == 0:
-        return "non_mappable"
+        return "non_mappable" ### this is incorrect. This should trigger hierarchy relaxation loop and retry matching
+        ## actually, hierarchy relaxation candidates should be explored in the creation of filtered_reaction_list in database_search.py
+        
     return "mappable"
 

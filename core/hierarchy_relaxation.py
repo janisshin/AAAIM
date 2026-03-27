@@ -12,6 +12,7 @@ import gzip
 import json
 import logging
 from collections import defaultdict
+from collections import deque
 from pathlib import Path
 from typing import (
     Any,
@@ -27,6 +28,8 @@ from typing import (
     Union,
 )
 
+import pandas as pd
+
 # Baseline vs leave-one-ChEBI-out scores for ``detect_problematic_metabolites``.
 # Call with ``exclude_chebi=None`` for full reaction; with a ChEBI id to drop
 # that term's contribution on both sides of the fingerprint.
@@ -36,6 +39,37 @@ logger = logging.getLogger(__name__)
 
 ParentMap = Mapping[str, Set[str]]
 ChebiToKegg = Mapping[str, Any]
+ChildMap = Mapping[str, Set[str]]
+_DIRECTION_PRIORITY: Dict[str, int] = {"up": 0, "down": 1, "exact": 2}
+
+# Species id → one ChEBI string or multiple candidates (same id, multiple rows in recommendations).
+SpeciesToChebi = Mapping[str, Any]
+
+
+def iter_chebi_for_species(species_to_chebi: SpeciesToChebi, sid: str) -> List[str]:
+    """
+    Return ordered distinct ChEBI annotation strings for a model species id.
+
+    Values may be a single string (backward compatible) or a sequence of strings
+    when multiple recommendation rows exist for the same species.
+    """
+    v = species_to_chebi.get(sid)
+    if v is None:
+        return []
+    if isinstance(v, str):
+        s = v.strip()
+        return [s] if s else []
+    if isinstance(v, (list, tuple)):
+        out: List[str] = []
+        seen: Set[str] = set()
+        for x in v:
+            c = str(x).strip()
+            if c and c not in seen:
+                seen.add(c)
+                out.append(c)
+        return out
+    s = str(v).strip()
+    return [s] if s else []
 
 
 def parse_chebi_obo(obo_path: Union[str, Path]) -> Dict[str, Set[str]]:
@@ -97,6 +131,79 @@ def get_ancestors(
 
     visited.discard(chebi_id)
     return visited
+
+
+def expand_chebi_with_metadata(
+    seed_chebi_id: str,
+    parent_map: ParentMap,
+    *,
+    child_map: Optional[ChildMap] = None,
+    max_up_depth: int = 0,
+    max_down_depth: int = 0,
+) -> Dict[str, Dict[str, Any]]:
+    """
+    BFS expansion returning per-node relaxation metadata.
+
+    Returns mapping:
+        chebi_id -> {"direction": "exact" | "up" | "down", "distance": int}
+
+    Tie-breaking for nodes reachable by multiple paths:
+    1) smaller distance
+    2) direction preference exact > down > up
+    """
+
+    seed = str(seed_chebi_id).strip()
+    if not seed:
+        return {}
+
+    if child_map is None:
+        derived: Dict[str, Set[str]] = defaultdict(set)
+        for child, parents in parent_map.items():
+            for parent in parents:
+                derived[str(parent)].add(str(child))
+        child_map = {k: set(v) for k, v in derived.items()}
+
+    best: Dict[str, Dict[str, Any]] = {seed: {"direction": "exact", "distance": 0}}
+    q = deque([(seed, "exact", 0)])
+
+    def _should_update(node: str, direction: str, distance: int) -> bool:
+        prev = best.get(node)
+        if prev is None:
+            return True
+        prev_dist = int(prev.get("distance", 10**9))
+        if distance < prev_dist:
+            return True
+        if distance > prev_dist:
+            return False
+        prev_dir = str(prev.get("direction", "up"))
+        return _DIRECTION_PRIORITY.get(direction, -1) > _DIRECTION_PRIORITY.get(prev_dir, -1)
+
+    while q:
+        node, direction, distance = q.popleft()
+
+        if direction in ("exact", "up") and distance < int(max_up_depth):
+            for parent in parent_map.get(node, ()):
+                p = str(parent).strip()
+                if not p:
+                    continue
+                cand_dir = "up"
+                cand_dist = distance + 1
+                if _should_update(p, cand_dir, cand_dist):
+                    best[p] = {"direction": cand_dir, "distance": cand_dist}
+                    q.append((p, cand_dir, cand_dist))
+
+        if direction in ("exact", "down") and distance < int(max_down_depth):
+            for child in child_map.get(node, ()):
+                c = str(child).strip()
+                if not c:
+                    continue
+                cand_dir = "down"
+                cand_dist = distance + 1
+                if _should_update(c, cand_dir, cand_dist):
+                    best[c] = {"direction": cand_dir, "distance": cand_dist}
+                    q.append((c, cand_dir, cand_dist))
+
+    return best
 
 
 def _coerce_kegg_values(raw: Any) -> Set[str]:
@@ -188,6 +295,35 @@ def normalize_chebi(
     return kegg_ids
 
 
+def compute_relaxation_penalty(
+    direction: str,
+    distance: int,
+    *,
+    lambda_down: float = 0.2,
+    lambda_up: float = 1.2,
+) -> float:
+    """
+    Penalty for one species-level relaxation hop.
+
+    exact -> 0
+    down  -> lambda_down * distance
+    up    -> lambda_up * distance
+    """
+
+    if lambda_up <= lambda_down:
+        raise ValueError("lambda_up must be greater than lambda_down")
+
+    d = max(0, int(distance))
+    dir_norm = str(direction).strip().lower()
+    if dir_norm == "exact":
+        return 0.0
+    if dir_norm == "down":
+        return float(lambda_down) * d
+    if dir_norm == "up":
+        return float(lambda_up) * d
+    return float(lambda_up) * d
+
+
 def normalize_reaction(
     chebi_metabolites: Iterable[str],
     chebi_to_kegg: ChebiToKegg,
@@ -248,6 +384,8 @@ def progressive_normalization(
 
 _CACHED_PARENT_MAP: Optional[Dict[str, Set[str]]] = None
 _CACHED_PARENT_MAP_SOURCE: Optional[str] = None
+_CACHED_CHILD_MAP: Optional[Dict[str, Set[str]]] = None
+_CACHED_CHILD_MAP_SOURCE: Optional[str] = None
 
 
 def load_chebi_parent_map(
@@ -292,10 +430,45 @@ def load_chebi_parent_map(
     if chosen.suffix == ".gz" or str(chosen).endswith(".json.gz"):
         with gzip.open(chosen, "rt", encoding="utf-8") as f:
             raw = json.load(f)
-        parent_map = {
-            str(k): set(v) if not isinstance(v, set) else set(v)
-            for k, v in raw.items()
-        }
+        def _coerce_parent_values(val) -> Set[str]:
+            """
+            Normalize parent map values from gz JSON into a set[str].
+
+            The cached JSON may store parents either as:
+            - ["CHEBI:...","CHEBI:..."]
+            - [["is_a","CHEBI:..."], ["is_a","CHEBI:..."], ...]
+            - a single scalar
+            """
+            out: Set[str] = set()
+            if val is None:
+                return out
+
+            # Make it iterable in a uniform way.
+            items = val if isinstance(val, (list, tuple, set)) else [val]
+            for item in items:
+                if item is None:
+                    continue
+                if isinstance(item, str):
+                    s = item.strip()
+                    if s:
+                        out.add(s)
+                    continue
+                if isinstance(item, (list, tuple, set)):
+                    # Common form: ["is_a", "CHEBI:133004"]
+                    for sub in item:
+                        if isinstance(sub, str):
+                            s = sub.strip()
+                            if s.startswith("CHEBI:"):
+                                out.add(s)
+                    continue
+
+                # Fallback: best-effort stringification for unexpected scalars.
+                s = str(item).strip()
+                if s:
+                    out.add(s)
+            return out
+
+        parent_map = {str(k): _coerce_parent_values(v) for k, v in raw.items()}
     else:
         parent_map = dict(parse_chebi_obo(chosen))
 
@@ -307,13 +480,69 @@ def load_chebi_parent_map(
     return parent_map
 
 
+def load_chebi_child_map(
+    *,
+    parent_map: Optional[ParentMap] = None,
+    gz_path: Optional[Union[str, Path]] = None,
+    data_dir: Optional[Union[str, Path]] = None,
+    use_cache: bool = True,
+) -> Dict[str, Set[str]]:
+    """
+    Load or derive parent->children map for downward expansion.
+    """
+
+    global _CACHED_CHILD_MAP, _CACHED_CHILD_MAP_SOURCE
+
+    base = Path(data_dir) if data_dir else Path(__file__).resolve().parent.parent / "data" / "chebi"
+    gz = Path(gz_path) if gz_path else base / "chebi_child_map.json.gz"
+    src_key = str(gz.resolve()) if gz.exists() else "__derived__"
+
+    if use_cache and _CACHED_CHILD_MAP is not None and _CACHED_CHILD_MAP_SOURCE == src_key:
+        return _CACHED_CHILD_MAP
+
+    child_map: Dict[str, Set[str]] = defaultdict(set)
+
+    if gz.exists():
+        with gzip.open(gz, "rt", encoding="utf-8") as f:
+            raw = json.load(f)
+        if isinstance(raw, dict):
+            for parent, children in raw.items():
+                p = str(parent).strip()
+                if not p:
+                    continue
+                vals = children if isinstance(children, (list, set, tuple)) else [children]
+                for child in vals:
+                    c = str(child).strip()
+                    if c:
+                        child_map[p].add(c)
+
+    if not child_map:
+        pm = parent_map if parent_map is not None else load_chebi_parent_map(data_dir=data_dir)
+        for child, parents in pm.items():
+            c = str(child).strip()
+            if not c:
+                continue
+            for parent in parents:
+                p = str(parent).strip()
+                if p:
+                    child_map[p].add(c)
+        src_key = "__derived__"
+
+    out = {k: set(v) for k, v in child_map.items()}
+    if use_cache:
+        _CACHED_CHILD_MAP = out
+        _CACHED_CHILD_MAP_SOURCE = src_key
+    return out
+
+
 def build_kegg_mapping_dataframe(
-    species_ids: Iterable[str],
-    species_to_chebi: Mapping[str, str],
+    species_to_chebi: SpeciesToChebi,
     relax_level: Mapping[str, int],
     chebi_to_kegg: ChebiToKegg,
     parent_map: ParentMap,
     max_ancestor_depth: int = 2,
+    child_map: Optional[ChildMap] = None,
+    max_descendant_depth: int = 1,
 ) -> Any:
     """
     Long-form DataFrame columns [id, KEGG_ID] for map_reactions_to_kegg.
@@ -321,34 +550,35 @@ def build_kegg_mapping_dataframe(
     One row per (species, KEGG) pair; duplicate indices are OK for the
     existing lookup logic in map_metabolites_to_kegg.
     """
-    import pandas as pd
-
-    rows: List[Dict[str, str]] = []
+    species_ids = species_to_chebi.keys()
+    rows: List[Dict[str, Any]] = []
     for sid in species_ids:
-        chebi = species_to_chebi.get(sid)
-        if not chebi or not str(chebi).strip():
+        chebi_list = iter_chebi_for_species(species_to_chebi, str(sid))
+        if not chebi_list:
             continue
-        lvl = int(relax_level.get(sid, 0))
-        keggs = normalize_chebi(
-            str(chebi).strip(),
-            chebi_to_kegg,
-            parent_map,
-            level=lvl,
-            max_depth=max_ancestor_depth,
-        )
-        if not keggs:
-            # Omit species with no KEGG hit so map_reactions_to_kegg skips them (unmapped).
-            continue
-        for k in sorted(keggs):
-            rows.append({"id": sid, "KEGG_ID": k})
+        for chebi in chebi_list:
+            # Strict-only mapping for initial filtering: no hierarchy expansion.
+            direct_keggs = kegg_ids_for_chebi_term(str(chebi).strip(), chebi_to_kegg)
+            if not direct_keggs:
+                continue
+            for k in sorted(direct_keggs):
+                rows.append(
+                    {
+                        "id": sid,
+                        "KEGG_ID": k,
+                        "canonical_id": str(chebi).strip(),
+                        "direction": "exact",
+                        "distance": 0,
+                    }
+                )
     if not rows:
-        return pd.DataFrame(columns=["id", "KEGG_ID"])
+        return pd.DataFrame(columns=["id", "KEGG_ID", "canonical_id", "direction", "distance"])
     return pd.DataFrame(rows)
 
 
 def detect_unmapped_species_ids(
     species_ids: Iterable[str],
-    species_to_chebi: Mapping[str, str],
+    species_to_chebi: SpeciesToChebi,
     relax_level: Mapping[str, int],
     chebi_to_kegg: ChebiToKegg,
     parent_map: ParentMap,
@@ -360,12 +590,15 @@ def detect_unmapped_species_ids(
     """
     unmapped: Set[str] = set()
     for sid in species_ids:
-        ch = str(species_to_chebi.get(sid, "")).strip()
-        if not ch:
+        chebi_list = iter_chebi_for_species(species_to_chebi, str(sid))
+        if not chebi_list:
             continue
         lvl = int(relax_level.get(sid, 0))
-        if not normalize_chebi(
-            ch, chebi_to_kegg, parent_map, level=lvl, max_depth=max_ancestor_depth
+        if not any(
+            normalize_chebi(
+                ch, chebi_to_kegg, parent_map, level=lvl, max_depth=max_ancestor_depth
+            )
+            for ch in chebi_list
         ):
             unmapped.add(sid)
     return unmapped
@@ -449,7 +682,7 @@ def select_metabolites_to_relax(
     max_depth: int = 2,
     score_threshold: float = 0.0,
     participant_species: Optional[Iterable[str]] = None,
-    species_to_chebi: Optional[Mapping[str, str]] = None,
+    species_to_chebi: Optional[SpeciesToChebi] = None,
     relax_level: Optional[Mapping[str, int]] = None,
 ) -> Set[str]:
     """
@@ -476,11 +709,17 @@ def select_metabolites_to_relax(
             parent_map,
             max_ancestor_depth=max_depth,
         )
-        unmapped = {
-            str(species_to_chebi[s]).strip()
-            for s in um_s
-            if str(species_to_chebi.get(s, "")).strip()
-        }
+        unmapped: Set[str] = set()
+        for s in um_s:
+            for ch in iter_chebi_for_species(species_to_chebi, str(s)):
+                c = str(ch).strip()
+                if not c:
+                    continue
+                lvl = int(relax_level.get(s, 0))
+                if not normalize_chebi(
+                    c, chebi_to_kegg, parent_map, level=lvl, max_depth=max_depth
+                ):
+                    unmapped.add(c)
     else:
         unmapped = detect_unmapped_metabolites(
             chebi_metabolites, chebi_to_kegg, parent_map, level=level, max_depth=max_depth

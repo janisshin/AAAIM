@@ -17,10 +17,14 @@ from .database_search import (
     score_model_against_kegg_reaction,
 )
 from .hierarchy_relaxation import (
+    compute_relaxation_penalty,
+    expand_chebi_with_metadata,
+    iter_chebi_for_species,
     detect_problematic_metabolites,
     detect_unmapped_metabolites,
     detect_unmapped_species_ids,
     get_ancestors,
+    load_chebi_child_map,
     load_chebi_parent_map,
     merge_chebi_to_kegg_mapping,
     normalize_chebi,
@@ -37,6 +41,7 @@ from .hierarchy_relaxation import (
 from .model_info import find_species_with_chebi_annotations, find_species_with_annotations_and_qualifiers, find_species_with_ncbigene_annotations, extract_model_info, format_prompt, get_species_display_names, get_all_species_ids, detect_model_format
 from .llm_interface import SYSTEM_PROMPT, SYSTEM_PROMPT_CHEMICAL, SYSTEM_PROMPT_GENE, get_system_prompt, query_llm, parse_llm_response
 from .database_search import get_species_recommendations_direct, search_database, get_available_databases, Recommendation
+from .reaction_deduplication import Reaction, deduplicate_reactions
 
 __all__ = [
     # Main interfaces
@@ -68,6 +73,10 @@ __all__ = [
     'Recommendation',
     'map_reactions_to_kegg_with_relaxation',
     'load_chebi_parent_map',
+    'load_chebi_child_map',
+    'expand_chebi_with_metadata',
+    'iter_chebi_for_species',
+    'compute_relaxation_penalty',
     'merge_chebi_to_kegg_mapping',
     'normalize_chebi',
     'normalize_reaction',
@@ -82,4 +91,6 @@ __all__ = [
     'unified_reaction_objective',
     'unified_reaction_objective_weighted',
     'should_continue_iteration',
+    'Reaction',
+    'deduplicate_reactions',
 ] 
