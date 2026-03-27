@@ -4,6 +4,25 @@ relaxation along is_a parents.
 
 Used by the KEGG reaction–mapping pipeline to widen mappings only when a
 metabolite is unmatched or drives a weak reaction match.
+
+ChEBI → KEGG in this package
+----------------------------
+The **same reference table** from ``load_chebi2kegg_dict`` (pickled
+ChEBI→KEGG compound mapping) underlies:
+
+- **This module** — ``merge_chebi_to_kegg_mapping`` turns the raw dict into
+  ChEBI → set(KEGG). ``normalize_chebi`` / ``normalize_reaction`` add *optional*
+  ontology relaxation (walking ChEBI parents) so more KEGG compounds can match
+  during reaction scoring.
+
+- **reaction_amendment.map_chebi_to_kegg** — uses that table *without*
+  relaxation: it expands recommendation rows so each ChEBI maps to one or more
+  KEGG compound columns for downstream amendment logic. It does not walk the
+  ChEBI hierarchy.
+
+For table-only lookups (no relaxation), use ``kegg_ids_for_chebi_term`` or
+``merge_chebi_to_kegg_mapping``; for reaction matching with optional relaxation,
+use ``normalize_chebi`` / ``normalize_reaction``.
 """
 
 from __future__ import annotations
@@ -228,7 +247,10 @@ def _coerce_kegg_values(raw: Any) -> Set[str]:
 def merge_chebi_to_kegg_mapping(raw: Mapping[str, Any]) -> Dict[str, Set[str]]:
     """
     Build ChEBI → set(KEGG) from a flat ChEBI→KEGG map (string or list values).
-    Duplicate ChEBI keys in the source are merged.
+
+    This is the canonical way to consume ``load_chebi2kegg_dict()`` for graph
+    and scoring code. For pandas row expansion without relaxation, see
+    ``reaction_amendment.map_chebi_to_kegg``.
     """
     merged: Dict[str, Set[str]] = defaultdict(set)
     for chebi, val in raw.items():
@@ -281,6 +303,10 @@ def normalize_chebi(
     Level 0: only direct ChEBI→KEGG hits.
     Level L≥1: union of KEGG hits over this term and is_a ancestors within
     min(L, max_depth) hops.
+
+    **Not** ``annotation_workflow.normalize_reactions`` (KEGG cofactor filtering
+    for whole reactions). For multi-metabolite ChEBI lists use
+    ``normalize_reaction``.
     """
     if level <= 0:
         return kegg_ids_for_chebi_term(chebi_id, chebi_to_kegg)
@@ -336,6 +362,9 @@ def normalize_reaction(
     """
     Map each ChEBI in chebi_metabolites to relaxed KEGG compound sets.
 
+    **Not** related to ``annotation_workflow.normalize_reactions``, which strips
+    cofactors from *already-KEGG-mapped* reaction lists for similarity scoring.
+
     Args:
         chebi_metabolites: ChEBI IDs participating in one reaction (any order).
         as_union: If True, return the union of all per-metabolite sets; if False,
@@ -344,6 +373,11 @@ def normalize_reaction(
     Returns:
         Dict mapping each distinct input ChEBI string to KEGG IDs, or a single
         set if as_union is True.
+
+    See Also:
+        ``normalize_chebi`` — per-term ChEBI→KEGG with optional ontology walk.
+        ``annotation_workflow.normalize_reactions`` — KEGG multiset / cofactor
+        filtering for reaction comparison.
     """
     per: Dict[str, Set[str]] = {}
     for chebi_id in chebi_metabolites:

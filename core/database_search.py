@@ -240,10 +240,15 @@ def load_uniprot_label_dict(tax_id: str = None) -> Dict[str, str]:
 
 def load_chebi2kegg_dict() -> Dict[str, str]:
     """
-    Load the ChEBI ID to KEGG compound ID mapping dictionary.
-    
+    Load the reference ChEBI → KEGG compound mapping (pickled).
+
+    Values are typically a single KEGG compound id but may be lists where one
+    ChEBI maps to several compounds. For graph/scoring code, normalize with
+    ``hierarchy_relaxation.merge_chebi_to_kegg_mapping``. For expanding
+    amendment tables row-wise, use ``reaction_amendment.map_chebi_to_kegg``.
+
     Returns:
-        Dictionary mapping ChEBI IDs to KEGG compound IDs
+        Raw mapping as loaded from disk (ChEBI id → KEGG id(s)).
     """
     global _CHEBI2KEGG_DICT
     
@@ -972,6 +977,38 @@ def _get_kegg_recommendations_rulebased(
                 )
         return out
 
+    def _recover_species_kegg_candidates(
+        side_block: Dict[str, Any],
+        species_ids: set,
+        *,
+        species_depth_cap: int,
+    ) -> None:
+        """Fill ChEBI→KEGG expansion candidates for species that have none (Stage 1A)."""
+        for sid in sorted(species_ids):
+            entry = side_block.get(sid)
+            has_candidates = bool(entry and entry.get("candidates"))
+            if has_candidates:
+                continue
+            coeff = 1 if entry is None else entry.get("coeff", 1)
+            chebi_ids = iter_chebi_for_species(species_to_chebi, sid)
+            recovered: List[Dict[str, Any]] = []
+            seen_r: Set[Tuple[str, str, str, int]] = set()
+            for chebi_id in chebi_ids:
+                for depth in range(1, species_depth_cap + 1):
+                    chunk = _expand_one_species(chebi_id, depth)
+                    for item in chunk:
+                        key = (
+                            item["kegg_id"],
+                            item["canonical_id"],
+                            item["direction"],
+                            item["distance"],
+                        )
+                        if key not in seen_r:
+                            seen_r.add(key)
+                            recovered.append(item)
+                    if chunk:
+                        break
+            side_block[sid] = {"species_id": sid, "coeff": coeff, "candidates": recovered}
 
     try:
         logger.info(f"Loading KEGG reaction data...")
@@ -1005,7 +1042,7 @@ def _get_kegg_recommendations_rulebased(
                     involved_met_ids |= set(model_subs.keys())
                 if isinstance(model_prods, dict):
                     involved_met_ids |= set(model_prods.keys())
-                reaction_relax_levels = {
+                reaction_relax_levels = { # build out the relaxation levels set for this reaction
                     mid: int(relaxation_levels_by_entity.get(mid, 0) or 0)
                     for mid in involved_met_ids
                 }
@@ -1029,57 +1066,12 @@ def _get_kegg_recommendations_rulebased(
             lhs_species, rhs_species = _reaction_species_ids(reaction_str)
 
             if species_to_chebi is not None and parent_map is not None and chebi_to_kegg is not None:
-                for sid in sorted(lhs_species):
-                    entry = active_subs.get(sid)
-                    has_candidates = bool(entry and entry.get("candidates"))
-                    if has_candidates:
-                        continue
-                    coeff = 1 if entry is None else entry.get("coeff", 1)
-                    chebi_ids = iter_chebi_for_species(species_to_chebi, sid)
-                    recovered: List[Dict[str, Any]] = []
-                    seen_r: Set[Tuple[str, str, str, int]] = set()
-                    for chebi_id in chebi_ids:
-                        for depth in range(1, species_depth_cap + 1):
-                            chunk = _expand_one_species(chebi_id, depth)
-                            for item in chunk:
-                                key = (
-                                    item["kegg_id"],
-                                    item["canonical_id"],
-                                    item["direction"],
-                                    item["distance"],
-                                )
-                                if key not in seen_r:
-                                    seen_r.add(key)
-                                    recovered.append(item)
-                            if chunk:
-                                break
-                    active_subs[sid] = {"species_id": sid, "coeff": coeff, "candidates": recovered}
-
-                for sid in sorted(rhs_species):
-                    entry = active_prods.get(sid)
-                    has_candidates = bool(entry and entry.get("candidates"))
-                    if has_candidates:
-                        continue
-                    coeff = 1 if entry is None else entry.get("coeff", 1)
-                    chebi_ids = iter_chebi_for_species(species_to_chebi, sid)
-                    recovered = []
-                    seen_r = set()
-                    for chebi_id in chebi_ids:
-                        for depth in range(1, species_depth_cap + 1):
-                            chunk = _expand_one_species(chebi_id, depth)
-                            for item in chunk:
-                                key = (
-                                    item["kegg_id"],
-                                    item["canonical_id"],
-                                    item["direction"],
-                                    item["distance"],
-                                )
-                                if key not in seen_r:
-                                    seen_r.add(key)
-                                    recovered.append(item)
-                            if chunk:
-                                break
-                    active_prods[sid] = {"species_id": sid, "coeff": coeff, "candidates": recovered}
+                _recover_species_kegg_candidates(
+                    active_subs, lhs_species, species_depth_cap=species_depth_cap
+                )
+                _recover_species_kegg_candidates(
+                    active_prods, rhs_species, species_depth_cap=species_depth_cap
+                )
 
             # --- Stage 1B: strict reaction filtering ---
             participant_relaxation: Dict[str, Dict[str, Any]] = {}

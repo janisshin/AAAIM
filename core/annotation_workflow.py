@@ -530,15 +530,23 @@ def print_results(results_df: pd.DataFrame):
 
 def normalize_reactions(model_reactions, cofactors_to_ignore):
     """
-    Normalize reaction data for comparison by filtering out common cofactors
-    and tracking stoichiometry.
-    
+    Prepare KEGG-mapped reaction dicts for comparison: drop cofactors and keep
+    substrate/product multisets (Counters).
+
+    **Not** ``hierarchy_relaxation.normalize_reaction``: that function maps
+    ChEBI terms to (relaxed) KEGG compound ID sets using the ontology. This
+    function assumes ``model_reactions`` already carry KEGG IDs in substrate /
+    product lists.
+
     Args:
         model_reactions: List of reaction dictionaries
         cofactors_to_ignore: Set of cofactor IDs to ignore
         
     Returns:
         List of normalized reaction dictionaries
+
+    See Also:
+        ``hierarchy_relaxation.normalize_reaction`` — ChEBI → KEGG compound sets.
     """
     normalized_reactions = []
     
@@ -1032,6 +1040,39 @@ def map_reactions_to_kegg_with_relaxation(
     Returns:
         (normalized_reactions, kegg_match_results, species_relax_level_by_id)
     """
+
+    def compute_global_score(levels: Mapping[str, int]) -> float:
+        """Evaluate the full-model global objective at the provided relaxation levels."""
+        trial_id_kegg_df = build_kegg_mapping_dataframe(
+            species_to_chebi,
+            levels,
+            merged_kegg,
+            parent_map,
+            max_ancestor_depth=max_ancestor_depth,
+            child_map=child_map,
+            max_descendant_depth=down_depth,
+        )
+        trial_normalized_reactions = map_reactions_to_kegg(
+            rxn_list, reaction_ids, trial_id_kegg_df, spectators=spectators
+        )
+        trial_match_results = _get_kegg_recommendations_rulebased(
+            trial_normalized_reactions,
+            cofactors_to_ignore=cofactors,
+            top_k=top_k,
+            spectators=spectators,
+            relaxation_levels_by_entity=levels,
+            penalty_lam=penalty_lam,
+            max_relax_level=max_relax_level,
+            species_to_chebi=species_to_chebi,
+            parent_map=parent_map,
+            child_map=child_map,
+            chebi_to_kegg=merged_kegg,
+            max_ancestor_depth=max_ancestor_depth,
+            max_descendant_depth=down_depth,
+        )
+        return float(_aggregate_best_penalized_scores(trial_match_results))
+
+
     if species_recommendations_df is None or species_recommendations_df.empty:
         return [], [], {}
 
@@ -1066,37 +1107,6 @@ def map_reactions_to_kegg_with_relaxation(
 
     max_iterations = 1 if not run_matching else max(1, int(max_relaxation_rounds))
     previous_best_score: float = float("-inf")
-
-    def compute_global_score(levels: Mapping[str, int]) -> float:
-        """Evaluate the full-model global objective at the provided relaxation levels."""
-        trial_id_kegg_df = build_kegg_mapping_dataframe(
-            species_to_chebi,
-            levels,
-            merged_kegg,
-            parent_map,
-            max_ancestor_depth=max_ancestor_depth,
-            child_map=child_map,
-            max_descendant_depth=down_depth,
-        )
-        trial_normalized_reactions = map_reactions_to_kegg(
-            rxn_list, reaction_ids, trial_id_kegg_df, spectators=spectators
-        )
-        trial_match_results = _get_kegg_recommendations_rulebased(
-            trial_normalized_reactions,
-            cofactors_to_ignore=cofactors,
-            top_k=top_k,
-            spectators=spectators,
-            relaxation_levels_by_entity=levels,
-            penalty_lam=penalty_lam,
-            max_relax_level=max_relax_level,
-            species_to_chebi=species_to_chebi,
-            parent_map=parent_map,
-            child_map=child_map,
-            chebi_to_kegg=merged_kegg,
-            max_ancestor_depth=max_ancestor_depth,
-            max_descendant_depth=down_depth,
-        )
-        return float(_aggregate_best_penalized_scores(trial_match_results))
 
     for _iteration in range(max_iterations):
         # --- Step 1: build normalized reactions ---

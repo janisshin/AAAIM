@@ -1213,7 +1213,14 @@ def check_environment(model_file: str) -> bool:
 
 
 def map_chebi_to_kegg(recommendations_df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    """Map ChEBI IDs to KEGG Compound IDs."""
+    """
+    Map ChEBI IDs in recommendation rows to KEGG compound IDs via
+    ``load_chebi2kegg_dict`` (no ChEBI ontology walk).
+
+    Duplicate rows are emitted when one ChEBI maps to multiple KEGG compounds.
+    For reaction matching with optional upward relaxation along ChEBI ``is_a``,
+    use ``hierarchy_relaxation.normalize_chebi`` / ``normalize_reaction`` instead.
+    """
     chebi_to_kegg_map = load_chebi2kegg_dict()
     
     expanded_rows = []

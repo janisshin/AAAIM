@@ -165,6 +165,93 @@ def extract_id_and_qualifier_from_annotation(annotation_str: str, uri_patterns: 
     
     return ids, qualifiers
 
+
+def _warn_bqmodel_in_annotation(annotation_str: str, entity_id: str, entity_kind: str) -> None:
+    if "bqmodel:" in annotation_str:
+        logger.warning(
+            f"{entity_kind} '{entity_id}': Found bqmodel qualifier instead of bqbiol - incorrect usage"
+        )
+
+
+def _collect_species_ids_from_list(
+    model: libsbml.Model,
+    target: Dict[str, List[str]],
+    uri_patterns: List[str],
+    bqbiol_qualifiers: Optional[list],
+    *,
+    entity_kind: str = "Species",
+) -> None:
+    for species in model.getListOfSpecies():
+        species_id = species.getId()
+        if not species.isSetAnnotation():
+            continue
+        annotation_str = species.getAnnotation().toXMLString()
+        _warn_bqmodel_in_annotation(annotation_str, species_id, entity_kind)
+        found = extract_id_from_annotation(annotation_str, uri_patterns, bqbiol_qualifiers)
+        if found:
+            target[species_id] = list(dict.fromkeys(found))
+
+
+def _collect_qual_species_ids_simple(
+    model: libsbml.Model,
+    target: Dict[str, List[str]],
+    uri_patterns: List[str],
+    bqbiol_qualifiers: Optional[list],
+) -> None:
+    qual_plugin = model.getPlugin("qual")
+    if not qual_plugin:
+        return
+    for qual_species in qual_plugin.getListOfQualitativeSpecies():
+        qid = qual_species.getId()
+        if not qual_species.isSetAnnotation():
+            continue
+        annotation_str = qual_species.getAnnotation().toXMLString()
+        _warn_bqmodel_in_annotation(annotation_str, qid, "Qualitative species")
+        found = extract_id_from_annotation(annotation_str, uri_patterns, bqbiol_qualifiers)
+        if found:
+            target[qid] = list(dict.fromkeys(found))
+
+
+def _collect_fbc_gene_product_ids_simple(
+    model: libsbml.Model,
+    target: Dict[str, List[str]],
+    uri_patterns: List[str],
+    bqbiol_qualifiers: Optional[list],
+) -> None:
+    fbc_plugin = model.getPlugin("fbc")
+    if not fbc_plugin:
+        return
+    for gene_product in fbc_plugin.getListOfGeneProducts():
+        gid = gene_product.getId()
+        if not gene_product.isSetAnnotation():
+            continue
+        annotation_str = gene_product.getAnnotation().toXMLString()
+        _warn_bqmodel_in_annotation(annotation_str, gid, "Gene")
+        found = extract_id_from_annotation(annotation_str, uri_patterns, bqbiol_qualifiers)
+        if found:
+            target[gid] = list(dict.fromkeys(found))
+
+
+def _qualifier_map_from_parallel_lists(ids: List[str], qualifier_list: List[str]) -> Dict[str, str]:
+    out: Dict[str, str] = {}
+    for i, ann_id in enumerate(ids):
+        out[ann_id] = qualifier_list[i] if i < len(qualifier_list) else "unknown"
+    return out
+
+
+def _record_entity_annotations_with_qualifiers(
+    annotations: Dict[str, List[str]],
+    qualifier_annotations: Dict[str, Dict[str, str]],
+    entity_id: str,
+    ids: List[str],
+    qualifier_list: List[str],
+) -> None:
+    if not ids:
+        return
+    annotations[entity_id] = ids
+    qualifier_annotations[entity_id] = _qualifier_map_from_parallel_lists(ids, qualifier_list)
+
+
 def find_species_with_chebi_annotations(model_file: str, bqbiol_qualifiers: list = None) -> Dict[str, List[str]]:
     """
     Find species with existing ChEBI annotations.
@@ -183,55 +270,17 @@ def find_species_with_chebi_annotations(model_file: str, bqbiol_qualifiers: list
     if model is None:
         return {}
 
-    model_type, format_info = detect_model_format(model_file)
-    chebi_annotations = {}
+    model_type, _ = detect_model_format(model_file)
+    chebi_annotations: Dict[str, List[str]] = {}
 
-    if model_type == ModelType.SBML:
-        for species in model.getListOfSpecies():
-            species_id = species.getId()
-
-            if species.isSetAnnotation():
-                annotation = species.getAnnotation()
-                annotation_str = annotation.toXMLString()
-                # Check for incorrect bqmodel usage
-                if 'bqmodel:' in annotation_str:
-                    logger.warning(f"Species '{species_id}': Found bqmodel qualifier instead of bqbiol - incorrect usage")
-                chebi_ids = extract_id_from_annotation(annotation_str, CHEBI_URI_PATTERNS, bqbiol_qualifiers)
-                if chebi_ids:
-                    # Remove duplicates while preserving order
-                    chebi_annotations[species_id] = list(dict.fromkeys(chebi_ids))
-
-    elif model_type == ModelType.SBML_FBC:
-        # For SBML_FBC models, ChEBI annotations are typically on regular species
-        for species in model.getListOfSpecies():
-            species_id = species.getId()
-
-            if species.isSetAnnotation():
-                annotation = species.getAnnotation()
-                annotation_str = annotation.toXMLString()
-                # Check for incorrect bqmodel usage
-                if 'bqmodel:' in annotation_str:
-                    logger.warning(f"Species '{species_id}': Found bqmodel qualifier instead of bqbiol - incorrect usage")
-                chebi_ids = extract_id_from_annotation(annotation_str, CHEBI_URI_PATTERNS, bqbiol_qualifiers)
-                if chebi_ids:
-                    # Remove duplicates while preserving order
-                    chebi_annotations[species_id] = list(dict.fromkeys(chebi_ids))
-
+    if model_type in (ModelType.SBML, ModelType.SBML_FBC):
+        _collect_species_ids_from_list(
+            model, chebi_annotations, CHEBI_URI_PATTERNS, bqbiol_qualifiers
+        )
     elif model_type == ModelType.SBML_QUAL:
-        qual_plugin = model.getPlugin("qual")
-        if qual_plugin:
-            for qual_species in qual_plugin.getListOfQualitativeSpecies():
-                qual_species_id = qual_species.getId()
-                if qual_species.isSetAnnotation():
-                    annotation = qual_species.getAnnotation()
-                    annotation_str = annotation.toXMLString()
-                    # Check for incorrect bqmodel usage
-                    if 'bqmodel:' in annotation_str:
-                        logger.warning(f"Species '{qual_species_id}': Found bqmodel qualifier instead of bqbiol - incorrect usage")
-                    chebi_ids = extract_id_from_annotation(annotation_str, CHEBI_URI_PATTERNS, bqbiol_qualifiers)
-                    if chebi_ids:
-                        # Remove duplicates while preserving order
-                        chebi_annotations[qual_species_id] = list(dict.fromkeys(chebi_ids))
+        _collect_qual_species_ids_simple(
+            model, chebi_annotations, CHEBI_URI_PATTERNS, bqbiol_qualifiers
+        )
 
     return chebi_annotations
 
@@ -256,9 +305,9 @@ def find_species_with_annotations_and_qualifiers(model_file: str, database: str,
     if model is None:
         return {}, {}
 
-    model_type, format_info = detect_model_format(model_file)
-    annotations = {}
-    qualifier_annotations = {}
+    model_type, _ = detect_model_format(model_file)
+    annotations: Dict[str, List[str]] = {}
+    qualifier_annotations: Dict[str, Dict[str, str]] = {}
 
     # Select URI patterns based on database
     if database == "chebi":
@@ -271,27 +320,19 @@ def find_species_with_annotations_and_qualifiers(model_file: str, database: str,
         logger.warning(f"Database {database} not supported")
         return {}, {}
 
-    # Process species annotations
+    # Process species annotations (all model types that expose Species)
     for species in model.getListOfSpecies():
         species_id = species.getId()
-
-        if species.isSetAnnotation():
-            annotation = species.getAnnotation()
-            annotation_str = annotation.toXMLString()
-            # Check for incorrect bqmodel usage
-            if 'bqmodel:' in annotation_str:
-                logger.warning(f"Species '{species_id}': Found bqmodel qualifier instead of bqbiol - incorrect usage")
-            ids, qualifier_list = extract_id_and_qualifier_from_annotation(annotation_str, uri_patterns, bqbiol_qualifiers)
-            if ids:
-                annotations[species_id] = ids
-                # Create mapping from annotation ID to qualifier
-                qualifier_map = {}
-                for i, ann_id in enumerate(ids):
-                    if i < len(qualifier_list):
-                        qualifier_map[ann_id] = qualifier_list[i]
-                    else:
-                        qualifier_map[ann_id] = 'unknown'
-                qualifier_annotations[species_id] = qualifier_map
+        if not species.isSetAnnotation():
+            continue
+        annotation_str = species.getAnnotation().toXMLString()
+        _warn_bqmodel_in_annotation(annotation_str, species_id, "Species")
+        ids, qualifier_list = extract_id_and_qualifier_from_annotation(
+            annotation_str, uri_patterns, bqbiol_qualifiers
+        )
+        _record_entity_annotations_with_qualifiers(
+            annotations, qualifier_annotations, species_id, ids, qualifier_list
+        )
 
     # Process FBC gene products if applicable
     if model_type == ModelType.SBML_FBC and database in ["ncbigene", "uniprot"]:
@@ -299,25 +340,16 @@ def find_species_with_annotations_and_qualifiers(model_file: str, database: str,
         if fbc_plugin:
             for gene_product in fbc_plugin.getListOfGeneProducts():
                 gene_id = gene_product.getId()
-
-                if gene_product.isSetAnnotation():
-                    annotation = gene_product.getAnnotation()
-                    annotation_str = annotation.toXMLString()
-                    # Check for incorrect bqmodel usage
-                    if 'bqmodel:' in annotation_str:
-                        logger.warning(f"Gene '{gene_id}': Found bqmodel qualifier instead of bqbiol - incorrect usage")
-                    ids, qualifier_list = extract_id_and_qualifier_from_annotation(annotation_str, uri_patterns, bqbiol_qualifiers)
-                    if ids:
-                        # IDs are already deduplicated by extract_id_and_qualifier_from_annotation
-                        annotations[gene_id] = ids
-                        # Create mapping from annotation ID to qualifier
-                        qualifier_map = {}
-                        for i, ann_id in enumerate(ids):
-                            if i < len(qualifier_list):
-                                qualifier_map[ann_id] = qualifier_list[i]
-                            else:
-                                qualifier_map[ann_id] = 'unknown'
-                        qualifier_annotations[gene_id] = qualifier_map
+                if not gene_product.isSetAnnotation():
+                    continue
+                annotation_str = gene_product.getAnnotation().toXMLString()
+                _warn_bqmodel_in_annotation(annotation_str, gene_id, "Gene")
+                ids, qualifier_list = extract_id_and_qualifier_from_annotation(
+                    annotation_str, uri_patterns, bqbiol_qualifiers
+                )
+                _record_entity_annotations_with_qualifiers(
+                    annotations, qualifier_annotations, gene_id, ids, qualifier_list
+                )
 
     # Process qualitative species if applicable
     if model_type == ModelType.SBML_QUAL:
@@ -325,24 +357,16 @@ def find_species_with_annotations_and_qualifiers(model_file: str, database: str,
         if qual_plugin:
             for qual_species in qual_plugin.getListOfQualitativeSpecies():
                 qual_id = qual_species.getId()
-
-                if qual_species.isSetAnnotation():
-                    annotation = qual_species.getAnnotation()
-                    annotation_str = annotation.toXMLString()
-                    # Check for incorrect bqmodel usage
-                    if 'bqmodel:' in annotation_str:
-                        logger.warning(f"Qualitative species '{qual_id}': Found bqmodel qualifier instead of bqbiol - incorrect usage")
-                    ids, qualifier_list = extract_id_and_qualifier_from_annotation(annotation_str, uri_patterns, bqbiol_qualifiers)
-                    if ids:
-                        annotations[qual_id] = ids
-                        # Create mapping from annotation ID to qualifier
-                        qualifier_map = {}
-                        for i, ann_id in enumerate(ids):
-                            if i < len(qualifier_list):
-                                qualifier_map[ann_id] = qualifier_list[i]
-                            else:
-                                qualifier_map[ann_id] = 'unknown'
-                        qualifier_annotations[qual_id] = qualifier_map
+                if not qual_species.isSetAnnotation():
+                    continue
+                annotation_str = qual_species.getAnnotation().toXMLString()
+                _warn_bqmodel_in_annotation(annotation_str, qual_id, "Qualitative species")
+                ids, qualifier_list = extract_id_and_qualifier_from_annotation(
+                    annotation_str, uri_patterns, bqbiol_qualifiers
+                )
+                _record_entity_annotations_with_qualifiers(
+                    annotations, qualifier_annotations, qual_id, ids, qualifier_list
+                )
 
     return annotations, qualifier_annotations
     
@@ -363,61 +387,23 @@ def find_species_with_ncbigene_annotations(model_file: str, bqbiol_qualifiers: l
     
     if model is None:
         return {}
-    
-    model_type, format_info = detect_model_format(model_file)
-    ncbigene_annotations = {}
-    
-    if model_type == ModelType.SBML_FBC:
-        # Extract annotations from FBC gene products
-        fbc_plugin = model.getPlugin("fbc")
-        if fbc_plugin:
-            for gene_product in fbc_plugin.getListOfGeneProducts():
-                gene_product_id = gene_product.getId()
-                
-                if gene_product.isSetAnnotation():
-                    annotation = gene_product.getAnnotation()
-                    annotation_str = annotation.toXMLString()
-                    # Check for incorrect bqmodel usage
-                    if 'bqmodel:' in annotation_str:
-                        logger.warning(f"Gene '{gene_product_id}': Found bqmodel qualifier instead of bqbiol - incorrect usage")
-                    gene_ids = extract_id_from_annotation(annotation_str, NCBIGENE_URI_PATTERNS, bqbiol_qualifiers)                    
-                    if gene_ids:
-                        # Remove duplicates while preserving order
-                        ncbigene_annotations[gene_product_id] = list(dict.fromkeys(gene_ids))
-    
-    elif model_type == ModelType.SBML_QUAL:
-        # Extract annotations from qual qualitative species
-        qual_plugin = model.getPlugin("qual")
-        if qual_plugin:
-            for qual_species in qual_plugin.getListOfQualitativeSpecies():
-                qual_species_id = qual_species.getId()
-                
-                if qual_species.isSetAnnotation():
-                    annotation = qual_species.getAnnotation()
-                    annotation_str = annotation.toXMLString()
-                    # Check for incorrect bqmodel usage
-                    if 'bqmodel:' in annotation_str:
-                        logger.warning(f"Qualitative species '{qual_species_id}': Found bqmodel qualifier instead of bqbiol - incorrect usage")
-                    gene_ids = extract_id_from_annotation(annotation_str, NCBIGENE_URI_PATTERNS, bqbiol_qualifiers)        
-                    if gene_ids:
-                        # Remove duplicates while preserving order
-                        ncbigene_annotations[qual_species_id] = list(dict.fromkeys(gene_ids))
-                        
-    elif model_type == ModelType.SBML:
-        for species in model.getListOfSpecies():
-            species_id = species.getId()
 
-            if species.isSetAnnotation():
-                annotation = species.getAnnotation()
-                annotation_str = annotation.toXMLString()
-                # Check for incorrect bqmodel usage
-                if 'bqmodel:' in annotation_str:
-                    logger.warning(f"Species '{species_id}': Found bqmodel qualifier instead of bqbiol - incorrect usage")
-                gene_ids = extract_id_from_annotation(annotation_str, NCBIGENE_URI_PATTERNS, bqbiol_qualifiers)                
-                if gene_ids:
-                    # Remove duplicates while preserving order
-                    ncbigene_annotations[species_id] = list(dict.fromkeys(gene_ids))
-    
+    model_type, _ = detect_model_format(model_file)
+    ncbigene_annotations: Dict[str, List[str]] = {}
+
+    if model_type == ModelType.SBML_FBC:
+        _collect_fbc_gene_product_ids_simple(
+            model, ncbigene_annotations, NCBIGENE_URI_PATTERNS, bqbiol_qualifiers
+        )
+    elif model_type == ModelType.SBML_QUAL:
+        _collect_qual_species_ids_simple(
+            model, ncbigene_annotations, NCBIGENE_URI_PATTERNS, bqbiol_qualifiers
+        )
+    elif model_type == ModelType.SBML:
+        _collect_species_ids_from_list(
+            model, ncbigene_annotations, NCBIGENE_URI_PATTERNS, bqbiol_qualifiers
+        )
+
     return ncbigene_annotations
 
 def find_species_with_uniprot_annotations(model_file: str, bqbiol_qualifiers: list = None) -> Dict[str, List[str]]:
@@ -437,63 +423,23 @@ def find_species_with_uniprot_annotations(model_file: str, bqbiol_qualifiers: li
     
     if model is None:
         return {}
-    
-    model_type, format_info = detect_model_format(model_file)
-    uniprot_annotations = {}
-    
-    if model_type == ModelType.SBML_FBC:
-        # Extract annotations from FBC gene products
-        fbc_plugin = model.getPlugin("fbc")
-        if fbc_plugin:
-            for gene_product in fbc_plugin.getListOfGeneProducts():
-                gene_product_id = gene_product.getId()
-                
-                if gene_product.isSetAnnotation():
-                    annotation = gene_product.getAnnotation()
-                    annotation_str = annotation.toXMLString()
-                    # Check for incorrect bqmodel usage
-                    if 'bqmodel:' in annotation_str:
-                        logger.warning(f"Gene '{gene_product_id}': Found bqmodel qualifier instead of bqbiol - incorrect usage")
-                    gene_ids = extract_id_from_annotation(annotation_str, UNIPROT_URI_PATTERNS, bqbiol_qualifiers)
-                    
-                    if gene_ids:
-                        # Remove duplicates while preserving order
-                        uniprot_annotations[gene_product_id] = list(dict.fromkeys(gene_ids))
-    
-    elif model_type == ModelType.SBML_QUAL:
-        # Extract annotations from qual qualitative species
-        qual_plugin = model.getPlugin("qual")
-        if qual_plugin:
-            for qual_species in qual_plugin.getListOfQualitativeSpecies():
-                qual_species_id = qual_species.getId()
-                
-                if qual_species.isSetAnnotation():
-                    annotation = qual_species.getAnnotation()
-                    annotation_str = annotation.toXMLString()
-                    # Check for incorrect bqmodel usage
-                    if 'bqmodel:' in annotation_str:
-                        logger.warning(f"Qualitative species '{qual_species_id}': Found bqmodel qualifier instead of bqbiol - incorrect usage")
-                    gene_ids = extract_id_from_annotation(annotation_str, UNIPROT_URI_PATTERNS, bqbiol_qualifiers)
-                    
-                    if gene_ids:
-                        # Remove duplicates while preserving order
-                        uniprot_annotations[qual_species_id] = list(dict.fromkeys(gene_ids))
-    elif model_type == ModelType.SBML:
-        for species in model.getListOfSpecies():
-            species_id = species.getId()
 
-            if species.isSetAnnotation():
-                annotation = species.getAnnotation()
-                annotation_str = annotation.toXMLString()
-                # Check for incorrect bqmodel usage
-                if 'bqmodel:' in annotation_str:
-                    logger.warning(f"Species '{species_id}': Found bqmodel qualifier instead of bqbiol - incorrect usage")
-                gene_ids = extract_id_from_annotation(annotation_str, UNIPROT_URI_PATTERNS, bqbiol_qualifiers)
-                
-                if gene_ids:
-                    # Remove duplicates while preserving order
-                    uniprot_annotations[species_id] = list(dict.fromkeys(gene_ids))
-                    
+    model_type, _ = detect_model_format(model_file)
+    uniprot_annotations: Dict[str, List[str]] = {}
+
+    if model_type == ModelType.SBML_FBC:
+        _collect_fbc_gene_product_ids_simple(
+            model, uniprot_annotations, UNIPROT_URI_PATTERNS, bqbiol_qualifiers
+        )
+    elif model_type == ModelType.SBML_QUAL:
+        _collect_qual_species_ids_simple(
+            model, uniprot_annotations, UNIPROT_URI_PATTERNS, bqbiol_qualifiers
+        )
+    elif model_type == ModelType.SBML:
+        _collect_species_ids_from_list(
+            model, uniprot_annotations, UNIPROT_URI_PATTERNS, bqbiol_qualifiers
+        )
+
     return uniprot_annotations
 
 def find_reactions_with_kegg_annotations(model_file: str, bqbiol_qualifiers: list = None) -> Dict[str, List[str]]:
