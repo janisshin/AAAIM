@@ -47,7 +47,7 @@ model_file = "tests/glycolysis_part1.xml"
 kegg_features_file = "data/kegg/kegg_reaction_features.lzma"
 llm_model = "meta-llama/llama-3.1-8b-instruct"
 # recommendations_df = pd.read_csv("recommendations_correctedChEBI.csv")
-recommendations_df = pd.read_csv("recommendations_unrelaxedChEBI.csv")
+recommendations_df = pd.read_csv("recommendations_unrelaxedChEBI-2.csv")
 TOP_K=10
 
 

@@ -589,11 +589,6 @@ def parse_reaction_equation(rxn_str: str) -> Tuple[Counter, Counter]:
 
     Same rules as ``map_reactions_to_kegg`` (``+`` terms, optional stoichiometry).
     """
-    if "=>" in rxn_str or "->" in rxn_str:
-        lhs, rhs = re.split(r"=>|->", rxn_str)
-    else:
-        return Counter(), Counter()
-
     def parse_metabolites(side: str) -> Counter:
         side = side.strip()
         if not side:
@@ -615,6 +610,11 @@ def parse_reaction_equation(rxn_str: str) -> Tuple[Counter, Counter]:
             met = met.lstrip("$")
             result[met] += coeff
         return result
+
+    if "=>" in rxn_str or "->" in rxn_str:
+        lhs, rhs = re.split(r"=>|->", rxn_str)
+    else:
+        return Counter(), Counter()
 
     reactants = parse_metabolites(lhs)
     products = parse_metabolites(rhs)
@@ -655,9 +655,6 @@ def map_reactions_to_kegg(rxn_list: List[str], reaction_ids: List[str], id_df: p
         - substrates: List of Counter objects with mapped substrate KEGG IDs and stoichiometry
         - products: List of Counter objects with mapped product KEGG IDs and stoichiometry
     """
-    # Keep full rows so we can propagate relaxation metadata when available.
-    id_lookup = id_df.copy()
-
     def map_metabolites_to_kegg(counter: Counter, mapping_df: pd.DataFrame) -> List[Counter]:
         """
         Map metabolite IDs to KEGG IDs while preserving stoichiometry.
@@ -715,6 +712,9 @@ def map_reactions_to_kegg(rxn_list: List[str], reaction_ids: List[str], id_df: p
                        
         return id_choices
 
+    # Keep full rows so we can propagate relaxation metadata when available.
+    id_lookup = id_df.copy()
+
     # Process each reaction
     output = []
        
@@ -732,7 +732,7 @@ def map_reactions_to_kegg(rxn_list: List[str], reaction_ids: List[str], id_df: p
             # Stoichiometric cancellation -- eliminate specatators
             reactants, products = cancel_spectators(reactants, products)
 
-        # Map metabolite IDs to KEGG IDs
+        # Map metabolite CHEBI IDs to KEGG IDs
         substrates_mapped = map_metabolites_to_kegg(reactants, id_lookup)
         products_mapped = map_metabolites_to_kegg(products, id_lookup)
 

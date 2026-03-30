@@ -5,13 +5,18 @@ from __future__ import annotations
 import logging
 import os
 import re
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Mapping, Optional, Set, Tuple
 
 import pandas as pd
 from rapidfuzz import fuzz
 
 from .annotation_workflow import _generate_recommendation_table, map_reactions_to_kegg_with_relaxation
 from .database_search import get_available_databases, load_chebi2kegg_dict
+from .hierarchy_relaxation import (
+    expand_chebi_with_metadata,
+    kegg_ids_for_chebi_term,
+    load_chebi_parent_map,
+)
 from .kegg_definition_text import extract_classifications
 from .kegg_reaction_features import KEGGReactionFeatures
 from .model_info import extract_reactions_from_sbml
@@ -1212,16 +1217,81 @@ def check_environment(model_file: str) -> bool:
     return all_ok
 
 
-def map_chebi_to_kegg(recommendations_df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
+def map_chebi_to_kegg(
+    recommendations_df: pd.DataFrame,
+    *,
+    parent_map: Optional[Mapping[str, Set[str]]] = None,
+    max_ancestor_depth: int = 2,
+    max_descendant_depth: int = 1,
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Map ChEBI IDs in recommendation rows to KEGG compound IDs via
-    ``load_chebi2kegg_dict`` (no ChEBI ontology walk).
-
+    ``load_chebi2kegg_dict`` with an ontology walk fallback when no direct
+    KEGG mapping exists for a given ChEBI term.
+    
     Duplicate rows are emitted when one ChEBI maps to multiple KEGG compounds.
     For reaction matching with optional upward relaxation along ChEBI ``is_a``,
     use ``hierarchy_relaxation.normalize_chebi`` / ``normalize_reaction`` instead.
     """
     chebi_to_kegg_map = load_chebi2kegg_dict()
+
+    # Lazy-load / reuse ChEBI hierarchy inputs for the ontology fallback.
+    ontology_parent_map: Optional[Mapping[str, Set[str]]] = parent_map
+    ontology_cache: Dict[str, List[str]] = {}
+
+    def _ontology_kegg_ids_for_chebi(seed_chebi_id: str) -> List[str]:
+        """
+        When direct ChEBI->KEGG mapping is empty, attempt a bounded ontology
+        walk: first ancestors (max_ancestor_depth), then descendants
+        (max_descendant_depth) if no KEGG IDs were found in the upward pass.
+        """
+        nonlocal ontology_parent_map
+
+        s = str(seed_chebi_id).strip()
+        if not s:
+            return []
+
+        cached = ontology_cache.get(s)
+        if cached is not None:
+            return cached
+
+        if ontology_parent_map is None:
+            ontology_parent_map = load_chebi_parent_map()
+
+        # 1) Upward expansion.
+        up_expanded = expand_chebi_with_metadata(
+            s,
+            ontology_parent_map,  # type: ignore[arg-type]
+            max_up_depth=max_ancestor_depth,
+            max_down_depth=0,
+        )
+        up_keggs: Set[str] = set()
+        for expanded_term in up_expanded.keys():
+            up_keggs.update(kegg_ids_for_chebi_term(str(expanded_term), chebi_to_kegg_map))
+
+        if up_keggs:
+            ontology_cache[s] = sorted(up_keggs)
+            return ontology_cache[s]
+
+        # 2) Downward expansion only if upward found nothing.
+        if max_descendant_depth <= 0:
+            ontology_cache[s] = []
+            return ontology_cache[s]
+
+        down_expanded = expand_chebi_with_metadata(
+            s,
+            ontology_parent_map,  # type: ignore[arg-type]
+            max_up_depth=0,
+            max_down_depth=max_descendant_depth,
+        )
+        down_keggs: Set[str] = set()
+        for expanded_term in down_expanded.keys():
+            down_keggs.update(
+                kegg_ids_for_chebi_term(str(expanded_term), chebi_to_kegg_map)
+            )
+
+        ontology_cache[s] = sorted(down_keggs)
+        return ontology_cache[s]
     
     expanded_rows = []
     existing_mappings = {}
@@ -1245,6 +1315,9 @@ def map_chebi_to_kegg(recommendations_df: pd.DataFrame) -> Tuple[pd.DataFrame, p
             if not isinstance(kegg_ids, list):
                 kegg_ids = [kegg_ids] if kegg_ids else []
             
+            if not kegg_ids:
+                kegg_ids = _ontology_kegg_ids_for_chebi(chebi_id)
+
             if not kegg_ids:
                 row_copy = row.copy()
                 row_copy['KEGG_ID'] = ""

@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Mapping, Optional, Set, Tuple
 from pathlib import Path
 from dataclasses import dataclass
 import logging
-from collections import Counter
+from collections import Counter, defaultdict
 from itertools import product
 import sys
 import chromadb
@@ -26,6 +26,7 @@ from core.hierarchy_relaxation import (
     expand_chebi_with_metadata,
     iter_chebi_for_species,
     kegg_ids_for_chebi_term,
+    merge_chebi_to_kegg_mapping,
     unified_reaction_objective,
 )
 from core.reaction_classification import classify_reaction
@@ -859,12 +860,21 @@ def _get_kegg_recommendations_rulebased(
     def _strict_filter(sub_keys: set, prod_keys: set):
         only_cofactors_subs = all(key in cofactors_to_ignore for key in sub_keys)
         only_cofactors_prods = all(key in cofactors_to_ignore for key in prod_keys)
+        _fk = {}
+        if chebi_to_kegg is not None and parent_map is not None:
+            _fk = {
+                "chebi_to_kegg": chebi_to_kegg,
+                "parent_map": parent_map,
+                "child_map": child_map,
+                "reaction_ontology_max_up": max_ancestor_depth,
+                "reaction_ontology_max_down": max_descendant_depth,
+            }
         if only_cofactors_subs or only_cofactors_prods:
-            candidates = filter_kegg_reactions(sub_keys, prod_keys)
+            candidates = filter_kegg_reactions(sub_keys, prod_keys, **_fk)
             filtered_species_local = set(sub_keys) | set(prod_keys)
         else:
-            candidates = filter_kegg_reactions(sub_keys, prod_keys) + filter_kegg_reactions(
-                sub_keys, prod_keys, cofactors_to_ignore=cofactors_to_ignore
+            candidates = filter_kegg_reactions(sub_keys, prod_keys, **_fk) + filter_kegg_reactions(
+                sub_keys, prod_keys, cofactors_to_ignore=cofactors_to_ignore, **_fk
             )
             candidates = set(candidates)
             filtered_species_local = {
@@ -1380,30 +1390,126 @@ def _get_kegg_recommendations_RAG(reaction_ids: List[str], top_k: int = None, sp
     pass
 
 
-def filter_kegg_reactions(model_sub_keys: List[Counter], model_prod_keys: List[Counter], cofactors_to_ignore={}) -> List[Dict[str, Any]]:
+def _expand_kegg_compound_set_by_chebi_ontology(
+    kegg_compound_ids: Set[str],
+    *,
+    chebi_to_kegg: Mapping[str, Any],
+    parent_map: Mapping[str, Set[str]],
+    child_map: Optional[Mapping[str, Set[str]]],
+    kegg_to_chebis: Mapping[str, Set[str]],
+    max_up_depth: int,
+    max_down_depth: int,
+) -> Set[str]:
+    """
+    Expand a set of KEGG compound IDs with other compounds linked to nearby ChEBI
+    terms (is_a parents/children), for relaxed reaction-side subset checks.
+    """
+    if max_up_depth <= 0 and max_down_depth <= 0:
+        return set(kegg_compound_ids)
+    out: Set[str] = set(kegg_compound_ids)
+    for kid in kegg_compound_ids:
+        k = str(kid).strip()
+        if not k:
+            continue
+        for chebi in kegg_to_chebis.get(k, ()):
+            ch = str(chebi).strip()
+            if not ch:
+                continue
+            for term in expand_chebi_with_metadata(
+                ch,
+                parent_map,
+                child_map=child_map,
+                max_up_depth=max_up_depth,
+                max_down_depth=max_down_depth,
+            ):
+                out.update(kegg_ids_for_chebi_term(term, chebi_to_kegg))
+    return out
+
+
+def filter_kegg_reactions(
+    model_sub_keys: List[Counter],
+    model_prod_keys: List[Counter],
+    cofactors_to_ignore={},
+    *,
+    chebi_to_kegg: Optional[Mapping[str, Any]] = None,
+    parent_map: Optional[Mapping[str, Set[str]]] = None,
+    child_map: Optional[Mapping[str, Set[str]]] = None,
+    reaction_ontology_max_up: int = 2,
+    reaction_ontology_max_down: int = 1,
+) -> List[Dict[str, Any]]:
     """
     Filter KEGG reactions based on substrate and product matching.
-    
+
+    When ``chebi_to_kegg`` and ``parent_map`` are provided, each reaction's
+    substrate and product KEGG compound sets are expanded with other compounds
+    linked to nearby ChEBI ontology terms (``reaction_ontology_max_up`` /
+    ``reaction_ontology_max_down`` hops along is_a), so subset matching can
+    relate related metabolites across the ontology.
+
     Args:
         model_subs: List of Counter objects representing model substrates
         model_prods: List of Counter objects representing model products
         kegg_parsed_reactions_dict: Dictionary of KEGG reaction data
         cofactors_to_ignore: set of KEGG IDs of cofactors
-        
+        chebi_to_kegg: Optional ChEBI→KEGG map for reaction-side expansion
+        parent_map: Optional ChEBI child→parents map (is_a)
+        child_map: Optional ChEBI parent→children map (derived if omitted)
+        reaction_ontology_max_up: Max is_a hops upward when expanding (0 disables)
+        reaction_ontology_max_down: Max hops downward when expanding (0 disables)
+
     Returns:
         List of KEGG reactions that contain all model substrates and products
     """
     kegg_parsed_reactions_dict = load_kegg_parsed_reactions_dict() # load_kegg_reaction_features_dict
     # Get unique keys from the model substrates and products
-    
+
+    expand_reaction_side = (
+        chebi_to_kegg is not None
+        and parent_map is not None
+        and (reaction_ontology_max_up > 0 or reaction_ontology_max_down > 0)
+    )
+    kegg_to_chebis: Optional[Dict[str, Set[str]]] = None
+    if expand_reaction_side:
+        kegg_to_chebis = defaultdict(set)
+        for chebi, kids in merge_chebi_to_kegg_mapping(chebi_to_kegg).items():
+            c = str(chebi).strip()
+            if not c:
+                continue
+            for x in kids:
+                k = str(x).strip()
+                if k:
+                    kegg_to_chebis[k].add(c)
+
     filtered_reactions = []
     partial_matches = []
-    
+
     for kegg_id in kegg_parsed_reactions_dict:
         # Get sets of KEGG substrates and products
         kegg_subs_set = set(kegg_parsed_reactions_dict.get(kegg_id, kegg_id).get('substrates', []))
+        a = len(kegg_subs_set)
         kegg_prods_set = set(kegg_parsed_reactions_dict.get(kegg_id, kegg_id).get('products', []))
-        
+        if expand_reaction_side and kegg_to_chebis is not None:
+            kegg_subs_set = _expand_kegg_compound_set_by_chebi_ontology(
+                kegg_subs_set,
+                chebi_to_kegg=chebi_to_kegg,
+                parent_map=parent_map,
+                child_map=child_map,
+                kegg_to_chebis=kegg_to_chebis,
+                max_up_depth=reaction_ontology_max_up,
+                max_down_depth=reaction_ontology_max_down,
+            )
+            b = len(kegg_subs_set)
+            assert a <= b, "KEGG substrate set expanded by ChEBI ontology should not be smaller"
+            kegg_prods_set = _expand_kegg_compound_set_by_chebi_ontology(
+                kegg_prods_set,
+                chebi_to_kegg=chebi_to_kegg,
+                parent_map=parent_map,
+                child_map=child_map,
+                kegg_to_chebis=kegg_to_chebis,
+                max_up_depth=reaction_ontology_max_up,
+                max_down_depth=reaction_ontology_max_down,
+            )
+
         # Check if all model metabolites are in KEGG reaction (ignore counts)
         subs_match = model_sub_keys.issubset(kegg_subs_set)
         prods_match = model_prod_keys.issubset(kegg_prods_set)
