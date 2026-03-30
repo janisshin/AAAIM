@@ -749,7 +749,6 @@ class ConvergenceChecker:
 
 def discover_new_participants(
     reaction_likelihood_df: pd.DataFrame,
-    kegg_features: KEGGReactionFeatures,
     current_participant_ids: Set[str],
     convergence_config: ConvergenceConfig
 ) -> Set[str]:
@@ -758,7 +757,6 @@ def discover_new_participants(
     
     Args:
         reaction_likelihood_df: DataFrame with reaction likelihoods
-        kegg_features: KEGG reaction features for extracting participants
         current_participant_ids: Set of currently known participant IDs
         convergence_config: Configuration with discovery thresholds
         
@@ -800,7 +798,6 @@ def discover_new_participants(
 def suggest_kegg_candidates_from_reactions(
     reaction_likelihood_df: pd.DataFrame,
     current_participants_df: pd.DataFrame,
-    kegg_features: KEGGReactionFeatures,
     convergence_config: ConvergenceConfig
 ) -> pd.DataFrame:
     """
@@ -810,7 +807,6 @@ def suggest_kegg_candidates_from_reactions(
     Args:
         reaction_likelihood_df: DataFrame with reaction likelihoods
         current_participants_df: Current participant DataFrame with KEGG IDs
-        kegg_features: KEGG reaction features
         convergence_config: Configuration with thresholds
         
     Returns:
@@ -975,7 +971,6 @@ def update_participant_likelihoods(
             new_kegg_candidates = suggest_kegg_candidates_from_reactions(
                 reaction_likelihood_df,
                 updated_participants_df_with_kegg,
-                kegg_features,
                 convergence_config
             )
             
@@ -1013,7 +1008,6 @@ def update_participant_likelihoods(
         if iteration > 1 and convergence_config.enable_participant_discovery:
             new_participant_ids = discover_new_participants(
                 reaction_likelihood_df,
-                kegg_features,
                 all_known_participant_ids,
                 convergence_config
             )
