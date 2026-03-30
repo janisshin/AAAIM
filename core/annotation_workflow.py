@@ -766,6 +766,7 @@ def _aggregate_best_penalized_scores(match_results: List[Any]) -> float:
     best_by_rxn: Dict[str, float] = {}
     classification_by_rxn: Dict[str, str] = {}
     ambiguous_default_by_rxn: Dict[str, float] = {}
+    failed_default_by_rxn: Dict[str, float] = {}
     for rec in match_results:
         rid = rec.id
         meta = getattr(rec, "metadata", None) or {}
@@ -773,6 +774,8 @@ def _aggregate_best_penalized_scores(match_results: List[Any]) -> float:
         classification_by_rxn[rid] = rtype
         if rtype == "ambiguous_mapping":
             ambiguous_default_by_rxn[rid] = float(meta.get("ambiguous_default_score", 0.0))
+        if rtype == "failed_mapping":
+            failed_default_by_rxn[rid] = float(meta.get("failed_default_score", 0.0))
         if rtype != "mappable":
             continue
         if not rec.match_score:
@@ -787,6 +790,9 @@ def _aggregate_best_penalized_scores(match_results: List[Any]) -> float:
             continue
         if rtype == "ambiguous_mapping":
             scored.append(float(ambiguous_default_by_rxn.get(rid, 0.0)))
+            continue
+        if rtype == "failed_mapping":
+            scored.append(float(failed_default_by_rxn.get(rid, 0.0)))
             continue
         if rid in best_by_rxn:
             scored.append(float(best_by_rxn[rid]))
@@ -1044,6 +1050,7 @@ def map_reactions_to_kegg_with_relaxation(
     def compute_global_score(levels: Mapping[str, int]) -> float:
         """Evaluate the full-model global objective at the provided relaxation levels."""
         trial_id_kegg_df = build_kegg_mapping_dataframe(
+            species_to_chebi.keys(),
             species_to_chebi,
             levels,
             merged_kegg,
@@ -1111,6 +1118,7 @@ def map_reactions_to_kegg_with_relaxation(
     for _iteration in range(max_iterations):
         # --- Step 1: build normalized reactions ---
         id_kegg_df = build_kegg_mapping_dataframe(
+            species_to_chebi.keys(),
             species_to_chebi,
             relax_level,
             merged_kegg,

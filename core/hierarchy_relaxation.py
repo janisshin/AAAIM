@@ -289,6 +289,113 @@ def kegg_ids_for_chebi_term(
     return set()
 
 
+def chebi_best_kegg_meta_with_ontology_fallback(
+    seed_chebi_id: str,
+    chebi_to_kegg: ChebiToKegg,
+    parent_map: ParentMap,
+    *,
+    child_map: Optional[ChildMap] = None,
+    max_ancestor_depth: int = 2,
+    max_descendant_depth: int = 1,
+) -> Dict[str, Dict[str, Any]]:
+    """
+    Map one ChEBI term to the best (direction, distance) KEGG compounds.
+
+    Strategy:
+    - Strict direct hits first (no ontology walk): each strict KEGG gets
+      ``direction="exact"`` and ``distance=0``.
+    - If strict hits are empty, walk ancestors (bounded by ``max_ancestor_depth``).
+    - If ancestor-walk produced no KEGG hits, walk descendants instead
+      (bounded by ``max_descendant_depth``).
+
+    The return value is a dict keyed by KEGG compound id; values contain
+    per-KEGG tie-breaking metadata when multiple expanded ChEBI terms map
+    to the same KEGG compound.
+    """
+    seed = str(seed_chebi_id).strip()
+    if not seed:
+        return {}
+
+    # Strict mapping first (no ontology walk).
+    direct_keggs = kegg_ids_for_chebi_term(seed, chebi_to_kegg)
+    if direct_keggs:
+        return {k: {"direction": "exact", "distance": 0} for k in direct_keggs}
+
+    best_meta_by_kegg: Dict[str, Dict[str, Any]] = {}
+
+    def _maybe_take(meta: Dict[str, Any], kegg_id: str) -> None:
+        prev = best_meta_by_kegg.get(kegg_id)
+        cand_dist = int(meta.get("distance", 0) or 0)
+        cand_dir = str(meta.get("direction", "exact")).strip()
+        if prev is None:
+            best_meta_by_kegg[kegg_id] = {"direction": cand_dir, "distance": cand_dist}
+            return
+
+        prev_dist = int(prev.get("distance", 0) or 0)
+        prev_dir = str(prev.get("direction", "exact")).strip()
+        if cand_dist < prev_dist:
+            best_meta_by_kegg[kegg_id] = {"direction": cand_dir, "distance": cand_dist}
+        elif cand_dist == prev_dist:
+            # Prefer exact > down > up (matches expand_chebi_with_metadata
+            # tie-breaking).
+            if _DIRECTION_PRIORITY.get(cand_dir, -1) > _DIRECTION_PRIORITY.get(prev_dir, -1):
+                best_meta_by_kegg[kegg_id] = {"direction": cand_dir, "distance": cand_dist}
+
+    # 1) Try ancestors (up) up to max_ancestor_depth.
+    up_expanded = expand_chebi_with_metadata(
+        seed,
+        parent_map,
+        child_map=child_map,
+        max_up_depth=max_ancestor_depth,
+        max_down_depth=0,
+    )
+    for expanded_term, meta in up_expanded.items():
+        expanded_term = str(expanded_term).strip()
+        if not expanded_term:
+            continue
+        for k in kegg_ids_for_chebi_term(expanded_term, chebi_to_kegg):
+            _maybe_take(meta, k)
+
+    # 2) If up produced nothing, then try descendants (down).
+    if not best_meta_by_kegg and max_descendant_depth > 0:
+        down_expanded = expand_chebi_with_metadata(
+            seed,
+            parent_map,
+            child_map=child_map,
+            max_up_depth=0,
+            max_down_depth=max_descendant_depth,
+        )
+        for expanded_term, meta in down_expanded.items():
+            expanded_term = str(expanded_term).strip()
+            if not expanded_term:
+                continue
+            for k in kegg_ids_for_chebi_term(expanded_term, chebi_to_kegg):
+                _maybe_take(meta, k)
+
+    return best_meta_by_kegg
+
+
+def chebi_best_kegg_ids_with_ontology_fallback(
+    seed_chebi_id: str,
+    chebi_to_kegg: ChebiToKegg,
+    parent_map: ParentMap,
+    *,
+    child_map: Optional[ChildMap] = None,
+    max_ancestor_depth: int = 2,
+    max_descendant_depth: int = 1,
+) -> List[str]:
+    """Convenience wrapper returning just the sorted KEGG id list."""
+    best_meta_by_kegg = chebi_best_kegg_meta_with_ontology_fallback(
+        seed_chebi_id,
+        chebi_to_kegg,
+        parent_map,
+        child_map=child_map,
+        max_ancestor_depth=max_ancestor_depth,
+        max_descendant_depth=max_descendant_depth,
+    )
+    return sorted(best_meta_by_kegg.keys())
+
+
 def normalize_chebi(
     chebi_id: str,
     chebi_to_kegg: ChebiToKegg,
@@ -569,10 +676,7 @@ def load_chebi_child_map(
 
 
 def build_kegg_mapping_dataframe(
-    species_to_chebi: SpeciesToChebi,
-    relax_level: Mapping[str, int],
-    chebi_to_kegg: ChebiToKegg,
-    parent_map: ParentMap,
+    *args: Any,
     max_ancestor_depth: int = 2,
     child_map: Optional[ChildMap] = None,
     max_descendant_depth: int = 1,
@@ -583,9 +687,25 @@ def build_kegg_mapping_dataframe(
     One row per (species, KEGG) pair; duplicate indices are OK for the
     existing lookup logic in map_metabolites_to_kegg.
     """
-    species_ids = species_to_chebi.keys()
+    # Backward-compatible call patterns:
+    # - (species_to_chebi, relax_level, chebi_to_kegg, parent_map)
+    # - (species_ids, species_to_chebi, relax_level, chebi_to_kegg, parent_map)
+    species_ids: Optional[Iterable[str]] = None
+    if len(args) == 4:
+        species_to_chebi, relax_level, chebi_to_kegg, parent_map = args
+    elif len(args) == 5:
+        species_ids, species_to_chebi, relax_level, chebi_to_kegg, parent_map = args
+    else:
+        raise TypeError(
+            "build_kegg_mapping_dataframe expected 4 positional args "
+            "(species_to_chebi, relax_level, chebi_to_kegg, parent_map) "
+            "or 5 positional args (species_ids, species_to_chebi, relax_level, "
+            "chebi_to_kegg, parent_map)"
+        )
+
     rows: List[Dict[str, Any]] = []
-    for sid in species_ids:
+    species_iter = species_ids if species_ids is not None else species_to_chebi.keys()
+    for sid in species_iter:
         chebi_list = iter_chebi_for_species(species_to_chebi, str(sid))
         if not chebi_list:
             continue
@@ -594,83 +714,15 @@ def build_kegg_mapping_dataframe(
             if not seed:
                 continue
 
-            # Strict mapping first (no ontology walk). If it fails, fall back to
-            # a bounded ontology expansion: up first, then down.
-            direct_keggs = kegg_ids_for_chebi_term(seed, chebi_to_kegg)
-            if direct_keggs:
-                for k in sorted(direct_keggs):
-                    rows.append(
-                        {
-                            "id": sid,
-                            "KEGG_ID": k,
-                            "canonical_id": seed,  # keep original seed term
-                            "direction": "exact",
-                            "distance": 0,
-                        }
-                    )
-                continue
-
-            # Collect best (direction, distance) metadata per KEGG ID among
-            # all expanded ChEBI terms.
-            best_meta_by_kegg: Dict[str, Dict[str, Any]] = {}
-
-            def _maybe_take(meta: Dict[str, Any], kegg_id: str) -> None:
-                prev = best_meta_by_kegg.get(kegg_id)
-                cand_dist = int(meta.get("distance", 0) or 0)
-                cand_dir = str(meta.get("direction", "exact")).strip()
-                if prev is None:
-                    best_meta_by_kegg[kegg_id] = {
-                        "direction": cand_dir,
-                        "distance": cand_dist,
-                    }
-                    return
-
-                prev_dist = int(prev.get("distance", 0) or 0)
-                prev_dir = str(prev.get("direction", "exact")).strip()
-                if cand_dist < prev_dist:
-                    best_meta_by_kegg[kegg_id] = {
-                        "direction": cand_dir,
-                        "distance": cand_dist,
-                    }
-                elif cand_dist == prev_dist:
-                    # Prefer exact > down > up (matches expand_chebi_with_metadata
-                    # tie-breaking).
-                    if _DIRECTION_PRIORITY.get(cand_dir, -1) > _DIRECTION_PRIORITY.get(prev_dir, -1):
-                        best_meta_by_kegg[kegg_id] = {
-                            "direction": cand_dir,
-                            "distance": cand_dist,
-                        }
-
-            # 1) Try ancestors (up) up to max_ancestor_depth.
-            up_expanded = expand_chebi_with_metadata(
+            # Strict direct hits first; then walk ancestors; then descendants.
+            best_meta_by_kegg = chebi_best_kegg_meta_with_ontology_fallback(
                 seed,
+                chebi_to_kegg,
                 parent_map,
                 child_map=child_map,
-                max_up_depth=max_ancestor_depth,
-                max_down_depth=0,
+                max_ancestor_depth=max_ancestor_depth,
+                max_descendant_depth=max_descendant_depth,
             )
-            for expanded_term, meta in up_expanded.items():
-                expanded_term = str(expanded_term).strip()
-                if not expanded_term:
-                    continue
-                for k in kegg_ids_for_chebi_term(expanded_term, chebi_to_kegg):
-                    _maybe_take(meta, k)
-
-            # 2) If up produced nothing, then try descendants (down).
-            if not best_meta_by_kegg and max_descendant_depth > 0:
-                down_expanded = expand_chebi_with_metadata(
-                    seed,
-                    parent_map,
-                    child_map=child_map,
-                    max_up_depth=0,
-                    max_down_depth=max_descendant_depth,
-                )
-                for expanded_term, meta in down_expanded.items():
-                    expanded_term = str(expanded_term).strip()
-                    if not expanded_term:
-                        continue
-                    for k in kegg_ids_for_chebi_term(expanded_term, chebi_to_kegg):
-                        _maybe_take(meta, k)
 
             for k in sorted(best_meta_by_kegg.keys()):
                 meta = best_meta_by_kegg[k]

@@ -13,8 +13,7 @@ from rapidfuzz import fuzz
 from .annotation_workflow import _generate_recommendation_table, map_reactions_to_kegg_with_relaxation
 from .database_search import get_available_databases, load_chebi2kegg_dict
 from .hierarchy_relaxation import (
-    expand_chebi_with_metadata,
-    kegg_ids_for_chebi_term,
+    chebi_best_kegg_ids_with_ontology_fallback,
     load_chebi_parent_map,
 )
 from .kegg_definition_text import extract_classifications
@@ -1239,12 +1238,8 @@ def map_chebi_to_kegg(
     ontology_parent_map: Optional[Mapping[str, Set[str]]] = parent_map
     ontology_cache: Dict[str, List[str]] = {}
 
-    def _ontology_kegg_ids_for_chebi(seed_chebi_id: str) -> List[str]:
-        """
-        When direct ChEBI->KEGG mapping is empty, attempt a bounded ontology
-        walk: first ancestors (max_ancestor_depth), then descendants
-        (max_descendant_depth) if no KEGG IDs were found in the upward pass.
-        """
+    def _kegg_ids_for_chebi(seed_chebi_id: str) -> List[str]:
+        """Direct hits, then bounded up-then-down ontology fallback."""
         nonlocal ontology_parent_map
 
         s = str(seed_chebi_id).strip()
@@ -1258,40 +1253,15 @@ def map_chebi_to_kegg(
         if ontology_parent_map is None:
             ontology_parent_map = load_chebi_parent_map()
 
-        # 1) Upward expansion.
-        up_expanded = expand_chebi_with_metadata(
+        ids = chebi_best_kegg_ids_with_ontology_fallback(
             s,
+            chebi_to_kegg_map,
             ontology_parent_map,  # type: ignore[arg-type]
-            max_up_depth=max_ancestor_depth,
-            max_down_depth=0,
+            max_ancestor_depth=max_ancestor_depth,
+            max_descendant_depth=max_descendant_depth,
         )
-        up_keggs: Set[str] = set()
-        for expanded_term in up_expanded.keys():
-            up_keggs.update(kegg_ids_for_chebi_term(str(expanded_term), chebi_to_kegg_map))
-
-        if up_keggs:
-            ontology_cache[s] = sorted(up_keggs)
-            return ontology_cache[s]
-
-        # 2) Downward expansion only if upward found nothing.
-        if max_descendant_depth <= 0:
-            ontology_cache[s] = []
-            return ontology_cache[s]
-
-        down_expanded = expand_chebi_with_metadata(
-            s,
-            ontology_parent_map,  # type: ignore[arg-type]
-            max_up_depth=0,
-            max_down_depth=max_descendant_depth,
-        )
-        down_keggs: Set[str] = set()
-        for expanded_term in down_expanded.keys():
-            down_keggs.update(
-                kegg_ids_for_chebi_term(str(expanded_term), chebi_to_kegg_map)
-            )
-
-        ontology_cache[s] = sorted(down_keggs)
-        return ontology_cache[s]
+        ontology_cache[s] = ids
+        return ids
     
     expanded_rows = []
     existing_mappings = {}
@@ -1310,13 +1280,7 @@ def map_chebi_to_kegg(
     if not recommendations_df.empty and 'annotation' in recommendations_df.columns:
         for _, row in recommendations_df.iterrows():
             chebi_id = row['annotation']
-            kegg_ids = chebi_to_kegg_map.get(chebi_id, [])
-            
-            if not isinstance(kegg_ids, list):
-                kegg_ids = [kegg_ids] if kegg_ids else []
-            
-            if not kegg_ids:
-                kegg_ids = _ontology_kegg_ids_for_chebi(chebi_id)
+            kegg_ids = _kegg_ids_for_chebi(chebi_id)
 
             if not kegg_ids:
                 row_copy = row.copy()
