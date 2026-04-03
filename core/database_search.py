@@ -22,6 +22,15 @@ from utils.constants import REF_CHEBI2LABEL, REF_NAMES2CHEBI, REF_NCBIGENE2LABEL
 from utils.constants import REF_CHEBI2KEGG_COMPOUND, REF_KEGG_REACTION2NAME, REF_KEGG2EC, REF_KEGG_REACTION_FEATURES, REF_KEGG_PARSED_REACTIONS
 # from utils.constants import SYNONYM_WORDS_TO_REMOVE
 from core.data_types import Recommendation, ReactionRecommendation
+from core.reaction.hierarchy_relaxation import (
+    expand_chebi_with_metadata,
+    iter_chebi_for_species,
+    kegg_ids_for_chebi_term,
+    merge_chebi_to_kegg_mapping,
+    unified_reaction_objective,
+)
+from core.reaction.classification import classify_reaction
+from core.reaction.kegg_definition import extract_classifications
 
 
 logger = logging.getLogger(__name__)
@@ -232,8 +241,13 @@ def load_uniprot_label_dict(tax_id: str = None) -> Dict[str, str]:
 
 def load_chebi2kegg_dict() -> Dict[str, str]:
     """
-    Load the ChEBI ID to KEGG compound ID mapping dictionary.
-    
+    Load the reference ChEBI → KEGG compound mapping (pickled).
+
+    Values are typically a single KEGG compound id but may be lists where one
+    ChEBI maps to several compounds. For graph/scoring code, normalize with
+    ``hierarchy_relaxation.merge_chebi_to_kegg_mapping``. For expanding
+    amendment tables row-wise, use ``utils.map_chebi_to_kegg``.
+
     Returns:
         Dictionary mapping ChEBI IDs to KEGG compound IDs
     """
