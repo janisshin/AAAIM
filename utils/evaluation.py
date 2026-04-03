@@ -1222,7 +1222,6 @@ def evaluate_models_in_folder(model_dir: str,
                              context: bool = True) -> pd.DataFrame:
     """
     Generate species evaluation statistics for multiple models in a directory.
-    Replicates evaluate_models from AMAS test_LLM_synonyms_plain.ipynb
     
     Args:
         model_dir: Directory containing SBML model files

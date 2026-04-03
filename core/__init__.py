@@ -13,13 +13,13 @@ from .annotation_workflow import (
     print_results,
 )
 from .curation_workflow import curate_model, curate_single_model
+from .feedback import AnnotationResult
 from .database_search import (
     Recommendation,
     get_available_databases,
     get_species_recommendations_direct,
     load_chebi2kegg_dict,
     load_kegg_reaction_features_dict,
-    score_model_against_kegg_reaction,
     search_database,
 )
 from .llm_interface import (
@@ -29,6 +29,7 @@ from .llm_interface import (
     get_system_prompt,
     parse_llm_response,
     query_llm,
+    query_llm_with_history,
 )
 from .model_info import (
     detect_model_format,
@@ -75,6 +76,7 @@ __all__ = [
     "curate_single_model",
     "print_results",
     "update_annotation",
+    "AnnotationResult",
     
     # Model + LLM
     "detect_model_format",
@@ -90,6 +92,7 @@ __all__ = [
     "SYSTEM_PROMPT_GENE",
     "get_system_prompt",
     "query_llm",
+    "query_llm_with_history",
     "parse_llm_response",
     
     # Database search
@@ -98,7 +101,6 @@ __all__ = [
     "get_species_recommendations_direct",
     "load_chebi2kegg_dict",
     "load_kegg_reaction_features_dict",
-    "score_model_against_kegg_reaction",
     "search_database",
 
     # Reaction ↔ KEGG matching

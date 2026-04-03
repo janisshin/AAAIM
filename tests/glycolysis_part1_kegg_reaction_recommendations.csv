@@ -1,0 +1,26 @@
+file,type,id,display_name,annotation,annotation_label,match_score,existing,update_annotation,qualifier
+glycolysis_part1.xml,reaction,J1,J1,KEGG:R01786,hexokinase; glucokinase; glucokinase; glucokinase,1.0,0,add,is
+glycolysis_part1.xml,reaction,J1,J1,KEGG:R02189,polyphosphate glucokinase,1.0,0,ignore,is
+glycolysis_part1.xml,reaction,J1,J1,KEGG:R09085,ADP-dependent phosphofructokinase/glucokinase; ADP-dependent glucokinase,0.75,0,ignore,is
+glycolysis_part1.xml,reaction,J2,J2,KEGG:R13199,"glucose-6-phosphate isomerase; glucose-6-phosphate isomerase, archaeal; transaldolase / glucose-6-phosphate isomerase; glucose/mannose-6-phosphate isomerase",1.0,0,add,is
+glycolysis_part1.xml,reaction,J3,J3,KEGG:R00756,6-phosphofructokinase 1; 6-phosphofructokinase 2; ATP-dependent phosphofructokinase / diphosphate-dependent phosphofructokinase; 6-phosphofructokinase,1.0,0,add,is
+glycolysis_part1.xml,reaction,J3,J3,KEGG:R00764,diphosphate-dependent phosphofructokinase; ATP-dependent phosphofructokinase / diphosphate-dependent phosphofructokinase,1.0,0,ignore,is
+glycolysis_part1.xml,reaction,J3,J3,KEGG:R05805,ADP-dependent phosphofructokinase/glucokinase,0.75,0,ignore,is
+glycolysis_part1.xml,reaction,J3,J3,KEGG:R00770,,0.5,0,ignore,is
+glycolysis_part1.xml,reaction,J3,J3,KEGG:R00767,,0.5,0,ignore,is
+glycolysis_part1.xml,reaction,J3,J3,KEGG:R00769,,0.5,0,ignore,is
+glycolysis_part1.xml,reaction,J4,J4,KEGG:R01068,"fructose 1,6-bisphosphate aldolase/phosphatase; fructose-bisphosphate aldolase, class I; fructose-bisphosphate aldolase, class II; fructose-bisphosphate aldolase, class I; fructose-bisphosphate aldolase / 6-deoxy-5-ketofructose 1-phosphate synthase; fructose-bisphosphate aldolase / 2-amino-3,7-dideoxy-D-threo-hept-6-ulosonate synthase",0.6666666666666666,0,add,is
+glycolysis_part1.xml,reaction,J4,J4,KEGG:R10049,fructose-bisphosphate aldolase / 6-deoxy-5-ketofructose 1-phosphate synthase,0.41666666666666663,0,ignore,is
+glycolysis_part1.xml,reaction,J5,J5,,J5,0.0,0,ignore,is
+glycolysis_part1.xml,reaction,J6,J6,KEGG:R00140,Straboviridae T-even-induced deoxynucleotide kinase,0.5,0,ignore,is
+glycolysis_part1.xml,reaction,J6,J6,KEGG:R02750,ribokinase,0.5,0,ignore,is
+glycolysis_part1.xml,reaction,J6,J6,KEGG:R03347,nicotinamide/nicotinate riboside kinase,0.5,0,ignore,is
+glycolysis_part1.xml,reaction,J6,J6,KEGG:R05202,inositol-pentakisphosphate 2-kinase; inositol-pentakisphosphate 2-kinase,0.5,0,ignore,is
+glycolysis_part1.xml,reaction,J6,J6,KEGG:R03157,3-hydroxypropionyl-CoA synthetase (ADP-forming),0.3333333333333333,0,ignore,is
+glycolysis_part1.xml,reaction,J6,J6,KEGG:R00283,,0.29166666666666663,0,ignore,is
+glycolysis_part1.xml,reaction,J6,J6,KEGG:R03905,aspartyl-tRNA(Asn)/glutamyl-tRNA(Gln) amidotransferase subunit A; aspartyl-tRNA(Asn)/glutamyl-tRNA(Gln) amidotransferase subunit B; aspartyl-tRNA(Asn)/glutamyl-tRNA(Gln) amidotransferase subunit C; glutamyl-tRNA(Gln) amidotransferase subunit E; glutamyl-tRNA(Gln) amidotransferase subunit F; glutamyl-tRNA(Gln) amidotransferase subunit D,0.25,0,ignore,is
+glycolysis_part1.xml,reaction,J6,J6,KEGG:R04212,aspartyl-tRNA(Asn)/glutamyl-tRNA(Gln) amidotransferase subunit A; aspartyl-tRNA(Asn)/glutamyl-tRNA(Gln) amidotransferase subunit B; aspartyl-tRNA(Asn)/glutamyl-tRNA(Gln) amidotransferase subunit C,0.25,0,ignore,is
+glycolysis_part1.xml,reaction,J6,J6,KEGG:R06282,light-independent protochlorophyllide reductase subunit L; light-independent protochlorophyllide reductase subunit N; light-independent protochlorophyllide reductase subunit B,0.25,0,ignore,is
+glycolysis_part1.xml,reaction,J6,J6,KEGG:R01724,nicotinate phosphoribosyltransferase,0.225,0,ignore,is
+glycolysis_part1.xml,reaction,J6,J6,KEGG:R11531,,0.225,0,ignore,is
+glycolysis_part1.xml,reaction,J6,J6,KEGG:R00124,nucleoside-diphosphate kinase; adenylate/nucleoside-diphosphate kinase,0.0,0,ignore,is
