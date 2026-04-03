@@ -15,7 +15,7 @@ ChEBI→KEGG compound mapping) underlies:
   ontology relaxation (walking ChEBI parents) so more KEGG compounds can match
   during reaction scoring.
 
-- **reaction_amendment.map_chebi_to_kegg** — uses that table *without*
+- **utils.map_chebi_to_kegg** — uses that table *without*
   relaxation: it expands recommendation rows so each ChEBI maps to one or more
   KEGG compound columns for downstream amendment logic. It does not walk the
   ChEBI hierarchy.
@@ -249,7 +249,7 @@ def merge_chebi_to_kegg_mapping(raw: Mapping[str, Any]) -> Dict[str, Set[str]]:
 
     This is the canonical way to consume ``load_chebi2kegg_dict()`` for graph
     and scoring code. For pandas row expansion without relaxation, see
-    ``reaction_amendment.map_chebi_to_kegg``.
+    ``utils.map_chebi_to_kegg``.
     """
     merged: Dict[str, Set[str]] = defaultdict(set)
     for chebi, val in raw.items():
@@ -543,7 +543,7 @@ def load_chebi_parent_map(
     """
     global _CACHED_PARENT_MAP, _CACHED_PARENT_MAP_SOURCE
 
-    base = Path(data_dir) if data_dir else Path(__file__).resolve().parent.parent / "data" / "chebi"
+    base = Path(data_dir) if data_dir else Path(__file__).resolve().parent.parent.parent / "data" / "chebi"
     gz = Path(gz_path) if gz_path else base / "chebi_parent_map.json.gz"
     obo = Path(obo_path) if obo_path else base / "chebi.obo"
 
@@ -633,7 +633,7 @@ def load_chebi_child_map(
 
     global _CACHED_CHILD_MAP, _CACHED_CHILD_MAP_SOURCE
 
-    base = Path(data_dir) if data_dir else Path(__file__).resolve().parent.parent / "data" / "chebi"
+    base = Path(data_dir) if data_dir else Path(__file__).resolve().parent.parent.parent / "data" / "chebi"
     gz = Path(gz_path) if gz_path else base / "chebi_child_map.json.gz"
     src_key = str(gz.resolve()) if gz.exists() else "__derived__"
 

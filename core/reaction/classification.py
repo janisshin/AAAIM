@@ -1,11 +1,10 @@
-"""
-Reaction eligibility classification for scoring/coverage accounting.
-"""
+"""Reaction mappability classification (no dependency on database_search)."""
 
 from __future__ import annotations
 
 from typing import Iterable
-from core.reaction_amendment_config import CofactorConfig
+
+from .amendment_config import CofactorConfig
 
 
 def classify_reaction(
@@ -34,8 +33,6 @@ def classify_reaction(
     if not lhs or not rhs:
         return "non_mappable"
     if len(cand) == 0:
-        return "non_mappable" ### this is incorrect. This should trigger hierarchy relaxation loop and retry matching
-        ## actually, hierarchy relaxation candidates should be explored in the creation of filtered_reaction_list in database_search.py
-        
-    return "mappable"
+        return "non_mappable"
 
+    return "mappable"

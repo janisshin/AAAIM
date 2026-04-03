@@ -7,7 +7,7 @@ import lzma
 import pickle
 from typing import Dict
 
-from .kegg_definition_text import extract_classifications
+from .kegg_definition import extract_classifications
 
 logger = logging.getLogger(__name__)
 

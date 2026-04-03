@@ -2,7 +2,6 @@ import pandas as pd
 import libsbml
 import re
 from core.model_info import detect_model_format
-import logging
 
 # XML helpers (adapted from AMAS)
 def divide_existing_annotation(inp_str, qualifier):
