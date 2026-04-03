@@ -1,0 +1,8 @@
+file,type,id,display_name,annotation,annotation_label,match_score,existing,update_annotation
+glycolysis_part1.xml,chemical,Glucose,,CHEBI:4167,glucose,1.0,0,add
+small_model.xml,chemical,G6P,,CHEBI:17665,alpha-D-glucose 6-phosphate,0.388,0,ignore
+small_model.xml,chemical,F6P,,CHEBI:16084,D-fructofuranose 6-phosphate,0.634,0,add
+small_model.xml,chemical,F16BP,,CHEBI:40595,D-fructofuranose 1 6-bisphosphate,0.493,0,ignore
+small_model.xml,chemical,ATP,,CHEBI:15422,ATP,1.0,0,add
+small_model.xml,chemical,ADP,,CHEBI:16761,ADP,1.0,0,ignore
+small_model.xml,chemical,G3P,,CHEBI:17138,D-glyceraldehyde 3-phosphate(18:3w3/18:1w9),0.147,0,ignore
