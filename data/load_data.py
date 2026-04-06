@@ -141,19 +141,6 @@ def extract_classifications(raw_text, classification):
     
     return "; ".join(set(clean_lines))
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
-
-
-def chunk_list(lst: List, size: int):
-    """Split a list into chunks of specified size."""
-    for i in range(0, len(lst), size):
-        yield lst[i:i + size]
-
 
 def load_reference_data(ref_data_path: str) -> Dict[str, List[str]]:
     """
