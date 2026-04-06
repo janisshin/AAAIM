@@ -167,7 +167,6 @@ def update_annotation(
                     existing_items.append((item, qual_name))
         
         # Parse all items, keep non-target ontologies, operate only on target ontology
-        keep_items = []
         removed_this_species = 0
         
         # Group existing items by qualifier

@@ -12,14 +12,29 @@ from .annotation_workflow import (
     annotate_single_model,
     print_results,
 )
+AAAIM core package — high-level model annotation/curation and shared building blocks.
+
+Typical entry points are ``annotate_model`` / ``annotate_single_model`` and
+``curate_model`` / ``curate_single_model``. Reaction–KEGG helpers, ChEBI
+relaxation utilities, and database accessors are re-exported here for
+convenience; deeper APIs live under ``core.reaction``.
+"""
+
+from .annotation_workflow import (
+    annotate_model,
+    annotate_single_model,
+    print_results,
+)
 from .curation_workflow import curate_model, curate_single_model
 from .feedback import AnnotationResult
+
 from .database_search import (
     Recommendation,
     get_available_databases,
     get_species_recommendations_direct,
     load_chebi2kegg_dict,
     load_kegg_reaction_features_dict,
+    score_model_against_kegg_reaction,
     search_database,
 )
 from .llm_interface import (
@@ -31,6 +46,7 @@ from .llm_interface import (
     query_llm,
     query_llm_with_history,
 )
+
 from .model_info import (
     detect_model_format,
     extract_model_info,
@@ -101,6 +117,7 @@ __all__ = [
     "get_species_recommendations_direct",
     "load_chebi2kegg_dict",
     "load_kegg_reaction_features_dict",
+    "score_model_against_kegg_reaction",
     "search_database",
 
     # Reaction ↔ KEGG matching

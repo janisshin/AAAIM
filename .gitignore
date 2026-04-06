@@ -23,3 +23,10 @@ tests/prev_results/
 tests/autoType/
 
 analysis/**
+
+.vscode/
+
+# testing files
+**/scratch.ipynb
+**/participants_likelihood*.csv
+**/reaction_likelihood*.csv
