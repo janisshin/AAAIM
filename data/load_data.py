@@ -28,6 +28,7 @@ import chromadb
 from chromadb.utils import embedding_functions
 from sentence_transformers import SentenceTransformer
 
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -89,7 +90,6 @@ def extract_classifications(raw_text, classification):
                 clean_lines.append(parts[1].strip())
             else:
                 clean_lines.append(stripped)
-        return "; ".join(clean_lines)
     
     elif classification == 'orthology':
         for line in lines:
@@ -99,7 +99,64 @@ def extract_classifications(raw_text, classification):
                 # Remove the EC info if present
                 name = parts[1].split(" [EC:")[0].strip()
                 clean_lines.append(name)
-        return "; ".join(clean_lines)
+
+    elif classification == 'definition':
+        parts = []
+        buf = ""
+        paren_level = 0  # Track nested parentheses
+
+        i = 0
+        while i < len(raw_text):
+            c = raw_text[i]
+
+            # Track parentheses
+            if c == '(':
+                paren_level += 1
+            elif c == ')':
+                paren_level -= 1
+
+            # Split points: + outside parentheses or <=>
+            if c == '+' and paren_level == 0:
+                parts.append(buf.strip())
+                buf = ""
+            elif raw_text[i:i+3] == '<=>' and paren_level == 0:
+                parts.append(buf.strip())
+                buf = ""
+                i += 2  # skip the next two chars of <=>
+            elif raw_text[i:i+2] == '->' and paren_level == 0:
+                parts.append(buf.strip())
+                buf = ""
+                i += 1  
+            else:
+                buf += c
+
+            i += 1
+
+        # Add remaining buffer
+        if buf:
+            parts.append(buf.strip())
+        # parts = [p for p in parts if p]
+        strip_dollars = [p.lstrip("$") for p in parts if p]
+        clean_lines = [re.sub(r'^[\d\w\(\)\+\-]+?\s+', '', p.strip()) for p in strip_dollars]
+    
+    return "; ".join(set(clean_lines))
+
+
+def load_reference_data(ref_data_path: str) -> Dict[str, List[str]]:
+    """
+    Load reference data (ChEBI or gene) from compressed pickle file.
+    """
+    logger.info(f"Loading data from {ref_data_path}")
+    if not os.path.exists(ref_data_path):
+        raise FileNotFoundError(f"Data file not found: {ref_data_path}")
+    try:
+        with open(ref_data_path, 'rb') as handle:
+            data = compress_pickle.load(handle, compression="lzma")
+        logger.info(f"Loaded {len(data)} entries")
+        return data
+    except Exception as e:
+        logger.error(f"Error loading reference data: {e}")
+        raise
 
 
 def build_chunks_for_embedding(kegg_reactions):
@@ -119,6 +176,7 @@ def build_chunks_for_embedding(kegg_reactions):
         ec_number = kegg_reactions[reaction].get("ENZYME", "").split()
         ec_number = flatten_list([line.strip() for line in ec_number if line.strip()])
         definition = kegg_reactions[reaction].get("DEFINITION", "")
+        participants = extract_classifications(definition, 'definition')
         equation = kegg_reactions[reaction].get("EQUATION", "")
         brite = kegg_reactions[reaction].get("BRITE","")
         if brite: 
@@ -130,16 +188,17 @@ def build_chunks_for_embedding(kegg_reactions):
             orthology = extract_classifications(orthology, 'orthology')
 
         # Construct the text to embed
-        text = f"{orthology}\n{name}\n{brite}\n{pathways}"
+        text = f"Reaction type: {orthology};{name};{brite};{pathways}\nReaction: {participants}"
 
         # Store in dictionary keyed by compound_id
         chunks[reaction_id] = {
             "text": text,
             "metadata": {
-                "reaction_id": reaction_id,
+                "kegg_id": reaction_id,
                 "name": name,
                 "ec_number": ec_number,
                 "definition": definition,
+                "participants": participants,
                 "equation": equation,
                 "brite": brite,
                 "orthology": orthology,

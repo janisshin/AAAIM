@@ -9,14 +9,27 @@ for all species in a model.
 import time
 import pandas as pd
 from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 from pathlib import Path
 import logging
 import warnings
 import numpy as np
 from core.model_info import find_species_with_annotations_and_qualifiers, find_reactions_with_kegg_annotations, extract_model_info, format_prompt, get_all_species_ids
+from core.model_info import find_species_with_annotations_and_qualifiers, find_reactions_with_kegg_annotations, extract_model_info, format_prompt, get_all_species_ids
 from core.model_info import get_all_reaction_ids
 from core.llm_interface import get_system_prompt, query_llm, parse_llm_response
 from core.data_types import Recommendation
+from core.database_search import (
+    extract_classifications,
+    get_species_recommendations_direct,
+    get_species_recommendations_rag,
+    load_chebi_label_dict,
+    load_kegg_label_dict,
+    load_ncbigene_label_dict,
+    load_uniprot_label_dict,
+)
+
+
 from core.database_search import (
     extract_classifications,
     get_species_recommendations_direct,
@@ -275,7 +288,9 @@ def annotate_single_model(model_file: str,
         if method == "direct":
             recommendations = get_species_recommendations_direct(entities_to_evaluate, synonyms_dict, database="kegg", top_k=top_k)
         elif method == "rag":
-            recommendations = get_species_recommendations_rag(entities_to_evaluate, synonyms_dict, database="kegg")
+            reaction_definitions = [i.split(':')[1] for i in model_info['reactions']]
+            reaction_participants = [extract_classifications(i, 'definition') for i in reaction_definitions]
+            recommendations = get_species_recommendations_rag(entities_to_evaluate, synonyms_dict, database="kegg", reaction_participants=reaction_participants)
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
@@ -341,7 +356,7 @@ def _generate_recommendation_table(model_file: str,
     
     Args:
         model_file: Path to model file
-        recommendations: List of Recommendation objects
+        recommendations: List of Recommendation or ReactionRecommendation objects
         existing_annotations: Dictionary of existing annotations (may be empty)
         model_info: Model information dictionary
         entity_type: Type of entity being annotated
@@ -427,16 +442,17 @@ def _generate_recommendation_table(model_file: str,
                 'display_name': model_info["display_names"].get(rec.id, rec.id),
                 'curated_name': curated_name,
                 'annotation': candidate_display,
-                'annotation_label': rec.candidate_names[i],
+                'annotation_label': rec.candidate_names[i] if i < len(rec.candidate_names) else candidate,
                 'match_score': match_score,
                 'status': status,
                 'update_annotation': update_action,
                 'qualifier': specific_qualifier
             }
+            
             rows.append(row)
             seen_pairs.add((rec.id, candidate))
 
-    # Add rows for existing annotations not predicted
+    # Add rows for existing annotations not predicted 
     if existing_annotations:
         if database == "chebi":
             lbl_dict = load_chebi_label_dict()
@@ -500,6 +516,8 @@ def _generate_recommendation_table(model_file: str,
             df = pd.concat([reason_row, df], ignore_index=True)
 
     return df
+
+
 
 def _calculate_metrics(recommendations_df: pd.DataFrame,
                       existing_annotations: Dict[str, List[str]],
