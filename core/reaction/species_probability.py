@@ -1,6 +1,4 @@
-"""
-Species–candidate probability helpers for reaction annotation workflows (EM-style updates).
-"""
+""" Species–candidate probability helpers for reaction annotation workflows (EM-style updates)."""
 
 from __future__ import annotations
 

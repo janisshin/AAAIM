@@ -11,7 +11,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 from .kegg_features import KEGGReactionFeatures
-from core.species_probability import init_species_probs_from_dict
+from .species_probability import init_species_probs_from_dict
 from core.model_info import extract_model_info, extract_reactions_from_sbml, get_all_reaction_ids
 from core.annotation_workflow import _generate_recommendation_table
 from .matching import map_reactions_to_kegg_with_relaxation

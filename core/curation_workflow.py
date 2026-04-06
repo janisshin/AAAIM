@@ -7,7 +7,6 @@ for models that already have existing annotations.
 """
 
 import time
-import numpy as np
 import pandas as pd
 from typing import Dict, List, Optional, Tuple, Any
 from pathlib import Path

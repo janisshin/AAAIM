@@ -28,6 +28,38 @@ import chromadb
 from chromadb.utils import embedding_functions
 from sentence_transformers import SentenceTransformer
 
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+
+def chunk_list(lst: List, size: int):
+    """Split a list into chunks of specified size."""
+    for i in range(0, len(lst), size):
+        yield lst[i:i + size]
+
+
+def load_reference_data(ref_data_path: str) -> Dict[str, List[str]]:
+    """
+    Load reference data (ChEBI or gene) from compressed pickle file.
+    """
+    logger.info(f"Loading data from {ref_data_path}")
+    if not os.path.exists(ref_data_path):
+        raise FileNotFoundError(f"Data file not found: {ref_data_path}")
+    try:
+        with open(ref_data_path, 'rb') as handle:
+            data = compress_pickle.load(handle, compression="lzma")
+        logger.info(f"Loaded {len(data)} entries")
+        return data
+    except Exception as e:
+        logger.error(f"Error loading reference data: {e}")
+        raise
+
+
 def extract_classifications(raw_text, classification):
     """
     classification (str): either 'brite' or 'orthology'
