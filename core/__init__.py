@@ -1,24 +1,4 @@
-"""
-AAAIM core package — high-level model annotation/curation and shared building blocks.
-
-Typical entry points are ``annotate_model`` / ``annotate_single_model`` and
-``curate_model`` / ``curate_single_model``. Reaction–KEGG helpers, ChEBI
-relaxation utilities, and database accessors are re-exported here for
-convenience; deeper APIs live under ``core.reaction``.
-"""
-
-from .annotation_workflow import (
-    annotate_model,
-    annotate_single_model,
-    print_results,
-)
-AAAIM core package — high-level model annotation/curation and shared building blocks.
-
-Typical entry points are ``annotate_model`` / ``annotate_single_model`` and
-``curate_model`` / ``curate_single_model``. Reaction–KEGG helpers, ChEBI
-relaxation utilities, and database accessors are re-exported here for
-convenience; deeper APIs live under ``core.reaction``.
-"""
+"""AAAIM core package — high-level model annotation/curation and shared building blocks."""
 
 from .annotation_workflow import (
     annotate_model,
