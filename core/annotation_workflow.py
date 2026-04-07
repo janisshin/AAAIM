@@ -28,8 +28,6 @@ from core.database_search import (
     load_ncbigene_label_dict,
     load_uniprot_label_dict,
 )
-
-
 from core.database_search import (
     extract_classifications,
     get_species_recommendations_direct,
@@ -39,7 +37,7 @@ from core.database_search import (
     load_ncbigene_label_dict,
     load_uniprot_label_dict,
 )
-
+from core.feedback import AnnotationResult, build_initial_conversation
 
 
 logger = logging.getLogger(__name__)
@@ -320,7 +318,7 @@ def annotate_single_model(model_file: str,
     print(f"Recommendations saved to {csv_path}")
     logger.info(f"Annotation completed in {total_time:.2f}s – {len(recommendations_df)} recommendations")
 
-    from core.feedback import AnnotationResult, build_initial_conversation
+    
     combined_prompt = "\n\n".join(all_prompts)
     combined_response = "\n\n".join(all_responses)
 

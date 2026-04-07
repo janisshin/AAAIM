@@ -17,6 +17,11 @@ DEFAULT_MAX_RETRIES = 5
 DEFAULT_INITIAL_DELAY = 10  # seconds
 DEFAULT_MAX_DELAY = 120  # seconds (2 minutes max wait)
 
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+LLAMA_BASE_URL = "https://api.llama.com/v1"
+
+GPT_MINI_MODEL = "gpt-4o-mini"
+
 logger = logging.getLogger(__name__)
 
 # Helper function to get entity type options from enum
@@ -258,7 +263,7 @@ def _make_api_call_with_retry(client, model: str, messages: list,
     return None
 
 
-def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", entity_type: str = "chemical",
+def query_llm(prompt: str, developer_prompt: str = None, model=GPT_MINI_MODEL, entity_type: str = "chemical",
               max_retries: int = DEFAULT_MAX_RETRIES, initial_delay: float = DEFAULT_INITIAL_DELAY):
     """
     Query the OpenAI LLM with the formatted prompt.
@@ -293,7 +298,7 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
             api_name="OpenAI"
         )
     elif model.startswith("meta-llama"):
-        client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.getenv("OPENROUTER_API_KEY"))
+        client = OpenAI(base_url=OPENROUTER_BASE_URL, api_key=os.getenv("OPENROUTER_API_KEY"))
         response = _make_api_call_with_retry(
             client, model, messages,
             max_retries=max_retries,
@@ -301,7 +306,7 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
             api_name="OpenRouter"
         )
     elif model.startswith("Llama"):
-        client = OpenAI(base_url="https://api.llama.com/compat/v1", api_key=os.getenv("LLAMA_API_KEY"))
+        client = OpenAI(base_url=LLAMA_BASE_URL, api_key=os.getenv("LLAMA_API_KEY"))
         response = _make_api_call_with_retry(
             client, model, messages,
             max_retries=max_retries,
@@ -313,11 +318,13 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
     
     if response is not None and hasattr(response, "choices") and response.choices:
         return response.choices[0].message.content
+    elif response and response.completion_message["content"]["text"]: 
+        return response.completion_message["content"]["text"]
     else:
         print("No response or empty response from LLM.")
         return ""
 
-def query_llm_with_history(messages: list, model: str = "gpt-4o-mini",
+def query_llm_with_history(messages: list, model: str = GPT_MINI_MODEL,
                            max_retries: int = DEFAULT_MAX_RETRIES,
                            initial_delay: float = DEFAULT_INITIAL_DELAY) -> str:
     """
@@ -347,7 +354,7 @@ def query_llm_with_history(messages: list, model: str = "gpt-4o-mini",
             api_name="OpenAI"
         )
     elif model.startswith("meta-llama"):
-        client = OpenAI(base_url="https://openrouter.ai/api/v1",
+        client = OpenAI(base_url=OPENROUTER_BASE_URL,
                         api_key=os.getenv("OPENROUTER_API_KEY"))
         response = _make_api_call_with_retry(
             client, model, messages,
@@ -355,7 +362,7 @@ def query_llm_with_history(messages: list, model: str = "gpt-4o-mini",
             api_name="OpenRouter"
         )
     elif model.startswith("Llama"):
-        client = OpenAI(base_url="https://api.llama.com/compat/v1",
+        client = OpenAI(base_url=LLAMA_BASE_URL,
                         api_key=os.getenv("LLAMA_API_KEY"))
         response = _make_api_call_with_retry(
             client, model, messages,
@@ -365,10 +372,10 @@ def query_llm_with_history(messages: list, model: str = "gpt-4o-mini",
     else:
         raise ValueError(f"Model {model} not supported")
 
-    if response is not None and hasattr(response, "choices") and response.choices:
+    if response is not None and hasattr(response, "choices") and response.choices:        
         return response.choices[0].message.content
     else:
-        print("No response or empty response from LLM.")
+        print("No response or empty response from LLM. L379")
         return ""
 
 
