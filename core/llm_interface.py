@@ -201,6 +201,7 @@ def _make_api_call_with_retry(client, model: str, messages: list,
                 model=model,
                 messages=messages
             )
+            # print(response)
             return response
             
         except RateLimitError as e:
@@ -301,7 +302,7 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
             api_name="OpenRouter"
         )
     elif model.startswith("Llama"):
-        client = OpenAI(base_url="https://api.llama.com/compat/v1", api_key=os.getenv("LLAMA_API_KEY"))
+        client = OpenAI(base_url="https://api.llama.com/v1", api_key=os.getenv("LLAMA_API_KEY"))
         response = _make_api_call_with_retry(
             client, model, messages,
             max_retries=max_retries,
@@ -311,8 +312,8 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
     else:
         raise ValueError(f"Model {model} not supported")
     
-    if response is not None and hasattr(response, "choices") and response.choices:
-        return response.choices[0].message.content
+    if response is not None and hasattr(response, "completion_message") and "content" in response.completion_message and "text" in response.completion_message["content"]:
+        return response.completion_message["content"]["text"]
     else:
         print("No response or empty response from LLM.")
         return ""
