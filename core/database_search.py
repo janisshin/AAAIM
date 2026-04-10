@@ -27,8 +27,8 @@ from core.reaction.hierarchy_relaxation import (
     iter_chebi_for_species,
     kegg_ids_for_chebi_term,
     merge_chebi_to_kegg_mapping,
-    unified_reaction_objective,
 )
+from core.reaction.scoring import unified_reaction_objective
 from core.reaction.classification import classify_reaction
 from core.reaction.kegg_definition import extract_classifications
 

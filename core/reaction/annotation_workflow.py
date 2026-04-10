@@ -14,10 +14,11 @@ from core.model_info import (
     map_reaction_ids_to_stoichiometry_strings,
 )
 
-from .amendment import LikelihoodCalculator, SimilarityCalculator, update_participant_likelihoods
+from .amendment import LikelihoodCalculator, update_participant_likelihoods
+from .scoring import SimilarityCalculator
 from .amendment_config import CofactorConfig, ConvergenceConfig, MatchingConfig
 from .kegg_features import KEGGReactionFeatures, REF_KEGG_REACTION_FEATURES
-from .matching import map_reactions_to_kegg_with_relaxation
+from .relaxation_workflow import map_reactions_to_kegg_with_relaxation
 from .species_probability import init_species_probs_from_dict
 from .utils import check_environment, extract_reaction_participants, map_chebi_to_kegg
 from utils.constants import EntityType

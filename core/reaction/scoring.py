@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from functools import lru_cache
-from typing import TYPE_CHECKING, Dict, Set, Iterable
+from typing import TYPE_CHECKING, Any, Dict, List, Mapping, Optional, Set
 
 import pandas as pd
 from rapidfuzz import fuzz
@@ -189,3 +189,76 @@ def compute_rscore_from_sets(
     jaccard_score = similarity_calc.fuzzy_jaccard(query_kegg_ids, ref_participant_ids)
     match_ratio = num_matched / max(len(ref_participant_ids), len(query_kegg_ids))
     return 0.5 * match_ratio + 0.5 * jaccard_score
+
+
+def unified_reaction_objective(
+    base_score: float,
+    relaxation_levels: Optional[Mapping[str, Any]],
+    *,
+    lam: float = 0.1,
+    max_relax_level: int = 1,
+) -> float:
+    """
+    Single objective for ranking KEGG reaction matches: similarity minus relaxation penalty.
+
+    ``base_score`` must be the raw similarity (unchanged). All ranking / top-k selection
+    should use only this return value.
+
+    Args:
+        base_score: Raw reaction similarity (e.g. from ``score_model_against_kegg_reaction``).
+        relaxation_levels: Entity id (e.g. model species id) -> relaxation level. If None or
+            empty, or ``lam == 0``, returns ``base_score`` unchanged.
+        lam: Penalty weight lambda.
+        max_relax_level: Maximum allowed relaxation level used to normalize penalty
+            to ``[0, 1]``.
+    """
+    if lam == 0:
+        return float(base_score)
+    if not relaxation_levels:
+        return float(base_score)
+
+    levels = [int(v) for v in relaxation_levels.values() if v is not None]
+    if not levels:
+        return float(base_score)
+
+    # Max-only penalty (participant-count independent), normalized to [0, 1].
+    max_lvl = max(1, int(max_relax_level))
+    penalty = float(max(levels))
+    normalized_penalty = penalty / float(max_lvl)
+    return float(base_score) - float(lam) * normalized_penalty
+
+
+def unified_reaction_objective_weighted(
+    base_score: float,
+    relaxation_levels: Optional[Mapping[str, Any]],
+    *,
+    weights: Optional[Mapping[str, float]] = None,
+    lam: float = 0.1,
+    max_relax_level: int = 1,
+) -> float:
+    """
+    Weighted penalty: aggregate ``weight(entity) * relaxation_level(entity)`` then apply lambda.
+    """
+    if lam == 0:
+        return float(base_score)
+    if not relaxation_levels:
+        return float(base_score)
+
+    if weights is None:
+        weights = {}
+
+    terms: List[float] = []
+    for ent, lvl in relaxation_levels.items():
+        if lvl is None:
+            continue
+        w = float(weights.get(ent, 1.0))
+        terms.append(w * float(int(lvl)))
+
+    if not terms:
+        return float(base_score)
+
+    # Max-only weighted term, normalized to keep penalty bounded.
+    max_lvl = max(1, int(max_relax_level))
+    penalty = float(max(terms))
+    normalized_penalty = penalty / float(max_lvl)
+    return float(base_score) - float(lam) * normalized_penalty
