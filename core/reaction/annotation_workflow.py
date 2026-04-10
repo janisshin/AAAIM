@@ -1,7 +1,7 @@
 import logging
 from collections import Counter
 from pathlib import Path
-from typing import Dict, List, NamedTuple, Optional, Tuple
+from typing import Dict, List, NamedTuple, Optional
 
 import pandas as pd
 
@@ -20,6 +20,7 @@ from .kegg_features import KEGGReactionFeatures, REF_KEGG_REACTION_FEATURES
 from .matching import map_reactions_to_kegg_with_relaxation
 from .species_probability import init_species_probs_from_dict
 from .utils import check_environment, extract_reaction_participants, map_chebi_to_kegg
+from utils.constants import EntityType
 
 logging.basicConfig(
     level=logging.INFO,
@@ -277,7 +278,7 @@ def rank_kegg_annotations_with_llm(
             reaction_annotation_choices=reaction_annotation_choices,
         )
 
-        response_text = query_llm(prompt, model=llm_model, entity_type="reaction")
+        response_text = query_llm(prompt, model=llm_model, entity_type=EntityType.REACTION)
         response_lines = [ln.strip() for ln in (response_text or "").splitlines() if ln.strip()]
 
         logger.info("%s -> %s", reaction_id, response_lines)

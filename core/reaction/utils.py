@@ -167,17 +167,22 @@ def extract_reaction_participants(
 ) -> Dict[str, List[str]]:
     """Extract participant names for each reaction."""
     reaction_participants = {}
-    
+
+    label_by_id: Dict[str, str] = {}
+    if 'annotation_label' in recommendations_df.columns:
+        for tup in recommendations_df[['id', 'annotation_label']].drop_duplicates('id').itertuples():
+            label_by_id[tup.id] = tup.annotation_label
+
     for reaction in model_info['reactions']:
         reaction_id = reaction.split(':')[0].strip()
         participant_str = extract_classifications(reaction, 'definition')
-        
+
         participant_names = []
         for participant in participant_str.split('; '):
-            matching_rows = recommendations_df[recommendations_df['id'] == participant]
-            if not matching_rows.empty and 'annotation_label' in matching_rows.columns:
-                participant_names.append(matching_rows['annotation_label'].values[0])
-        
+            label = label_by_id.get(participant)
+            if label is not None:
+                participant_names.append(label)
+
         reaction_participants[reaction_id] = participant_names
-    
+
     return reaction_participants

@@ -154,6 +154,7 @@ def map_reactions_to_kegg(rxn_list: List[str], reaction_ids: List[str], id_df: p
     
     # Keep full rows so we can propagate relaxation metadata when available.
     id_lookup = id_df.copy()
+    id_grouped = dict(list(id_lookup.groupby("id")))
 
     # Process each reaction
     output = []
@@ -173,8 +174,8 @@ def map_reactions_to_kegg(rxn_list: List[str], reaction_ids: List[str], id_df: p
             reactants, products = cancel_spectators(reactants, products)
 
         # Map metabolite CHEBI IDs to KEGG IDs
-        substrates_mapped = map_metabolites_to_kegg(reactants, id_lookup)
-        products_mapped = map_metabolites_to_kegg(products, id_lookup)
+        substrates_mapped = map_metabolites_to_kegg(reactants, id_lookup, _grouped=id_grouped)
+        products_mapped = map_metabolites_to_kegg(products, id_lookup, _grouped=id_grouped)
 
         # Store mapped reaction
         output.append({
@@ -186,7 +187,12 @@ def map_reactions_to_kegg(rxn_list: List[str], reaction_ids: List[str], id_df: p
     
     return output
 
-def map_metabolites_to_kegg(counter: Counter, mapping_df: pd.DataFrame) -> List[Counter]:
+def map_metabolites_to_kegg(
+        counter: Counter,
+        mapping_df: pd.DataFrame,
+        *,
+        _grouped: Optional[Dict[str, pd.DataFrame]] = None,
+) -> List[Counter]:
         """
         Map metabolite IDs to KEGG IDs while preserving stoichiometry.
         
@@ -196,45 +202,44 @@ def map_metabolites_to_kegg(counter: Counter, mapping_df: pd.DataFrame) -> List[
         Args:
             counter: Counter mapping metabolite IDs to stoichiometric coefficients
             mapping_df: DataFrame mapping metabolite IDs to KEGG IDs (+ optional metadata)
+            _grouped: Pre-computed ``mapping_df.groupby("id")`` dict for hot-path callers.
             
         Returns:
             List of Counter objects representing all possible KEGG ID mappings
         """
-        # For each metabolite in the counter, get possible KEGG IDs
+        has_relax_cols = "direction" in mapping_df.columns and "distance" in mapping_df.columns
+        grouped = _grouped if _grouped is not None else dict(list(mapping_df.groupby("id")))
+
         id_choices = dict()
         for met, coeff in counter.items():
-            # Try to find KEGG IDs for this metabolite
             try:
-                met_rows = mapping_df[mapping_df["id"] == met]
-                if met_rows.empty:
+                met_rows = grouped.get(met)
+                if met_rows is None or met_rows.empty:
                     raise KeyError(met)
 
-                if "direction" in met_rows.columns and "distance" in met_rows.columns:
+                if has_relax_cols:
                     choices = []
-                    for _, row in met_rows.iterrows():
-                        kid = row.get("KEGG_ID")
+                    for tup in met_rows.itertuples():
+                        kid = tup.KEGG_ID
                         if pd.isna(kid) or str(kid).strip() == "":
                             continue
                         choices.append(
                             {
                                 "kegg_id": str(kid).strip(),
-                                "canonical_id": str(row.get("canonical_id", "")).strip(),
-                                "direction": str(row.get("direction", "exact")).strip(),
-                                "distance": int(row.get("distance", 0) or 0),
+                                "canonical_id": str(getattr(tup, "canonical_id", "")).strip(),
+                                "direction": str(getattr(tup, "direction", "exact")).strip(),
+                                "distance": int(getattr(tup, "distance", 0) or 0),
                             }
                         )
                 else:
-                    # Backward-compatible path when only id/KEGG_ID are present.
                     choices = [str(kid).strip() for kid in met_rows["KEGG_ID"].tolist() if str(kid).strip()]
-                
+
                 id_choices[met] = {
                     'species_id': met,
                     'coeff': coeff,
                     'candidates': choices
                 }
-                # id_choices.append(choices)
             except (KeyError, IndexError):
-                # Metabolite not found in mapping, skip it
                 logger.debug(f"No KEGG mapping found for metabolite: {met}")
                 continue
         
@@ -253,13 +258,8 @@ def _participant_species_from_normalized_reaction(nr: Dict[str, Any]) -> Set[str
     return s
 
 
-def _aggregate_best_penalized_scores(match_results: List[Any]) -> float:
-    """
-    Mean penalized score over score-eligible reactions:
-    - include mappable reactions by best penalized match
-    - include ambiguous_mapping reactions with default low score
-    - exclude non_mappable reactions
-    """
+def _per_reaction_best_scores(match_results: List[Any]) -> Dict[str, Optional[float]]:
+    """Per-reaction best eligible score.  ``None`` for non_mappable (excluded from mean)."""
     best_by_rxn: Dict[str, float] = {}
     classification_by_rxn: Dict[str, str] = {}
     ambiguous_default_by_rxn: Dict[str, float] = {}
@@ -281,21 +281,58 @@ def _aggregate_best_penalized_scores(match_results: List[Any]) -> float:
         prev = best_by_rxn.get(rid)
         if prev is None or sc > prev:
             best_by_rxn[rid] = sc
-    scored: List[float] = []
+
+    out: Dict[str, Optional[float]] = {}
     for rid, rtype in classification_by_rxn.items():
         if rtype == "non_mappable":
+            out[rid] = None
             continue
         if rtype == "ambiguous_mapping":
-            scored.append(float(ambiguous_default_by_rxn.get(rid, 0.0)))
+            out[rid] = float(ambiguous_default_by_rxn.get(rid, 0.0))
             continue
         if rtype == "failed_mapping":
-            scored.append(float(failed_default_by_rxn.get(rid, 0.0)))
+            out[rid] = float(failed_default_by_rxn.get(rid, 0.0))
             continue
         if rid in best_by_rxn:
-            scored.append(float(best_by_rxn[rid]))
+            out[rid] = float(best_by_rxn[rid])
+    return out
+
+
+def _aggregate_best_penalized_scores(match_results: List[Any]) -> float:
+    """
+    Mean penalized score over score-eligible reactions:
+    - include mappable reactions by best penalized match
+    - include ambiguous_mapping reactions with default low score
+    - exclude non_mappable reactions
+    """
+    per_rxn = _per_reaction_best_scores(match_results)
+    scored = [v for v in per_rxn.values() if v is not None]
     if not scored:
         return 0.0
     return sum(scored) / len(scored)
+
+
+def _aggregate_from_per_reaction_scores(per_rxn: Dict[str, Optional[float]]) -> float:
+    """Mean of non-None per-reaction scores (same semantics as ``_aggregate_best_penalized_scores``)."""
+    scored = [v for v in per_rxn.values() if v is not None]
+    if not scored:
+        return 0.0
+    return sum(scored) / len(scored)
+
+
+def _build_species_to_rxn_indices(
+    rxn_list: List[str], spectators: bool = False,
+) -> Dict[str, Set[int]]:
+    """Map each species ID to the set of reaction-list indices it participates in."""
+    species_to_indices: Dict[str, Set[int]] = {}
+    for i, rxn in enumerate(rxn_list):
+        rxn_str = rxn.split(":", 1)[1] if ":" in rxn else rxn
+        reactants, products = parse_reaction_equation(rxn_str)
+        if not spectators:
+            reactants, products = cancel_spectators(reactants, products)
+        for sid in set(reactants.keys()) | set(products.keys()):
+            species_to_indices.setdefault(sid, set()).add(i)
+    return species_to_indices
 
 
 def _reaction_coverage_stats(match_results: List[Any]) -> Dict[str, Any]:
@@ -544,10 +581,43 @@ def map_reactions_to_kegg_with_relaxation(
         (normalized_reactions, kegg_match_results, species_relax_level_by_id)
     """
 
+    species_to_rxn_idx = _build_species_to_rxn_indices(rxn_list, spectators=spectators)
+
+    # Mutable state for the incremental scorer (reset each outer iteration).
+    _incr_base_levels: Dict[str, int] = {}
+    _incr_base_per_rxn: Dict[str, Optional[float]] = {}
+    _incr_base_id_kegg_df: Optional[pd.DataFrame] = None
+
+    def _set_incremental_baseline(
+        levels: Mapping[str, int],
+        per_rxn_scores: Dict[str, Optional[float]],
+        base_df: pd.DataFrame,
+    ) -> None:
+        nonlocal _incr_base_levels, _incr_base_per_rxn, _incr_base_id_kegg_df
+        _incr_base_levels = dict(levels)
+        _incr_base_per_rxn = dict(per_rxn_scores)
+        _incr_base_id_kegg_df = base_df
+
     def compute_global_score(levels: Mapping[str, int]) -> float:
-        """Evaluate the full-model global objective at the provided relaxation levels."""
-        trial_id_kegg_df = build_kegg_mapping_dataframe(
-            species_to_chebi.keys(),
+        """Incremental global objective — only rescores reactions affected by changed species."""
+        changed = {
+            s for s in set(levels) | set(_incr_base_levels)
+            if levels.get(s, 0) != _incr_base_levels.get(s, 0)
+        }
+
+        if not changed or _incr_base_id_kegg_df is None:
+            return float(_aggregate_from_per_reaction_scores(_incr_base_per_rxn))
+
+        affected_idx: Set[int] = set()
+        for s in changed:
+            affected_idx |= species_to_rxn_idx.get(s, set())
+
+        if not affected_idx:
+            return float(_aggregate_from_per_reaction_scores(_incr_base_per_rxn))
+
+        # Rebuild mapping DF only for changed species, keep rest from baseline.
+        trial_partial_df = build_kegg_mapping_dataframe(
+            changed,
             species_to_chebi,
             levels,
             merged_kegg,
@@ -556,11 +626,22 @@ def map_reactions_to_kegg_with_relaxation(
             child_map=child_map,
             max_descendant_depth=down_depth,
         )
-        trial_normalized_reactions = map_reactions_to_kegg(
-            rxn_list, reaction_ids, trial_id_kegg_df, spectators=spectators
+        trial_id_kegg_df = pd.concat(
+            [_incr_base_id_kegg_df[~_incr_base_id_kegg_df['id'].isin(changed)], trial_partial_df],
+            ignore_index=True,
         )
-        trial_match_results = _get_kegg_recommendations_rulebased(
-            trial_normalized_reactions,
+
+        # Re-normalize only affected reactions.
+        affected_sorted = sorted(affected_idx)
+        affected_rxn_list = [rxn_list[i] for i in affected_sorted]
+        affected_rxn_ids = [reaction_ids[i] for i in affected_sorted]
+        trial_normalized_affected = map_reactions_to_kegg(
+            affected_rxn_list, affected_rxn_ids, trial_id_kegg_df, spectators=spectators
+        )
+
+        # Re-score only affected reactions.
+        trial_match_affected = _get_kegg_recommendations_rulebased(
+            trial_normalized_affected,
             cofactors_to_ignore=cofactors,
             top_k=top_k,
             spectators=spectators,
@@ -574,7 +655,15 @@ def map_reactions_to_kegg_with_relaxation(
             max_ancestor_depth=max_ancestor_depth,
             max_descendant_depth=down_depth,
         )
-        return float(_aggregate_best_penalized_scores(trial_match_results))
+
+        # Merge: baseline scores for unaffected reactions + new scores for affected ones.
+        affected_rxn_id_set = set(affected_rxn_ids)
+        merged_per_rxn = {
+            rid: sc for rid, sc in _incr_base_per_rxn.items()
+            if rid not in affected_rxn_id_set
+        }
+        merged_per_rxn.update(_per_reaction_best_scores(trial_match_affected))
+        return float(_aggregate_from_per_reaction_scores(merged_per_rxn))
 
 
     if species_recommendations_df is None or species_recommendations_df.empty:
@@ -746,6 +835,9 @@ def map_reactions_to_kegg_with_relaxation(
                     relax_level,
                     max_relax_level,
                 )
+
+        # Seed incremental scorer with this iteration's baseline before trialing.
+        _set_incremental_baseline(relax_level, _per_reaction_best_scores(match_results), id_kegg_df)
 
         # Global objective gate: relax only species that improve full-model score.
         to_relax: Set[str] = set(

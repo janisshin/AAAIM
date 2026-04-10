@@ -215,10 +215,9 @@ def _aggregate_scores(
     if not scores:
         return float("-inf")
 
-    agg = str(score_aggregation).lower().strip()
-    if agg == "max":
+    if score_aggregation == "max":
         return float(max(scores))
-    if agg != "logsumexp":
+    if score_aggregation != "logsumexp":
         raise ValueError(f"Unsupported score_aggregation={score_aggregation!r}")
 
     if scores_are_log_probs:
@@ -329,6 +328,8 @@ def deduplicate_reactions(
         - score: float (aggregated)
     - merge_map: Dict[canonical_signature, List[reaction_id]]
     """
+
+    score_aggregation = str(score_aggregation).lower().strip()
 
     groups: MutableMapping[CanonicalSignature, List[Dict[str, Any]]] = defaultdict(list)
 
