@@ -54,12 +54,16 @@ from .reaction.hierarchy_relaxation import (
     parse_chebi_obo,
     progressive_normalization,
     select_metabolites_to_relax,
-    should_continue_iteration,
+)
+from .reaction.scoring import (
     unified_reaction_objective,
     unified_reaction_objective_weighted,
 )
-from .reaction.matching import (
+from .reaction.relaxation_workflow import (
     map_reactions_to_kegg_with_relaxation,
+    should_continue_iteration,
+)
+from .reaction.matching import (
     normalize_reactions,
 )
 from .update_model import update_annotation

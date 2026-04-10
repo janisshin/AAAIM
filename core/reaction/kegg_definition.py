@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import functools
 import re
 
 
+@functools.lru_cache(maxsize=4096)
 def extract_classifications(raw_text: str, classification: str) -> str:
     """Extract and clean classification text based on type (brite, orthology, definition)."""
     lines = raw_text.splitlines()
