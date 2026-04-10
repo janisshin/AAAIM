@@ -13,6 +13,7 @@ from pathlib import Path
 import logging
 import warnings
 
+from utils.constants import DatabaseID, EntityType
 from core.model_info import find_species_with_chebi_annotations, find_species_with_annotations_and_qualifiers, find_species_with_ncbigene_annotations, find_species_with_uniprot_annotations, extract_model_info, format_prompt
 from core.llm_interface import get_system_prompt, query_llm, parse_llm_response
 from core.data_types import Recommendation
@@ -28,8 +29,8 @@ def curate_single_model(model_file: str,
                   method: str = "direct",
                   top_k: int = 3,
                   max_entities: int = None,
-                  entity_type: str = "chemical",
-                  database: str = "chebi",
+                  entity_type: str | EntityType = EntityType.CHEMICAL,
+                  database: str | DatabaseID = DatabaseID.CHEBI,
                   tax_id: str = None,
                   chunk_size: int = 50) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """
@@ -57,24 +58,36 @@ def curate_single_model(model_file: str,
     logger.info(f"Starting curation for model: {model_file}")
     logger.info(f"Using LLM model: {llm_model}")
     logger.info(f"Using method: {method} for database search")
-    logger.info(f"Entity type: {entity_type}, Database: {database}")
+    if isinstance(entity_type, str):
+        try:
+            entity_type = EntityType(entity_type)
+        except ValueError:
+            logger.warning(f"Unknown entity type {entity_type}, using chemical")
+            entity_type = EntityType.CHEMICAL
+    if isinstance(database, str):
+        try:
+            database = DatabaseID(database)
+        except ValueError:
+            logger.warning(f"Unknown database {database}, using chebi")
+            database = DatabaseID.CHEBI
+    logger.info(f"Entity type: {entity_type.value}, Database: {database.value}")
     if tax_id:
         logger.info(f"Using organism-specific search for tax_id: {tax_id}")
     
     # Step 1: Find existing annotations
     logger.info(">>>Step 1: Finding existing annotations...<<<")
-    if entity_type == "chemical" and database == "chebi":
-        existing_annotations, qualifier_annotations = find_species_with_annotations_and_qualifiers(model_file, "chebi")
+    if entity_type == EntityType.CHEMICAL and database == DatabaseID.CHEBI:
+        existing_annotations, qualifier_annotations = find_species_with_annotations_and_qualifiers(model_file, DatabaseID.CHEBI.value)
         logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
-    elif entity_type == "gene" and database == "ncbigene":
-        existing_annotations, qualifier_annotations = find_species_with_annotations_and_qualifiers(model_file, "ncbigene")
+    elif entity_type == EntityType.GENE and database == DatabaseID.NCBIGENE:
+        existing_annotations, qualifier_annotations = find_species_with_annotations_and_qualifiers(model_file, DatabaseID.NCBIGENE.value)
         logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
-    elif entity_type == "protein" and database == "uniprot":
-        existing_annotations, qualifier_annotations = find_species_with_annotations_and_qualifiers(model_file, "uniprot")
+    elif entity_type == EntityType.PROTEIN and database == DatabaseID.UNIPROT:
+        existing_annotations, qualifier_annotations = find_species_with_annotations_and_qualifiers(model_file, DatabaseID.UNIPROT.value)
         logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
     else:
         # Future: support other entity types and databases
-        logger.warning(f"Entity type {entity_type} with database {database} not yet supported")
+        logger.warning(f"Entity type {entity_type.value} with database {database.value} not yet supported")
         existing_annotations = {}
         qualifier_annotations = {}
     
@@ -210,37 +223,37 @@ def curate_single_model(model_file: str,
         print(f"LLM Reason: {reason}")
 
     # Search database
-    logger.info(f">>>Step 4: Searching {database} database...<<<")
+    logger.info(f">>>Step 4: Searching {database.value} database...<<<")
     search_start = time.time()
     
-    if database == "chebi":
+    if database == DatabaseID.CHEBI:
         if method == "direct":
-            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="chebi", top_k=top_k)
+            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database=DatabaseID.CHEBI.value, top_k=top_k)
         elif method == "rag":
-            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="chebi")
+            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database=DatabaseID.CHEBI.value)
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
-    elif database == "ncbigene":
+    elif database == DatabaseID.NCBIGENE:
         if method == "direct":
-            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
+            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database=DatabaseID.NCBIGENE.value, tax_id=tax_id, top_k=top_k)
         elif method == "rag":
-            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="ncbigene", tax_id=tax_id)
+            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database=DatabaseID.NCBIGENE.value, tax_id=tax_id)
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
-    elif database == "uniprot":
+    elif database == DatabaseID.UNIPROT:
         if method == "direct":
-            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
+            recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database=DatabaseID.UNIPROT.value, tax_id=tax_id, top_k=top_k)
         elif method == "rag":
-            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database="uniprot", tax_id=tax_id)
+            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database=DatabaseID.UNIPROT.value, tax_id=tax_id)
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
     else:
         # Future: support other databases
-        logger.error(f"Database {database} not yet supported")
-        return pd.DataFrame(), {"error": f"Database {database} not yet supported"}
+        logger.error(f"Database {database.value} not yet supported")
+        return pd.DataFrame(), {"error": f"Database {database.value} not yet supported"}
     
     search_time = time.time() - search_start
     logger.info(f"Database search completed in {search_time:.2f}s")
@@ -248,7 +261,7 @@ def curate_single_model(model_file: str,
     # Generate recommendation table
     logger.info(">>>Step 5: Generating recommendation table...<<<")
     recommendations_df = _generate_recommendation_table(
-        model_file, recommendations, existing_annotations, model_info, entity_type, database, qualifier_annotations,
+        model_file, recommendations, existing_annotations, model_info, entity_type.value, database.value, qualifier_annotations,
         synonyms_dict=synonyms_dict, reason=reason
     )
     
@@ -289,7 +302,7 @@ def _generate_recommendation_table(model_file: str,
                                  existing_annotations: Dict[str, List[str]],
                                  model_info: Dict[str, Any],
                                  entity_type: str = "chemical",
-                                 database: str = "chebi",
+                                 database: str = DatabaseID.CHEBI.value,
                                  qualifier_annotations: Dict[str, List[str]] = None,
                                  synonyms_dict: Dict[str, List[str]] = None,
                                  reason: str = "") -> pd.DataFrame:
@@ -377,11 +390,11 @@ def _generate_recommendation_table(model_file: str,
             seen_pairs.add((rec.id, candidate))
 
     # Add rows for existing annotations not predicted
-    if database == "chebi":
+    if database == DatabaseID.CHEBI.value:
         lbl_dict = load_chebi_label_dict()
-    elif database == "ncbigene":
+    elif database == DatabaseID.NCBIGENE.value:
         lbl_dict = load_ncbigene_label_dict()
-    elif database == "uniprot":
+    elif database == DatabaseID.UNIPROT.value:
         lbl_dict = load_uniprot_label_dict()
     else:
         lbl_dict = {}

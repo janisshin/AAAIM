@@ -1,27 +1,28 @@
-from typing import NamedTuple, Optional
+import logging
+from collections import Counter
+from typing import Dict, List, NamedTuple, Optional
 
 import pandas as pd
-from collections import Counter
 
-import logging
+from core.annotation_workflow import _generate_recommendation_table
+from core.model_info import extract_model_info, extract_reactions_from_sbml, get_all_reaction_ids
+
+from .amendment import LikelihoodCalculator, SimilarityCalculator, update_participant_likelihoods
+from .amendment_config import CofactorConfig, ConvergenceConfig, MatchingConfig
+from .kegg_features import KEGGReactionFeatures, REF_KEGG_REACTION_FEATURES
+from .matching import map_reactions_to_kegg_with_relaxation
+from .species_probability import init_species_probs_from_dict
+from .utils import check_environment, extract_reaction_participants, map_chebi_to_kegg
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
-from .kegg_features import KEGGReactionFeatures
-from .species_probability import init_species_probs_from_dict
-from core.model_info import extract_model_info, extract_reactions_from_sbml, get_all_reaction_ids
-from core.annotation_workflow import _generate_recommendation_table
-from .matching import map_reactions_to_kegg_with_relaxation
-from .amendment_config import CofactorConfig, ConvergenceConfig, MatchingConfig
-from .amendment import LikelihoodCalculator, SimilarityCalculator, update_participant_likelihoods
-from .utils import check_environment, extract_reaction_participants, map_chebi_to_kegg
-
 
 class KeggAnnotationWorkflowResult(NamedTuple):
-    """DataFrames from :func:`run_kegg_annotation_workflow` (ChEBI→KEGG map, KEGG reaction
+    """DataFrames from :func:`run_kegg_annotation_workflow_rulebased` (ChEBI→KEGG map, KEGG reaction
     candidates, scored candidates, updated participant likelihoods)."""
 
     high_score_recommendations: pd.DataFrame
@@ -30,13 +31,13 @@ class KeggAnnotationWorkflowResult(NamedTuple):
     updated_participants: pd.DataFrame
 
 
-def run_kegg_annotation_workflow(
+def run_kegg_annotation_workflow_rulebased(
     model_file: str,
     recommendations_df: pd.DataFrame,
-    kegg_features_file: str,
+    existing_annotations: Optional[Dict[str, List[str]]] = None,
+    kegg_features_file: str = REF_KEGG_REACTION_FEATURES,
     entity_type: str = "reaction",
     database: str = "kegg",
-    llm_model: str = "meta-llama/llama-3.1-8b-instruct",
     cofactor_config: Optional[CofactorConfig] = None,
     convergence_config: Optional[ConvergenceConfig] = None,
     matching_config: Optional[MatchingConfig] = None,
@@ -53,13 +54,13 @@ def run_kegg_annotation_workflow(
         convergence_config = ConvergenceConfig()
     if matching_config is None:
         matching_config = MatchingConfig()
+    if existing_annotations is None:
+        existing_annotations = {}
 
     if not check_environment(model_file):
         logger.error("Environment check failed. Please fix the issues and try again.")
         return None
 
-    logger.info("Model file: %s", model_file)
-    logger.info("LLM model: %s", llm_model)
     logger.info("Analyzing model: %s", model_file)
 
     reaction_ids = get_all_reaction_ids(model_file)
@@ -101,7 +102,7 @@ def run_kegg_annotation_workflow(
     kegg_recommendations_df = _generate_recommendation_table(
         model_file,
         match_results,
-        {},
+        existing_annotations,
         model_info,
         entity_type,
         database,

@@ -10,145 +10,27 @@ import time
 from typing import Dict, List, Tuple, Any
 from openai import OpenAI, RateLimitError, APIError
 import logging
-from utils.constants import EntityType
-
-# Default retry settings for rate limit errors (429)
-DEFAULT_MAX_RETRIES = 5
-DEFAULT_INITIAL_DELAY = 10  # seconds
-DEFAULT_MAX_DELAY = 120  # seconds (2 minutes max wait)
-
-logger = logging.getLogger(__name__)
-
-# Helper function to get entity type options from enum
-def _get_entity_type_options() -> str:
-    """Get comma-separated list of entity types from EntityType enum."""
-    # Exclude REACTION from auto-detection as they're not applicable to species
-    exclude_types = ['reaction']
-    types = [e.value for e in EntityType if e.value not in exclude_types]
-    return ', '.join(types)
-
-# Automatic entity type detection
-SYSTEM_PROMPT_AUTO = f"""You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized names for ontology lookup, and determine the entity type for each species.
-For each species, identify entity type from the following options: [{_get_entity_type_options()}]. Specify the entity type in parentheses after the species ID, followed by synonyms. Note that amino acids and tRNAs are considered as chemical. 
-For complexes, do not give the name of the complex, only list standardized names of the chemical and protein components, separated by commas (no other symbols like “:” or “-”). E.g., for "EGF-EGFR^2", return "EGF", "EGFR".
-Try your best to give the most likely terminology without modifications (e.g., no "phosphorylated") or extra information (e.g., no “protein”, “complex”, or localization terms like “nuclear”).
-
-Here is one example:
-Species to annotate: A, B, C, D
-Model: "hexokinase reaction"
-// Display Names:
-A is "glucose";
-B is "ATP";
-C is "hexokinase (cytoplasmic)";
-D is "glucose-ATP-hexokinase complex (active)";
-
-// Reactions:
-A + B + C -> D;
-D -> products;
-
-This should return:
-A (chemical): "glucose", "D-glucose"
-B (chemical): "ATP", "adenosine triphosphate"
-C (protein): "Hexokinase-1", "HK1"
-D (complex): "glucose", "ATP", "Hexokinase-1"
-Reason: A and B are small-molecule substrates (chemicals), C is the enzyme (protein), and D represents the enzyme–substrate complex. For the complex D, the complex name and extra info (“complex”, “active”) are removed, and only the standardized names of its components are listed.
-"""
-
-# System prompt for chemical annotation
-# SYSTEM_PROMPT_CHEMICAL = """You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized names for ontology lookup on ChEBI. 
-# All given species are chemical entities. For complexes, only consider the chemical components. If lacking information about details, try your best to give the most likely general name.
-# Do not include modifications or extra information (e.g., no “dissolved”, “anion”, or localization terms like “nuclear”).
-# """
-
-SYSTEM_PROMPT_CHEMICAL = """You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized names for ontology lookup on ChEBI. 
-All given species are chemical entities. For complexes, only consider the chemical components. If lacking information about details, try your best to give the most likely general name.
-Do not include modifications or extra information (e.g., no “dissolved”, “anion”, or localization terms like “nuclear”).
-
-Here is one example:
-Species: A, B, D
-Model: "citric acid cycle model"
- // Display Names:
-A is "acetyl-CoA";
-B is "citrate";
-C is "CoA";
- // Reactions:
-A + oxaloacetate => B + C;
-E + F => D;
-
-This should return:
-A: "acetyl-CoA", "acetyl coenzyme A"
-B: "citric acid", "sodium citrate", "citrate(4−)"
-D: "UNK"
-Reason: the reaction is likely to be the TCA cycle, where A is the substrate and B is an intermediate. D is unknown because no display names are given for its reactants."""
-
-# System prompt for gene annotation
-SYSTEM_PROMPT_GENE = """You are a biomedical knowledge assistant. Your task is to normalize species names from biochemical models into standardized gene names or common gene symbols for ontology lookup on NCBI Gene. 
-All given species are genes. For complexes, only consider the gene components. If lacking information about details, try your best to give the most likely general name.
-
-Here is one example:
-Species: G1, G2, G3
-Model: "NF-κB signaling pathway"
- // Display Names:
-G1 is "p65";
-G2 is "p50";
-G3 is "IKK";
- // Reactions:
-G1 = G1 | (G3 & !(G1 & G2))
-G2 = G1
-G3 = G3
-
-This should return:
-G1: "RELA", "p65", "NFKB3"
-G2: "NFKB1", "KBF1", "NF-kB"
-G3: "CHUK", "IKK1", "BPS2"
-Reason: This appears to be a regulatory motif in the NF-κB signaling pathway. G1 is the p65 subunit (RELA), G2 is the p50 subunit (NFKB1), and G3 is IKK, a kinase that phosphorylates p50."""
-
-# System prompt for protein annotation
-SYSTEM_PROMPT_PROTEIN = """You are a biomedical knowledge assistant. Your task is to normalize species names from biochemical models into standardized protein names for ontology lookup on UniProt.
-All given species are proteins. For complexes, only consider the protein components and separate their names with commas. E.g., for "EGF-EGFR^2", return "EGF", "EGFR".
-Try your best to give the most likely standardized terminology without any extra information. E.g., a model may contain various states (e.g., phosphorylated, nuclear, or transcribed) of the same protein, you should only return the most likely standard name like "BMAL1" but not "BMAL1_phosphorylated".
-For protein names that represent a family or ambiguous label, return all reasonable subtype or isoform candidates. E.g., “AKT” → AKT1, AKT2, AKT3; “RAS” → KRAS, NRAS, HRAS
-
-Here is one example:
-Species: C1, C2
-Model: "NF-κB signaling pathway"
-// Display Names:  
-C1 is "NFκB (nuclear)";  
-C2 is "IKK complex";  
-// Reactions:  
-C2 => phosphorylates C1;  
-C1 (cytoplasmic) => C1 (nuclear);  
-
-This should return:
-C1: NFKB1, RELA  
-C2: CHUK, IKBKB, IKBKG
-Reason: “NFkB (nuclear)” refers to the activated NF-κB complex, typically composed of NFKB1 (p50) and RELA (p65). The “IKK complex” consists of CHUK (IKKα), IKBKB (IKKβ), and IKBKG (NEMO). Extra terms like “nuclear” are ignored, and only the UniProt protein names of the components are listed, separated by commas."""
-
-# System prompt for reaction and enzyme annotation
-SYSTEM_PROMPT_REACTION = """You are a biomedical knowledge assistant. Your task is to normalize reaction and enzyme names from biochemical models into standardized or canonical reaction or enzyme names for ontology lookup on KEGG. 
-Examine each reaction's label, and its substrates and products to determine the enzyme or process responsible for the reaction. If lacking information about details, try your best to give the most likely description. Return "UNK" if not or unsure.
-
-Here is one example:
-Species: A, B, D
-Model: "citric acid cycle model"
- // Display Names:
-J1 is "CS";
-J2 is "ACON";
-J3 is "IDH";
- // Reactions:
-J1: AcetylCoA + OAA -> Citrate + CoA; 
-J2: Citrate <-> Isocitrate;
-J3: Isocitrate + NAD -> AKG + CO2 + NADH;
-
-This should return:
-J1: "Citrate synthase",
-J2: "Aconitase"
-J3: "Isocitrate dehydrogenase"
-Reason: these reactions match the reactions found in the TCA cycle """
+from utils.constants import (
+    EntityType,
+    DEFAULT_MAX_RETRIES,
+    DEFAULT_INITIAL_DELAY,
+    DEFAULT_MAX_DELAY,
+    OPENROUTER_BASE_URL,
+    LLAMA_BASE_URL,
+    GPT_MINI_MODEL,
+    SYSTEM_PROMPT_AUTO,
+    SYSTEM_PROMPT_CHEMICAL,
+    SYSTEM_PROMPT_GENE,
+    SYSTEM_PROMPT_PROTEIN,
+    SYSTEM_PROMPT_REACTION,
+)
 
 SYSTEM_PROMPT = SYSTEM_PROMPT_AUTO
 
-def get_system_prompt(entity_type: str = "chemical") -> str:
+logger = logging.getLogger(__name__)
+
+
+def get_system_prompt(entity_type: str | EntityType = EntityType.CHEMICAL) -> str:
     """
     Get the appropriate system prompt based on entity type.
     
@@ -158,15 +40,22 @@ def get_system_prompt(entity_type: str = "chemical") -> str:
     Returns:
         System prompt string
     """
-    if entity_type == "auto":
+    if isinstance(entity_type, str):
+        try:
+            entity_type = EntityType(entity_type)
+        except ValueError:
+            logger.warning(f"Unknown entity type {entity_type}, using chemical prompt")
+            entity_type = EntityType.CHEMICAL
+
+    if entity_type == EntityType.AUTO:
         return SYSTEM_PROMPT_AUTO
-    elif entity_type == "chemical":
+    elif entity_type == EntityType.CHEMICAL:
         return SYSTEM_PROMPT_CHEMICAL
-    elif entity_type == "gene":
+    elif entity_type == EntityType.GENE:
         return SYSTEM_PROMPT_GENE
-    elif entity_type == "protein":
+    elif entity_type == EntityType.PROTEIN:
         return SYSTEM_PROMPT_PROTEIN
-    elif entity_type == "reaction":
+    elif entity_type == EntityType.REACTION:
         return SYSTEM_PROMPT_REACTION
     else:
         logger.warning(f"Unknown entity type {entity_type}, using chemical prompt")
@@ -201,7 +90,6 @@ def _make_api_call_with_retry(client, model: str, messages: list,
                 model=model,
                 messages=messages
             )
-            # print(response)
             return response
             
         except RateLimitError as e:
@@ -259,7 +147,7 @@ def _make_api_call_with_retry(client, model: str, messages: list,
     return None
 
 
-def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", entity_type: str = "chemical",
+def query_llm(prompt: str, developer_prompt: str = None, model=GPT_MINI_MODEL, entity_type: str = "chemical",
               max_retries: int = DEFAULT_MAX_RETRIES, initial_delay: float = DEFAULT_INITIAL_DELAY):
     """
     Query the OpenAI LLM with the formatted prompt.
@@ -294,7 +182,7 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
             api_name="OpenAI"
         )
     elif model.startswith("meta-llama"):
-        client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.getenv("OPENROUTER_API_KEY"))
+        client = OpenAI(base_url=OPENROUTER_BASE_URL, api_key=os.getenv("OPENROUTER_API_KEY"))
         response = _make_api_call_with_retry(
             client, model, messages,
             max_retries=max_retries,
@@ -302,7 +190,7 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
             api_name="OpenRouter"
         )
     elif model.startswith("Llama"):
-        client = OpenAI(base_url="https://api.llama.com/v1", api_key=os.getenv("LLAMA_API_KEY"))
+        client = OpenAI(base_url=LLAMA_BASE_URL, api_key=os.getenv("LLAMA_API_KEY"))
         response = _make_api_call_with_retry(
             client, model, messages,
             max_retries=max_retries,
@@ -318,7 +206,7 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
         print("No response or empty response from LLM.")
         return ""
 
-def query_llm_with_history(messages: list, model: str = "gpt-4o-mini",
+def query_llm_with_history(messages: list, model: str = GPT_MINI_MODEL,
                            max_retries: int = DEFAULT_MAX_RETRIES,
                            initial_delay: float = DEFAULT_INITIAL_DELAY) -> str:
     """
@@ -348,7 +236,7 @@ def query_llm_with_history(messages: list, model: str = "gpt-4o-mini",
             api_name="OpenAI"
         )
     elif model.startswith("meta-llama"):
-        client = OpenAI(base_url="https://openrouter.ai/api/v1",
+        client = OpenAI(base_url=OPENROUTER_BASE_URL,
                         api_key=os.getenv("OPENROUTER_API_KEY"))
         response = _make_api_call_with_retry(
             client, model, messages,
@@ -356,7 +244,7 @@ def query_llm_with_history(messages: list, model: str = "gpt-4o-mini",
             api_name="OpenRouter"
         )
     elif model.startswith("Llama"):
-        client = OpenAI(base_url="https://api.llama.com/compat/v1",
+        client = OpenAI(base_url=LLAMA_BASE_URL,
                         api_key=os.getenv("LLAMA_API_KEY"))
         response = _make_api_call_with_retry(
             client, model, messages,
@@ -366,14 +254,17 @@ def query_llm_with_history(messages: list, model: str = "gpt-4o-mini",
     else:
         raise ValueError(f"Model {model} not supported")
 
-    if response is not None and hasattr(response, "choices") and response.choices:
+    if response is not None and hasattr(response, "choices") and response.choices:        
         return response.choices[0].message.content
     else:
-        print("No response or empty response from LLM.")
+        print("No response or empty response from LLM. L379")
         return ""
 
 
-def parse_llm_response(response, entity_type: str = "auto") -> Tuple[Dict[str, List[str]], Dict[str, str], str]:
+def parse_llm_response(
+    response,
+    entity_type: str | EntityType = EntityType.AUTO,
+) -> Tuple[Dict[str, List[str]], Dict[str, str], str]:
     """
     Parse the LLM response to extract species synonyms and entity types in the format:
     SpeciesA (chemical): "name1", "name2", ...
@@ -425,6 +316,11 @@ def parse_llm_response(response, entity_type: str = "auto") -> Tuple[Dict[str, L
         # Only parse synonym lines before 'Reason:'
         lines = lines[:reason_start]
 
+    if isinstance(entity_type, EntityType):
+        entity_type_str = entity_type.value
+    else:
+        entity_type_str = str(entity_type)
+
     for line in lines:
         line = line.strip()
         if not line:
@@ -440,10 +336,10 @@ def parse_llm_response(response, entity_type: str = "auto") -> Tuple[Dict[str, L
             detected_type = entity_type_match.group(2).strip().lower() 
             names_str = entity_type_match.group(3).strip()
             # Only use detected type if in auto mode, otherwise use specified entity_type
-            if entity_type == "auto":
+            if entity_type_str == EntityType.AUTO.value:
                 entity_type_dict[species_id] = detected_type
             else:
-                entity_type_dict[species_id] = entity_type
+                entity_type_dict[species_id] = entity_type_str
         else:
             # Standard format without entity type: "SpeciesA: names..."
             parts = line.split(':', 1)
@@ -452,10 +348,10 @@ def parse_llm_response(response, entity_type: str = "auto") -> Tuple[Dict[str, L
             species_id = parts[0].strip()
             names_str = parts[1].strip()
             # Use specified entity_type, or "unknown" only if in auto mode
-            if entity_type == "auto":
+            if entity_type_str == EntityType.AUTO.value:
                 entity_type_dict[species_id] = "unknown"
             else:
-                entity_type_dict[species_id] = entity_type
+                entity_type_dict[species_id] = entity_type_str
 
         # Extract all synonyms, handling both quoted and unquoted names
         names = []
