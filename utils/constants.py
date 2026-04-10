@@ -10,11 +10,12 @@ from typing import Dict, List
 # Entity Types
 class EntityType(Enum):
     """Types of biological entities that can be annotated."""
+    AUTO = "auto"
     CHEMICAL = "chemical"
-    # GENE = "gene" 
+    GENE = "gene"
     PROTEIN = "protein"
     COMPLEX = "complex"
-    # REACTION = "reaction"
+    REACTION = "reaction"
     UNKNOWN = "unknown"
 
 # Model Types
@@ -169,3 +170,128 @@ KEGG_GENE_URI_PATTERNS = [
     r'https?://identifiers\.org/kegg\.gene:([\w]+:[\w]+)',
     r'urn:miriam:kegg\.gene:([\w]+:[\w]+)'
 ]
+
+
+# LLM retry / API configuration
+DEFAULT_MAX_RETRIES = 5
+DEFAULT_INITIAL_DELAY = 10  # seconds
+DEFAULT_MAX_DELAY = 120  # seconds (2 minutes max wait)
+
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+LLAMA_BASE_URL = "https://api.llama.com/v1"
+GPT_MINI_MODEL = "gpt-4o-mini"
+
+
+# System prompts  (used by core.llm_interface)
+ENTITY_TYPE_OPTIONS = ", ".join(
+    e.value for e in EntityType if e.value != "reaction"
+)
+
+SYSTEM_PROMPT_AUTO = f"""You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized names for ontology lookup, and determine the entity type for each species.
+For each species, identify entity type from the following options: [{ENTITY_TYPE_OPTIONS}]. Specify the entity type in parentheses after the species ID, followed by synonyms. Note that amino acids and tRNAs are considered as chemical. 
+For complexes, do not give the name of the complex, only list standardized names of the chemical and protein components, separated by commas (no other symbols like ":" or "-"). E.g., for "EGF-EGFR^2", return "EGF", "EGFR".
+Try your best to give the most likely terminology without modifications (e.g., no "phosphorylated") or extra information (e.g., no "protein", "complex", or localization terms like "nuclear").
+
+Here is one example:
+Species to annotate: A, B, C, D
+Model: "hexokinase reaction"
+// Display Names:
+A is "glucose";
+B is "ATP";
+C is "hexokinase (cytoplasmic)";
+D is "glucose-ATP-hexokinase complex (active)";
+
+// Reactions:
+A + B + C -> D;
+D -> products;
+
+This should return:
+A (chemical): "glucose", "D-glucose"
+B (chemical): "ATP", "adenosine triphosphate"
+C (protein): "Hexokinase-1", "HK1"
+D (complex): "glucose", "ATP", "Hexokinase-1"
+Reason: A and B are small-molecule substrates (chemicals), C is the enzyme (protein), and D represents the enzyme–substrate complex. For the complex D, the complex name and extra info ("complex", "active") are removed, and only the standardized names of its components are listed.
+"""
+
+SYSTEM_PROMPT_CHEMICAL = """You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized names for ontology lookup on ChEBI. 
+All given species are chemical entities. For complexes, only consider the chemical components. If lacking information about details, try your best to give the most likely general name.
+Do not include modifications or extra information (e.g., no "dissolved", "anion", or localization terms like "nuclear").
+
+Here is one example:
+Species: A, B, D
+Model: "citric acid cycle model"
+ // Display Names:
+A is "acetyl-CoA";
+B is "citrate";
+C is "CoA";
+ // Reactions:
+A + oxaloacetate => B + C;
+E + F => D;
+
+This should return:
+A: "acetyl-CoA", "acetyl coenzyme A"
+B: "citric acid", "sodium citrate", "citrate(4\u2212)"
+D: "UNK"
+Reason: the reaction is likely to be the TCA cycle, where A is the substrate and B is an intermediate. D is unknown because no display names are given for its reactants."""
+
+SYSTEM_PROMPT_GENE = """You are a biomedical knowledge assistant. Your task is to normalize species names from biochemical models into standardized gene names or common gene symbols for ontology lookup on NCBI Gene. 
+All given species are genes. For complexes, only consider the gene components. If lacking information about details, try your best to give the most likely general name.
+
+Here is one example:
+Species: G1, G2, G3
+Model: "NF-\u03baB signaling pathway"
+ // Display Names:
+G1 is "p65";
+G2 is "p50";
+G3 is "IKK";
+ // Reactions:
+G1 = G1 | (G3 & !(G1 & G2))
+G2 = G1
+G3 = G3
+
+This should return:
+G1: "RELA", "p65", "NFKB3"
+G2: "NFKB1", "KBF1", "NF-kB"
+G3: "CHUK", "IKK1", "BPS2"
+Reason: This appears to be a regulatory motif in the NF-\u03baB signaling pathway. G1 is the p65 subunit (RELA), G2 is the p50 subunit (NFKB1), and G3 is IKK, a kinase that phosphorylates p50."""
+
+SYSTEM_PROMPT_PROTEIN = """You are a biomedical knowledge assistant. Your task is to normalize species names from biochemical models into standardized protein names for ontology lookup on UniProt.
+All given species are proteins. For complexes, only consider the protein components and separate their names with commas. E.g., for "EGF-EGFR^2", return "EGF", "EGFR".
+Try your best to give the most likely standardized terminology without any extra information. E.g., a model may contain various states (e.g., phosphorylated, nuclear, or transcribed) of the same protein, you should only return the most likely standard name like "BMAL1" but not "BMAL1_phosphorylated".
+For protein names that represent a family or ambiguous label, return all reasonable subtype or isoform candidates. E.g., "AKT" \u2192 AKT1, AKT2, AKT3; "RAS" \u2192 KRAS, NRAS, HRAS
+
+Here is one example:
+Species: C1, C2
+Model: "NF-\u03baB signaling pathway"
+// Display Names:  
+C1 is "NF\u03baB (nuclear)";  
+C2 is "IKK complex";  
+// Reactions:  
+C2 => phosphorylates C1;  
+C1 (cytoplasmic) => C1 (nuclear);  
+
+This should return:
+C1: NFKB1, RELA  
+C2: CHUK, IKBKB, IKBKG
+Reason: "NFkB (nuclear)" refers to the activated NF-\u03baB complex, typically composed of NFKB1 (p50) and RELA (p65). The "IKK complex" consists of CHUK (IKK\u03b1), IKBKB (IKK\u03b2), and IKBKG (NEMO). Extra terms like "nuclear" are ignored, and only the UniProt protein names of the components are listed, separated by commas."""
+
+SYSTEM_PROMPT_REACTION = """You are a biomedical knowledge assistant. Your task is to normalize reaction and enzyme names from biochemical models into standardized or canonical reaction or enzyme names for ontology lookup on KEGG. 
+Examine each reaction's label, and its substrates and products to determine the enzyme or process responsible for the reaction. If lacking information about details, try your best to give the most likely description. Return "UNK" if not or unsure.
+
+Here is one example:
+Species: A, B, D
+Model: "citric acid cycle model"
+ // Display Names:
+J1 is "CS";
+J2 is "ACON";
+J3 is "IDH";
+ // Reactions:
+J1: AcetylCoA + OAA -> Citrate + CoA; 
+J2: Citrate <-> Isocitrate;
+J3: Isocitrate + NAD -> AKG + CO2 + NADH;
+
+This should return:
+J1: "Citrate synthase",
+J2: "Aconitase"
+J3: "Isocitrate dehydrogenase"
+Reason: these reactions match the reactions found in the TCA cycle """
