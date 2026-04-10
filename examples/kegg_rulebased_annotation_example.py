@@ -47,6 +47,7 @@ def main() -> None:
     logger.info("AAAIM KEGG Reaction Annotation Example")
     logger.info("=" * 50)
 
+    # ── Example 1: Rule-based KEGG annotation workflow ──────────────────────────────
     _annotation_result, _metrics = annotate_model(
         model_file=model_file,
         llm_model=llm_model,
@@ -69,6 +70,21 @@ def main() -> None:
         csv_path=str(csv_path),
     )
 
+    # Display annotation results
+    if not ranked_df.empty:
+        print("Annotation Results:")
+        print(f"Total entities in model: {_metrics['total_entities']}")
+        print(f"Entities with predictions: {_metrics['entities_with_predictions']}")
+        print(f"Annotation rate: {_metrics['annotation_rate']:.1%}")
+        
+        if not pd.isna(_metrics['accuracy']):
+            print(f"Accuracy (where existing annotations available): {_metrics['accuracy']:.1%}")
+        else:
+            print("Accuracy: N/A (no existing annotations to compare against)")
+        
+        print(f"Total time: {_metrics['total_time']:.2f}s")
+        print()
+        
     return ranked_df
 
 
