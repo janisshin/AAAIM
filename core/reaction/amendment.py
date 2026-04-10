@@ -768,6 +768,13 @@ def update_participant_likelihoods(
     prev_rscores = None
     
     logger.info("Starting EM-style iterative participant likelihood updates")
+    # Reuse calculators/config objects across iterations (they are stateless for a fixed config).
+    likelihood_calc = LikelihoodCalculator(
+        cofactor_config,
+        MatchingConfig(),
+        convergence_config,
+    )
+    save_iteration_csvs: bool = bool(getattr(convergence_config, "save_iteration_csvs", True))
     
     for iteration in range(1, convergence_config.max_iterations + 1):
         # Log statistics
@@ -919,47 +926,27 @@ def update_participant_likelihoods(
         
         # Build participant annotations dictionary for rScore computation
         # Format: {reaction_id: {participant_id: kegg_annotation}}
-        participant_annotations = {}
-        
-        for _, row in updated_participants_df_with_kegg.iterrows():
-            if pd.notna(row.get('KEGG_ID')) and row['KEGG_ID'] != '':
-                participant_id = row['id']
-                if 'reaction_id' not in updated_participants_df_with_kegg.columns:
-                    continue
-                if pd.isna(row.get('reaction_id')) or row['reaction_id'] == '':
-                    continue 
-                reaction_id = str(row['reaction_id'])
-                
-                if reaction_id not in participant_annotations:
-                    participant_annotations[reaction_id] = {}
-                
-                # Use the participant with highest likelihood for this KEGG ID
-                if participant_id not in participant_annotations[reaction_id]:
-                    participant_annotations[reaction_id][participant_id] = row['KEGG_ID']
-                else:
-                    # Keep the one with higher likelihood
-                    current_likelihood = updated_participants_df_with_kegg[
-                        (updated_participants_df_with_kegg['id'] == participant_id) &
-                        (updated_participants_df_with_kegg['KEGG_ID'] == participant_annotations[reaction_id][participant_id])
-                        &
-                        (updated_participants_df_with_kegg.get('reaction_id') == reaction_id)
-                    ]['participant_likelihood'].iloc[0] if len(updated_participants_df_with_kegg[
-                        (updated_participants_df_with_kegg['id'] == participant_id) &
-                        (updated_participants_df_with_kegg['KEGG_ID'] == participant_annotations[reaction_id][participant_id]) &
-                        (updated_participants_df_with_kegg.get('reaction_id') == reaction_id)
-                    ]) > 0 else 0.0
-                    
-                    new_likelihood = row.get('participant_likelihood', 0.0)
-                    if new_likelihood > current_likelihood:
-                        participant_annotations[reaction_id][participant_id] = row['KEGG_ID']
+        participant_annotations: Dict[str, Dict[str, str]] = {}
+        if "reaction_id" in updated_participants_df_with_kegg.columns:
+            # Vectorized: for each (reaction_id, participant_id), keep the KEGG_ID at max participant_likelihood.
+            df_ann = updated_participants_df_with_kegg[
+                updated_participants_df_with_kegg["KEGG_ID"].notna()
+                & (updated_participants_df_with_kegg["KEGG_ID"] != "")
+                & updated_participants_df_with_kegg["reaction_id"].notna()
+                & (updated_participants_df_with_kegg["reaction_id"] != "")
+            ].copy()
+            if not df_ann.empty:
+                # Ensure consistent string types for keys.
+                df_ann["reaction_id"] = df_ann["reaction_id"].astype(str)
+                df_ann["id"] = df_ann["id"].astype(str)
+                df_ann = df_ann.sort_values("participant_likelihood", ascending=False)
+                df_best = df_ann.drop_duplicates(subset=["reaction_id", "id"], keep="first")
+
+                for rid, grp in df_best.groupby("reaction_id", sort=False):
+                    participant_annotations[str(rid)] = dict(zip(grp["id"], grp["KEGG_ID"]))
         
         # M-STEP: Compute updated rScores based on current participant annotations
         logger.info(f"Iteration {iteration}: Computing updated rScores (M-step)")
-        likelihood_calc = LikelihoodCalculator(
-            cofactor_config,
-            MatchingConfig(),
-            convergence_config
-        )
         updated_reaction_likelihood_df, current_rscores = likelihood_calc.compute_rscores(
             participant_annotations,
             updated_kegg_recommendations_df,
@@ -982,15 +969,16 @@ def update_participant_likelihoods(
         reaction_likelihood_df = updated_reaction_likelihood_df
         
         # Save iteration results
-        updated_participants_df_with_kegg.to_csv(
-            f'participants_likelihood_iter{iteration}.csv',
-            index=False
-        )
-        
-        updated_reaction_likelihood_df.to_csv(
-            f'reaction_likelihood_iter{iteration}.csv',
-            index=False
-        )
+        if save_iteration_csvs:
+            updated_participants_df_with_kegg.to_csv(
+                f'participants_likelihood_iter{iteration}.csv',
+                index=False
+            )
+            
+            updated_reaction_likelihood_df.to_csv(
+                f'reaction_likelihood_iter{iteration}.csv',
+                index=False
+            )
         
         if converged:
             break
