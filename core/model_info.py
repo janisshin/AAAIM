@@ -7,7 +7,7 @@ Extracts model information and context for annotation
 import re
 import libsbml
 import antimony
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Dict, List, Any, Optional, Tuple, Set
 from pathlib import Path
 import logging
 
@@ -761,6 +761,70 @@ def map_reaction_ids_to_stoichiometry_strings(model_file: str) -> Dict[str, str]
             continue
         rid, rest = m.group(1), m.group(2).strip()
         out[rid] = f"{rid}: {rest} {arrow} {right_side.strip()}"
+    return out
+
+
+def build_antimony_reaction_index(model_file: str) -> List[Tuple[str, str, Set[str]]]:
+    """
+    Parse the model once via antimony and build an index of:
+        (reaction_id, reaction_string_without_id_prefix, set_of_species_ids_in_reaction)
+
+    This is intended for performance-sensitive loops that repeatedly filter
+    reactions by a changing set of target species IDs (e.g., EM iterations).
+    """
+    index: List[Tuple[str, str, Set[str]]] = []
+    for left_side, arrow, right_side in _parse_antimony_reaction_matches(model_file):
+        m = re.match(r"^([A-Za-z0-9_]+):\s*(.*)$", left_side.strip(), re.DOTALL)
+        if not m:
+            continue
+        reaction_id = m.group(1).strip()
+        left_side_body = m.group(2).strip()
+
+        left_side_cleaned = re.sub(r"^[A-Za-z0-9_]+:\s*", "", left_side.strip())
+        # Keep the historical behavior: the returned reaction string excludes the RID prefix.
+        reaction_str = f"{left_side_body} {arrow} {right_side.strip()}"
+
+        all_ids_in_reaction = set(
+            re.findall(r"\b([A-Za-z0-9_]+)\b", left_side + " " + right_side)
+        )
+        index.append((reaction_id, reaction_str, all_ids_in_reaction))
+    return index
+
+
+def filter_reactions_from_antimony_index(
+    antimony_index: List[Tuple[str, str, Set[str]]],
+    species_ids: List[str],
+) -> Tuple[List[str], List[str], Set[str]]:
+    """
+    Filter a prebuilt antimony reaction index down to reactions involving any
+    of the provided *species_ids*.
+
+    Returns:
+        (reactions, reaction_ids, related_species)
+    """
+    species_set = set(species_ids)
+    reactions: List[str] = []
+    reaction_ids: List[str] = []
+    related_species: Set[str] = set(species_ids)
+
+    for reaction_id, reaction_str, ids_in_reaction in antimony_index:
+        if ids_in_reaction & species_set:
+            reactions.append(reaction_str)
+            reaction_ids.append(reaction_id)
+            related_species |= ids_in_reaction
+
+    return reactions, reaction_ids, related_species
+
+
+def map_reaction_ids_to_participant_ids(model_file: str) -> Dict[str, Set[str]]:
+    """
+    Map each reaction id to the set of species ids appearing in that reaction.
+
+    Uses the cached antimony parsing (via :func:`build_antimony_reaction_index`).
+    """
+    out: Dict[str, Set[str]] = {}
+    for reaction_id, _reaction_str, ids_in_reaction in build_antimony_reaction_index(model_file):
+        out[str(reaction_id)] = set(ids_in_reaction)
     return out
 
 

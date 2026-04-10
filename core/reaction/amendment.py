@@ -9,7 +9,11 @@ import pandas as pd
 
 from ..annotation_workflow import _generate_recommendation_table
 from .kegg_features import KEGGReactionFeatures
-from ..model_info import extract_reactions_from_sbml
+from ..model_info import (
+    build_antimony_reaction_index,
+    filter_reactions_from_antimony_index,
+    map_reaction_ids_to_participant_ids,
+)
 from .amendment_config import CofactorConfig, ConvergenceConfig, MatchingConfig
 from .matching import map_reactions_to_kegg_with_relaxation
 from .scoring import (
@@ -747,14 +751,20 @@ def update_participant_likelihoods(
     # Track all participant IDs we've seen
     all_known_participant_ids = set(current_participants_df['id'].unique())
 
+    # Cache reaction → participants once (avoid repeated parsing).
+    reaction_to_participants_cached = map_reaction_ids_to_participant_ids(model_file)
+
     # Add an explicit `reaction_id` column so later steps do not rely on brittle string parsing.
     # This makes the EM updates reaction-scoped.
     if "reaction_id" not in current_participants_df.columns:
-        # Build reaction_id -> set(species_id) from the extracted reaction strings.
-        # IMPORTANT: `reactions` is aligned with `reaction_ids` by construction in callers.
-        reaction_to_participants: Dict[str, Set[str]] = {}
-        for rid, rxn_str in zip(reaction_ids, reactions):
-            reaction_to_participants[str(rid)] = _species_ids_from_reaction_string(rxn_str)
+        # Build reaction_id -> set(species_id) from cached antimony parsing.
+        # Limit to the caller-provided reaction_ids to preserve intended scope.
+        allowed_reaction_ids = set(str(rid) for rid in reaction_ids)
+        reaction_to_participants = {
+            rid: parts
+            for rid, parts in reaction_to_participants_cached.items()
+            if rid in allowed_reaction_ids
+        }
         species_to_reactions: Dict[str, Set[str]] = {}
         for rid, parts in reaction_to_participants.items():
             for pid in parts:
@@ -766,6 +776,9 @@ def update_participant_likelihoods(
     
     # Track rScores for convergence checking
     prev_rscores = None
+
+    # Parse antimony once; we'll filter from this index each iteration.
+    antimony_index = build_antimony_reaction_index(model_file)
     
     logger.info("Starting EM-style iterative participant likelihood updates")
     # Reuse calculators/config objects across iterations (they are stateless for a fixed config).
@@ -882,16 +895,15 @@ def update_participant_likelihoods(
 
         # Re-extract reactions with expanded participant list
         logger.info(f"Iteration {iteration}: Re-extracting reactions with expanded participant list")
-        reactions, _ = extract_reactions_from_sbml(
-            model_file,
-            expanded_participant_ids
+        reactions, filtered_reaction_ids, _ = filter_reactions_from_antimony_index(
+            antimony_index, expanded_participant_ids
         )
         
         # Map reactions to KEGG with updated participant set
         logger.info(f"Iteration {iteration}: Mapping reactions to KEGG")
         normalized_reactions, match_results, _species_relax_levels = map_reactions_to_kegg_with_relaxation(
             reactions,
-            reaction_ids,
+            filtered_reaction_ids,
             high_score_recommendations,
             spectators=False,
             cofactors_to_ignore=cofactor_config.kegg_ids,
