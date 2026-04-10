@@ -718,6 +718,52 @@ def extract_qual_transitions(model_file: str, species_ids: List[str]) -> List[st
     
     return transitions
 
+
+def _parse_antimony_reaction_matches(model_file: str) -> List[Tuple[str, str, str]]:
+    """Parse antimony export into (left_side, arrow, right_side) tuples for each reaction."""
+    antimony.clearPreviousLoads()
+    sbml_model = antimony.loadSBMLFile(model_file)
+    if sbml_model == -1:
+        logger.error(f"Error loading SBML file with antimony: {antimony.getLastError()}")
+        return []
+
+    antimony_string = antimony.getAntimonyString()
+    reaction_pattern = re.compile(r"// Reactions:.*?(?=//|$)", re.DOTALL)
+    reactions_section = reaction_pattern.search(antimony_string)
+    
+    reaction_matches = []
+    if reactions_section:
+        reactions_text = reactions_section.group(0).replace("// Reactions:", "").strip()
+        reaction_pattern = re.compile(r"([^;]+)(=>|->)([^;]+);", re.MULTILINE)
+        reaction_matches = reaction_pattern.findall(reactions_text)
+
+    # If no matches found with '=>', try with '=' instead
+    if not reaction_matches:
+        reaction_pattern = re.compile(r"// Rate Rules:.*?(?=//|$)", re.DOTALL)
+        reactions_section = reaction_pattern.search(antimony_string)
+        if reactions_section:
+            reactions_text = reactions_section.group(0).replace("// Rate Rules:", "").strip()
+            reaction_pattern = re.compile(r"([^;]+)(=>|->|=)([^;]+);", re.MULTILINE)
+            reaction_matches = reaction_pattern.findall(reactions_text)
+
+    return reaction_matches
+
+
+def map_reaction_ids_to_stoichiometry_strings(model_file: str) -> Dict[str, str]:
+    """
+    Map each SBML reaction id to a one-line stoichiometry string ``RID: lhs arrow rhs``
+    (same style as KEGG ranking prompts).
+    """
+    out: Dict[str, str] = {}
+    for left_side, arrow, right_side in _parse_antimony_reaction_matches(model_file):
+        m = re.match(r"^([A-Za-z0-9_]+):\s*(.*)$", left_side.strip(), re.DOTALL)
+        if not m:
+            continue
+        rid, rest = m.group(1), m.group(2).strip()
+        out[rid] = f"{rid}: {rest} {arrow} {right_side.strip()}"
+    return out
+
+
 def extract_reactions_from_sbml(model_file: str, species_ids: List[str]) -> Tuple[List[str], set]:
     """
     Extract reactions from an SBML model file using antimony.
@@ -734,35 +780,8 @@ def extract_reactions_from_sbml(model_file: str, species_ids: List[str]) -> Tupl
     """
     reactions = []
     related_species = set(species_ids)
-    
-    antimony.clearPreviousLoads()
-    sbml_model = antimony.loadSBMLFile(model_file)
-    if sbml_model == -1:
-        logger.error(f"Error loading SBML file with antimony: {antimony.getLastError()}")
-        return [], related_species
-    
-    antimony_string = antimony.getAntimonyString()
-    
-    # Look for lines with => symbols which indicate reactions
-    
-    reaction_pattern = re.compile(r'// Reactions:.*?(?=//|$)', re.DOTALL)
-    reactions_section = reaction_pattern.search(antimony_string)
-    
-    reaction_matches = []
-    if reactions_section:
-        reactions_text = reactions_section.group(0).replace("// Reactions:", "").strip()
-        reaction_pattern = re.compile(r'([^;]+)(=>|->)([^;]+);', re.MULTILINE)
-        reaction_matches = reaction_pattern.findall(reactions_text)
 
-    # If no matches found with '=>', try with '=' instead
-    if not reaction_matches:
-        reaction_pattern = re.compile(r'// Rate Rules:.*?(?=//|$)', re.DOTALL)
-        reactions_section = reaction_pattern.search(antimony_string)
-        
-        if reactions_section:
-            reactions_text = reactions_section.group(0).replace("// Rate Rules:", "").strip()
-            reaction_pattern = re.compile(r'([^;]+)(=>|->|=)([^;]+);', re.MULTILINE)
-            reaction_matches = reaction_pattern.findall(reactions_text)
+    reaction_matches = _parse_antimony_reaction_matches(model_file)
 
     # Filter reactions to only include those involving our species
     for match in reaction_matches:

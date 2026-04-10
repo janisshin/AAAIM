@@ -295,3 +295,37 @@ J1: "Citrate synthase",
 J2: "Aconitase"
 J3: "Isocitrate dehydrogenase"
 Reason: these reactions match the reactions found in the TCA cycle """
+
+
+REACTION_ANNOTATION_RANKING_PROMPT = """Task: Select the best matching KEGG reaction ID(s).
+
+Model reaction:
+{model_reaction}
+
+Candidate KEGG reactions:
+{reaction_annotation_choices}
+
+Instructions:
+- Choose only from the provided KEGG IDs.
+- Return the ID(s) only. Do NOT explain your reasoning. Do NOT include any other text.
+- Order multiple IDs from best to worst match.
+- If none match, return: UNK
+- If multiple candidates differ only in specificity, rank the most general reaction highest (e.g., fructose > D-fructose > beta-D-fructose).
+- Consider biochemical equivalence (e.g., isomers, implicit conversions like DHAP ↔ G3P).
+
+Output format:
+One ID per line.
+
+Example:
+Model reaction:
+J4: F16BP -> 2 G3P
+
+Candidate KEGG reactions:
+R01068: D-Fructose 1,6-bisphosphate <=> Glycerone phosphate + D-Glyceraldehyde 3-phosphate
+R10049: Methylglyoxal + D-Fructose 1,6-bisphosphate <=> D-Glyceraldehyde 3-phosphate + 6-Deoxy-5-ketofructose 1-phosphate
+R01070: beta-D-Fructose 1,6-bisphosphate <=> Glycerone phosphate + D-Glyceraldehyde 3-phosphate
+
+Output:
+R01068
+R01070
+"""
