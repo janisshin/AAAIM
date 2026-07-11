@@ -29,8 +29,8 @@ def main():
     # Configuration
     model_curation_file = "tests/test_models/BIOMD0000000190.xml"
     model_file = "tests/test_models/190_few_anno.xml"
+    llm_model = "gpt-4o-mini"
     # llm_model = "meta-llama/llama-3.3-70b-instruct:free"
-    llm_model = "Llama-3.3-70B-Instruct"
     max_entities = 5  # None will evaluate all species
     
     # Check if model file exists

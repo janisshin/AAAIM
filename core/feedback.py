@@ -22,7 +22,7 @@ import logging
 from core.model_info import extract_model_info
 from core.llm_interface import (
     get_system_prompt,
-    query_llm_with_history,
+    query_llm_message_with_history,
     parse_llm_response,
 )
 from core.database_search import (
@@ -66,7 +66,7 @@ class AnnotationResult:
         metrics: Dict[str, Any],
         *,
         model_file: str,
-        conversation_history: List[Dict[str, str]],
+        conversation_history: List[Dict[str, Any]],
         entities_to_evaluate: List[str],
         entity_type: str,
         database: str,
@@ -245,18 +245,18 @@ def _revise_recommendations(
     model_file: str,
     previous_recommendations_df: pd.DataFrame,
     feedback: str,
-    conversation_history: List[Dict[str, str]],
+    conversation_history: List[Dict[str, Any]],
     entities_to_evaluate: List[str],
     entity_type: str = "chemical",
     database: str = "chebi",
     method: str = "direct",
-    llm_model: str = "Llama-3.3-70B-Instruct",
+    llm_model: str = "gpt-4o-mini",
     top_k: int = 3,
     tax_id: str = None,
     existing_annotations: Optional[Dict[str, List[str]]] = None,
     qualifier_annotations: Optional[Dict[str, List[str]]] = None,
     model_info: Optional[Dict[str, Any]] = None,
-) -> Tuple[pd.DataFrame, Dict[str, Any], List[Dict[str, str]]]:
+) -> Tuple[pd.DataFrame, Dict[str, Any], List[Dict[str, Any]]]:
     """Single feedback revision round (internal implementation)."""
     start_time = time.time()
 
@@ -283,14 +283,18 @@ def _revise_recommendations(
 
     logger.info("Querying LLM with feedback (revision round)...")
     llm_start = time.time()
-    llm_response = query_llm_with_history(history, model=llm_model)
+    assistant_message = query_llm_message_with_history(
+        history,
+        model=llm_model,
+    )
+    llm_response = assistant_message.get("content") if assistant_message else ""
     llm_time = time.time() - llm_start
 
     if not llm_response:
         logger.error("No response from LLM during feedback revision")
         return previous_recommendations_df, {"error": "No LLM response"}, history
 
-    history.append({"role": "assistant", "content": llm_response})
+    history.append(assistant_message)
 
     synonyms_dict, entity_type_dict, reason = parse_llm_response(
         llm_response, entity_type
@@ -364,12 +368,20 @@ def build_initial_conversation(
     system_prompt: str,
     user_prompt: str,
     llm_response: str,
-) -> List[Dict[str, str]]:
+    assistant_message: Optional[Dict[str, Any]] = None,
+) -> List[Dict[str, Any]]:
     """Construct the initial conversation history from the first annotation round."""
+    if assistant_message is None:
+        assistant_message = {"role": "assistant", "content": llm_response}
+    else:
+        assistant_message = dict(assistant_message)
+        assistant_message.setdefault("role", "assistant")
+        assistant_message.setdefault("content", llm_response)
+
     return [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_prompt},
-        {"role": "assistant", "content": llm_response},
+        assistant_message,
     ]
 
 

@@ -26,7 +26,6 @@ from sklearn.metrics.pairwise import cosine_distances
 class RateLimiter:
     """
     Rate limiter for API calls with support for request count limits.
-    Designed to comply with Llama API limits (10 requests/min, 250k tokens/min).
     """
     def __init__(self, max_requests_per_minute: int = 10, verbose: bool = True):
         """
@@ -1244,7 +1243,7 @@ def evaluate_models_in_folder(model_dir: str,
         bqbiol_qualifiers: List of bqbiol qualifiers to extract (e.g. ['is', 'isVersionOf', 'hasPart'])
         chunk_size: Size of chunks to split large models into, if None, no chunking is done (default: 50)
         max_try: Maximum number of retry attempts for species with empty predictions (default: 1, no retry)
-        rate_limit_rpm: Maximum LLM API requests per minute (default: 10 for Llama API)
+        rate_limit_rpm: Maximum LLM API requests per minute
         context: If True, include full model context (model name, reactions, notes) in prompt.
                  If False, only use display names. (default: True)
         
@@ -1291,10 +1290,6 @@ def evaluate_models_in_folder(model_dir: str,
         llm_name = "llama-3.3-70b-instruct"
     elif llm_model == "meta-llama/llama-3.3-70b-instruct":
         llm_name = "llama-3.3-70b-instruct"
-    elif llm_model == "Llama-3.3-70B-Instruct":
-        llm_name = "Llama-3.3-70B-instruct-Meta"
-    elif llm_model == "Llama-4-Maverick-17B-128E-Instruct-FP8":
-        llm_name = "llama-4-maverick-17b-128e-instruct-fp8"
     else:
         llm_name = llm_model
 
@@ -1661,10 +1656,6 @@ def _save_llm_results(model_file: str, llm_model: str, output_dir: str,
         llm_name = "llama-3.3-70b-instruct"
     elif llm_model == "meta-llama/llama-3.3-70b-instruct":
         llm_name = "llama-3.3-70b-instruct"
-    elif llm_model == "Llama-3.3-70B-Instruct":
-        llm_name = "Llama-3.3-70B-instruct-Meta"
-    elif llm_model == "Llama-4-Maverick-17B-128E-Instruct-FP8":
-        llm_name = "llama-4-maverick-17b-128e-instruct-fp8"
     else:
         llm_name = llm_model
 

@@ -19,8 +19,18 @@ Set at least one LLM API key (in your shell or a `.env` file):
 ```bash
 OPENAI_API_KEY=<your-openai-key>          # gpt-4o-mini, gpt-5-mini
 OPENROUTER_API_KEY=<your-openrouter-key>  # llama-3.3-70b (free tier available)
-LLAMA_API_KEY=<your-llama-key>            # Llama-3.3-70B-Instruct
 ```
+
+To start with a free OpenRouter model:
+
+```python
+result = annotate_model(
+    model_file="path/to/model.xml",
+    llm_model="openrouter/free",
+)
+```
+
+For other models like OpenAI models, just pass the model name, e.g. "gpt-4o-mini".
 
 ---
 

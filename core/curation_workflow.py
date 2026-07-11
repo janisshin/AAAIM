@@ -14,7 +14,7 @@ import logging
 import warnings
 
 from core.model_info import find_species_with_chebi_annotations, find_species_with_annotations_and_qualifiers, find_species_with_ncbigene_annotations, find_species_with_uniprot_annotations, extract_model_info, format_prompt
-from core.llm_interface import get_system_prompt, query_llm, parse_llm_response
+from core.llm_interface import get_system_prompt, query_llm_message, parse_llm_response
 from core.data_types import Recommendation
 from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, load_uniprot_label_dict, load_ncbigene_label_dict, load_chebi_label_dict
 
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 def curate_single_model(model_file: str, 
-                  llm_model: str = "Llama-3.3-70B-Instruct",
+                  llm_model: str = "gpt-4o-mini",
                   method: str = "direct",
                   top_k: int = 3,
                   max_entities: int = None,
@@ -38,7 +38,7 @@ def curate_single_model(model_file: str,
     
     Args:
         model_file: Path to SBML model file
-        llm_model: LLM model to use ("gpt-4o-mini", "Llama-3.3-70B-Instruct")
+        llm_model: LLM model to use ("gpt-4o-mini" or an OpenRouter "meta-llama/..." model)
         method: Method to use for database search ("direct", "rag")
         top_k: Number of top candidates to return per species
         max_entities: Maximum number of entities to annotate (None for all)
@@ -106,6 +106,7 @@ def curate_single_model(model_file: str,
     # Track conversation context for potential feedback rounds
     all_prompts = []
     all_responses = []
+    assistant_messages = []
     system_prompt = get_system_prompt(entity_type)
 
     if chunk_size and len(specs_to_evaluate) > chunk_size:
@@ -136,7 +137,13 @@ def curate_single_model(model_file: str,
             
             llm_start = time.time()
             try:
-                result = query_llm(prompt, system_prompt, model=llm_model, entity_type=entity_type)
+                assistant_message = query_llm_message(
+                    prompt,
+                    system_prompt,
+                    model=llm_model,
+                    entity_type=entity_type,
+                )
+                result = assistant_message.get("content") if assistant_message else ""
                 chunk_llm_time = time.time() - llm_start
                 total_llm_time += chunk_llm_time
                 
@@ -145,6 +152,7 @@ def curate_single_model(model_file: str,
                     continue
                 
                 all_responses.append(result)
+                assistant_messages.append(assistant_message)
                 logger.info(f"Chunk {chunk_idx + 1} LLM response received in {chunk_llm_time:.2f}s")
                 
             except Exception as e:
@@ -183,7 +191,13 @@ def curate_single_model(model_file: str,
         
         llm_start = time.time()
         try:
-            result = query_llm(prompt, system_prompt, model=llm_model, entity_type=entity_type)
+            assistant_message = query_llm_message(
+                prompt,
+                system_prompt,
+                model=llm_model,
+                entity_type=entity_type,
+            )
+            result = assistant_message.get("content") if assistant_message else ""
             llm_time = time.time() - llm_start
             
             if not result:
@@ -191,6 +205,7 @@ def curate_single_model(model_file: str,
                 return pd.DataFrame(), {"error": "No response from LLM"}
             
             all_responses.append(result)
+            assistant_messages.append(assistant_message)
             logger.info(f"LLM response received in {llm_time:.2f}s")
             
         except Exception as e:
@@ -266,11 +281,17 @@ def curate_single_model(model_file: str,
     from core.feedback import AnnotationResult, build_initial_conversation
     combined_prompt = "\n\n".join(all_prompts)
     combined_response = "\n\n".join(all_responses)
+    combined_assistant_message = assistant_messages[0] if len(assistant_messages) == 1 else None
 
     return AnnotationResult(
         recommendations_df, metrics,
         model_file=model_file,
-        conversation_history=build_initial_conversation(system_prompt, combined_prompt, combined_response),
+        conversation_history=build_initial_conversation(
+            system_prompt,
+            combined_prompt,
+            combined_response,
+            assistant_message=combined_assistant_message,
+        ),
         entities_to_evaluate=specs_to_evaluate,
         entity_type=entity_type,
         database=database,
@@ -549,4 +570,4 @@ def curate_model(model_file: str, **kwargs) -> Tuple[pd.DataFrame, Dict[str, Any
     Returns:
         Tuple of (recommendations_df, metrics_dict)
     """
-    return curate_single_model(model_file, **kwargs) 
+    return curate_single_model(model_file, **kwargs)

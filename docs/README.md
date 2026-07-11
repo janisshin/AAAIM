@@ -19,9 +19,6 @@ export OPENAI_API_KEY="your-openai-key"
 
 # For OpenRouter models (meta-llama/llama-3.3-70b-instruct:free)
 export OPENROUTER_API_KEY="your-openrouter-key"
-
-# For LlaMa models (Llama-3.3-70B-Instruct)
-export LLAMA_API_KEY="your-llama-key"
 ```
 
 Alternatively, you can setup an `.env` file that looks like the following:
@@ -29,7 +26,16 @@ Alternatively, you can setup an `.env` file that looks like the following:
 ```bash
 OPENAI_API_KEY=<your-openai-api-key-here>
 OPENROUTER_API_KEY=<your-openrouter-api-key-here>
-LLAMA_API_KEY=<your-llama-api-key-here>
+```
+
+OpenRouter models are also supported. Reasoning is enabled automatically for
+OpenRouter requests when the provider supports it:
+
+```python
+result = annotate_model(
+    model_file="path/to/model.xml",
+    llm_model="openrouter/free",
+)
 ```
 
 ## Usage
@@ -260,6 +266,7 @@ A summary of added/removed annotations will be printed after update.
 result = annotate_model(
     model_file = "path/to/model.xml",
     llm_model = "meta-llama/llama-3.3-70b-instruct:free",       # the LLM model used to predict annotations
+    # llm_model = "openrouter/free",			 # OpenRouter free model; reasoning is automatic when supported
     max_entities = 100,					 # maximum number of entities to annotate (None for all)
     entity_type = "gene",				 # type of entities to annotate ("chemical", "gene", "protein", "auto")
     database = "ncbigene",				 # database to use ("chebi", "ncbigene", "uniprot") or list for auto mode
@@ -470,4 +477,3 @@ aaaim/
 - **Multi-Database Support**: GO, Rhea, mapping between ontologies
 - **Improve RAG for NCBI Gene**: Test on other embedding models for genes
 - **Web Interface**: User-friendly annotation tool
-

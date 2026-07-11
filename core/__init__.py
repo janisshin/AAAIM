@@ -24,6 +24,8 @@ from .llm_interface import (
     get_system_prompt,
     parse_llm_response,
     query_llm,
+    query_llm_message,
+    query_llm_message_with_history,
     query_llm_with_history,
 )
 
@@ -88,6 +90,8 @@ __all__ = [
     "SYSTEM_PROMPT_GENE",
     "get_system_prompt",
     "query_llm",
+    "query_llm_message",
+    "query_llm_message_with_history",
     "query_llm_with_history",
     "parse_llm_response",
     

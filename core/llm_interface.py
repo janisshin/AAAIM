@@ -7,10 +7,17 @@ Handles LLM interactions for annotation.
 import os
 import re
 import time
-from typing import Dict, List, Tuple, Any
+import requests
+from typing import Dict, List, Tuple, Any, Optional
 from openai import OpenAI, RateLimitError, APIError
 import logging
 from utils.constants import EntityType
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    pass
 
 # Default retry settings for rate limit errors (429)
 DEFAULT_MAX_RETRIES = 5
@@ -238,9 +245,10 @@ def _make_api_call_with_retry(client, model: str, messages: list,
         except APIError as e:
             # Handle other API errors (500, 502, 503, etc.)
             last_exception = e
-            if e.status_code in [500, 502, 503, 504] and attempt < max_retries:
+            status_code = getattr(e, "status_code", None)
+            if status_code in [500, 502, 503, 504] and attempt < max_retries:
                 wait_time = min(delay, max_delay)
-                print(f"API error ({e.status_code}) from {api_name}. Attempt {attempt + 1}/{max_retries + 1}. "
+                print(f"API error ({status_code}) from {api_name}. Attempt {attempt + 1}/{max_retries + 1}. "
                       f"Waiting {wait_time:.1f}s before retry...")
                 time.sleep(wait_time)
                 delay = min(delay * 2, max_delay)
@@ -259,16 +267,176 @@ def _make_api_call_with_retry(client, model: str, messages: list,
     return None
 
 
+def _make_openrouter_api_call_with_retry(
+    model: str,
+    messages: list,
+    max_retries: int = DEFAULT_MAX_RETRIES,
+    initial_delay: float = DEFAULT_INITIAL_DELAY,
+    max_delay: float = DEFAULT_MAX_DELAY,
+):
+    """
+    Make an OpenRouter chat completion request.
+
+    Uses raw HTTP so provider-specific fields like ``reasoning_details`` are
+    preserved and can be passed back unchanged in follow-up requests.
+    """
+    api_key = os.getenv("OPENROUTER_API_KEY")
+    if not api_key:
+        raise ValueError("OPENROUTER_API_KEY environment variable is required for OpenRouter models")
+
+    payload = {
+        "model": model,
+        "messages": messages,
+        "reasoning": {"enabled": True},
+    }
+
+    delay = initial_delay
+    last_exception = None
+
+    for attempt in range(max_retries + 1):
+        try:
+            response = requests.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                },
+                json=payload,
+                timeout=120,
+            )
+
+            if response.status_code == 429 and attempt < max_retries:
+                wait_time = min(delay, max_delay)
+                print(
+                    f"Rate limit error (429) from OpenRouter. Attempt {attempt + 1}/{max_retries + 1}. "
+                    f"Waiting {wait_time:.1f}s before retry..."
+                )
+                time.sleep(wait_time)
+                delay = min(delay * 2, max_delay)
+                continue
+
+            if response.status_code in [500, 502, 503, 504] and attempt < max_retries:
+                wait_time = min(delay, max_delay)
+                print(
+                    f"API error ({response.status_code}) from OpenRouter. Attempt {attempt + 1}/{max_retries + 1}. "
+                    f"Waiting {wait_time:.1f}s before retry..."
+                )
+                time.sleep(wait_time)
+                delay = min(delay * 2, max_delay)
+                continue
+
+            response.raise_for_status()
+            return response.json()
+
+        except requests.RequestException as e:
+            last_exception = e
+            print(f"API error from OpenRouter: {e}")
+            break
+
+    if last_exception:
+        print(f"All retries exhausted for OpenRouter. Last error: {last_exception}")
+    return None
+
+
+def _extract_response_text(response: Any) -> Optional[str]:
+    """
+    Extract assistant text from the response shapes used by supported chat APIs.
+
+    OpenAI-compatible chat completions return ``choices[0].message.content``.
+    """
+    if response is None:
+        return None
+
+    if hasattr(response, "choices") and response.choices:
+        message = response.choices[0].message
+        content = getattr(message, "content", None)
+        if isinstance(content, str):
+            return content
+        if isinstance(content, list):
+            text_parts = []
+            for item in content:
+                if isinstance(item, dict):
+                    text = item.get("text")
+                else:
+                    text = getattr(item, "text", None)
+                if text:
+                    text_parts.append(text)
+            if text_parts:
+                return "".join(text_parts)
+
+    return None
+
+
+def _extract_assistant_message(response: Any) -> Optional[Dict[str, Any]]:
+    """Extract an assistant message dict, preserving OpenRouter reasoning details."""
+    if response is None:
+        return None
+
+    if isinstance(response, dict):
+        choices = response.get("choices") or []
+        if not choices:
+            return None
+        message = choices[0].get("message") or {}
+        assistant_message = {
+            "role": "assistant",
+            "content": message.get("content") or "",
+        }
+        if message.get("reasoning_details") is not None:
+            assistant_message["reasoning_details"] = message.get("reasoning_details")
+        return assistant_message
+
+    text = _extract_response_text(response)
+    if text is None:
+        return None
+    return {"role": "assistant", "content": text}
+
+
+def _is_openrouter_model(model: str) -> bool:
+    return model.startswith("meta-llama") or model.startswith("openrouter/")
+
+
+def query_llm_message(
+    prompt: str,
+    developer_prompt: str = None,
+    model="gpt-4o-mini",
+    entity_type: str = "chemical",
+    max_retries: int = DEFAULT_MAX_RETRIES,
+    initial_delay: float = DEFAULT_INITIAL_DELAY,
+) -> Dict[str, Any]:
+    """
+    Query the configured LLM and return the assistant message dict.
+
+    For OpenRouter reasoning requests, the returned dict includes
+    ``reasoning_details`` when the provider returns it; pass that dict back
+    unchanged in later message history.
+    """
+    if developer_prompt is None:
+        developer_prompt = get_system_prompt(entity_type)
+
+    messages = [
+        {"role": "system", "content": developer_prompt},
+        {"role": "user", "content": prompt}
+    ]
+
+    return query_llm_message_with_history(
+        messages,
+        model=model,
+        max_retries=max_retries,
+        initial_delay=initial_delay,
+    )
+
+
 def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", entity_type: str = "chemical",
               max_retries: int = DEFAULT_MAX_RETRIES, initial_delay: float = DEFAULT_INITIAL_DELAY):
     """
-    Query the OpenAI LLM with the formatted prompt.
+    Query the configured LLM with the formatted prompt.
     Includes automatic retry with exponential backoff for rate limit errors (429).
     
     Args:
         prompt: The formatted prompt to send to the LLM
         developer_prompt: The system prompt (if None, will use appropriate prompt for entity_type)
-        model: The model to use for the LLM, e.g., "meta-llama/llama-3.3-70b-instruct:free"
+        model: The model to use, e.g. "gpt-4o-mini" or
+            "meta-llama/llama-3.3-70b-instruct:free"
         entity_type: Type of entity for prompt selection if developer_prompt is None
         max_retries: Maximum number of retry attempts for rate limit errors (default: 5)
         initial_delay: Initial delay in seconds before first retry (default: 10)
@@ -276,47 +444,51 @@ def query_llm(prompt: str, developer_prompt: str = None, model="gpt-4o-mini", en
     Returns:
         String response from LLM or empty string on error
     """
-    if developer_prompt is None:
-        developer_prompt = get_system_prompt(entity_type)
-    
-    messages = [
-        {"role": "system", "content": developer_prompt},
-        {"role": "user", "content": prompt}
-    ]
-    
+    assistant_message = query_llm_message(
+        prompt,
+        developer_prompt,
+        model=model,
+        entity_type=entity_type,
+        max_retries=max_retries,
+        initial_delay=initial_delay,
+    )
+    text = assistant_message.get("content") if assistant_message else None
+    if text:
+        return text
+    else:
+        print("No response or empty response from LLM.")
+        return ""
+
+def query_llm_message_with_history(
+    messages: list,
+    model: str = "gpt-4o-mini",
+    max_retries: int = DEFAULT_MAX_RETRIES,
+    initial_delay: float = DEFAULT_INITIAL_DELAY,
+) -> Dict[str, Any]:
+    """Query the LLM with full history and return the assistant message dict."""
     response = None
     if model.startswith("gpt"):
         client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         response = _make_api_call_with_retry(
-            client, model, messages, 
-            max_retries=max_retries, 
-            initial_delay=initial_delay,
+            client, model, messages,
+            max_retries=max_retries, initial_delay=initial_delay,
             api_name="OpenAI"
         )
-    elif model.startswith("meta-llama"):
-        client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=os.getenv("OPENROUTER_API_KEY"))
-        response = _make_api_call_with_retry(
-            client, model, messages,
+    elif _is_openrouter_model(model):
+        response = _make_openrouter_api_call_with_retry(
+            model,
+            messages,
             max_retries=max_retries,
             initial_delay=initial_delay,
-            api_name="OpenRouter"
-        )
-    elif model.startswith("Llama"):
-        client = OpenAI(base_url="https://api.llama.com/v1", api_key=os.getenv("LLAMA_API_KEY"))
-        response = _make_api_call_with_retry(
-            client, model, messages,
-            max_retries=max_retries,
-            initial_delay=initial_delay,
-            api_name="Llama API"
         )
     else:
-        raise ValueError(f"Model {model} not supported")
-    
-    if response is not None and hasattr(response, "completion_message") and "content" in response.completion_message and "text" in response.completion_message["content"]:
-        return response.completion_message["content"]["text"]
-    else:
-        print("No response or empty response from LLM.")
-        return ""
+        raise ValueError(
+            f"Model {model} not supported. Use an OpenAI model starting with "
+            "'gpt' or an OpenRouter model starting with 'meta-llama' or 'openrouter/'."
+        )
+
+    return _extract_assistant_message(response) or {}
+
 
 def query_llm_with_history(messages: list, model: str = "gpt-4o-mini",
                            max_retries: int = DEFAULT_MAX_RETRIES,
@@ -339,35 +511,15 @@ def query_llm_with_history(messages: list, model: str = "gpt-4o-mini",
     Returns:
         The assistant's response text, or empty string on failure.
     """
-    response = None
-    if model.startswith("gpt"):
-        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        response = _make_api_call_with_retry(
-            client, model, messages,
-            max_retries=max_retries, initial_delay=initial_delay,
-            api_name="OpenAI"
-        )
-    elif model.startswith("meta-llama"):
-        client = OpenAI(base_url="https://openrouter.ai/api/v1",
-                        api_key=os.getenv("OPENROUTER_API_KEY"))
-        response = _make_api_call_with_retry(
-            client, model, messages,
-            max_retries=max_retries, initial_delay=initial_delay,
-            api_name="OpenRouter"
-        )
-    elif model.startswith("Llama"):
-        client = OpenAI(base_url="https://api.llama.com/compat/v1",
-                        api_key=os.getenv("LLAMA_API_KEY"))
-        response = _make_api_call_with_retry(
-            client, model, messages,
-            max_retries=max_retries, initial_delay=initial_delay,
-            api_name="Llama API"
-        )
-    else:
-        raise ValueError(f"Model {model} not supported")
-
-    if response is not None and hasattr(response, "choices") and response.choices:
-        return response.choices[0].message.content
+    assistant_message = query_llm_message_with_history(
+        messages,
+        model=model,
+        max_retries=max_retries,
+        initial_delay=initial_delay,
+    )
+    text = assistant_message.get("content") if assistant_message else None
+    if text:
+        return text
     else:
         print("No response or empty response from LLM.")
         return ""
