@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING, Dict, Set
+from functools import lru_cache
+from typing import TYPE_CHECKING, Any, Dict, List, Mapping, Optional, Set
 
 import pandas as pd
 from rapidfuzz import fuzz
@@ -45,7 +46,7 @@ class SimilarityCalculator:
             
         overlap = 0
         for a in set_a:
-            best = max((fuzz.ratio(a, b) / 100 for b in set_b), default=0)
+            best = max((_cached_fuzz_ratio(a, b) for b in set_b), default=0)
             if best * 100 >= self.config.jaccard_threshold:
                 overlap += best
         
@@ -81,11 +82,36 @@ def softmax_normalize(scores: Dict[str, float], temperature: float = 1.0) -> Dic
     return {k: float(p) for k, p in zip(keys, probabilities)}
 
 
-def compute_rscore(
-    reference_reaction: pd.Series,
+@lru_cache(maxsize=200_000)
+def _cached_fuzz_ratio(a: str, b: str) -> float:
+    """Cached symmetric rapidfuzz ratio scaled to [0, 1]."""
+    a = str(a)
+    b = str(b)
+    if a == b:
+        return 1.0
+    # Symmetry: ratio(a,b) == ratio(b,a)
+    if a > b:
+        a, b = b, a
+    return fuzz.ratio(a, b) / 100.0
+
+
+def _parse_participant_ids_field(value) -> Set[str]:
+    if value is None or (isinstance(value, float) and value != value):
+        return set()
+    s = str(value)
+    if not s or s.lower() == "nan":
+        return set()
+    return {p.strip() for p in s.split(";") if p and p.strip()}
+
+
+def compute_rscore_from_participant_ids(
+    reference_participant_ids_value,
     participant_annotations: Dict[str, str],
-    participant_filter: 'ParticipantFilter',
-    similarity_calc: 'SimilarityCalculator'
+    participant_filter: "ParticipantFilter",
+    similarity_calc: "SimilarityCalculator",
+    *,
+    prefiltered_ref_participant_ids: Set[str] | None = None,
+    prefiltered_query_kegg_ids: Set[str] | None = None,
 ) -> float:
     """
     Compute reaction match score (rScore) for a query-reference reaction pair.
@@ -105,26 +131,21 @@ def compute_rscore(
     Returns:
         rScore value between 0 and 1
     """
-    # Extract reference reaction participants
-    if pd.isna(reference_reaction.get('participant_ids')) or not reference_reaction['participant_ids']:
-        return 0.0
-    
-    ref_participant_ids = set(
-        p.strip() for p in str(reference_reaction['participant_ids']).split(';') if p.strip()
-    )
-    
-    # Filter cofactors from reference participants
-    ref_participant_ids = participant_filter.filter_cofactors(ref_participant_ids)
+    if prefiltered_ref_participant_ids is None:
+        ref_participant_ids = _parse_participant_ids_field(reference_participant_ids_value)
+        ref_participant_ids = participant_filter.filter_cofactors(ref_participant_ids)
+    else:
+        ref_participant_ids = prefiltered_ref_participant_ids
     
     if not ref_participant_ids:
         return 0.0
     
-    # Get query participants with current annotations
-    query_participant_ids = set(participant_annotations.keys())
-    query_kegg_ids = set(participant_annotations.values())
-    
-    # Filter cofactors from query participants
-    query_kegg_ids = participant_filter.filter_cofactors(query_kegg_ids)
+    # Get query participants with current annotations (optionally prefiltered/cached by caller).
+    if prefiltered_query_kegg_ids is None:
+        query_kegg_ids = set(participant_annotations.values())
+        query_kegg_ids = participant_filter.filter_cofactors(query_kegg_ids)
+    else:
+        query_kegg_ids = prefiltered_query_kegg_ids
     
     if not query_kegg_ids:
         return 0.0
@@ -146,30 +167,98 @@ def compute_rscore(
     return rscore
 
 
-def _species_ids_from_reaction_string(reaction_str: str) -> Set[str]:
+def compute_rscore_from_sets(
+    query_kegg_ids: Set[str],
+    ref_participant_ids: Set[str],
+    similarity_calc: "SimilarityCalculator",
+) -> float:
     """
-    Extract candidate species ids from an Antimony-like reaction string.
+    Compute rScore given already-filtered query and reference KEGG participant-id sets.
 
-    Intended to map model species ids (as they appear in `participant_df['id']`)
-    to the reaction ids in `reaction_ids`.
+    This is the lowest-overhead scoring path and is intended for callers that
+    cache cofactor filtering and participant-id parsing.
     """
-    if not reaction_str:
-        return set()
-    s = str(reaction_str)
-    # Remove comments / ids prefixes if any, keep only equation-ish content.
-    # Tokenize on word boundaries (SBML ids are typically [A-Za-z0-9_]).
-    toks = re.findall(r"\b[A-Za-z0-9_]+\b", s)
-    if not toks:
-        return set()
-    # Filter out obvious non-species tokens.
-    stop = {"to", "and", "or"}
-    out: Set[str] = set()
-    for t in toks:
-        if not t:
+    if not query_kegg_ids or not ref_participant_ids:
+        return 0.0
+
+    matched_participants = ref_participant_ids.intersection(query_kegg_ids)
+    num_matched = len(matched_participants)
+    if num_matched == 0:
+        return 0.0
+
+    jaccard_score = similarity_calc.fuzzy_jaccard(query_kegg_ids, ref_participant_ids)
+    match_ratio = num_matched / max(len(ref_participant_ids), len(query_kegg_ids))
+    return 0.5 * match_ratio + 0.5 * jaccard_score
+
+
+def unified_reaction_objective(
+    base_score: float,
+    relaxation_levels: Optional[Mapping[str, Any]],
+    *,
+    lam: float = 0.1,
+    max_relax_level: int = 1,
+) -> float:
+    """
+    Single objective for ranking KEGG reaction matches: similarity minus relaxation penalty.
+
+    ``base_score`` must be the raw similarity (unchanged). All ranking / top-k selection
+    should use only this return value.
+
+    Args:
+        base_score: Raw reaction similarity (e.g. from ``score_model_against_kegg_reaction``).
+        relaxation_levels: Entity id (e.g. model species id) -> relaxation level. If None or
+            empty, or ``lam == 0``, returns ``base_score`` unchanged.
+        lam: Penalty weight lambda.
+        max_relax_level: Maximum allowed relaxation level used to normalize penalty
+            to ``[0, 1]``.
+    """
+    if lam == 0:
+        return float(base_score)
+    if not relaxation_levels:
+        return float(base_score)
+
+    levels = [int(v) for v in relaxation_levels.values() if v is not None]
+    if not levels:
+        return float(base_score)
+
+    # Max-only penalty (participant-count independent), normalized to [0, 1].
+    max_lvl = max(1, int(max_relax_level))
+    penalty = float(max(levels))
+    normalized_penalty = penalty / float(max_lvl)
+    return float(base_score) - float(lam) * normalized_penalty
+
+
+def unified_reaction_objective_weighted(
+    base_score: float,
+    relaxation_levels: Optional[Mapping[str, Any]],
+    *,
+    weights: Optional[Mapping[str, float]] = None,
+    lam: float = 0.1,
+    max_relax_level: int = 1,
+) -> float:
+    """
+    Weighted penalty: aggregate ``weight(entity) * relaxation_level(entity)`` then apply lambda.
+    """
+    if lam == 0:
+        return float(base_score)
+    if not relaxation_levels:
+        return float(base_score)
+
+    if weights is None:
+        weights = {}
+
+    terms: List[float] = []
+    for ent, lvl in relaxation_levels.items():
+        if lvl is None:
             continue
-        if t.isdigit():
-            continue
-        if t.lower() in stop:
-            continue
-        out.add(t.lstrip("$"))
-    return out
+        w = float(weights.get(ent, 1.0))
+        terms.append(w * float(int(lvl)))
+
+    if not terms:
+        return float(base_score)
+
+    # Max-only weighted term, normalized to keep penalty bounded.
+    max_lvl = max(1, int(max_relax_level))
+    penalty = float(max(terms))
+    normalized_penalty = penalty / float(max_lvl)
+    return float(base_score) - float(lam) * normalized_penalty

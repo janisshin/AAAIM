@@ -5,6 +5,7 @@ Modules:
     ``scoring``, 
     ``classification``, 
     ``deduplication``, 
+    ``relaxation_workflow``,
     ``utils``,
     ``amendment``, 
     ``amendment_config``, 

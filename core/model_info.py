@@ -7,11 +7,20 @@ Extracts model information and context for annotation
 import re
 import libsbml
 import antimony
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Dict, List, Any, Optional, Tuple, Set
 from pathlib import Path
 import logging
 
-from utils.constants import ModelType, MODEL_FORMAT_PLUGINS, NCBIGENE_URI_PATTERNS, CHEBI_URI_PATTERNS, UNIPROT_URI_PATTERNS, KEGG_REACTION_URI_PATTERNS, EntityType
+from utils.constants import (
+    DatabaseID,
+    EntityType,
+    MODEL_FORMAT_PLUGINS,
+    ModelType,
+    CHEBI_URI_PATTERNS,
+    KEGG_REACTION_URI_PATTERNS,
+    NCBIGENE_URI_PATTERNS,
+    UNIPROT_URI_PATTERNS,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -310,11 +319,14 @@ def find_species_with_annotations_and_qualifiers(model_file: str, database: str,
     qualifier_annotations: Dict[str, Dict[str, str]] = {}
 
     # Select URI patterns based on database
-    if database == "chebi":
+    if isinstance(database, DatabaseID):
+        database = database.value
+
+    if database == DatabaseID.CHEBI.value:
         uri_patterns = CHEBI_URI_PATTERNS
-    elif database == "ncbigene":
+    elif database == DatabaseID.NCBIGENE.value:
         uri_patterns = NCBIGENE_URI_PATTERNS
-    elif database == "uniprot":
+    elif database == DatabaseID.UNIPROT.value:
         uri_patterns = UNIPROT_URI_PATTERNS
     else:
         logger.warning(f"Database {database} not supported")
@@ -335,7 +347,7 @@ def find_species_with_annotations_and_qualifiers(model_file: str, database: str,
         )
 
     # Process FBC gene products if applicable
-    if model_type == ModelType.SBML_FBC and database in ["ncbigene", "uniprot"]:
+    if model_type == ModelType.SBML_FBC and database in [DatabaseID.NCBIGENE.value, DatabaseID.UNIPROT.value]:
         fbc_plugin = model.getPlugin("fbc")
         if fbc_plugin:
             for gene_product in fbc_plugin.getListOfGeneProducts():
@@ -490,7 +502,10 @@ def find_reactions_with_kegg_annotations(model_file: str, bqbiol_qualifiers: lis
     return kegg_annotations, {} # empty qualifier annotations
 
 
-def get_species_display_names(model_file: str, entity_type: str = "chemical") -> Dict[str, str]:
+def get_species_display_names(
+    model_file: str,
+    entity_type: str | EntityType = EntityType.CHEMICAL,
+) -> Dict[str, str]:
     """
     Get the display names for all species in the model.
     Supports regular species, FBC gene products, and qual qualitative species.
@@ -511,7 +526,13 @@ def get_species_display_names(model_file: str, entity_type: str = "chemical") ->
     
     model_type, format_info = detect_model_format(model_file)
     
-    if entity_type == "gene" or entity_type == "protein":
+    if isinstance(entity_type, str):
+        try:
+            entity_type = EntityType(entity_type)
+        except ValueError:
+            entity_type = EntityType.CHEMICAL
+
+    if entity_type in (EntityType.GENE, EntityType.PROTEIN):
         names = {}
         
         if model_type == ModelType.SBML_FBC:
@@ -697,6 +718,116 @@ def extract_qual_transitions(model_file: str, species_ids: List[str]) -> List[st
     
     return transitions
 
+
+def _parse_antimony_reaction_matches(model_file: str) -> List[Tuple[str, str, str]]:
+    """Parse antimony export into (left_side, arrow, right_side) tuples for each reaction."""
+    antimony.clearPreviousLoads()
+    sbml_model = antimony.loadSBMLFile(model_file)
+    if sbml_model == -1:
+        logger.error(f"Error loading SBML file with antimony: {antimony.getLastError()}")
+        return []
+
+    antimony_string = antimony.getAntimonyString()
+    reaction_pattern = re.compile(r"// Reactions:.*?(?=//|$)", re.DOTALL)
+    reactions_section = reaction_pattern.search(antimony_string)
+    
+    reaction_matches = []
+    if reactions_section:
+        reactions_text = reactions_section.group(0).replace("// Reactions:", "").strip()
+        reaction_pattern = re.compile(r"([^;]+)(=>|->)([^;]+);", re.MULTILINE)
+        reaction_matches = reaction_pattern.findall(reactions_text)
+
+    # If no matches found with '=>', try with '=' instead
+    if not reaction_matches:
+        reaction_pattern = re.compile(r"// Rate Rules:.*?(?=//|$)", re.DOTALL)
+        reactions_section = reaction_pattern.search(antimony_string)
+        if reactions_section:
+            reactions_text = reactions_section.group(0).replace("// Rate Rules:", "").strip()
+            reaction_pattern = re.compile(r"([^;]+)(=>|->|=)([^;]+);", re.MULTILINE)
+            reaction_matches = reaction_pattern.findall(reactions_text)
+
+    return reaction_matches
+
+
+def map_reaction_ids_to_stoichiometry_strings(model_file: str) -> Dict[str, str]:
+    """
+    Map each SBML reaction id to a one-line stoichiometry string ``RID: lhs arrow rhs``
+    (same style as KEGG ranking prompts).
+    """
+    out: Dict[str, str] = {}
+    for left_side, arrow, right_side in _parse_antimony_reaction_matches(model_file):
+        m = re.match(r"^([A-Za-z0-9_]+):\s*(.*)$", left_side.strip(), re.DOTALL)
+        if not m:
+            continue
+        rid, rest = m.group(1), m.group(2).strip()
+        out[rid] = f"{rid}: {rest} {arrow} {right_side.strip()}"
+    return out
+
+
+def build_antimony_reaction_index(model_file: str) -> List[Tuple[str, str, Set[str]]]:
+    """
+    Parse the model once via antimony and build an index of:
+        (reaction_id, reaction_string_without_id_prefix, set_of_species_ids_in_reaction)
+
+    This is intended for performance-sensitive loops that repeatedly filter
+    reactions by a changing set of target species IDs (e.g., EM iterations).
+    """
+    index: List[Tuple[str, str, Set[str]]] = []
+    for left_side, arrow, right_side in _parse_antimony_reaction_matches(model_file):
+        m = re.match(r"^([A-Za-z0-9_]+):\s*(.*)$", left_side.strip(), re.DOTALL)
+        if not m:
+            continue
+        reaction_id = m.group(1).strip()
+        left_side_body = m.group(2).strip()
+
+        left_side_cleaned = re.sub(r"^[A-Za-z0-9_]+:\s*", "", left_side.strip())
+        # Keep the historical behavior: the returned reaction string excludes the RID prefix.
+        reaction_str = f"{left_side_body} {arrow} {right_side.strip()}"
+
+        all_ids_in_reaction = set(
+            re.findall(r"\b([A-Za-z0-9_]+)\b", left_side + " " + right_side)
+        )
+        index.append((reaction_id, reaction_str, all_ids_in_reaction))
+    return index
+
+
+def filter_reactions_from_antimony_index(
+    antimony_index: List[Tuple[str, str, Set[str]]],
+    species_ids: List[str],
+) -> Tuple[List[str], List[str], Set[str]]:
+    """
+    Filter a prebuilt antimony reaction index down to reactions involving any
+    of the provided *species_ids*.
+
+    Returns:
+        (reactions, reaction_ids, related_species)
+    """
+    species_set = set(species_ids)
+    reactions: List[str] = []
+    reaction_ids: List[str] = []
+    related_species: Set[str] = set(species_ids)
+
+    for reaction_id, reaction_str, ids_in_reaction in antimony_index:
+        if ids_in_reaction & species_set:
+            reactions.append(reaction_str)
+            reaction_ids.append(reaction_id)
+            related_species |= ids_in_reaction
+
+    return reactions, reaction_ids, related_species
+
+
+def map_reaction_ids_to_participant_ids(model_file: str) -> Dict[str, Set[str]]:
+    """
+    Map each reaction id to the set of species ids appearing in that reaction.
+
+    Uses the cached antimony parsing (via :func:`build_antimony_reaction_index`).
+    """
+    out: Dict[str, Set[str]] = {}
+    for reaction_id, _reaction_str, ids_in_reaction in build_antimony_reaction_index(model_file):
+        out[str(reaction_id)] = set(ids_in_reaction)
+    return out
+
+
 def extract_reactions_from_sbml(model_file: str, species_ids: List[str]) -> Tuple[List[str], set]:
     """
     Extract reactions from an SBML model file using antimony.
@@ -713,35 +844,8 @@ def extract_reactions_from_sbml(model_file: str, species_ids: List[str]) -> Tupl
     """
     reactions = []
     related_species = set(species_ids)
-    
-    antimony.clearPreviousLoads()
-    sbml_model = antimony.loadSBMLFile(model_file)
-    if sbml_model == -1:
-        logger.error(f"Error loading SBML file with antimony: {antimony.getLastError()}")
-        return [], related_species
-    
-    antimony_string = antimony.getAntimonyString()
-    
-    # Look for lines with => symbols which indicate reactions
-    
-    reaction_pattern = re.compile(r'// Reactions:.*?(?=//|$)', re.DOTALL)
-    reactions_section = reaction_pattern.search(antimony_string)
-    
-    reaction_matches = []
-    if reactions_section:
-        reactions_text = reactions_section.group(0).replace("// Reactions:", "").strip()
-        reaction_pattern = re.compile(r'([^;]+)(=>|->)([^;]+);', re.MULTILINE)
-        reaction_matches = reaction_pattern.findall(reactions_text)
 
-    # If no matches found with '=>', try with '=' instead
-    if not reaction_matches:
-        reaction_pattern = re.compile(r'// Rate Rules:.*?(?=//|$)', re.DOTALL)
-        reactions_section = reaction_pattern.search(antimony_string)
-        
-        if reactions_section:
-            reactions_text = reactions_section.group(0).replace("// Rate Rules:", "").strip()
-            reaction_pattern = re.compile(r'([^;]+)(=>|->|=)([^;]+);', re.MULTILINE)
-            reaction_matches = reaction_pattern.findall(reactions_text)
+    reaction_matches = _parse_antimony_reaction_matches(model_file)
 
     # Filter reactions to only include those involving our species
     for match in reaction_matches:
@@ -817,6 +921,12 @@ def extract_model_info(model_file: str, species_ids: List[str], entity_type: str
         # Reassemble the filtered content with proper spacing
         model_notes = '\n'.join(filtered_lines)
 
+    if isinstance(entity_type, str):
+        try:
+            entity_type = EntityType(entity_type)
+        except ValueError:
+            entity_type = EntityType.CHEMICAL
+
     ########## DISPLAY NAMES ##########
     all_display_names = get_species_display_names(model_file, entity_type)
     # filter to only include species_ids
@@ -825,7 +935,7 @@ def extract_model_info(model_file: str, species_ids: List[str], entity_type: str
     ########## REACTIONS/TRANSITIONS ##########
     reactions = []
     
-    if (entity_type == "gene" or entity_type == "protein") and model_type == ModelType.SBML_QUAL:
+    if entity_type in (EntityType.GENE, EntityType.PROTEIN) and model_type == ModelType.SBML_QUAL:
         # For SBML-qual gene models, extract boolean transitions
         reactions = extract_qual_transitions(model_file, species_ids)
         
@@ -839,7 +949,7 @@ def extract_model_info(model_file: str, species_ids: List[str], entity_type: str
         # Filter display names to include our target species and all related species
         filtered_display_names = {species_id: all_display_names.get(species_id, "") for species_id in related_species if species_id in all_display_names}
         
-    elif (entity_type == "gene" or entity_type == "protein") and model_type == ModelType.SBML_FBC:
+    elif entity_type in (EntityType.GENE, EntityType.PROTEIN) and model_type == ModelType.SBML_FBC:
         # For SBML-fbc gene models, reactions are empty (genes don't participate in reactions directly)
         reactions = []
     
@@ -859,7 +969,13 @@ def extract_model_info(model_file: str, species_ids: List[str], entity_type: str
         "model_notes": model_notes
     }
 
-def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "chemical", top_k: int = 3, context: bool = True) -> str:
+def format_prompt(
+    model_file: str,
+    species_ids: List[str],
+    entity_type: str | EntityType = EntityType.CHEMICAL,
+    top_k: int = 3,
+    context: bool = True,
+) -> str:
     """
     Format the information for the LLM prompt.
     Adapts format based on model type (SBML, SBML-fbc, SBML-qual).
@@ -882,11 +998,18 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
         exclude_types = ['reaction']
         types = [e.value for e in EntityType if e.value not in exclude_types]
         return ', '.join(types)
+    if isinstance(entity_type, str):
+        try:
+            entity_type = EntityType(entity_type)
+        except ValueError:
+            entity_type = EntityType.CHEMICAL
+
     model_info = extract_model_info(model_file, species_ids, entity_type)
     if model_info == {}:
         return ""
     
     model_type = model_info.get("model_type", ModelType.SBML)
+    entity_type_str = entity_type.value
     
     # Check if display_names are all empty
     display_names = model_info["display_names"]
@@ -899,7 +1022,7 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
     has_notes = model_info["model_notes"] and model_info["model_notes"].strip()
 
     if model_type == ModelType.SBML_QUAL:
-        if entity_type == "auto":
+        if entity_type == EntityType.AUTO:
             # Auto entity type detection for SBML-qual models
             prompt = f"Now annotate these species:\nSpecies to annotate: {', '.join(species_ids)}\n"
             if context:
@@ -929,7 +1052,7 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
             return prompt
         
         # SBML-qual models have boolean transitions
-        prompt = f"Now annotate these:\n{entity_type.title()} to annotate: {', '.join(species_ids)}\n"
+        prompt = f"Now annotate these:\n{entity_type_str.title()} to annotate: {', '.join(species_ids)}\n"
         if context:
             prompt += f'Model: "{model_info["model_name"]}"\n'
         
@@ -948,13 +1071,13 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
             prompt += "\n"
             prompt += f'// Notes:\n"{model_info["model_notes"]}"\n'
         
-        prompt += f"\nReturn up to {top_k} standardized names or common synonyms for each {entity_type}, ranked by likelihood. Provide components names for complexes, which may exceed the limit of {top_k}.\n"
-        prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type}s after 'Reason:' by the end.\n\n"
+        prompt += f"\nReturn up to {top_k} standardized names or common synonyms for each {entity_type_str}, ranked by likelihood. Provide components names for complexes, which may exceed the limit of {top_k}.\n"
+        prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type_str}s after 'Reason:' by the end.\n\n"
         prompt += 'SpeciesA: "name1", "name2", …\nSpeciesB: …\nReason: …'
         return prompt
 
     elif model_type == ModelType.SBML_FBC:
-        if entity_type == "auto":
+        if entity_type == EntityType.AUTO:
             # Auto entity type detection for SBML-fbc models
             prompt = f"Now annotate these species:\nSpecies to annotate: {', '.join(species_ids)}\n"
             if context:
@@ -983,9 +1106,9 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
             prompt += 'SpeciesA (entity_type): "name1", "name2", …\nSpeciesB (entity_type): …\nReason: …'
             return prompt
         
-        elif entity_type == "gene" or entity_type == "protein":
+        elif entity_type in (EntityType.GENE, EntityType.PROTEIN):
             # SBML-fbc models don't have reactions for genes or proteins
-            prompt = f"Now annotate these:\n{entity_type.title()} to annotate: {', '.join(species_ids)}\n"
+            prompt = f"Now annotate these:\n{entity_type_str.title()} to annotate: {', '.join(species_ids)}\n"
             if context:
                 prompt += f'Model: "{model_info["model_name"]}"\n'
             
@@ -999,13 +1122,13 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
                 prompt += "\n"
                 prompt += f'// Notes:\n"{model_info["model_notes"]}"\n'
             
-            prompt += f"\nReturn up to {top_k} standardized names or common synonyms for each {entity_type}, ranked by likelihood.\n"
-            prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type}s after 'Reason:' by the end.\n\n"
+            prompt += f"\nReturn up to {top_k} standardized names or common synonyms for each {entity_type_str}, ranked by likelihood.\n"
+            prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type_str}s after 'Reason:' by the end.\n\n"
             prompt += 'SpeciesA: "name1", "name2", …\nSpeciesB: …\nReason: …'
             return prompt
         
         else: # FBC, chemicals, same as SBML
-            prompt = f"Now annotate these:\n{entity_type.title()} to annotate: {', '.join(species_ids)}\n"
+            prompt = f"Now annotate these:\n{entity_type_str.title()} to annotate: {', '.join(species_ids)}\n"
             if context:
                 prompt += f'Model: "{model_info["model_name"]}"\n'
             
@@ -1024,13 +1147,13 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
                 prompt += "\n"
                 prompt += f'// Notes:\n"{model_info["model_notes"]}"\n'
             
-            prompt += f"\nReturn up to {top_k} standardized names or common synonyms for each {entity_type}, ranked by likelihood. Provide components names for complexes, which may exceed the limit of {top_k}.\n"
-            prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type}s after 'Reason:' by the end.\n\n"
+            prompt += f"\nReturn up to {top_k} standardized names or common synonyms for each {entity_type_str}, ranked by likelihood. Provide components names for complexes, which may exceed the limit of {top_k}.\n"
+            prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type_str}s after 'Reason:' by the end.\n\n"
             prompt += 'SpeciesA: "name1", "name2", …\nSpeciesB: …\nReason: …'
             return prompt             
     
     else:  # SBML
-        if entity_type == "reaction":
+        if entity_type == EntityType.REACTION:
             reaction_display_names = get_reaction_display_names(model_file)
             reaction_ids = get_all_reaction_ids(model_file)
             
@@ -1058,11 +1181,11 @@ def format_prompt(model_file: str, species_ids: List[str], entity_type: str = "c
                 prompt += f'// Notes:\n"{model_info["model_notes"]}"\n'
             
             prompt += f"\nReturn up to {top_k} standardized names or common synonyms for each reaction, ranked by likelihood.\n"
-            prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type} after 'Reason:' by the end.\n\n"
+            prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type_str} after 'Reason:' by the end.\n\n"
             prompt += 'ReactionA: "name1", "name2", …\nReactionB: …\nReason: …'
             return prompt
         
-        elif entity_type == "auto":
+        elif entity_type == EntityType.AUTO:
             # Auto entity type detection for regular SBML models
             prompt = f"Now annotate these species:\nSpecies to annotate: {', '.join(species_ids)}\n"
             if context:

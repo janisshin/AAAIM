@@ -11,6 +11,7 @@ antimony==2.15.0
 
 # LLM integration
 openai==1.78.1
+requests>=2.32.0
 
 # Caching and storage
 compress-pickle==2.1.0

@@ -1,6 +1,4 @@
-"""
-Shared data types
-"""
+"""Shared data types"""
 
 from dataclasses import dataclass
 from typing import List, Optional, Dict, Any

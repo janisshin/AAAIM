@@ -27,8 +27,8 @@ from core.reaction.hierarchy_relaxation import (
     iter_chebi_for_species,
     kegg_ids_for_chebi_term,
     merge_chebi_to_kegg_mapping,
-    unified_reaction_objective,
 )
+from core.reaction.scoring import unified_reaction_objective
 from core.reaction.classification import classify_reaction
 from core.reaction.kegg_definition import extract_classifications
 
@@ -265,7 +265,10 @@ def load_chebi2kegg_dict() -> Dict[str, str]:
     return _CHEBI2KEGG_DICT
 
 def load_kegg_label_dict(): 
-    return [] # JANISTAG
+    # For KEGG reaction annotation, we don't currently maintain a species/reaction-id → label
+    # dictionary analogous to ChEBI/NCBIGene/UniProt. Returning an empty dict keeps downstream
+    # code paths consistent (callers expect a mapping with ``.get``).
+    return {}
 
 def load_kegg_reaction2name_dict() -> Dict[str, str]:
     """
@@ -476,7 +479,6 @@ def get_species_recommendations_direct(species_ids: List[str], synonyms_dict, da
     elif database == "uniprot":
         return _get_uniprot_recommendations_direct(species_ids, synonyms_dict, tax_id=tax_id, top_k=top_k)
     elif database == "kegg":
-        # return _get_kegg_recommendations_rulebased(species_ids, synonyms_dict, top_k=top_k)
         return _get_kegg_recommendations_direct(species_ids, synonyms_dict, top_k=top_k)
     else:
         logger.error(f"Database {database} not supported for direct search")
@@ -1245,7 +1247,7 @@ def _get_kegg_recommendations_rulebased(
         return []
 
 
-def _get_kegg_recommendations_direct(reaction_ids: List[str], synonyms_dict, top_k: int = 3, species_recs=None) -> List[Recommendation]:
+def _get_kegg_recommendations_direct(reaction_ids: List[str], synonyms_dict, top_k: int = 3) -> List[Recommendation]:
     """
     Find KEGG recommendations by directly matching against KEGG compound synonyms.
     Args:
@@ -1383,11 +1385,7 @@ def _get_kegg_recommendations_direct(reaction_ids: List[str], synonyms_dict, top
         )
         recommendations.append(recommendation)
     
-    return recommendations
-
-
-def _get_kegg_recommendations_RAG(reaction_ids: List[str], top_k: int = None, spectators=False)-> List[Recommendation]:
-    pass
+    return recommendations    
 
 
 def _expand_kegg_compound_set_by_chebi_ontology(

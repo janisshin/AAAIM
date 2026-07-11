@@ -47,6 +47,9 @@ class ConvergenceConfig:
     threshold: float = 0.001
     stable_count: int = 3
 
+    # Whether to write per-iteration CSV artifacts (useful for debugging, can be noisy).
+    save_iteration_csvs: bool = False
+
     match_score_cutoff: float = 0.1
     convergence_threshold: float = 0.001
 
