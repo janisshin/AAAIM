@@ -21,13 +21,8 @@ import logging
 
 from core.model_info import extract_model_info
 from core.llm_interface import (
-    get_system_prompt,
     query_llm_message_with_history,
     parse_llm_response,
-)
-from core.database_search import (
-    get_species_recommendations_direct,
-    get_species_recommendations_rag,
 )
 
 logger = logging.getLogger(__name__)
@@ -312,18 +307,35 @@ def _revise_recommendations(
     logger.info(f"Parsed revised synonyms for {len(synonyms_dict)} entities")
 
     search_start = time.time()
-    recommendations = _run_database_search(
-        entities_to_evaluate, synonyms_dict,
-        database=database, method=method, top_k=top_k, tax_id=tax_id,
+    from core.annotation_workflow import (
+        _generate_recommendation_table,
+        _normalize_databases,
+        _normalize_entity_type,
+        _search_databases,
+    )
+
+    entity_type = _normalize_entity_type(entity_type)
+    databases = _normalize_databases(database)
+    recommendations, species_database, candidate_databases = _search_databases(
+        entities_to_evaluate,
+        synonyms_dict,
+        entity_type=entity_type,
+        databases=databases,
+        method=method,
+        top_k=top_k,
+        tax_id=tax_id,
+        entity_type_dict=entity_type_dict,
+        model_info=model_info,
     )
     search_time = time.time() - search_start
 
-    from core.annotation_workflow import _generate_recommendation_table
-
     updated_df = _generate_recommendation_table(
         model_file, recommendations, existing_annotations,
-        model_info, entity_type, database, qualifier_annotations,
+        model_info, entity_type.value, [db.value for db in databases], qualifier_annotations,
         synonyms_dict=synonyms_dict, reason=reason,
+        entity_type_dict=entity_type_dict,
+        species_database=species_database,
+        candidate_databases=candidate_databases,
     )
 
     total_time = time.time() - start_time
@@ -350,18 +362,27 @@ def _run_database_search(
     method: str,
     top_k: int,
     tax_id: str = None,
+    entity_type: str = "chemical",
+    entity_type_dict: Optional[Dict[str, str]] = None,
+    model_info: Optional[Dict[str, Any]] = None,
 ):
     """Thin dispatcher that mirrors the search logic in annotation_workflow."""
-    kwargs = {"database": database, "top_k": top_k}
-    if tax_id:
-        kwargs["tax_id"] = tax_id
+    from core.annotation_workflow import _normalize_databases, _normalize_entity_type, _search_databases
 
-    if method == "direct":
-        return get_species_recommendations_direct(entities, synonyms_dict, **kwargs)
-    elif method == "rag":
-        return get_species_recommendations_rag(entities, synonyms_dict, **kwargs)
-    else:
-        raise ValueError(f"Invalid search method: {method}")
+    databases = _normalize_databases(database)
+    entity_type = _normalize_entity_type(entity_type)
+    recommendations, _, _ = _search_databases(
+        entities,
+        synonyms_dict,
+        entity_type=entity_type,
+        databases=databases,
+        method=method,
+        top_k=top_k,
+        tax_id=tax_id,
+        entity_type_dict=entity_type_dict,
+        model_info=model_info,
+    )
+    return recommendations
 
 
 def build_initial_conversation(

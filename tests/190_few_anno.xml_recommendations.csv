@@ -1,0 +1,30 @@
+file,type,id,display_name,curated_name,annotation,annotation_label,match_score,status,update_annotation,qualifier
+190_few_anno.xml,,Reason:,"The given model is for polyamine metabolism, and the display names and reactions provide clear information about the chemicals involved. SAM is a well-known methyl donor, and its conversion to A is a key step in the metabolism. The polyamines P, S, and D are interconnected through various reactions, and their acetylated forms (aS and aD) play important roles in the pathway. Met is the precursor to SAM, and ORN is the starting point for the synthesis of P. AcCoA and CoA are cofactors involved in the acetylation reactions.",,,,,,,
+190_few_anno.xml,chemical,A,S-adenosylmethioninamine,S-adenosylmethioninamine,CHEBI:15625,S-adenosylmethioninamine,0.6666666666666666,original and predicted,keep,is
+190_few_anno.xml,chemical,AcCoA,Acetyl-CoA,acetyl-CoA,CHEBI:15351,acetyl-CoA,0.6666666666666666,predicted only,add,is
+190_few_anno.xml,chemical,AcCoA,Acetyl-CoA,acetyl-CoA,CHEBI:57288,acetyl-CoA(4-),0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,CoA,,coenzyme A,CHEBI:15346,coenzyme A,0.6666666666666666,predicted only,add,is
+190_few_anno.xml,chemical,CoA,,coenzyme A,CHEBI:57287,coenzyme A(4-),0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,D,Spermidine,spermidine,CHEBI:16610,spermidine,0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,D,Spermidine,spermidine,CHEBI:57834,spermidine(3+),0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,D,Spermidine,spermidine,CHEBI:16841,bis(3-aminopropyl)amine,0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,Met,Methionine,methionine,CHEBI:16643,L-methionine,0.6666666666666666,predicted only,add,is
+190_few_anno.xml,chemical,Met,Methionine,methionine,CHEBI:16811,methionine,0.6666666666666666,predicted only,ignore,is
+190_few_anno.xml,chemical,Met,Methionine,methionine,CHEBI:64558,methionine zwitterion,0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,ORN,L-Ornithine,ornithine,CHEBI:18257,ornithine,0.6666666666666666,predicted only,add,is
+190_few_anno.xml,chemical,ORN,L-Ornithine,ornithine,CHEBI:44667,L-ornithinium(2+),0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,ORN,L-Ornithine,ornithine,CHEBI:15729,L-ornithine,0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,P,Putrescine,putrescine,CHEBI:17148,putrescine,1.0,predicted only,add,is
+190_few_anno.xml,chemical,P,Putrescine,putrescine,CHEBI:326268,"1,4-butanediammonium",0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,S,Spermine,spermine,CHEBI:15746,spermine,0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,S,Spermine,spermine,CHEBI:45725,spermine(4+),0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,S,Spermine,spermine,CHEBI:45718,"3,3,3-tetramine",0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,SAM,S-adenosyl-L-methionine,S-adenosylmethionine,CHEBI:15414,S-adenosyl-L-methionine,0.6666666666666666,original and predicted,keep,is
+190_few_anno.xml,chemical,SAM,S-adenosyl-L-methionine,S-adenosylmethionine,CHEBI:33442,(S)-S-adenosyl-L-methionine,0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,SAM,S-adenosyl-L-methionine,S-adenosylmethionine,CHEBI:67040,S-adenosyl-L-methioninate,0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,aD,N1-Acetylspermidine,N1-acetylspermidine,CHEBI:17927,N(1)-acetylspermidine,0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,aD,N1-Acetylspermidine,N1-acetylspermidine,CHEBI:58324,N(1)-acetylspermidinium(2+),0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,aD,N1-Acetylspermidine,N1-acetylspermidine,CHEBI:22204,acetylspermidine,0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,aS,N1-Acetylspermine,N1-acetylspermine,CHEBI:17312,N(1)-acetylspermine,0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,aS,N1-Acetylspermine,N1-acetylspermine,CHEBI:58101,N(1)-acetylsperminium(3+),0.3333333333333333,predicted only,ignore,is
+190_few_anno.xml,chemical,aS,N1-Acetylspermine,N1-acetylspermine,CHEBI:22205,acetylspermine,0.3333333333333333,predicted only,ignore,is

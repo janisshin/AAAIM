@@ -10,7 +10,7 @@ import logging
 import time
 import warnings
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
 import pandas as pd
@@ -27,7 +27,7 @@ from core.database_search import (
 )
 from core.feedback import AnnotationResult, build_initial_conversation
 from core.llm_interface import get_system_prompt, query_llm_message, parse_llm_response
-from utils.constants import DatabaseID, EntityType
+from utils.constants import DatabaseID, EntityType, get_database_for_entity_type
 from core.model_info import (
     extract_model_info,
     find_reactions_with_kegg_annotations,
@@ -43,6 +43,252 @@ logger = logging.getLogger(__name__)
 # Suppress pandas FutureWarning noise (e.g., concat dtype changes)
 warnings.filterwarnings("ignore", category=FutureWarning)
 
+SUPPORTED_SEARCH_DATABASES = {
+    DatabaseID.CHEBI.value,
+    DatabaseID.NCBIGENE.value,
+    DatabaseID.UNIPROT.value,
+    DatabaseID.KEGG.value,
+}
+
+
+def _normalize_entity_type(entity_type: str | EntityType) -> EntityType:
+    if isinstance(entity_type, EntityType):
+        return entity_type
+    try:
+        return EntityType(entity_type)
+    except ValueError:
+        logger.warning(f"Unknown entity type {entity_type}, using chemical")
+        return EntityType.CHEMICAL
+
+
+def _normalize_databases(
+    database: str | DatabaseID | Sequence[str | DatabaseID],
+) -> List[DatabaseID]:
+    """Normalize database input to a non-empty list of DatabaseID enums."""
+    items = database if isinstance(database, (list, tuple)) else [database]
+    databases: List[DatabaseID] = []
+    for item in items:
+        parsed = None
+        if isinstance(item, DatabaseID):
+            parsed = item
+        elif isinstance(item, str):
+            try:
+                parsed = DatabaseID(item.lower())
+            except ValueError:
+                logger.warning(f"Unknown database {item}, skipping")
+        else:
+            logger.warning(f"Unknown database {item}, skipping")
+        if parsed is not None and parsed not in databases:
+            databases.append(parsed)
+    if not databases:
+        logger.warning("No valid databases provided, using chebi")
+        return [DatabaseID.CHEBI]
+    return databases
+
+
+def _database_log_label(databases: List[DatabaseID]) -> str:
+    return ", ".join(db.value for db in databases)
+
+
+def _empty_recommendation(species_id: str, synonyms_dict: Dict[str, List[str]]) -> Recommendation:
+    return Recommendation(
+        id=species_id,
+        synonyms=synonyms_dict.get(species_id, []),
+        candidates=[],
+        candidate_names=[],
+        match_score=[],
+    )
+
+
+def _search_one_database(
+    species_list: List[str],
+    synonyms_dict: Dict[str, List[str]],
+    database: str,
+    method: str,
+    top_k: int,
+    tax_id: str = None,
+    model_info: Dict[str, Any] = None,
+) -> List[Recommendation]:
+    """Search a single database and return Recommendation objects."""
+    if database not in SUPPORTED_SEARCH_DATABASES:
+        logger.error(f"Database {database} not yet supported")
+        return []
+
+    if method == "direct":
+        return get_species_recommendations_direct(
+            species_list, synonyms_dict, database=database, tax_id=tax_id, top_k=top_k
+        )
+    if method == "rag":
+        kwargs: Dict[str, Any] = {"database": database, "tax_id": tax_id, "top_k": top_k}
+        if database == DatabaseID.KEGG.value and model_info:
+            reaction_definitions = [i.split(":")[1] for i in model_info.get("reactions", [])]
+            kwargs["reaction_participants"] = [
+                extract_classifications(i, "definition") for i in reaction_definitions
+            ]
+        return get_species_recommendations_rag(species_list, synonyms_dict, **kwargs)
+
+    logger.error(f"Invalid method: {method}")
+    return []
+
+
+def _search_databases(
+    entities: List[str],
+    synonyms_dict: Dict[str, List[str]],
+    entity_type: EntityType,
+    databases: List[DatabaseID],
+    method: str,
+    top_k: int,
+    tax_id: str = None,
+    entity_type_dict: Optional[Dict[str, str]] = None,
+    model_info: Dict[str, Any] = None,
+) -> Tuple[List[Recommendation], Dict[str, str], Dict[Tuple[str, str], str]]:
+    """Search the appropriate database(s) for each entity.
+
+    Returns:
+        recommendations, species_id -> database name, (species_id, candidate) -> database name
+    """
+    species_database: Dict[str, str] = {}
+    candidate_databases: Dict[Tuple[str, str], str] = {}
+    allowed_names = [db.value for db in databases]
+
+    if entity_type == EntityType.AUTO:
+        logger.info(f">>>Step 4: Searching databases {_database_log_label(databases)}...<<<")
+        entity_type_dict = entity_type_dict or {}
+        species_by_type: Dict[str, List[str]] = {}
+        for species_id in entities:
+            detected_type = entity_type_dict.get(species_id, "unknown")
+            species_by_type.setdefault(detected_type, []).append(species_id)
+
+        logger.info(
+            f"Detected entity types: {dict((k, len(v)) for k, v in species_by_type.items())}"
+        )
+
+        all_recommendations: List[Recommendation] = []
+        for detected_type, species_list in species_by_type.items():
+            if detected_type == "unknown":
+                logger.warning(
+                    f"There are {len(species_list)} species with unknown entity type: {species_list}"
+                )
+                for species_id in species_list:
+                    all_recommendations.append(_empty_recommendation(species_id, synonyms_dict))
+                continue
+
+            if detected_type == "complex":
+                logger.info(
+                    f"Searching all databases {allowed_names} for {len(species_list)} complex entities"
+                )
+                for species_id in species_list:
+                    all_candidates: List[str] = []
+                    all_candidate_names: List[str] = []
+                    all_scores: List[float] = []
+                    for db in allowed_names:
+                        db_recs = _search_one_database(
+                            [species_id], synonyms_dict, db, method, top_k, tax_id, model_info
+                        )
+                        for rec in db_recs:
+                            if rec.id != species_id:
+                                continue
+                            all_candidates.extend(rec.candidates)
+                            all_candidate_names.extend(rec.candidate_names)
+                            all_scores.extend(rec.match_score)
+                            for candidate in rec.candidates:
+                                candidate_databases[(species_id, candidate)] = db
+                    all_recommendations.append(
+                        Recommendation(
+                            id=species_id,
+                            synonyms=synonyms_dict.get(species_id, []),
+                            candidates=all_candidates,
+                            candidate_names=all_candidate_names,
+                            match_score=all_scores,
+                        )
+                    )
+                continue
+
+            target_database = get_database_for_entity_type(detected_type, allowed_names)
+            if target_database is None:
+                logger.warning(
+                    f"No valid database found for entity type '{detected_type}' "
+                    f"in {allowed_names} for {len(species_list)} species"
+                )
+                for species_id in species_list:
+                    all_recommendations.append(_empty_recommendation(species_id, synonyms_dict))
+                continue
+
+            logger.info(
+                f"Searching {target_database} for {len(species_list)} {detected_type} entities"
+            )
+            group_recs = _search_one_database(
+                species_list, synonyms_dict, target_database, method, top_k, tax_id, model_info
+            )
+            for rec in group_recs:
+                species_database[rec.id] = target_database
+            all_recommendations.extend(group_recs)
+
+        return all_recommendations, species_database, candidate_databases
+
+    if len(databases) > 1:
+        logger.warning(
+            f"Multiple databases provided but entity_type is not 'auto'. "
+            f"Using first database: {databases[0].value}"
+        )
+
+    database_name = databases[0].value
+    logger.info(f">>>Step 4: Searching {database_name} database...<<<")
+    recommendations = _search_one_database(
+        entities, synonyms_dict, database_name, method, top_k, tax_id, model_info
+    )
+    for rec in recommendations:
+        species_database[rec.id] = database_name
+    return recommendations, species_database, candidate_databases
+
+
+def _collect_existing_annotations(
+    model_file: str,
+    entity_type: EntityType,
+    databases: List[DatabaseID],
+) -> Tuple[Dict[str, List[str]], Dict[str, Dict[str, str]], Dict[Tuple[str, str], str]]:
+    """Collect existing annotations for metrics, keyed by species ID."""
+    existing_annotations: Dict[str, List[str]] = {}
+    qualifier_annotations: Dict[str, Dict[str, str]] = {}
+    existing_annotation_databases: Dict[Tuple[str, str], str] = {}
+
+    if entity_type == EntityType.AUTO:
+        dbs_to_search = databases
+    else:
+        dbs_to_search = databases[:1]
+
+    for db in dbs_to_search:
+        if entity_type != EntityType.AUTO:
+            supported = (
+                (entity_type == EntityType.CHEMICAL and db == DatabaseID.CHEBI)
+                or (entity_type == EntityType.GENE and db == DatabaseID.NCBIGENE)
+                or (entity_type == EntityType.PROTEIN and db == DatabaseID.UNIPROT)
+                or (entity_type == EntityType.REACTION and db == DatabaseID.KEGG)
+            )
+            if not supported:
+                logger.warning(
+                    f"Entity type {entity_type.value} with database {db.value} not yet supported"
+                )
+                continue
+
+        if db == DatabaseID.KEGG:
+            anns, quals = find_reactions_with_kegg_annotations(model_file)
+        elif db in (DatabaseID.CHEBI, DatabaseID.NCBIGENE, DatabaseID.UNIPROT):
+            anns, quals = find_species_with_annotations_and_qualifiers(model_file, db.value)
+        else:
+            logger.warning(f"Database {db.value} not yet supported for existing annotation lookup")
+            continue
+
+        for species_id, ids in anns.items():
+            existing_annotations.setdefault(species_id, []).extend(ids)
+            for annotation_id in ids:
+                existing_annotation_databases[(species_id, annotation_id)] = db.value
+        for species_id, qualifier_map in quals.items():
+            qualifier_annotations.setdefault(species_id, {}).update(qualifier_map)
+
+    if existing_annotations:
+        logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
+    return existing_annotations, qualifier_annotations, existing_annotation_databases
 
 
 def annotate_single_model(
@@ -52,7 +298,7 @@ def annotate_single_model(
     top_k: int = 3,
     max_entities: int = None,
     entity_type: str | EntityType = EntityType.CHEMICAL,
-    database: str | DatabaseID = DatabaseID.CHEBI,
+    database: str | DatabaseID | Sequence[str | DatabaseID] = DatabaseID.CHEBI,
     tax_id: str = None,
     chunk_size: int = 50,
     species_recommendations_df = None) -> Tuple[pd.DataFrame, Dict[str, Any]]:
@@ -69,7 +315,8 @@ def annotate_single_model(
         top_k: Number of top candidates to return per species
         max_entities: Maximum number of entities to annotate (None for all)
         entity_type: Type of entities to annotate ("chemical", "gene", "protein", "auto")
-        database: Target database ("chebi", "ncbigene", "uniprot")
+        database: Target database ("chebi", "ncbigene", "uniprot") or a list of
+            databases when entity_type is "auto"
         tax_id: For gene/protein annotations, the organism's tax_id for species-specific lookup
         chunk_size: Size of chunks to split large models into (default: 50, None for no chunking)
 
@@ -89,19 +336,15 @@ def annotate_single_model(
     logger.info(f"Starting annotation for model: {model_file}")
     logger.info(f"Using LLM model: {llm_model}")
     logger.info(f"Using method: {method} for database search")
-    if isinstance(entity_type, str):
-        try:
-            entity_type = EntityType(entity_type)
-        except ValueError:
-            logger.warning(f"Unknown entity type {entity_type}, using chemical")
-            entity_type = EntityType.CHEMICAL
-    if isinstance(database, str):
-        try:
-            database = DatabaseID(database)
-        except ValueError:
-            logger.warning(f"Unknown database {database}, using chebi")
-            database = DatabaseID.CHEBI
-    logger.info(f"Entity type: {entity_type.value}, Database: {database.value}")
+    entity_type = _normalize_entity_type(entity_type)
+    databases = _normalize_databases(database)
+    if entity_type != EntityType.AUTO and len(databases) > 1:
+        logger.warning(
+            f"Multiple databases provided but entity_type is not 'auto'. "
+            f"Using first database: {databases[0].value}"
+        )
+        databases = databases[:1]
+    logger.info(f"Entity type: {entity_type.value}, Database: {_database_log_label(databases)}")
     if tax_id:
         logger.info(f"Using organism-specific search for tax_id: {tax_id}")
 
@@ -130,23 +373,9 @@ def annotate_single_model(
         logger.info(f"Found {len(all_entity_ids)} species in model")
 
     # Check for existing annotations (for metrics calculation)
-    existing_annotations = {}
-    qualifier_annotations = {}
-    if entity_type == EntityType.CHEMICAL and database == DatabaseID.CHEBI:
-        existing_annotations, qualifier_annotations = find_species_with_annotations_and_qualifiers(model_file, DatabaseID.CHEBI.value)
-        logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
-    elif entity_type == EntityType.GENE and database == DatabaseID.NCBIGENE:
-        existing_annotations, qualifier_annotations = find_species_with_annotations_and_qualifiers(model_file, DatabaseID.NCBIGENE.value)
-        logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
-    elif entity_type == EntityType.PROTEIN and database == DatabaseID.UNIPROT:
-        existing_annotations, qualifier_annotations = find_species_with_annotations_and_qualifiers(model_file, DatabaseID.UNIPROT.value)
-        logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
-    elif entity_type == EntityType.REACTION and database == DatabaseID.KEGG:
-        existing_annotations, qualifier_annotations = find_reactions_with_kegg_annotations(model_file)
-        logger.info(f"Found {len(existing_annotations)} entities with existing annotations")
-    else:
-        # Future: support other entity types and databases
-        logger.warning(f"Entity type {entity_type.value} with database {database.value} not yet supported")
+    existing_annotations, qualifier_annotations, existing_annotation_databases = (
+        _collect_existing_annotations(model_file, entity_type, databases)
+    )
 
     if max_entities:
         entities_to_evaluate = all_entity_ids[:max_entities]
@@ -203,6 +432,7 @@ def annotate_single_model(
         all_responses = []
         assistant_messages = []
         system_prompt = get_system_prompt(entity_type)
+        entity_type_dict: Dict[str, str] = {}
 
         if chunk_size and len(entities_to_evaluate) > chunk_size:
             logger.info(f"Breaking {len(entities_to_evaluate)} entities into chunks of {chunk_size}")
@@ -215,6 +445,7 @@ def annotate_single_model(
 
             # Process each chunk and accumulate results
             all_synonyms_dict = {}
+            all_entity_type_dict = {}
             all_reasons = []
             total_llm_time = 0
 
@@ -257,8 +488,9 @@ def annotate_single_model(
                 # Parse LLM response
                 chunk_synonyms_dict, chunk_entity_type_dict, chunk_reason = parse_llm_response(result, entity_type)
 
-                # Accumulate synonyms
+                # Accumulate synonyms and detected entity types
                 all_synonyms_dict.update(chunk_synonyms_dict)
+                all_entity_type_dict.update(chunk_entity_type_dict)
 
                 # Accumulate reasons
                 if chunk_reason:
@@ -272,6 +504,7 @@ def annotate_single_model(
 
             # Use accumulated synonyms
             synonyms_dict = all_synonyms_dict
+            entity_type_dict = all_entity_type_dict
             llm_time = total_llm_time
 
         else:
@@ -320,55 +553,38 @@ def annotate_single_model(
             print(f"LLM Reason: {reason}")
 
         # Step 4: Search database
-        logger.info(f">>>Step 4: Searching {database.value} database...<<<")
+        if method not in ("direct", "rag"):
+            logger.error(f"Invalid method: {method}")
+            return pd.DataFrame(), {"error": f"Invalid method: {method}"}
+        if entity_type != EntityType.AUTO and databases[0].value not in SUPPORTED_SEARCH_DATABASES:
+            logger.error(f"Database {databases[0].value} not yet supported")
+            return pd.DataFrame(), {"error": f"Database {databases[0].value} not yet supported"}
+
         search_start = time.time()
-
-        if database == DatabaseID.CHEBI:
-            if method == "direct":
-                recommendations = get_species_recommendations_direct(entities_to_evaluate, synonyms_dict, database=DatabaseID.CHEBI.value, top_k=top_k)
-            elif method == "rag":
-                recommendations = get_species_recommendations_rag(entities_to_evaluate, synonyms_dict, database=DatabaseID.CHEBI.value, top_k=top_k)
-            else:
-                logger.error(f"Invalid method: {method}")
-                return pd.DataFrame(), {"error": f"Invalid method: {method}"}
-        elif database == DatabaseID.NCBIGENE:
-            if method == "direct":
-                recommendations = get_species_recommendations_direct(entities_to_evaluate, synonyms_dict, database=DatabaseID.NCBIGENE.value, tax_id=tax_id, top_k=top_k)
-            elif method == "rag":
-                recommendations = get_species_recommendations_rag(entities_to_evaluate, synonyms_dict, database=DatabaseID.NCBIGENE.value, tax_id=tax_id)
-            else:
-                logger.error(f"Invalid method: {method}")
-                return pd.DataFrame(), {"error": f"Invalid method: {method}"}
-        elif database == DatabaseID.UNIPROT:
-            if method == "direct":
-                recommendations = get_species_recommendations_direct(entities_to_evaluate, synonyms_dict, database=DatabaseID.UNIPROT.value, tax_id=tax_id, top_k=top_k)
-            elif method == "rag":
-                recommendations = get_species_recommendations_rag(entities_to_evaluate, synonyms_dict, database=DatabaseID.UNIPROT.value, tax_id=tax_id)
-            else:
-                logger.error(f"Invalid method: {method}")
-                return pd.DataFrame(), {"error": f"Invalid method: {method}"}
-        elif database == DatabaseID.KEGG:
-            if method == "direct":
-                recommendations = get_species_recommendations_direct(entities_to_evaluate, synonyms_dict, database=DatabaseID.KEGG.value, top_k=top_k)
-            elif method == "rag":
-                reaction_definitions = [i.split(':')[1] for i in model_info['reactions']]
-                reaction_participants = [extract_classifications(i, 'definition') for i in reaction_definitions]
-                recommendations = get_species_recommendations_rag(entities_to_evaluate, synonyms_dict, database=DatabaseID.KEGG.value, reaction_participants=reaction_participants)
-            else:
-                logger.error(f"Invalid method: {method}")
-                return pd.DataFrame(), {"error": f"Invalid method: {method}"}
-        else:
-            logger.error(f"Database {database.value} not yet supported")
-            return pd.DataFrame(), {"error": f"Database {database.value} not yet supported"}
-
+        recommendations, species_database, candidate_databases = _search_databases(
+            entities_to_evaluate,
+            synonyms_dict,
+            entity_type=entity_type,
+            databases=databases,
+            method=method,
+            top_k=top_k,
+            tax_id=tax_id,
+            entity_type_dict=entity_type_dict,
+            model_info=model_info,
+        )
         search_time = time.time() - search_start
         logger.info(f"Database search completed in {search_time:.2f}s")
 
         # Generate recommendation table
         logger.info(">>>Step 5: Generating recommendation table...<<<")
         recommendations_df = _generate_recommendation_table(
-            model_file, recommendations, existing_annotations, model_info, entity_type.value, database.value, qualifier_annotations,
-            synonyms_dict=synonyms_dict, reason=reason
+            model_file, recommendations, existing_annotations, model_info,
+            entity_type.value, [db.value for db in databases], qualifier_annotations,
+            synonyms_dict=synonyms_dict, reason=reason,
+            entity_type_dict=entity_type_dict,
+            species_database=species_database,
+            candidate_databases=candidate_databases,
+            existing_annotation_databases=existing_annotation_databases,
         )
 
     # Step 10: Calculate metrics
@@ -401,7 +617,7 @@ def annotate_single_model(
         ),
         entities_to_evaluate=entities_to_evaluate,
         entity_type=entity_type,
-        database=database,
+        database=[db.value for db in databases],
         method=method,
         llm_model=llm_model,
         top_k=top_k,
@@ -413,15 +629,75 @@ def annotate_single_model(
     )
 
 
+def _database_name(database: str | DatabaseID) -> str:
+    return database.value if isinstance(database, DatabaseID) else str(database)
+
+
+def _entity_type_name(entity_type: str | EntityType) -> str:
+    return entity_type.value if isinstance(entity_type, EntityType) else str(entity_type)
+
+
+def _normalize_database_names(
+    database: str | DatabaseID | Sequence[str | DatabaseID],
+) -> List[str]:
+    items = database if isinstance(database, (list, tuple)) else [database]
+    names = []
+    for item in items:
+        name = _database_name(item)
+        if name not in names:
+            names.append(name)
+    return names or [DatabaseID.CHEBI.value]
+
+
+def _resolve_row_database(
+    species_id: str,
+    candidate: Optional[str],
+    default_databases: List[str],
+    species_database: Dict[str, str],
+    candidate_databases: Dict[Tuple[str, str], str],
+    existing_annotation_databases: Dict[Tuple[str, str], str],
+) -> str:
+    if candidate is not None:
+        if (species_id, candidate) in candidate_databases:
+            return candidate_databases[(species_id, candidate)]
+        if (species_id, candidate) in existing_annotation_databases:
+            return existing_annotation_databases[(species_id, candidate)]
+    if species_id in species_database:
+        return species_database[species_id]
+    return default_databases[0]
+
+
+def _load_label_dicts(database_names: List[str]) -> Dict[str, Dict[str, str]]:
+    label_dicts: Dict[str, Dict[str, str]] = {}
+    for name in database_names:
+        if name in label_dicts:
+            continue
+        if name == DatabaseID.CHEBI.value:
+            label_dicts[name] = load_chebi_label_dict()
+        elif name == DatabaseID.NCBIGENE.value:
+            label_dicts[name] = load_ncbigene_label_dict()
+        elif name == DatabaseID.UNIPROT.value:
+            label_dicts[name] = load_uniprot_label_dict()
+        elif name == DatabaseID.KEGG.value:
+            label_dicts[name] = load_kegg_label_dict()
+        else:
+            label_dicts[name] = {}
+    return label_dicts
+
+
 def _generate_recommendation_table(model_file: str,
                                  recommendations: List[Recommendation],
                                  existing_annotations: Dict[str, List[str]],
                                  model_info: Dict[str, Any],
                                  entity_type: str = "chemical",
-                                 database: str = DatabaseID.CHEBI.value,
+                                 database: str | DatabaseID | Sequence[str | DatabaseID] = DatabaseID.CHEBI.value,
                                  qualifier_annotations: Dict[str, List[str]] = None,
                                  synonyms_dict: Dict[str, List[str]] = None,
-                                 reason: str = "") -> pd.DataFrame:
+                                 reason: str = "",
+                                 entity_type_dict: Optional[Dict[str, str]] = None,
+                                 species_database: Optional[Dict[str, str]] = None,
+                                 candidate_databases: Optional[Dict[Tuple[str, str], str]] = None,
+                                 existing_annotation_databases: Optional[Dict[Tuple[str, str], str]] = None) -> pd.DataFrame:
     """
     Generate AMAS-compatible recommendation table.
 
@@ -430,11 +706,15 @@ def _generate_recommendation_table(model_file: str,
         recommendations: List of Recommendation or ReactionRecommendation objects
         existing_annotations: Dictionary of existing annotations (may be empty)
         model_info: Model information dictionary
-        entity_type: Type of entity being annotated
-        database: Database being used for search
+        entity_type: Type of entity being annotated ("auto" or a specific type)
+        database: Database or list of databases used for search
         qualifier_annotations: Dictionary of qualifier annotations
         synonyms_dict: Dictionary mapping species IDs to LLM-suggested synonyms
         reason: LLM reasoning text
+        entity_type_dict: Optional mapping of species IDs to detected entity types
+        species_database: Optional mapping of species IDs to the database searched
+        candidate_databases: Optional mapping of (species_id, candidate) to database
+        existing_annotation_databases: Optional mapping of (species_id, annotation) to database
 
     Returns:
         DataFrame in AMAS format
@@ -445,11 +725,42 @@ def _generate_recommendation_table(model_file: str,
         synonyms_dict = {}
     if qualifier_annotations is None:
         qualifier_annotations = {}
+    if entity_type_dict is None:
+        entity_type_dict = {}
+    if species_database is None:
+        species_database = {}
+    if candidate_databases is None:
+        candidate_databases = {}
+    if existing_annotation_databases is None:
+        existing_annotation_databases = {}
+
+    default_entity_type = _entity_type_name(entity_type)
+    default_databases = _normalize_database_names(database)
+    display_names = model_info.get("display_names", {}) if model_info else {}
+
+    needed_databases = set(default_databases)
+    needed_databases.update(species_database.values())
+    needed_databases.update(candidate_databases.values())
+    needed_databases.update(existing_annotation_databases.values())
+    label_dicts = _load_label_dicts(list(needed_databases))
+
+    def row_type(species_id: str) -> str:
+        return entity_type_dict.get(species_id, default_entity_type)
+
+    def row_database(species_id: str, candidate: Optional[str] = None) -> str:
+        return _resolve_row_database(
+            species_id, candidate, default_databases,
+            species_database, candidate_databases, existing_annotation_databases,
+        )
+
+    def label_for(db_id: str, database_name: str) -> str:
+        return label_dicts.get(database_name, {}).get(db_id, db_id)
 
     seen_pairs = set()
 
     for rec in recommendations:
         curated_name = synonyms_dict.get(rec.id, [""])[0]
+        rec_type = row_type(rec.id)
 
         if not rec.candidates:
             if rec.id in qualifier_annotations and qualifier_annotations[rec.id]:
@@ -458,23 +769,14 @@ def _generate_recommendation_table(model_file: str,
             else:
                 specific_qualifier = 'is'
 
-            if database == DatabaseID.CHEBI.value:
-                lbl_dict = load_chebi_label_dict()
-            elif database == DatabaseID.NCBIGENE.value:
-                lbl_dict = load_ncbigene_label_dict()
-            elif database == DatabaseID.UNIPROT.value:
-                lbl_dict = load_uniprot_label_dict()
-            elif database == DatabaseID.KEGG.value:
-                lbl_dict = load_kegg_label_dict()
-            else:
-                lbl_dict = {}
-            label = lbl_dict.get(rec.id, rec.id)
+            rec_db = row_database(rec.id)
+            label = label_for(rec.id, rec_db)
 
             row = {
                 'file': filename,
-                'type': entity_type,
+                'type': rec_type,
                 'id': rec.id,
-                'display_name': model_info["display_names"].get(rec.id, rec.id),
+                'display_name': display_names.get(rec.id, rec.id),
                 'curated_name': curated_name,
                 'annotation': '',
                 'annotation_label': label,
@@ -487,7 +789,8 @@ def _generate_recommendation_table(model_file: str,
             continue
 
         for i, candidate in enumerate(rec.candidates):
-            candidate_display = f"{database.upper()}:{candidate}"
+            rec_db = row_database(rec.id, candidate)
+            candidate_display = f"{rec_db.upper()}:{candidate}"
             is_existing = candidate in existing_annotations.get(rec.id, [])
             match_score = rec.match_score[i]
 
@@ -508,9 +811,9 @@ def _generate_recommendation_table(model_file: str,
 
             row = {
                 'file': filename,
-                'type': entity_type,
+                'type': rec_type,
                 'id': rec.id,
-                'display_name': model_info["display_names"].get(rec.id, rec.id),
+                'display_name': display_names.get(rec.id, rec.id),
                 'curated_name': curated_name,
                 'annotation': candidate_display,
                 'annotation_label': rec.candidate_names[i] if i < len(rec.candidate_names) else candidate,
@@ -525,21 +828,11 @@ def _generate_recommendation_table(model_file: str,
 
     # Add rows for existing annotations not predicted
     if existing_annotations:
-        if database == DatabaseID.CHEBI.value:
-            lbl_dict = load_chebi_label_dict()
-        elif database == DatabaseID.NCBIGENE.value:
-            lbl_dict = load_ncbigene_label_dict()
-        elif database == DatabaseID.UNIPROT.value:
-            lbl_dict = load_uniprot_label_dict()
-        elif database == DatabaseID.KEGG.value:
-            lbl_dict = load_kegg_label_dict()
-        else:
-            lbl_dict = {}
-
         for species_id, ann_list in existing_annotations.items():
             for ann in ann_list:
                 if (species_id, ann) not in seen_pairs:
-                    candidate_display = f"{database.upper()}:{ann}"
+                    rec_db = row_database(species_id, ann)
+                    candidate_display = f"{rec_db.upper()}:{ann}"
                     curated_name = synonyms_dict.get(species_id, [""])[0]
 
                     if qualifier_annotations:
@@ -547,16 +840,14 @@ def _generate_recommendation_table(model_file: str,
                     else:
                         specific_qualifier = 'is'
 
-                    label = lbl_dict.get(ann, ann)
-
                     row = {
                         'file': filename,
-                        'type': entity_type,
+                        'type': row_type(species_id),
                         'id': species_id,
-                        'display_name': model_info["display_names"].get(species_id, species_id),
+                        'display_name': display_names.get(species_id, species_id),
                         'curated_name': curated_name,
                         'annotation': candidate_display,
-                        'annotation_label': label,
+                        'annotation_label': label_for(ann, rec_db),
                         'match_score': None,
                         'status': 'original only',
                         'update_annotation': 'keep',

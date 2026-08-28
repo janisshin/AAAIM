@@ -1,0 +1,2865 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1">
+  <model areaUnits="um2" extentUnits="molecules" id="fullEGFR9__sorafenib" lengthUnits="um" name="fullEGFR9_+sorafenib" substanceUnits="molecules" timeUnits="min" volumeUnits="um3">
+    <listOfUnitDefinitions>
+      <unitDefinition id="molecules">
+        <listOfUnits>
+          <unit exponent="1" kind="item" multiplier="1" scale="0"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="um3">
+        <listOfUnits>
+          <unit exponent="3" kind="metre" multiplier="1" scale="-6"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="um2">
+        <listOfUnits>
+          <unit exponent="2" kind="metre" multiplier="1" scale="-6"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="um">
+        <listOfUnits>
+          <unit exponent="1" kind="metre" multiplier="1" scale="-6"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="min">
+        <listOfUnits>
+          <unit exponent="1" kind="second" multiplier="60" scale="0"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="uM_1_min_1">
+        <listOfUnits>
+          <unit exponent="-1" kind="mole" multiplier="1" scale="-6"/>
+          <unit exponent="1" kind="litre" multiplier="1" scale="0"/>
+          <unit exponent="-1" kind="second" multiplier="60" scale="0"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="min_1">
+        <listOfUnits>
+          <unit exponent="-1" kind="second" multiplier="60" scale="0"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="molecules_1_min_1">
+        <listOfUnits>
+          <unit exponent="-1" kind="item" multiplier="1" scale="0"/>
+          <unit exponent="-1" kind="second" multiplier="60" scale="0"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="min_1_molecules_1">
+        <listOfUnits>
+          <unit exponent="-1" kind="second" multiplier="60" scale="0"/>
+          <unit exponent="-1" kind="item" multiplier="1" scale="0"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="uM">
+        <listOfUnits>
+          <unit exponent="1" kind="mole" multiplier="1" scale="-6"/>
+          <unit exponent="-1" kind="litre" multiplier="1" scale="0"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="K">
+        <listOfUnits>
+          <unit exponent="1" kind="kelvin" multiplier="1" scale="0"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="_one_">
+        <listOfUnits>
+          <unit exponent="1" kind="dimensionless" multiplier="1" scale="0"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="C_mol_1">
+        <listOfUnits>
+          <unit exponent="1" kind="coulomb" multiplier="1" scale="0"/>
+          <unit exponent="-1" kind="mole" multiplier="1" scale="0"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="C_nmol_1">
+        <listOfUnits>
+          <unit exponent="1" kind="coulomb" multiplier="1" scale="0"/>
+          <unit exponent="-1" kind="mole" multiplier="1" scale="-9"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="molecules_pmol_1">
+        <listOfUnits>
+          <unit exponent="1" kind="item" multiplier="1" scale="0"/>
+          <unit exponent="-1" kind="mole" multiplier="1" scale="-12"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="_one_000000000">
+        <listOfUnits>
+          <unit exponent="1" kind="dimensionless" multiplier="1000000000" scale="0"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="mV_C_K_1_mol_1">
+        <listOfUnits>
+          <unit exponent="1" kind="volt" multiplier="1" scale="-3"/>
+          <unit exponent="1" kind="coulomb" multiplier="1" scale="0"/>
+          <unit exponent="-1" kind="kelvin" multiplier="1" scale="0"/>
+          <unit exponent="-1" kind="mole" multiplier="1" scale="0"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="mV_V_1">
+        <listOfUnits>
+          <unit exponent="1" kind="dimensionless" multiplier="1" scale="0"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="uM_um3_molecules_1">
+        <listOfUnits>
+          <unit exponent="1" kind="mole" multiplier="1" scale="-6"/>
+          <unit exponent="-1" kind="litre" multiplier="1" scale="0"/>
+          <unit exponent="3" kind="metre" multiplier="1" scale="-6"/>
+          <unit exponent="-1" kind="item" multiplier="1" scale="0"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="pA_um_2">
+        <listOfUnits>
+          <unit exponent="1" kind="ampere" multiplier="1" scale="-12"/>
+          <unit exponent="-2" kind="metre" multiplier="1" scale="-6"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="um3_min_1_molecules_1">
+        <listOfUnits>
+          <unit exponent="3" kind="metre" multiplier="1" scale="-6"/>
+          <unit exponent="-1" kind="second" multiplier="60" scale="0"/>
+          <unit exponent="-1" kind="item" multiplier="1" scale="0"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="um2_min_1_molecules_1">
+        <listOfUnits>
+          <unit exponent="2" kind="metre" multiplier="1" scale="-6"/>
+          <unit exponent="-1" kind="second" multiplier="60" scale="0"/>
+          <unit exponent="-1" kind="item" multiplier="1" scale="0"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment constant="true" id="cytoplasm" name="cytoplasm" size="1" spatialDimensions="3" units="um3"/>
+      <compartment constant="true" id="pm" name="pm" size="1" spatialDimensions="2"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species boundaryCondition="true" compartment="cytoplasm" constant="false" hasOnlySubstanceUnits="false" id="sorafenib" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_GTP" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="cytoplasm" constant="false" hasOnlySubstanceUnits="false" id="Raf1" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="cytoplasm" constant="false" hasOnlySubstanceUnits="false" id="pRaf1" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_Raf1" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_iRaf1" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_pRaf1_Raf1_tetramer" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_BRaf" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_pRaf1" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_BRaf_Raf1_tetramer" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_iRaf1_tetramer" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="cytoplasm" constant="false" hasOnlySubstanceUnits="false" id="iRaf1" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="cytoplasm" constant="false" hasOnlySubstanceUnits="false" id="BRaf" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_Braf_iRaf1_tetramer" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_pRaf1_tetramer" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_BRaf_pRaf1_tetramer" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="cytoplasm" constant="false" hasOnlySubstanceUnits="false" id="MEK" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="cytoplasm" constant="false" hasOnlySubstanceUnits="false" id="pMEK" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="cytoplasm" constant="false" hasOnlySubstanceUnits="false" id="ERK" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="cytoplasm" constant="false" hasOnlySubstanceUnits="false" id="iBRaf" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_Raf1_iBRaf_tetramer" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_pRaf1_iBRaf_tetramer" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="cytoplasm" constant="false" hasOnlySubstanceUnits="false" id="pERK" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="iBRaf_dimer" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="BRaf_dimer" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_iBRaf" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_nfpRaf1" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="cytoplasm" constant="false" hasOnlySubstanceUnits="false" id="nfpRaf1" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_nfpBRaf" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="cytoplasm" constant="false" hasOnlySubstanceUnits="false" id="nfpBRaf" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="BRaf_iBRaf_dimer" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_nfpiBRaf" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="cytoplasm" constant="false" hasOnlySubstanceUnits="false" id="nfpiBRaf" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_nfpiRaf1" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="cytoplasm" constant="false" hasOnlySubstanceUnits="false" id="nfpiRaf1" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_iRaf1_iBRaf1_tetramer" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="mE" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="mEL" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="mELmEL" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="E" initialAmount="0" substanceUnits="molecules">
+        <notes>
+          <html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+
+  </head>
+  <body>
+    EGF-bound pEGFR dimer
+  </body>
+</html>
+        </notes>
+      </species>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="EG2SOS" initialAmount="0" substanceUnits="molecules">
+        <notes>
+          <html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+
+  </head>
+  <body>
+
+  </body>
+</html>
+        </notes>
+      </species>
+      <species boundaryCondition="false" compartment="cytoplasm" constant="false" hasOnlySubstanceUnits="false" id="GRB2_SOS" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="Ras_GDP" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="pm" constant="false" hasOnlySubstanceUnits="false" id="EG2" initialAmount="0" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="cytoplasm" constant="false" hasOnlySubstanceUnits="false" id="GRB2" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="cytoplasm" constant="false" hasOnlySubstanceUnits="false" id="SOS" substanceUnits="molecules"/>
+      <species boundaryCondition="false" compartment="cytoplasm" constant="false" hasOnlySubstanceUnits="false" id="nfpSOS" initialAmount="0" substanceUnits="molecules"/>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter constant="true" id="kSon" units="uM_1_min_1" value="13.52143291"/>
+      <parameter constant="true" id="kSoff" units="min_1" value="1243.069312"/>
+      <parameter constant="true" id="kpR1" units="min_1" value="190"/>
+      <parameter constant="true" id="kdR1f" units="molecules_1_min_1" value="0.019"/>
+      <parameter constant="true" id="kR1f" units="molecules_1_min_1" value="2.5E-5"/>
+      <parameter constant="true" id="kR1r" units="min_1" value="8.4"/>
+      <parameter constant="true" id="kBf" units="min_1_molecules_1" value="2.5E-7"/>
+      <parameter constant="true" id="kBr" units="min_1" value="0.037"/>
+      <parameter constant="true" id="kdR1r" units="min_1" value="110"/>
+      <parameter constant="true" id="kdpR1" units="min_1" value="0.6"/>
+      <parameter constant="false" id="boundRaf_frac_parameter"/>
+      <parameter constant="true" id="kiR1f" units="min_1_molecules_1" value="1.15E-5"/>
+      <parameter constant="true" id="kiR1r" units="min_1" value="0.072015388"/>
+      <parameter constant="false" id="Raf1_pm_param"/>
+      <parameter constant="false" id="Raf1_cyt_param"/>
+      <parameter constant="true" id="kpMEK" units="molecules_1_min_1" value="6E-6"/>
+      <parameter constant="false" id="active_Raf"/>
+      <parameter constant="true" id="kpERK" units="min_1" value="6E-5"/>
+      <parameter constant="true" id="kdpERK" units="min_1" value="0.6"/>
+      <parameter constant="true" id="kdpMEK" units="min_1" value="0.6"/>
+      <parameter constant="true" id="kiBf" units="molecules_1_min_1" value="2.47E-7"/>
+      <parameter constant="true" id="kiBr" units="min_1" value="0.0367"/>
+      <parameter constant="true" id="kfpR1r" units="min_1" value="0.046229858"/>
+      <parameter constant="true" id="kfpBr" units="min_1" value="0.37"/>
+      <parameter constant="true" id="knfpBR1" units="min_1_molecules_1" value="6E-7"/>
+      <parameter constant="true" id="kEf" units="uM_1_min_1" value="310"/>
+      <parameter constant="true" id="EGF" units="uM" value="0.0017"/>
+      <parameter constant="true" id="kEr" units="min_1" value="0.8"/>
+      <parameter constant="true" id="kdEf" units="molecules_1_min_1" value="0.00092"/>
+      <parameter constant="true" id="kdEr" units="min_1" value="0.1"/>
+      <parameter constant="true" id="kcatE" units="min_1" value="6.60624874"/>
+      <parameter constant="true" id="kdp" units="min_1" value="8"/>
+      <parameter constant="true" id="kRgneslow" units="min_1" value="5.838226569"/>
+      <parameter constant="true" id="Kmgneslow" units="molecules" value="1.417816814E5"/>
+      <parameter constant="true" id="kRhydro" units="min_1" value="0.142907544"/>
+      <parameter constant="true" id="kG2f" units="molecules_1_min_1" value="0.00038"/>
+      <parameter constant="true" id="kG2r" units="min_1" value="460"/>
+      <parameter constant="true" id="kSOSf" units="min_1_molecules_1" value="2.2E-6"/>
+      <parameter constant="true" id="kSOSr" units="min_1" value="0.0083"/>
+      <parameter constant="true" id="kdpSOS" units="min_1" value="0.6"/>
+      <parameter constant="true" id="knfpSOS" units="min_1" value="0.0025"/>
+      <parameter constant="true" id="init_ERK_HeLa" units="molecules" value="600000"/>
+      <parameter constant="true" id="init_SOS_HeLa" units="molecules" value="7700"/>
+      <parameter constant="true" id="init_RAS_HeLa" units="molecules" value="135000"/>
+      <parameter constant="true" id="init_MEK_HeLa" units="molecules" value="500000"/>
+      <parameter constant="true" id="init_GRB2_HeLa" units="molecules" value="628000"/>
+      <parameter constant="true" id="init_EGFR_HeLa" units="molecules" value="93000"/>
+      <parameter constant="true" id="init_BRAF_HeLa" units="molecules" value="1000"/>
+      <parameter constant="true" id="kG2SOSf" units="molecules_1_min_1" value="0.00942"/>
+      <parameter constant="true" id="kG2SOSr" units="min_1" value="4.6"/>
+      <parameter constant="true" id="init_sorafenib" units="uM" value="10"/>
+      <parameter constant="true" id="init_RAF_HeLa" units="molecules" value="12000"/>
+      <parameter constant="false" id="RasGTP_parameter"/>
+      <parameter constant="false" id="pRaf1_total"/>
+      <parameter constant="true" id="knfpiR1r" units="min_1_molecules_1" value="0.046229858"/>
+      <parameter constant="true" id="knfpiBr" units="min_1_molecules_1" value="0.37"/>
+      <parameter constant="true" id="_T_" units="K" value="300"/>
+      <parameter constant="true" id="_PI_" units="_one_" value="3.141592653589793"/>
+      <parameter constant="true" id="_F_" units="C_mol_1" value="9.64853321E4"/>
+      <parameter constant="true" id="_F_nmol_" units="C_nmol_1" value="9.64853321E-5"/>
+      <parameter constant="true" id="_N_pmol_" units="molecules_pmol_1" value="6.02214179E11"/>
+      <parameter constant="true" id="_K_GHK_" units="_one_000000000" value="1E-9"/>
+      <parameter constant="true" id="_R_" units="mV_C_K_1_mol_1" value="8314.46261815"/>
+      <parameter constant="true" id="K_millivolts_per_volt" units="mV_V_1" value="1000"/>
+      <parameter constant="true" id="KMOLE" units="uM_um3_molecules_1" value="0.001660538783162726"/>
+      <parameter constant="false" id="Kf_Ras_Raf1_bind" units="um3_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_Ras_Raf1_bind" units="min_1"/>
+      <parameter constant="false" id="Kf_BRAF_RAF1_bind" units="um2_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_BRAF_RAF1_bind" units="min_1"/>
+      <parameter constant="true" id="Kr_BRAF_RAF1_phos" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_BRAF_RAF1_phos" units="min_1"/>
+      <parameter constant="false" id="Kf_RAS_pRAF1_unbind" units="min_1"/>
+      <parameter constant="false" id="Kr_RAS_pRAF1_unbind" units="um3_min_1_molecules_1"/>
+      <parameter constant="false" id="Kf_RAS_BRAF_bind" units="um3_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_RAS_BRAF_bind" units="min_1"/>
+      <parameter constant="false" id="Kf_pRaf1_Raf1_bind" units="um2_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_pRaf1_Raf1_bind" units="min_1"/>
+      <parameter constant="true" id="Kr_pRAF1_RAF1_phos" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_pRAF1_RAF1_phos" units="min_1"/>
+      <parameter constant="false" id="Kf_sorafenib_Raf1_bind_cyt" units="um3_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_sorafenib_Raf1_bind_cyt" units="min_1"/>
+      <parameter constant="false" id="Kf_Ras_iRaf1_bind" units="um3_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_Ras_iRaf1_bind" units="min_1"/>
+      <parameter constant="false" id="Kf_iRaf1_iRaf1_bind" units="um2_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_iRaf1_iRaf1_bind" units="min_1"/>
+      <parameter constant="false" id="Kf_BRaf_iRaf1_bind" units="um2_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_BRaf_iRaf1_bind" units="min_1"/>
+      <parameter constant="true" id="Kr_pRAF1_dephos" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_pRAF1_dephos" units="min_1"/>
+      <parameter constant="false" id="Kf_pRaf1_pRaf1_unbind" units="min_1"/>
+      <parameter constant="false" id="Kr_pRaf1_pRaf1_unbind" units="um2_min_1_molecules_1"/>
+      <parameter constant="false" id="Kf_BRaf_pRaf1_unbind" units="min_1"/>
+      <parameter constant="false" id="Kr_BRaf_pRaf1_unbind" units="um2_min_1_molecules_1"/>
+      <parameter constant="false" id="Kf_sorafenib_BRaf_bind_cyt" units="um3_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_sorafenib_BRaf_bind_cyt" units="min_1"/>
+      <parameter constant="true" id="Kr_MEK_phos" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_MEK_phos" units="min_1"/>
+      <parameter constant="true" id="Kr_MEK_dephos" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_MEK_dephos" units="min_1"/>
+      <parameter constant="true" id="Kr_ERK_phos" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_ERK_phos" units="min_1"/>
+      <parameter constant="true" id="Kr_ERK_dephos" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_ERK_dephos" units="min_1"/>
+      <parameter constant="false" id="Kf_RAS_iBRAF_bind" units="um3_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_RAS_iBRAF_bind" units="min_1"/>
+      <parameter constant="false" id="Kf_iBRaf_dim" units="um2_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_iBRaf_dim" units="min_1"/>
+      <parameter constant="false" id="Kf_iBRaf_Raf1_bind" units="um2_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_iBRaf_Raf1_bind" units="min_1"/>
+      <parameter constant="true" id="Kr_Raf1_iBRaf_phos" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_Raf1_iBRaf_phos" units="min_1"/>
+      <parameter constant="false" id="Kf_pRaf1_iBRaf_unbind" units="min_1"/>
+      <parameter constant="false" id="Kr_pRaf1_iBRaf_unbind" units="um2_min_1_molecules_1"/>
+      <parameter constant="false" id="Kf_BRAF_dim" units="um2_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_BRAF_dim" units="min_1"/>
+      <parameter constant="true" id="Kr_Ras_pRaf1_dp" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_Ras_pRaf1_dp" units="min_1"/>
+      <parameter constant="true" id="Kr_Ras_Raf1_nfp" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_Ras_Raf1_nfp" units="min_1"/>
+      <parameter constant="true" id="Kr_neg_fdbk_unbind_RASt_nfpRAF1" units="um3_min_1_molecules_1" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbk_unbind_RASt_nfpRAF1" units="min_1"/>
+      <parameter constant="true" id="Kr_neg_fdbk_dephos_pRaf1" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbk_dephos_pRaf1" units="min_1"/>
+      <parameter constant="true" id="Kr_BRAF_nfp" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_BRAF_nfp" units="min_1"/>
+      <parameter constant="true" id="Kr_neg_fdbk_unbind_RASt_nfpBRAF" units="um3_min_1_molecules_1" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbk_unbind_RASt_nfpBRAF" units="min_1"/>
+      <parameter constant="true" id="Kr_neg_fdbk_dephos_pBRAF" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbk_dephos_pBRAF" units="min_1"/>
+      <parameter constant="false" id="Kf_BRaf_iBRaf_dim" units="um2_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_BRaf_iBRaf_dim" units="min_1"/>
+      <parameter constant="true" id="Kr_Ras_iRaf_nfp" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_Ras_iRaf_nfp" units="min_1"/>
+      <parameter constant="true" id="Kr_neg_fdbk_unbind_piRaf1_RASt" units="um3_min_1_molecules_1" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbk_unbind_piRaf1_RASt" units="min_1"/>
+      <parameter constant="true" id="Kr_neg_fdbck_dephos_piRaf" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbck_dephos_piRaf" units="min_1"/>
+      <parameter constant="true" id="Kr_Ras_iBRaf_nfp" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_Ras_iBRaf_nfp" units="min_1"/>
+      <parameter constant="true" id="Kr_neg_fdbk_unbind_piBRaf_RASt" units="um3_min_1_molecules_1" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbk_unbind_piBRaf_RASt" units="min_1"/>
+      <parameter constant="true" id="Kr_neg_fdbk_dephos_iBRAF" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbk_dephos_iBRAF" units="min_1"/>
+      <parameter constant="false" id="Kf_iRaf_iBRaf_dim" units="um2_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_iRaf_iBRaf_dim" units="min_1"/>
+      <parameter constant="false" id="Kf_EGF_bind" units="min_1"/>
+      <parameter constant="false" id="Kr_EGF_bind" units="min_1"/>
+      <parameter constant="false" id="Kf_mEL_dim" units="um2_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_mEL_dim" units="min_1"/>
+      <parameter constant="false" id="Kf_mELmEL_phos_dephos" units="min_1"/>
+      <parameter constant="false" id="Kr_mELmEL_phos_dephos" units="min_1"/>
+      <parameter constant="true" id="Kr_RAS_GTP_bind" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_RAS_GTP_bind" units="min_1"/>
+      <parameter constant="true" id="Kr_RAS_GTPhydro" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_RAS_GTPhydro" units="min_1"/>
+      <parameter constant="false" id="Kf_E_G2SOS_bind" units="um3_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_E_G2SOS_bind" units="min_1"/>
+      <parameter constant="false" id="Kf_E_G2_bind" units="um3_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_E_G2_bind" units="min_1"/>
+      <parameter constant="false" id="Kf_GRB2_SOS_bind_cyt" units="um3_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_GRB2_SOS_bind_cyt" units="min_1"/>
+      <parameter constant="false" id="Kf_EG2_SOS_bind" units="um3_min_1_molecules_1"/>
+      <parameter constant="false" id="Kr_EG2_SOS_bind" units="min_1"/>
+      <parameter constant="true" id="Kr_neg_fdbk_dephos_pSOS" units="min_1" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbk_dephos_pSOS" units="min_1"/>
+      <parameter constant="true" id="Kr_neg_fdbk_phos_of_SOS" units="um3_min_1_molecules_1" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbk_phos_of_SOS" units="min_1"/>
+    </listOfParameters>
+    <listOfInitialAssignments>
+      <initialAssignment symbol="sorafenib">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> init_sorafenib </ci>
+        </math>
+            </initialAssignment>
+      <initialAssignment symbol="Raf1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> init_RAF_HeLa </ci>
+        </math>
+            </initialAssignment>
+      <initialAssignment symbol="BRaf">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> init_BRAF_HeLa </ci>
+        </math>
+            </initialAssignment>
+      <initialAssignment symbol="MEK">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> init_MEK_HeLa </ci>
+        </math>
+            </initialAssignment>
+      <initialAssignment symbol="ERK">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> init_ERK_HeLa </ci>
+        </math>
+            </initialAssignment>
+      <initialAssignment symbol="mE">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> init_EGFR_HeLa </ci>
+        </math>
+            </initialAssignment>
+      <initialAssignment symbol="Ras_GDP">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> init_RAS_HeLa </ci>
+        </math>
+            </initialAssignment>
+      <initialAssignment symbol="GRB2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> init_GRB2_HeLa </ci>
+        </math>
+            </initialAssignment>
+      <initialAssignment symbol="SOS">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> init_SOS_HeLa </ci>
+        </math>
+            </initialAssignment>
+    </listOfInitialAssignments>
+    <listOfRules>
+      <assignmentRule variable="Raf1_pm_param">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <ci> Ras_pRaf1 </ci>
+            <apply>
+              <times/>
+              <cn> 2 </cn>
+              <ci> Ras_pRaf1_Raf1_tetramer </ci>
+            </apply>
+            <ci> Ras_BRaf_Raf1_tetramer </ci>
+            <ci> Ras_iRaf1 </ci>
+            <ci> Ras_Raf1 </ci>
+            <apply>
+              <times/>
+              <cn> 2 </cn>
+              <ci> Ras_iRaf1_tetramer </ci>
+            </apply>
+            <ci> Ras_Braf_iRaf1_tetramer </ci>
+            <ci> Ras_BRaf_pRaf1_tetramer </ci>
+            <apply>
+              <times/>
+              <cn> 2 </cn>
+              <ci> Ras_pRaf1_tetramer </ci>
+            </apply>
+            <ci> Ras_nfpiRaf1 </ci>
+            <ci> Ras_nfpRaf1 </ci>
+            <ci> Ras_iRaf1_iBRaf1_tetramer </ci>
+            <ci> Ras_Raf1_iBRaf_tetramer </ci>
+            <ci> Ras_pRaf1_iBRaf_tetramer </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Raf1_cyt_param">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <ci> Raf1 </ci>
+            <ci> pRaf1 </ci>
+            <ci> iRaf1 </ci>
+            <ci> nfpRaf1 </ci>
+            <ci> nfpiRaf1 </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+        <assignmentRule variable="boundRaf_frac_parameter">
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+              <apply>
+                <times/>
+                <ci> Raf1_pm_param </ci>
+                <apply>
+                  <divide/>
+                  <cn> 1 </cn>
+                  <apply>
+                    <plus/>
+                    <ci> Raf1_cyt_param </ci>
+                    <ci> Raf1_pm_param </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </math>
+        </assignmentRule>
+      <assignmentRule variable="active_Raf">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <apply>
+              <times/>
+              <cn> 2 </cn>
+              <ci> BRaf_dimer </ci>
+            </apply>
+            <ci> Ras_BRaf_Raf1_tetramer </ci>
+            <apply>
+              <times/>
+              <cn> 2 </cn>
+              <ci> Ras_BRaf_pRaf1_tetramer </ci>
+            </apply>
+            <ci> Ras_pRaf1_iBRaf_tetramer </ci>
+            <ci> Ras_pRaf1 </ci>
+            <ci> Ras_pRaf1_Raf1_tetramer </ci>
+            <apply>
+              <times/>
+              <cn> 2 </cn>
+              <ci> Ras_pRaf1_tetramer </ci>
+            </apply>
+            <ci> pRaf1 </ci>
+            <ci> BRaf_iBRaf_dimer </ci>
+            <ci> Ras_Braf_iRaf1_tetramer </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="RasGTP_parameter">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <ci> Ras_GTP </ci>
+            <apply>
+              <times/>
+              <cn> 2 </cn>
+              <apply>
+                <plus/>
+                <ci> Ras_iRaf1_tetramer </ci>
+                <ci> Ras_Braf_iRaf1_tetramer </ci>
+                <ci> Ras_BRaf_Raf1_tetramer </ci>
+                <ci> Ras_pRaf1_Raf1_tetramer </ci>
+                <ci> Ras_BRaf_pRaf1_tetramer </ci>
+                <ci> Ras_pRaf1_tetramer </ci>
+                <ci> BRaf_dimer </ci>
+                <ci> BRaf_iBRaf_dimer </ci>
+                <ci> iBRaf_dimer </ci>
+                <ci> Ras_iRaf1_iBRaf1_tetramer </ci>
+                <ci> Ras_Raf1_iBRaf_tetramer </ci>
+                <ci> Ras_pRaf1_iBRaf_tetramer </ci>
+              </apply>
+            </apply>
+            <ci> Ras_BRaf </ci>
+            <ci> Ras_iRaf1 </ci>
+            <ci> Ras_pRaf1 </ci>
+            <ci> Ras_Raf1 </ci>
+            <ci> Ras_nfpRaf1 </ci>
+            <ci> Ras_nfpiRaf1 </ci>
+            <ci> Ras_iBRaf </ci>
+            <ci> Ras_nfpiBRaf </ci>
+            <ci> Ras_nfpBRaf </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="pRaf1_total">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <ci> Ras_pRaf1 </ci>
+            <ci> Ras_pRaf1_iBRaf_tetramer </ci>
+            <ci> Ras_pRaf1_tetramer </ci>
+            <ci> Ras_BRaf_pRaf1_tetramer </ci>
+            <ci> pRaf1 </ci>
+            <ci> Ras_pRaf1_Raf1_tetramer </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_Ras_Raf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_Ras_Raf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_BRAF_RAF1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_BRAF_RAF1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_BRAF_RAF1_phos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kpR1 </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_RAS_pRAF1_unbind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_RAS_pRAF1_unbind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_RAS_BRAF_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kBf </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_RAS_BRAF_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kBr </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_pRaf1_Raf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_pRaf1_Raf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_pRAF1_RAF1_phos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kpR1 </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_sorafenib_Raf1_bind_cyt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kSon </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_sorafenib_Raf1_bind_cyt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kSoff </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_Ras_iRaf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kiR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_Ras_iRaf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kiR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_iRaf1_iRaf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_iRaf1_iRaf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_BRaf_iRaf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_BRaf_iRaf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_pRAF1_dephos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdpR1 </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_pRaf1_pRaf1_unbind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_pRaf1_pRaf1_unbind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_BRaf_pRaf1_unbind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_BRaf_pRaf1_unbind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_sorafenib_BRaf_bind_cyt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kSon </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_sorafenib_BRaf_bind_cyt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kSoff </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_MEK_phos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> kpMEK </ci>
+            <ci> active_Raf </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_MEK_dephos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdpMEK </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_ERK_phos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> kpERK </ci>
+            <ci> pMEK </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_ERK_dephos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdpERK </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_RAS_iBRAF_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kiBf </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_RAS_iBRAF_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kiBr </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_iBRaf_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_iBRaf_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_iBRaf_Raf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_iBRaf_Raf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_Raf1_iBRaf_phos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kpR1 </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_pRaf1_iBRaf_unbind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_pRaf1_iBRaf_unbind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_BRAF_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_BRAF_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_Ras_pRaf1_dp">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdpR1 </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_Ras_Raf1_nfp">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> knfpBR1 </ci>
+            <ci> pERK </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_neg_fdbk_unbind_RASt_nfpRAF1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kfpR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_neg_fdbk_dephos_pRaf1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdpR1 </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_BRAF_nfp">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> knfpBR1 </ci>
+            <ci> pERK </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_neg_fdbk_unbind_RASt_nfpBRAF">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kfpBr </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_neg_fdbk_dephos_pBRAF">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdpR1 </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_BRaf_iBRaf_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_BRaf_iBRaf_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_Ras_iRaf_nfp">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> kpR1 </ci>
+            <ci> pERK </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_neg_fdbk_unbind_piRaf1_RASt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> knfpiR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_neg_fdbck_dephos_piRaf">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdpR1 </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_Ras_iBRaf_nfp">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> knfpBR1 </ci>
+            <ci> pERK </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_neg_fdbk_unbind_piBRaf_RASt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> knfpiBr </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_neg_fdbk_dephos_iBRAF">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdpR1 </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_iRaf_iBRaf_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_iRaf_iBRaf_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_EGF_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> kEf </ci>
+            <ci> EGF </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_EGF_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kEr </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_mEL_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdEf </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_mEL_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdEr </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_mELmEL_phos_dephos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kcatE </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_mELmEL_phos_dephos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdp </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_RAS_GTP_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> kRgneslow </ci>
+            <ci> EG2SOS </ci>
+            <apply>
+              <divide/>
+              <cn> 1 </cn>
+              <apply>
+                <plus/>
+                <ci> Kmgneslow </ci>
+                <ci> Ras_GDP </ci>
+              </apply>
+            </apply>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_RAS_GTPhydro">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kRhydro </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_E_G2SOS_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kG2SOSf </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_E_G2SOS_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kG2SOSr </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_E_G2_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kG2f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_E_G2_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kG2r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_GRB2_SOS_bind_cyt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kSOSf </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_GRB2_SOS_bind_cyt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kSOSr </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_EG2_SOS_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kSOSf </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kr_EG2_SOS_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kSOSr </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_neg_fdbk_dephos_pSOS">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> kdpSOS </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule variable="Kf_neg_fdbk_phos_of_SOS">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> knfpSOS </ci>
+            <ci> pERK </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+    </listOfRules>
+    <listOfReactions>
+      <reaction fast="false" id="Ras_Raf1_bind" name="Ras_Raf1_bind" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="Ras_Raf1_bind_Ras_GTPr" species="Ras_GTP" stoichiometry="1"/>
+          <speciesReference constant="true" id="Ras_Raf1_bind_Raf1r" species="Raf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="Ras_Raf1_bind_Ras_Raf1p" species="Ras_Raf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_Ras_Raf1_bind </ci>
+                  <ci> Ras_GTP </ci>
+                  <ci> Raf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_Ras_Raf1_bind </ci>
+                    <ci> Ras_Raf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="BRAF_RAF1_bind" name="BRAF_RAF1_bind" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="BRAF_RAF1_bind_Ras_BRafr" species="Ras_BRaf" stoichiometry="1"/>
+          <speciesReference constant="true" id="BRAF_RAF1_bind_Ras_Raf1r" species="Ras_Raf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="BRAF_RAF1_bind_Ras_BRaf_Raf1_tetramerp" species="Ras_BRaf_Raf1_tetramer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_BRAF_RAF1_bind </ci>
+                  <ci> Ras_BRaf </ci>
+                  <ci> Ras_Raf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_BRAF_RAF1_bind </ci>
+                    <ci> Ras_BRaf_Raf1_tetramer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="BRAF_RAF1_phos" name="BRAF_RAF1_phos" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="BRAF_RAF1_phos_Ras_BRaf_Raf1_tetramerr" species="Ras_BRaf_Raf1_tetramer" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="BRAF_RAF1_phos_Ras_BRaf_pRaf1_tetramerp" species="Ras_BRaf_pRaf1_tetramer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_BRAF_RAF1_phos </ci>
+                  <ci> Ras_BRaf_Raf1_tetramer </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_BRAF_RAF1_phos </ci>
+                    <ci> Ras_BRaf_pRaf1_tetramer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="RAS_pRAF1_unbind" name="RAS_pRAF1_unbind" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="RAS_pRAF1_unbind_Ras_pRaf1r" species="Ras_pRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="RAS_pRAF1_unbind_pRaf1p" species="pRaf1" stoichiometry="1"/>
+          <speciesReference constant="true" id="RAS_pRAF1_unbind_Ras_GTPp" species="Ras_GTP" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_RAS_pRAF1_unbind </ci>
+                  <ci> Ras_pRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_RAS_pRAF1_unbind </ci>
+                    <ci> pRaf1 </ci>
+                    <ci> Ras_GTP </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="RAS_BRAF_bind" name="RAS_BRAF_bind" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="RAS_BRAF_bind_BRafr" species="BRaf" stoichiometry="1"/>
+          <speciesReference constant="true" id="RAS_BRAF_bind_Ras_GTPr" species="Ras_GTP" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="RAS_BRAF_bind_Ras_BRafp" species="Ras_BRaf" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_RAS_BRAF_bind </ci>
+                  <ci> BRaf </ci>
+                  <ci> Ras_GTP </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_RAS_BRAF_bind </ci>
+                    <ci> Ras_BRaf </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="pRaf1_Raf1_bind" name="pRaf1_Raf1_bind" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="pRaf1_Raf1_bind_Ras_pRaf1r" species="Ras_pRaf1" stoichiometry="1"/>
+          <speciesReference constant="true" id="pRaf1_Raf1_bind_Ras_Raf1r" species="Ras_Raf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="pRaf1_Raf1_bind_Ras_pRaf1_Raf1_tetramerp" species="Ras_pRaf1_Raf1_tetramer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_pRaf1_Raf1_bind </ci>
+                  <ci> Ras_pRaf1 </ci>
+                  <ci> Ras_Raf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_pRaf1_Raf1_bind </ci>
+                    <ci> Ras_pRaf1_Raf1_tetramer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="pRAF1_RAF1_phos" name="pRAF1_RAF1_phos" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="pRAF1_RAF1_phos_Ras_pRaf1_Raf1_tetramerr" species="Ras_pRaf1_Raf1_tetramer" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="pRAF1_RAF1_phos_Ras_pRaf1_tetramerp" species="Ras_pRaf1_tetramer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_pRAF1_RAF1_phos </ci>
+                  <ci> Ras_pRaf1_Raf1_tetramer </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_pRAF1_RAF1_phos </ci>
+                    <ci> Ras_pRaf1_tetramer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="sorafenib_Raf1_bind_cyt" name="sorafenib_Raf1_bind_cyt" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="sorafenib_Raf1_bind_cyt_sorafenibr" species="sorafenib" stoichiometry="1"/>
+          <speciesReference constant="true" id="sorafenib_Raf1_bind_cyt_Raf1r" species="Raf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="sorafenib_Raf1_bind_cyt_iRaf1p" species="iRaf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_sorafenib_Raf1_bind_cyt </ci>
+                  <ci> sorafenib </ci>
+                  <ci> Raf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_sorafenib_Raf1_bind_cyt </ci>
+                    <ci> iRaf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="Ras_iRaf1_bind" name="Ras_iRaf1_bind" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="Ras_iRaf1_bind_iRaf1r" species="iRaf1" stoichiometry="1"/>
+          <speciesReference constant="true" id="Ras_iRaf1_bind_Ras_GTPr" species="Ras_GTP" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="Ras_iRaf1_bind_Ras_iRaf1p" species="Ras_iRaf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_Ras_iRaf1_bind </ci>
+                  <ci> iRaf1 </ci>
+                  <ci> Ras_GTP </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_Ras_iRaf1_bind </ci>
+                    <ci> Ras_iRaf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="iRaf1_iRaf1_bind" name="iRaf1_iRaf1_bind" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="iRaf1_iRaf1_bind_Ras_iRaf1r" species="Ras_iRaf1" stoichiometry="2"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="iRaf1_iRaf1_bind_Ras_iRaf1_tetramerp" species="Ras_iRaf1_tetramer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_iRaf1_iRaf1_bind </ci>
+                  <apply>
+                    <power/>
+                    <ci> Ras_iRaf1 </ci>
+                    <cn> 2 </cn>
+                  </apply>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_iRaf1_iRaf1_bind </ci>
+                    <ci> Ras_iRaf1_tetramer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="BRaf_iRaf1_bind" name="BRaf_iRaf1_bind" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="BRaf_iRaf1_bind_Ras_BRafr" species="Ras_BRaf" stoichiometry="1"/>
+          <speciesReference constant="true" id="BRaf_iRaf1_bind_Ras_iRaf1r" species="Ras_iRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="BRaf_iRaf1_bind_Ras_Braf_iRaf1_tetramerp" species="Ras_Braf_iRaf1_tetramer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_BRaf_iRaf1_bind </ci>
+                  <ci> Ras_BRaf </ci>
+                  <ci> Ras_iRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_BRaf_iRaf1_bind </ci>
+                    <ci> Ras_Braf_iRaf1_tetramer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="pRAF1_dephos" name="pRAF1_dephos" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="pRAF1_dephos_pRaf1r" species="pRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="pRAF1_dephos_Raf1p" species="Raf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_pRAF1_dephos </ci>
+                  <ci> pRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_pRAF1_dephos </ci>
+                    <ci> Raf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="pRaf1_pRaf1_unbind" name="pRaf1_pRaf1_unbind" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="pRaf1_pRaf1_unbind_Ras_pRaf1_tetramerr" species="Ras_pRaf1_tetramer" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="pRaf1_pRaf1_unbind_Ras_pRaf1p" species="Ras_pRaf1" stoichiometry="2"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_pRaf1_pRaf1_unbind </ci>
+                  <ci> Ras_pRaf1_tetramer </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_pRaf1_pRaf1_unbind </ci>
+                    <apply>
+                      <power/>
+                      <ci> Ras_pRaf1 </ci>
+                      <cn> 2 </cn>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="BRaf_pRaf1_unbind" name="BRaf_pRaf1_unbind" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="BRaf_pRaf1_unbind_Ras_BRaf_pRaf1_tetramerr" species="Ras_BRaf_pRaf1_tetramer" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="BRaf_pRaf1_unbind_Ras_BRafp" species="Ras_BRaf" stoichiometry="1"/>
+          <speciesReference constant="true" id="BRaf_pRaf1_unbind_Ras_pRaf1p" species="Ras_pRaf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_BRaf_pRaf1_unbind </ci>
+                  <ci> Ras_BRaf_pRaf1_tetramer </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_BRaf_pRaf1_unbind </ci>
+                    <ci> Ras_BRaf </ci>
+                    <ci> Ras_pRaf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="sorafenib_BRaf_bind_cyt" name="sorafenib_BRaf_bind_cyt" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="sorafenib_BRaf_bind_cyt_sorafenibr" species="sorafenib" stoichiometry="1"/>
+          <speciesReference constant="true" id="sorafenib_BRaf_bind_cyt_BRafr" species="BRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="sorafenib_BRaf_bind_cyt_iBRafp" species="iBRaf" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_sorafenib_BRaf_bind_cyt </ci>
+                  <ci> sorafenib </ci>
+                  <ci> BRaf </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_sorafenib_BRaf_bind_cyt </ci>
+                    <ci> iBRaf </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="MEK_phos" name="MEK_phos" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="MEK_phos_MEKr" species="MEK" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="MEK_phos_pMEKp" species="pMEK" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pRaf1"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_MEK_phos </ci>
+                  <ci> MEK </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_MEK_phos </ci>
+                    <ci> pMEK </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="MEK_dephos" name="MEK_dephos" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="MEK_dephos_pMEKr" species="pMEK" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="MEK_dephos_MEKp" species="MEK" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_MEK_dephos </ci>
+                  <ci> pMEK </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_MEK_dephos </ci>
+                    <ci> MEK </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="ERK_phos" name="ERK_phos" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="ERK_phos_ERKr" species="ERK" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="ERK_phos_pERKp" species="pERK" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pMEK"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_ERK_phos </ci>
+                  <ci> ERK </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_ERK_phos </ci>
+                    <ci> pERK </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="ERK_dephos" name="ERK_dephos" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="ERK_dephos_pERKr" species="pERK" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="ERK_dephos_ERKp" species="ERK" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_ERK_dephos </ci>
+                  <ci> pERK </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_ERK_dephos </ci>
+                    <ci> ERK </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="RAS_iBRAF_bind" name="RAS_iBRAF_bind" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="RAS_iBRAF_bind_iBRafr" species="iBRaf" stoichiometry="1"/>
+          <speciesReference constant="true" id="RAS_iBRAF_bind_Ras_GTPr" species="Ras_GTP" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="RAS_iBRAF_bind_Ras_iBRafp" species="Ras_iBRaf" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_RAS_iBRAF_bind </ci>
+                  <ci> iBRaf </ci>
+                  <ci> Ras_GTP </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_RAS_iBRAF_bind </ci>
+                    <ci> Ras_iBRaf </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="iBRaf_dim" name="iBRaf_dim" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="iBRaf_dim_Ras_iBRafr" species="Ras_iBRaf" stoichiometry="2"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="iBRaf_dim_iBRaf_dimerp" species="iBRaf_dimer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_iBRaf_dim </ci>
+                  <apply>
+                    <power/>
+                    <ci> Ras_iBRaf </ci>
+                    <cn> 2 </cn>
+                  </apply>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_iBRaf_dim </ci>
+                    <ci> iBRaf_dimer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="iBRaf_Raf1_bind" name="iBRaf_Raf1_bind" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="iBRaf_Raf1_bind_Ras_Raf1r" species="Ras_Raf1" stoichiometry="1"/>
+          <speciesReference constant="true" id="iBRaf_Raf1_bind_Ras_iBRafr" species="Ras_iBRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="iBRaf_Raf1_bind_Ras_Raf1_iBRaf_tetramerp" species="Ras_Raf1_iBRaf_tetramer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_iBRaf_Raf1_bind </ci>
+                  <ci> Ras_Raf1 </ci>
+                  <ci> Ras_iBRaf </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_iBRaf_Raf1_bind </ci>
+                    <ci> Ras_Raf1_iBRaf_tetramer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="Raf1_iBRaf_phos" name="Raf1_iBRaf_phos" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="Raf1_iBRaf_phos_Ras_Raf1_iBRaf_tetramerr" species="Ras_Raf1_iBRaf_tetramer" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="Raf1_iBRaf_phos_Ras_pRaf1_iBRaf_tetramerp" species="Ras_pRaf1_iBRaf_tetramer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_Raf1_iBRaf_phos </ci>
+                  <ci> Ras_Raf1_iBRaf_tetramer </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_Raf1_iBRaf_phos </ci>
+                    <ci> Ras_pRaf1_iBRaf_tetramer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="pRaf1_iBRaf_unbind" name="pRaf1_iBRaf_unbind" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="pRaf1_iBRaf_unbind_Ras_pRaf1_iBRaf_tetramerr" species="Ras_pRaf1_iBRaf_tetramer" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="pRaf1_iBRaf_unbind_Ras_iBRafp" species="Ras_iBRaf" stoichiometry="1"/>
+          <speciesReference constant="true" id="pRaf1_iBRaf_unbind_Ras_pRaf1p" species="Ras_pRaf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_pRaf1_iBRaf_unbind </ci>
+                  <ci> Ras_pRaf1_iBRaf_tetramer </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_pRaf1_iBRaf_unbind </ci>
+                    <ci> Ras_iBRaf </ci>
+                    <ci> Ras_pRaf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="BRAF_dim" name="BRAF_dim" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="BRAF_dim_Ras_BRafr" species="Ras_BRaf" stoichiometry="2"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="BRAF_dim_BRaf_dimerp" species="BRaf_dimer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_BRAF_dim </ci>
+                  <apply>
+                    <power/>
+                    <ci> Ras_BRaf </ci>
+                    <cn> 2 </cn>
+                  </apply>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_BRAF_dim </ci>
+                    <ci> BRaf_dimer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="Ras_pRaf1_dp" name="Ras_pRaf1_dp" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="Ras_pRaf1_dp_Ras_pRaf1r" species="Ras_pRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="Ras_pRaf1_dp_Ras_Raf1p" species="Ras_Raf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_Ras_pRaf1_dp </ci>
+                  <ci> Ras_pRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_Ras_pRaf1_dp </ci>
+                    <ci> Ras_Raf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="Ras_Raf1_nfp" name="Ras_Raf1_nfp" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="Ras_Raf1_nfp_Ras_Raf1r" species="Ras_Raf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="Ras_Raf1_nfp_Ras_nfpRaf1p" species="Ras_nfpRaf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_Ras_Raf1_nfp </ci>
+                  <ci> Ras_Raf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_Ras_Raf1_nfp </ci>
+                    <ci> Ras_nfpRaf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="neg_fdbk_unbind_RASt_nfpRAF1" name="neg_fdbk_unbind_RASt_nfpRAF1" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="neg_fdbk_unbind_RASt_nfpRAF1_Ras_nfpRaf1r" species="Ras_nfpRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="neg_fdbk_unbind_RASt_nfpRAF1_Ras_GTPp" species="Ras_GTP" stoichiometry="1"/>
+          <speciesReference constant="true" id="neg_fdbk_unbind_RASt_nfpRAF1_nfpRaf1p" species="nfpRaf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbk_unbind_RASt_nfpRAF1 </ci>
+                  <ci> Ras_nfpRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbk_unbind_RASt_nfpRAF1 </ci>
+                    <ci> Ras_GTP </ci>
+                    <ci> nfpRaf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="neg_fdbk_dephos_pRaf1" name="neg_fdbk_dephos_pRaf1" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="neg_fdbk_dephos_pRaf1_nfpRaf1r" species="nfpRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="neg_fdbk_dephos_pRaf1_Raf1p" species="Raf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbk_dephos_pRaf1 </ci>
+                  <ci> nfpRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbk_dephos_pRaf1 </ci>
+                    <ci> Raf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="BRAF_nfp" name="BRAF_nfp" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="BRAF_nfp_Ras_BRafr" species="Ras_BRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="BRAF_nfp_Ras_nfpBRafp" species="Ras_nfpBRaf" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_BRAF_nfp </ci>
+                  <ci> Ras_BRaf </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_BRAF_nfp </ci>
+                    <ci> Ras_nfpBRaf </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="neg_fdbk_unbind_RASt_nfpBRAF" name="neg_fdbk_unbind_RASt_nfpBRAF" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="neg_fdbk_unbind_RASt_nfpBRAF_Ras_nfpBRafr" species="Ras_nfpBRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="neg_fdbk_unbind_RASt_nfpBRAF_Ras_GTPp" species="Ras_GTP" stoichiometry="1"/>
+          <speciesReference constant="true" id="neg_fdbk_unbind_RASt_nfpBRAF_nfpBRafp" species="nfpBRaf" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbk_unbind_RASt_nfpBRAF </ci>
+                  <ci> Ras_nfpBRaf </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbk_unbind_RASt_nfpBRAF </ci>
+                    <ci> Ras_GTP </ci>
+                    <ci> nfpBRaf </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="neg_fdbk_dephos_pBRAF" name="neg_fdbk_dephos_pBRAF" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="neg_fdbk_dephos_pBRAF_nfpBRafr" species="nfpBRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="neg_fdbk_dephos_pBRAF_BRafp" species="BRaf" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbk_dephos_pBRAF </ci>
+                  <ci> nfpBRaf </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbk_dephos_pBRAF </ci>
+                    <ci> BRaf </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="BRaf_iBRaf_dim" name="BRaf_iBRaf_dim" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="BRaf_iBRaf_dim_Ras_iBRafr" species="Ras_iBRaf" stoichiometry="1"/>
+          <speciesReference constant="true" id="BRaf_iBRaf_dim_Ras_BRafr" species="Ras_BRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="BRaf_iBRaf_dim_BRaf_iBRaf_dimerp" species="BRaf_iBRaf_dimer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_BRaf_iBRaf_dim </ci>
+                  <ci> Ras_iBRaf </ci>
+                  <ci> Ras_BRaf </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_BRaf_iBRaf_dim </ci>
+                    <ci> BRaf_iBRaf_dimer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="Ras_iRaf_nfp" name="Ras_iRaf_nfp" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="Ras_iRaf_nfp_Ras_iRaf1r" species="Ras_iRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="Ras_iRaf_nfp_Ras_nfpiRaf1p" species="Ras_nfpiRaf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_Ras_iRaf_nfp </ci>
+                  <ci> Ras_iRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_Ras_iRaf_nfp </ci>
+                    <ci> Ras_nfpiRaf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="neg_fdbk_unbind_piRaf1_RASt" name="neg_fdbk_unbind_piRaf1_RASt" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="neg_fdbk_unbind_piRaf1_RASt_Ras_nfpiRaf1r" species="Ras_nfpiRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="neg_fdbk_unbind_piRaf1_RASt_nfpiRaf1p" species="nfpiRaf1" stoichiometry="1"/>
+          <speciesReference constant="true" id="neg_fdbk_unbind_piRaf1_RASt_Ras_GTPp" species="Ras_GTP" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbk_unbind_piRaf1_RASt </ci>
+                  <ci> Ras_nfpiRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbk_unbind_piRaf1_RASt </ci>
+                    <ci> nfpiRaf1 </ci>
+                    <ci> Ras_GTP </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="neg_fdbck_dephos_piRaf" name="neg_fdbck_dephos_piRaf" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="neg_fdbck_dephos_piRaf_nfpiRaf1r" species="nfpiRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="neg_fdbck_dephos_piRaf_iRaf1p" species="iRaf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbck_dephos_piRaf </ci>
+                  <ci> nfpiRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbck_dephos_piRaf </ci>
+                    <ci> iRaf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="Ras_iBRaf_nfp" name="Ras_iBRaf_nfp" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="Ras_iBRaf_nfp_Ras_iBRafr" species="Ras_iBRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="Ras_iBRaf_nfp_Ras_nfpiBRafp" species="Ras_nfpiBRaf" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_Ras_iBRaf_nfp </ci>
+                  <ci> Ras_iBRaf </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_Ras_iBRaf_nfp </ci>
+                    <ci> Ras_nfpiBRaf </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="neg_fdbk_unbind_piBRaf_RASt" name="neg_fdbk_unbind_piBRaf_RASt" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="neg_fdbk_unbind_piBRaf_RASt_Ras_nfpiBRafr" species="Ras_nfpiBRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="neg_fdbk_unbind_piBRaf_RASt_nfpiBRafp" species="nfpiBRaf" stoichiometry="1"/>
+          <speciesReference constant="true" id="neg_fdbk_unbind_piBRaf_RASt_Ras_GTPp" species="Ras_GTP" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbk_unbind_piBRaf_RASt </ci>
+                  <ci> Ras_nfpiBRaf </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbk_unbind_piBRaf_RASt </ci>
+                    <ci> nfpiBRaf </ci>
+                    <ci> Ras_GTP </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="neg_fdbk_dephos_iBRAF" name="neg_fdbk_dephos_iBRAF" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="neg_fdbk_dephos_iBRAF_nfpiBRafr" species="nfpiBRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="neg_fdbk_dephos_iBRAF_iBRafp" species="iBRaf" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbk_dephos_iBRAF </ci>
+                  <ci> nfpiBRaf </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbk_dephos_iBRAF </ci>
+                    <ci> iBRaf </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="iRaf_iBRaf_dim" name="iRaf_iBRaf_dim" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="iRaf_iBRaf_dim_Ras_iBRafr" species="Ras_iBRaf" stoichiometry="1"/>
+          <speciesReference constant="true" id="iRaf_iBRaf_dim_Ras_iRaf1r" species="Ras_iRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="iRaf_iBRaf_dim_Ras_iRaf1_iBRaf1_tetramerp" species="Ras_iRaf1_iBRaf1_tetramer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_iRaf_iBRaf_dim </ci>
+                  <ci> Ras_iBRaf </ci>
+                  <ci> Ras_iRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_iRaf_iBRaf_dim </ci>
+                    <ci> Ras_iRaf1_iBRaf1_tetramer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="EGF_bind" name="EGF_bind" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="EGF_bind_mEr" species="mE" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="EGF_bind_mELp" species="mEL" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_EGF_bind </ci>
+                  <ci> mE </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_EGF_bind </ci>
+                    <ci> mEL </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="mEL_dim" name="mEL_dim" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="mEL_dim_mELr" species="mEL" stoichiometry="2"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="mEL_dim_mELmELp" species="mELmEL" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_mEL_dim </ci>
+                  <apply>
+                    <power/>
+                    <ci> mEL </ci>
+                    <cn> 2 </cn>
+                  </apply>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_mEL_dim </ci>
+                    <ci> mELmEL </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="mELmEL_phos_dephos" name="mELmEL_phos_dephos" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="mELmEL_phos_dephos_mELmELr" species="mELmEL" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="mELmEL_phos_dephos_Ep" species="E" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_mELmEL_phos_dephos </ci>
+                  <ci> mELmEL </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_mELmEL_phos_dephos </ci>
+                    <ci> E </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="RAS_GTP_bind" name="RAS_GTP_bind" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="RAS_GTP_bind_Ras_GDPr" species="Ras_GDP" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="RAS_GTP_bind_Ras_GTPp" species="Ras_GTP" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="EG2SOS"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_RAS_GTP_bind </ci>
+                  <ci> Ras_GDP </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_RAS_GTP_bind </ci>
+                    <ci> Ras_GTP </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="RAS_GTPhydro" name="RAS_GTPhydro" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="RAS_GTPhydro_Ras_GTPr" species="Ras_GTP" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="RAS_GTPhydro_Ras_GDPp" species="Ras_GDP" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_RAS_GTPhydro </ci>
+                  <ci> Ras_GTP </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_RAS_GTPhydro </ci>
+                    <ci> Ras_GDP </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="E_G2SOS_bind" name="E_G2SOS_bind" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="E_G2SOS_bind_GRB2_SOSr" species="GRB2_SOS" stoichiometry="1"/>
+          <speciesReference constant="true" id="E_G2SOS_bind_Er" species="E" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="E_G2SOS_bind_EG2SOSp" species="EG2SOS" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_E_G2SOS_bind </ci>
+                  <ci> GRB2_SOS </ci>
+                  <ci> E </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_E_G2SOS_bind </ci>
+                    <ci> EG2SOS </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="E_G2_bind" name="E_G2_bind" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="E_G2_bind_GRB2r" species="GRB2" stoichiometry="1"/>
+          <speciesReference constant="true" id="E_G2_bind_Er" species="E" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="E_G2_bind_EG2p" species="EG2" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_E_G2_bind </ci>
+                  <ci> GRB2 </ci>
+                  <ci> E </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_E_G2_bind </ci>
+                    <ci> EG2 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="GRB2_SOS_bind_cyt" name="GRB2_SOS_bind_cyt" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="GRB2_SOS_bind_cyt_GRB2r" species="GRB2" stoichiometry="1"/>
+          <speciesReference constant="true" id="GRB2_SOS_bind_cyt_SOSr" species="SOS" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="GRB2_SOS_bind_cyt_GRB2_SOSp" species="GRB2_SOS" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_GRB2_SOS_bind_cyt </ci>
+                  <ci> GRB2 </ci>
+                  <ci> SOS </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_GRB2_SOS_bind_cyt </ci>
+                    <ci> GRB2_SOS </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="EG2_SOS_bind" name="EG2_SOS_bind" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="EG2_SOS_bind_EG2r" species="EG2" stoichiometry="1"/>
+          <speciesReference constant="true" id="EG2_SOS_bind_SOSr" species="SOS" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="EG2_SOS_bind_EG2SOSp" species="EG2SOS" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_EG2_SOS_bind </ci>
+                  <ci> EG2 </ci>
+                  <ci> SOS </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_EG2_SOS_bind </ci>
+                    <ci> EG2SOS </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="neg_fdbk_dephos_pSOS" name="neg_fdbk_dephos_pSOS" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="neg_fdbk_dephos_pSOS_nfpSOSr" species="nfpSOS" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="neg_fdbk_dephos_pSOS_SOSp" species="SOS" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbk_dephos_pSOS </ci>
+                  <ci> nfpSOS </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbk_dephos_pSOS </ci>
+                    <ci> SOS </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction fast="false" id="neg_fdbk_phos_of_SOS" name="neg_fdbk_phos_of_SOS" reversible="true">
+        <listOfReactants>
+          <speciesReference constant="true" id="neg_fdbk_phos_of_SOS_EG2SOSr" species="EG2SOS" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" id="neg_fdbk_phos_of_SOS_EG2p" species="EG2" stoichiometry="1"/>
+          <speciesReference constant="true" id="neg_fdbk_phos_of_SOS_nfpSOSp" species="nfpSOS" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pERK"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbk_phos_of_SOS </ci>
+                  <ci> EG2SOS </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbk_phos_of_SOS </ci>
+                    <ci> EG2 </ci>
+                    <ci> nfpSOS </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                  <listOfLocalParameters>
+            <localParameter id="I" units="pA_um_2" value="0"/>
+            <localParameter id="netValence" units="_one_" value="1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>

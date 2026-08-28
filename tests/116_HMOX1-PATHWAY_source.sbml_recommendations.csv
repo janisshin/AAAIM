@@ -1,0 +1,216 @@
+file,type,id,display_name,curated_name,annotation,annotation_label,match_score,status,update_annotation,qualifier
+116_HMOX1-PATHWAY_source.sbml,,Reason:,"Chunk 3: sa171 is a SARS-CoV-2 protein, sa189 is Cullin-associated and neddylation-dissociated 1, sa190 refers to Protein Kinase C, sa3 is Nuclear factor erythroid 2-related factor 2, sa196 is Feline leukemia virus subgroup C receptor 1, sa197 and sa198 are associated with heme metabolism, sa203, sa204, and sa205 are simple molecules, sa214 and sa229 are Transferrin, sa238 is an ion, sa241 is Mucolipin 1, sa242 is an ion, sa243 is Six-transmembrane epithelial antigen of prostate 3,",,,,,,,
+116_HMOX1-PATHWAY_source.sbml,protein,csa10,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:P62877,RBX1,0.6666666666666666,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa10,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:Q14145,KEAP1,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa10,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:Q15843,NEDD8,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa10,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:Q13618,CUL3,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa10,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:Q16236,NFE2L2,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa10,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:P0CG48,UBC,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa10,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:Q13616,CUL1,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa10,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:P61081,UBE2M,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa101,Nf-KB Complex_complex,NFKB1,UNIPROT:P19838,NFKB1,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa101,Nf-KB Complex_complex,NFKB1,UNIPROT:Q04206,RELA,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa101,Nf-KB Complex_complex,NFKB1,UNIPROT:Q00653,NFKB2,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa11,Ferritin_complex,FTL,UNIPROT:P02794,FTH1,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa11,Ferritin_complex,FTL,UNIPROT:P02792,FTL,0.5,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa12,SLC40A1:CP:Cu2+_complex,SLC40A1,UNIPROT:Q9NP59,SLC40A1,0.3333333333333333,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa12,SLC40A1:CP:Cu2+_complex,SLC40A1,UNIPROT:P00450,CP,0.3333333333333333,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa12,SLC40A1:CP:Cu2+_complex,SLC40A1,UNIPROT:Q9BQS7,HEPH,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa13,CYBRD1:Heme_complex,CYBRD1,UNIPROT:Q53TN4,CYBRD1,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa14,ALAD:Zn2+_complex,ALAD,UNIPROT:P13716,ALAD,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa15,HMBS:DIPY_complex,HMBS,UNIPROT:P08397,HMBS,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa17,PPO:FAD_complex,PPOX,UNIPROT:P50336,PPOX,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa17,PPO:FAD_complex,PPOX,UNIPROT:O43612,HCRT,0.5,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa19,CUL3:RBX1_complex,CUL3,UNIPROT:P62877,RBX1,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa19,CUL3:RBX1_complex,CUL3,UNIPROT:Q13618,CUL3,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa2,Nrf2/Maf_complex,NFE2L2,UNIPROT:Q16236,NFE2L2,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa2,Nrf2/Maf_complex,NFE2L2,UNIPROT:O75444,MAF,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa2,Nrf2/Maf_complex,NFE2L2,UNIPROT:O15525,MAFG,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa21,BLVRA:Zn2+_complex,BLVRA,UNIPROT:P53004,BLVRA,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa22,SLC40A1:HEPH:Cu2+_complex,SLC40A1,UNIPROT:Q9NP59,SLC40A1,0.3333333333333333,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa22,SLC40A1:HEPH:Cu2+_complex,SLC40A1,UNIPROT:Q9BQS7,HEPH,0.3333333333333333,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa27,TFRC:holoTF_complex_cell,TFRC,UNIPROT:P02786,TFRC,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa27,TFRC:holoTF_complex_cell,TFRC,UNIPROT:P02787,TF,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa27,TFRC:holoTF_complex_cell,TFRC,UNIPROT:P13726,F3,0.5,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa29,TFRC:holoTF_complex_endosome,TFRC,UNIPROT:P02786,TFRC,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa29,TFRC:holoTF_complex_endosome,TFRC,UNIPROT:P02787,TF,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa29,TFRC:holoTF_complex_endosome,TFRC,UNIPROT:P13726,F3,0.5,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa3,ALB/BIL_complex,ALB,UNIPROT:P02768,ALB,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa3,ALB/BIL_complex,ALB,UNIPROT:Q8TES7,FBF1,0.5,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa30,TFRC:TF_complex_endosome,TFRC,UNIPROT:P02786,TFRC,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa30,TFRC:TF_complex_endosome,TFRC,UNIPROT:P02787,TF,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa30,TFRC:TF_complex_endosome,TFRC,UNIPROT:P13726,F3,0.5,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa31,TFRC:TF_complex_cell,TFRC,UNIPROT:P02786,TFRC,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa31,TFRC:TF_complex_cell,TFRC,UNIPROT:P02787,TF,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa31,TFRC:TF_complex_cell,TFRC,UNIPROT:P13726,F3,0.5,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa32,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:P62877,RBX1,0.6666666666666666,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa32,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:Q14145,KEAP1,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa32,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:Q15843,NEDD8,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa32,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:Q13618,CUL3,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa32,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:Q16236,NFE2L2,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa32,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:P0CG48,UBC,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa32,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:Q13616,CUL1,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa32,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:P61081,UBE2M,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa4,BACH1/Maf_complex,BACH1,UNIPROT:O14867,BACH1,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa4,BACH1/Maf_complex,BACH1,UNIPROT:Q9BX63,BRIP1,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa4,BACH1/Maf_complex,BACH1,UNIPROT:O75444,MAF,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa5,ALAS1:ALAS2_complex,ALAS1,UNIPROT:P13196,ALAS1,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa5,ALAS1:ALAS2_complex,ALAS1,UNIPROT:P22557,ALAS2,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa69,Thioredoxin:TXNIP_complex,TXN,UNIPROT:P10599,TXN,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa69,Thioredoxin:TXNIP_complex,TXN,UNIPROT:Q9H3M7,TXNIP,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa72,NLRP3:SUGT1:HSP90_complex,NLRP3,UNIPROT:Q96P20,NLRP3,0.3333333333333333,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa72,NLRP3:SUGT1:HSP90_complex,NLRP3,UNIPROT:Q9Y2Z0,SUGT1,0.3333333333333333,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa72,NLRP3:SUGT1:HSP90_complex,NLRP3,UNIPROT:P08238,HSP90AB1,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa74,TXNIP:NLRP3_complex,TXNIP,UNIPROT:Q9H3M7,TXNIP,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa74,TXNIP:NLRP3_complex,TXNIP,UNIPROT:Q96P20,NLRP3,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa78,NLRP3 oligomer:ASC:Caspase1_complex,NLRP3,UNIPROT:Q9ULZ3,PYCARD,0.3333333333333333,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa78,NLRP3 oligomer:ASC:Caspase1_complex,NLRP3,UNIPROT:P29466,CASP1,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa78,NLRP3 oligomer:ASC:Caspase1_complex,NLRP3,UNIPROT:Q96P20,NLRP3,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa78,NLRP3 oligomer:ASC:Caspase1_complex,NLRP3,UNIPROT:P08842,STS,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa8,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:P62877,RBX1,0.6666666666666666,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa8,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:Q14145,KEAP1,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa8,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:Q15843,NEDD8,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa8,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:Q13618,CUL3,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa8,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:Q16236,NFE2L2,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa8,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:Q13616,CUL1,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa8,Ubiquitin Ligase Complex_complex_cell,CUL1,UNIPROT:P61081,UBE2M,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa83,PSTPIP1 trimer:Pyrin trimer_complex,PSTPIP1,UNIPROT:O43586,PSTPIP1,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa83,PSTPIP1 trimer:Pyrin trimer_complex,PSTPIP1,UNIPROT:O15553,MEFV,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa85,Pyrin trimer_complex,PYRIN,UNIPROT:O15553,MEFV,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa88,Pyrin trimer:ASC_complex,PYRIN,UNIPROT:O15553,MEFV,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa88,Pyrin trimer:ASC_complex,PYRIN,UNIPROT:Q9ULZ3,PYCARD,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa88,Pyrin trimer:ASC_complex,PYRIN,UNIPROT:P08842,STS,0.5,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,csa93,Caspase-1 Tetramer_complex,CASP1,UNIPROT:P29466,CASP1,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,csa94,CASP1(120-197):CASP1(317-404)_complex,CASP1,UNIPROT:P29466,CASP1,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa101,PBG_simple_molecule,PBGD,UNIPROT:P08397,HMBS,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa104,H+_ion_cell,,,sa104,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa105,HMBL_simple_molecule,HMBL,,sa105,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa107,NH4+_ion,,,sa107,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa111,URO3_simple_molecule,UROS,UNIPROT:P10746,Mgu,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa112,UROS,UROS,UNIPROT:P10746,Mgu,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa113,COPRO3_simple_molecule_cell,UROD,UNIPROT:P06132,UROD,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa114,UROD,UROD,UNIPROT:P06132,UROD,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa115,COPRO3_simple_molecule_mitochondrion,COPRO3,,sa115,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa116,PPGEN9_simple_molecule,,,sa116,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa117,PRIN9_simple_molecule_mitochondrion,PRIN9,,sa117,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa118,CPOX,CPOX,UNIPROT:P36551,CPOX,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa121,O2_simple_molecule_mitochondrion,,,sa121,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa122,CO2_simple_molecule_mitochondrion,,,sa122,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa123,H2O2_simple_molecule,,,sa123,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa126,Dimethly fumarate_drug,,,sa126,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa127,Ferroptosis_phenotype,Ferroptosis,,sa127,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa128,Poly-unsaturated fatty acid_simple_molecule,,,sa128,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa130,Lipid Peroxide_simple_molecule,,,sa130,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa135,Fe2+_ion_default_compartment,,,sa135,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa138,Fe3+_ion_default_compartment,,,sa138,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa140,SLC40A1_rna,SLC40A1,UNIPROT:Q9NP59,SLC40A1,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa144,FTH1_rna,FTH1,UNIPROT:P02794,FTH1,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa145,FTL_rna,FTL,UNIPROT:P02792,FTL,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa147,FECH_rna,FECH,UNIPROT:P22830,FECH,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa150,BLVRA_rna,BLVRA,UNIPROT:P53004,BLVRA,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa151,BLVRB_rna,BLVRB,UNIPROT:P30043,BLVRB,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa152,Fe(3+)O(OH)_simple_molecule,,,sa152,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa156,O2_simple_molecule_default_compartment,,,sa156,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa157,H+_ion_default_compartment,,,sa157,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa158,H2O_simple_molecule_default_compartment,,,sa158,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa164,SLC11A2,SLC11A2,UNIPROT:P49281,SLC11A2,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa165,Reactive Oxygen Species_simple_molecule,,,sa165,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa166,Lipid alcohol_simple_molecule,GPX4,UNIPROT:P36969,GPX4,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa167,GPX4,GPX4,UNIPROT:P36969,GPX4,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa168,HMOX1_cell_active,HMOX1,UNIPROT:P09601,HMOX1,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa169,ORF3a,ORF3a,UNIPROT:P0DTC3,P0DTC3,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa169,ORF3a,ORF3a,,sa169,0.0,,ignore,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa171,ORF9c,ORF9c,,sa171,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa189,CAND1,CAND1,UNIPROT:Q86VP6,CAND1,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa190,PKC,PRKCA,UNIPROT:P17252,PRKCA,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa190,PKC,PRKCA,UNIPROT:P05771,PRKCB,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa190,PKC,PRKCA,UNIPROT:P05129,PRKCG,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa195,e-_ion_default_compartment,,,sa195,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa196,FLVCR1-1,FLVCR1,UNIPROT:Q9Y5Y0,FLVCR1,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa197,Heme_simple_molecule_default_compartment,HMOX1,UNIPROT:P09601,HMOX1,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa198,ABCG2,ABCG2,UNIPROT:Q9UNQ0,ABCG2,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa20,Panhematin_drug,,,sa20,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa203,ATP_simple_molecule,,,sa203,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa204,ADP_simple_molecule,,,sa204,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa205,Pi_simple_molecule,,,sa205,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa21,Heme_simple_molecule_cell,HEME,,sa21,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa214,Transferrin,TF,UNIPROT:P02787,TF,0.5,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa214,Transferrin,TF,UNIPROT:P13726,F3,0.5,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa214,Transferrin,TF,UNIPROT:P02786,TFRC,0.5,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa22,Biliverdin_simple_molecule,BV,,sa22,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa229,Fe3+_ion_endosome,TF,UNIPROT:P02787,TF,0.5,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa229,Fe3+_ion_endosome,TF,UNIPROT:P13726,F3,0.5,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa229,Fe3+_ion_endosome,TF,UNIPROT:P02786,TFRC,0.5,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa23,Heme_simple_molecule_mitochondrial matrix,HEME,,sa23,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa238,Fe2+_ion_endosome,,,sa238,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa24,O2_simple_molecule_cell,O2,,sa24,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa241,MCOLN1,MCOLN1,UNIPROT:Q9GZU1,MCOLN1,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa242,e-_ion_endosome,,,sa242,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa243,STEAP3,STEAP3,UNIPROT:Q658P3,STEAP3,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa249,NRF2_ubiquitinated,NFE2L2,UNIPROT:Q16236,NFE2L2,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa25,NADPH_simple_molecule,NADPH,,sa25,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa26,H2O_simple_molecule_cell,H2O,,sa26,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa27,NADP+_simple_molecule,NADP,,sa27,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa28,Fe2+_ion_cell,FE2+,,sa28,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa29,HMOX1_cell,HMOX1,UNIPROT:P09601,HMOX1,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa3,NRF2_phosphorylated_cell,NFE2L2,UNIPROT:Q16236,NFE2L2,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa30,FLVCR1-2,FLVCR1,UNIPROT:Q9Y5Y0,FLVCR1,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa31,CO_simple_molecule,CO,,sa31,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa32,Bilirubin_simple_molecule,BR,UNIPROT:Q69YU5,UQCC6,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa36,BLVRB,BLVRA,UNIPROT:P30043,BLVRB,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa36,BLVRB,BLVRA,UNIPROT:P53004,BLVRA,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa362,NLRP3_cell,NLRP3,UNIPROT:Q96P20,NLRP3,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa363,TXNIP,TXNIP,UNIPROT:Q9H3M7,TXNIP,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa364,TXN_cell,TXN,UNIPROT:P10599,TXN,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa366,TXN_cell,TXN,UNIPROT:P10599,TXN,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa367,NLRP3_rna,NLRP3,UNIPROT:Q96P20,NLRP3,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa375,ASC,PYCARD,UNIPROT:Q9ULZ3,PYCARD,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa377,PSTPIP1,PSTPIP1,UNIPROT:O43586,PSTPIP1,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa381,CTSG,CTSG,UNIPROT:P08311,CTSG,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa382,CASP1_cell,CASP1,UNIPROT:P29466,CASP1,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa385,CASP1_cell,CASP1,UNIPROT:P29466,CASP1,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa39,ABCC1,ABCC1,UNIPROT:P02768,ALB,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa39,ABCC1,ABCC1,UNIPROT:P33527,ABCC1,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa43,NRF2_phosphorylated_nucleus,NFE2L2,UNIPROT:Q16236,NFE2L2,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa44,BACH1,BACH1,UNIPROT:O14867,BACH1,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa44,BACH1,BACH1,UNIPROT:Q9BX63,BRIP1,1.0,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa460,proIL-1B_cell,IL1B,UNIPROT:P01584,IL1B,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa461,proIL-18_cell,IL18,UNIPROT:Q14116,IL18,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa462,proIL-1B_cell,IL1B,UNIPROT:P01584,IL1B,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa463,proIL-18_cell,IL18,UNIPROT:Q14116,IL18,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa464,IL-1B_cell,IL1B,UNIPROT:P01584,IL1B,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa465,IL-18_cell,IL18,UNIPROT:Q14116,IL18,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa466,IL-1B_default_compartment,IL1B,UNIPROT:P01584,IL1B,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa467,IL-18_default_compartment,IL18,UNIPROT:Q14116,IL18,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa468,NLRP3_cell_active,NLRP3,UNIPROT:Q96P20,NLRP3,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa469,SARS Orf3a,,UNIPROT:P59632,P59632,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa469,SARS Orf3a,,,sa469,0.0,,ignore,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa471,SARS E,SARSE,UNIPROT:P59637,P59637,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa471,SARS E,SARSE,,sa471,0.0,,ignore,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa48,miRNA-155_rna,MIR155,,sa48,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa494,NLRP3 Elicitor Small Molecules_simple_molecule,,,sa494,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa495,NLRP3 Elicitor Proteins,,UNIPROT:P05067,APP,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa495,NLRP3 Elicitor Proteins,,UNIPROT:P09616,P09616,,original only,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa495,NLRP3 Elicitor Proteins,,,sa495,0.0,,ignore,"isEncodedBy, isEncodedBy"
+116_HMOX1-PATHWAY_source.sbml,protein,sa5,MAF,MAF,UNIPROT:O75444,MAF,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa50,HMOX1_rna,HMOX1,UNIPROT:P09601,HMOX1,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa526,CK2,CSNK2A1,UNIPROT:P68400,CSNK2A1,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa526,CK2,CSNK2A1,UNIPROT:P19784,CSNK2A2,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa526,CK2,CSNK2A1,UNIPROT:P67870,CSNK2B,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa527,DAMPs_phenotype,,,sa527,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa528,PAMPs_phenotype,,,sa528,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa53,FECH,FECH,UNIPROT:P22830,FECH,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa54,PRIN9_simple_molecule_mitochondrial matrix,PRIN9,,sa54,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa55,Fe2+_ion_mitochondrial matrix,,,sa55,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa56,Pb2+_ion,,,sa56,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa57,H+_ion_mitochondrial matrix,,,sa57,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa6,NRF2_empty,NFE2L2,UNIPROT:Q16236,NFE2L2,1.0,original and predicted,keep,isEncodedBy
+116_HMOX1-PATHWAY_source.sbml,protein,sa65,SUCC-CoA_simple_molecule,SUCLG1,UNIPROT:P53597,SUCLG1,0.5,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa65,SUCC-CoA_simple_molecule,SUCLG1,UNIPROT:Q96I99,SUCLG2,0.5,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa68,Gly_simple_molecule,,,sa68,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa69,dALA_simple_molecule_mitochondrial matrix,ALAD,UNIPROT:P13716,ALAD,1.0,predicted only,add,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa70,CO2_simple_molecule_mitochondrial matrix,,,sa70,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa71,CoA-SH_simple_molecule,,,sa71,0.0,,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa72,dALA_simple_molecule_cell,NLRP3,UNIPROT:Q96P20,NLRP3,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa72,dALA_simple_molecule_cell,NLRP3,UNIPROT:Q9Y2Z0,SUGT1,0.3333333333333333,predicted only,ignore,is
+116_HMOX1-PATHWAY_source.sbml,protein,sa78,KEAP1,KEAP1,UNIPROT:Q14145,KEAP1,1.0,original and predicted,keep,isEncodedBy

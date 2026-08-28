@@ -5,7 +5,7 @@ Defines constants used throughout the AAAIM system.
 """
 
 from enum import Enum
-from typing import Dict, List
+from typing import Dict, List, Optional, Union
 
 # Entity Types
 class EntityType(Enum):
@@ -64,11 +64,56 @@ DATABASE_URIS: Dict[DatabaseID, str] = {
 # Entity Type to Database Mapping
 ENTITY_DATABASE_MAPPING: Dict[EntityType, List[DatabaseID]] = {
     EntityType.CHEMICAL: [DatabaseID.CHEBI],
-    # EntityType.GENE: [DatabaseID.NCBIGENE],
+    EntityType.GENE: [DatabaseID.NCBIGENE],
     EntityType.PROTEIN: [DatabaseID.UNIPROT],
     EntityType.COMPLEX: [DatabaseID.CHEBI, DatabaseID.UNIPROT, DatabaseID.NCBIGENE],
     # EntityType.REACTION: [DatabaseID.RHEA, DatabaseID.EC, DatabaseID.KEGG],
 }
+
+
+def get_database_for_entity_type(
+    entity_type: Union[str, EntityType],
+    allowed_databases: Optional[List[Union[str, DatabaseID]]] = None,
+) -> Optional[str]:
+    """Return the first mapped database for an entity type that is also allowed.
+
+    Args:
+        entity_type: Detected or requested entity type.
+        allowed_databases: Optional user-provided database names or enums.
+            If omitted, the first default mapping is returned.
+
+    Returns:
+        Database name (e.g. "chebi"), or None if nothing matches.
+    """
+    if isinstance(entity_type, EntityType):
+        entity_type_enum = entity_type
+    else:
+        try:
+            entity_type_enum = EntityType(str(entity_type).lower())
+        except ValueError:
+            return None
+
+    if entity_type_enum == EntityType.UNKNOWN:
+        return None
+
+    valid_databases = ENTITY_DATABASE_MAPPING.get(entity_type_enum)
+    if not valid_databases:
+        return None
+
+    if not allowed_databases:
+        return valid_databases[0].value
+
+    allowed_names = []
+    for db in allowed_databases:
+        if isinstance(db, DatabaseID):
+            allowed_names.append(db.value)
+        else:
+            allowed_names.append(str(db).lower())
+
+    for db_id in valid_databases:
+        if db_id.value in allowed_names:
+            return db_id.value
+    return None
 
 # Confidence Thresholds
 DEFAULT_CONFIDENCE_THRESHOLD = 0.5

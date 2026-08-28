@@ -105,7 +105,7 @@ from core.model_info import find_species_with_chebi_annotations, find_species_wi
 from core.llm_interface import SYSTEM_PROMPT, query_llm, parse_llm_response, get_system_prompt
 from core.data_types import Recommendation
 from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, clear_chromadb_cache
-from utils.constants import REF_CHEBI2LABEL, REF_NCBIGENE2LABEL, REF_UNIPROT2LABEL, REF_CHEBI2FORMULA, CHEBI_URI_PATTERNS, NCBIGENE_URI_PATTERNS, UNIPROT_URI_PATTERNS, ModelType, ENTITY_DATABASE_MAPPING, EntityType, DatabaseID
+from utils.constants import REF_CHEBI2LABEL, REF_NCBIGENE2LABEL, REF_UNIPROT2LABEL, REF_CHEBI2FORMULA, CHEBI_URI_PATTERNS, NCBIGENE_URI_PATTERNS, UNIPROT_URI_PATTERNS, ModelType, EntityType, DatabaseID, get_database_for_entity_type
 
 REF_RESULTS = "/Users/luna/Desktop/CRBM/AMAS_proj/Results/biomd_species_accuracy_AMAS.csv"
 
@@ -550,48 +550,13 @@ def _get_database_for_entity_type(entity_type: str,
     Returns:
         Database name to use, or None if no valid database found
     """
-    # Map string entity type to EntityType enum
-    entity_type_lower = entity_type.lower()
-    entity_type_enum = None
-    
-    if entity_type_lower == "chemical":
-        entity_type_enum = EntityType.CHEMICAL
-    elif entity_type_lower == "gene":
-        entity_type_enum = EntityType.GENE
-    elif entity_type_lower == "protein":
-        entity_type_enum = EntityType.PROTEIN
-    elif entity_type_lower == "complex":
-        entity_type_enum = EntityType.COMPLEX
-    elif entity_type_lower == "unknown":
-        return None
-    else:
-        logger.warning(f"Unknown entity type: {entity_type}")
-        return None
-    
-    # Get default databases for this entity type from constants
-    if entity_type_enum not in ENTITY_DATABASE_MAPPING:
-        logger.warning(f"No database mapping found for entity type: {entity_type}")
-        return None
-    
-    valid_databases = ENTITY_DATABASE_MAPPING[entity_type_enum]
-    
-    # If allowed_databases is provided, filter to only use those
-    if allowed_databases:
-        # Convert DatabaseID enums to lowercase strings for comparison
-        allowed_databases_lower = [db.lower() for db in allowed_databases]
-        
-        # Find the first valid database that's in the allowed list
-        for db_id in valid_databases:
-            db_name = db_id.value.lower()
-            if db_name in allowed_databases_lower:
-                return db_name
-        
-        # No valid database found in allowed list
-        logger.warning(f"No valid database found for entity type '{entity_type}' in allowed databases: {allowed_databases}")
-        return None
-    else:
-        # Use first default database for this entity type
-        return valid_databases[0].value.lower()
+    target = get_database_for_entity_type(entity_type, allowed_databases)
+    if target is None and entity_type.lower() not in ("unknown", EntityType.UNKNOWN.value):
+        logger.warning(
+            f"No valid database found for entity type '{entity_type}'"
+            + (f" in allowed databases: {allowed_databases}" if allowed_databases else "")
+        )
+    return target
 
 def evaluate_single_model(model_file: str, 
                          llm_model: str = 'meta-llama/llama-3.3-70b-instruct:free',

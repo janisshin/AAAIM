@@ -1,0 +1,2535 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<sbml xmlns="http://www.sbml.org/sbml/level2/version3" level="2" version="3">
+  <model id="sorafenibminus" metaid="SloppyCell_00000" name="Lee2025 EGFR-RAS-RAF-ERK, -sorafenib model">
+    <notes>
+      <body xmlns="http://www.w3.org/1999/xhtml">
+     <p>This model describes the biochemical reactions involved in the EGFR-RAS-ERK signaling pathway in context of low RAF1 abundance. Signaling dynamics in the presence of RAF kinase inhibitor, sorafenib, is described by the additional SBML file attached. </p>
+  </body>
+    </notes>
+    <annotation>
+	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+        <rdf:Description rdf:about="#SloppyCell_00000">
+          <bqmodel:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="https://identifiers.org/biomodels.db:MODEL2501150001"/>
+	</rdf:Bag>
+	</bqmodel:is>
+	<bqbiol:hasProperty>
+	<rdf:Bag>
+	<rdf:li rdf:resource="http://identifiers.org/mamo/MAMO_0000046"/>
+	</rdf:Bag>
+	</bqbiol:hasProperty>
+	
+	<bqmodel:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="https://identifiers.org/doi:10.1016/j.bpj.2025.12.033"/>
+	</rdf:Bag>
+	</bqmodel:isDescribedBy>
+	</rdf:Description>
+	
+	
+	
+	
+	
+	</rdf:RDF>
+	</annotation>
+      <listOfCompartments>
+      <compartment constant="true" id="cytoplasm" metaid="SloppyCell_00001" name="cytoplasm" size="1"/>
+      <compartment constant="true" id="pm" metaid="SloppyCell_00002" name="pm" size="1"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species boundaryCondition="true" compartment="cytoplasm" id="sorafenib" initialConcentration="1" metaid="SloppyCell_00003"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_GTP" initialConcentration="0" metaid="SloppyCell_00004"/>
+      <species boundaryCondition="false" compartment="cytoplasm" id="Raf1" initialConcentration="1" metaid="SloppyCell_00005"/>
+      <species boundaryCondition="false" compartment="cytoplasm" id="pRaf1" initialConcentration="0" metaid="SloppyCell_00006"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_Raf1" initialConcentration="0" metaid="SloppyCell_00007"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_iRaf1" initialConcentration="0" metaid="SloppyCell_00008"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_pRaf1_Raf1_tetramer" initialConcentration="0" metaid="SloppyCell_00009"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_BRaf" initialConcentration="0" metaid="SloppyCell_00010"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_pRaf1" initialConcentration="0" metaid="SloppyCell_00011"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_BRaf_Raf1_tetramer" initialConcentration="0" metaid="SloppyCell_00012"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_iRaf1_tetramer" initialConcentration="0" metaid="SloppyCell_00013"/>
+      <species boundaryCondition="false" compartment="cytoplasm" id="iRaf1" initialConcentration="0" metaid="SloppyCell_00014"/>
+      <species boundaryCondition="false" compartment="cytoplasm" id="BRaf" initialConcentration="1" metaid="SloppyCell_00015"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_Braf_iRaf1_tetramer" initialConcentration="0" metaid="SloppyCell_00016"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_pRaf1_tetramer" initialConcentration="0" metaid="SloppyCell_00017"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_BRaf_pRaf1_tetramer" initialConcentration="0" metaid="SloppyCell_00018"/>
+      <species boundaryCondition="false" compartment="cytoplasm" id="MEK" initialConcentration="1" metaid="SloppyCell_00019"/>
+      <species boundaryCondition="false" compartment="cytoplasm" id="pMEK" initialConcentration="0" metaid="SloppyCell_00020"/>
+      <species boundaryCondition="false" compartment="cytoplasm" id="ERK" initialConcentration="1" metaid="SloppyCell_00021"/>
+      <species boundaryCondition="false" compartment="cytoplasm" id="iBRaf" initialConcentration="0" metaid="SloppyCell_00022"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_Raf1_iBRaf_tetramer" initialConcentration="0" metaid="SloppyCell_00023"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_pRaf1_iBRaf_tetramer" initialConcentration="0" metaid="SloppyCell_00024"/>
+      <species boundaryCondition="false" compartment="cytoplasm" id="pERK" initialConcentration="0" metaid="SloppyCell_00025"/>
+      <species boundaryCondition="false" compartment="pm" id="iBRaf_dimer" initialConcentration="0" metaid="SloppyCell_00026"/>
+      <species boundaryCondition="false" compartment="pm" id="BRaf_dimer" initialConcentration="0" metaid="SloppyCell_00027"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_iBRaf" initialConcentration="0" metaid="SloppyCell_00028"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_nfpRaf1" initialConcentration="0" metaid="SloppyCell_00029"/>
+      <species boundaryCondition="false" compartment="cytoplasm" id="nfpRaf1" initialConcentration="0" metaid="SloppyCell_00030"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_nfpBRaf" initialConcentration="0" metaid="SloppyCell_00031"/>
+      <species boundaryCondition="false" compartment="cytoplasm" id="nfpBRaf" initialConcentration="0" metaid="SloppyCell_00032"/>
+      <species boundaryCondition="false" compartment="pm" id="BRaf_iBRaf_dimer" initialConcentration="0" metaid="SloppyCell_00033"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_nfpiBRaf" initialConcentration="0" metaid="SloppyCell_00034"/>
+      <species boundaryCondition="false" compartment="cytoplasm" id="nfpiBRaf" initialConcentration="0" metaid="SloppyCell_00035"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_nfpiRaf1" initialConcentration="0" metaid="SloppyCell_00036"/>
+      <species boundaryCondition="false" compartment="cytoplasm" id="nfpiRaf1" initialConcentration="0" metaid="SloppyCell_00037"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_iRaf1_iBRaf1_tetramer" initialConcentration="0" metaid="SloppyCell_00038"/>
+      <species boundaryCondition="false" compartment="pm" id="mE" initialConcentration="1" metaid="SloppyCell_00039"/>
+      <species boundaryCondition="false" compartment="pm" id="mEL" initialConcentration="0" metaid="SloppyCell_00040"/>
+      <species boundaryCondition="false" compartment="pm" id="mELmEL" initialConcentration="0" metaid="SloppyCell_00041"/>
+      <species boundaryCondition="false" compartment="pm" id="E" initialConcentration="0" metaid="SloppyCell_00042"/>
+      <species boundaryCondition="false" compartment="pm" id="EG2SOS" initialConcentration="0" metaid="SloppyCell_00043"/>
+      <species boundaryCondition="false" compartment="cytoplasm" id="GRB2_SOS" initialConcentration="0" metaid="SloppyCell_00044"/>
+      <species boundaryCondition="false" compartment="pm" id="Ras_GDP" initialConcentration="1" metaid="SloppyCell_00045"/>
+      <species boundaryCondition="false" compartment="pm" id="EG2" initialConcentration="0" metaid="SloppyCell_00046"/>
+      <species boundaryCondition="false" compartment="cytoplasm" id="GRB2" initialConcentration="1" metaid="SloppyCell_00047"/>
+      <species boundaryCondition="false" compartment="cytoplasm" id="SOS" initialConcentration="1" metaid="SloppyCell_00048"/>
+      <species boundaryCondition="false" compartment="cytoplasm" id="nfpSOS" initialConcentration="0" metaid="SloppyCell_00049"/>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter constant="true" id="kSon" metaid="SloppyCell_00050" value="13.52143291"/>
+      <parameter constant="true" id="kSoff" metaid="SloppyCell_00051" value="1243.069312"/>
+      <parameter constant="true" id="kpR1" metaid="SloppyCell_00052" value="190"/>
+      <parameter constant="true" id="kdR1f" metaid="SloppyCell_00053" value="0.019"/>
+      <parameter constant="true" id="kR1f" metaid="SloppyCell_00054" value="2.5E-5"/>
+      <parameter constant="true" id="kR1r" metaid="SloppyCell_00055" value="8.4"/>
+      <parameter constant="true" id="kBf" metaid="SloppyCell_00056" value="2.5E-7"/>
+      <parameter constant="true" id="kBr" metaid="SloppyCell_00057" value="0.037"/>
+      <parameter constant="true" id="kdR1r" metaid="SloppyCell_00058" value="110"/>
+      <parameter constant="true" id="kdpR1" metaid="SloppyCell_00059" value="0.6"/>
+      <parameter constant="false" id="boundRaf_frac_parameter" metaid="SloppyCell_00060" value="NaN"/>
+      <parameter constant="true" id="kiR1f" metaid="SloppyCell_00061" value="1.15E-5"/>
+      <parameter constant="true" id="kiR1r" metaid="SloppyCell_00062" value="0.072015388"/>
+      <parameter constant="false" id="Raf1_pm_param" metaid="SloppyCell_00063" value="NaN"/>
+      <parameter constant="false" id="Raf1_cyt_param" metaid="SloppyCell_00064" value="NaN"/>
+      <parameter constant="true" id="kpMEK" metaid="SloppyCell_00065" value="6E-6"/>
+      <parameter constant="false" id="active_Raf" metaid="SloppyCell_00066" value="NaN"/>
+      <parameter constant="true" id="kpERK" metaid="SloppyCell_00067" value="6E-5"/>
+      <parameter constant="true" id="kdpERK" metaid="SloppyCell_00068" value="0.6"/>
+      <parameter constant="true" id="kdpMEK" metaid="SloppyCell_00069" value="0.6"/>
+      <parameter constant="true" id="kiBf" metaid="SloppyCell_00070" value="2.47E-7"/>
+      <parameter constant="true" id="kiBr" metaid="SloppyCell_00071" value="0.0367"/>
+      <parameter constant="true" id="kfpR1r" metaid="SloppyCell_00072" value="0.046229858"/>
+      <parameter constant="true" id="kfpBr" metaid="SloppyCell_00073" value="0.37"/>
+      <parameter constant="true" id="knfpBR1" metaid="SloppyCell_00074" value="6E-7"/>
+      <parameter constant="true" id="kEf" metaid="SloppyCell_00075" value="310"/>
+      <parameter constant="true" id="EGF" metaid="SloppyCell_00076" value="0.0017"/>
+      <parameter constant="true" id="kEr" metaid="SloppyCell_00077" value="0.8"/>
+      <parameter constant="true" id="kdEf" metaid="SloppyCell_00078" value="0.00092"/>
+      <parameter constant="true" id="kdEr" metaid="SloppyCell_00079" value="0.1"/>
+      <parameter constant="true" id="kcatE" metaid="SloppyCell_00080" value="6.60624874"/>
+      <parameter constant="true" id="kdp" metaid="SloppyCell_00081" value="8"/>
+      <parameter constant="true" id="kRgneslow" metaid="SloppyCell_00082" value="5.838226569"/>
+      <parameter constant="true" id="Kmgneslow" metaid="SloppyCell_00083" value="1.417816814E5"/>
+      <parameter constant="true" id="kRhydro" metaid="SloppyCell_00084" value="0.142907544"/>
+      <parameter constant="true" id="kG2f" metaid="SloppyCell_00085" value="0.00038"/>
+      <parameter constant="true" id="kG2r" metaid="SloppyCell_00086" value="460"/>
+      <parameter constant="true" id="kSOSf" metaid="SloppyCell_00087" value="2.2E-6"/>
+      <parameter constant="true" id="kSOSr" metaid="SloppyCell_00088" value="0.0083"/>
+      <parameter constant="true" id="kdpSOS" metaid="SloppyCell_00089" value="0.6"/>
+      <parameter constant="true" id="knfpSOS" metaid="SloppyCell_00090" value="0.0025"/>
+      <parameter constant="true" id="init_ERK_HeLa" metaid="SloppyCell_00091" value="600000"/>
+      <parameter constant="true" id="init_SOS_HeLa" metaid="SloppyCell_00092" value="7700"/>
+      <parameter constant="true" id="init_RAS_HeLa" metaid="SloppyCell_00093" value="135000"/>
+      <parameter constant="true" id="init_MEK_HeLa" metaid="SloppyCell_00094" value="500000"/>
+      <parameter constant="true" id="init_GRB2_HeLa" metaid="SloppyCell_00095" value="628000"/>
+      <parameter constant="true" id="init_EGFR_HeLa" metaid="SloppyCell_00096" value="93000"/>
+      <parameter constant="true" id="init_BRAF_HeLa" metaid="SloppyCell_00097" value="1000"/>
+      <parameter constant="true" id="kG2SOSf" metaid="SloppyCell_00098" value="0.00942"/>
+      <parameter constant="true" id="kG2SOSr" metaid="SloppyCell_00099" value="4.6"/>
+      <parameter constant="true" id="init_sorafenib" metaid="SloppyCell_00100" value="10"/>
+      <parameter constant="true" id="init_RAF_HeLa" metaid="SloppyCell_00101" value="12000"/>
+      <parameter constant="false" id="RasGTP_parameter" metaid="SloppyCell_00102" value="NaN"/>
+      <parameter constant="false" id="pRaf1_total" metaid="SloppyCell_00103" value="NaN"/>
+      <parameter constant="true" id="knfpiR1r" metaid="SloppyCell_00104" value="0.046229858"/>
+      <parameter constant="true" id="knfpiBr" metaid="SloppyCell_00105" value="0.37"/>
+      <parameter constant="true" id="_T_" metaid="SloppyCell_00106" value="300"/>
+      <parameter constant="true" id="_PI_" metaid="SloppyCell_00107" value="3.14159265358979"/>
+      <parameter constant="true" id="_F_" metaid="SloppyCell_00108" value="9.64853321E4"/>
+      <parameter constant="true" id="_F_nmol_" metaid="SloppyCell_00109" value="9.64853321E-5"/>
+      <parameter constant="true" id="_N_pmol_" metaid="SloppyCell_00110" value="6.02214179E11"/>
+      <parameter constant="true" id="_K_GHK_" metaid="SloppyCell_00111" value="1E-9"/>
+      <parameter constant="true" id="_R_" metaid="SloppyCell_00112" value="8314.46261815"/>
+      <parameter constant="true" id="K_millivolts_per_volt" metaid="SloppyCell_00113" value="1000"/>
+      <parameter constant="true" id="KMOLE" metaid="SloppyCell_00114" value="0.00166053878316273"/>
+      <parameter constant="false" id="Kf_Ras_Raf1_bind" metaid="SloppyCell_00115" value="NaN"/>
+      <parameter constant="false" id="Kr_Ras_Raf1_bind" metaid="SloppyCell_00116" value="NaN"/>
+      <parameter constant="false" id="Kf_BRAF_RAF1_bind" metaid="SloppyCell_00117" value="NaN"/>
+      <parameter constant="false" id="Kr_BRAF_RAF1_bind" metaid="SloppyCell_00118" value="NaN"/>
+      <parameter constant="true" id="Kr_BRAF_RAF1_phos" metaid="SloppyCell_00119" value="0"/>
+      <parameter constant="false" id="Kf_BRAF_RAF1_phos" metaid="SloppyCell_00120" value="NaN"/>
+      <parameter constant="false" id="Kf_RAS_pRAF1_unbind" metaid="SloppyCell_00121" value="NaN"/>
+      <parameter constant="false" id="Kr_RAS_pRAF1_unbind" metaid="SloppyCell_00122" value="NaN"/>
+      <parameter constant="false" id="Kf_RAS_BRAF_bind" metaid="SloppyCell_00123" value="NaN"/>
+      <parameter constant="false" id="Kr_RAS_BRAF_bind" metaid="SloppyCell_00124" value="NaN"/>
+      <parameter constant="false" id="Kf_pRaf1_Raf1_bind" metaid="SloppyCell_00125" value="NaN"/>
+      <parameter constant="false" id="Kr_pRaf1_Raf1_bind" metaid="SloppyCell_00126" value="NaN"/>
+      <parameter constant="true" id="Kr_pRAF1_RAF1_phos" metaid="SloppyCell_00127" value="0"/>
+      <parameter constant="false" id="Kf_pRAF1_RAF1_phos" metaid="SloppyCell_00128" value="NaN"/>
+      <parameter constant="false" id="Kf_sorafenib_Raf1_bind_cyt" metaid="SloppyCell_00129" value="NaN"/>
+      <parameter constant="false" id="Kr_sorafenib_Raf1_bind_cyt" metaid="SloppyCell_00130" value="NaN"/>
+      <parameter constant="false" id="Kf_Ras_iRaf1_bind" metaid="SloppyCell_00131" value="NaN"/>
+      <parameter constant="false" id="Kr_Ras_iRaf1_bind" metaid="SloppyCell_00132" value="NaN"/>
+      <parameter constant="false" id="Kf_iRaf1_iRaf1_bind" metaid="SloppyCell_00133" value="NaN"/>
+      <parameter constant="false" id="Kr_iRaf1_iRaf1_bind" metaid="SloppyCell_00134" value="NaN"/>
+      <parameter constant="false" id="Kf_BRaf_iRaf1_bind" metaid="SloppyCell_00135" value="NaN"/>
+      <parameter constant="false" id="Kr_BRaf_iRaf1_bind" metaid="SloppyCell_00136" value="NaN"/>
+      <parameter constant="true" id="Kr_pRAF1_dephos" metaid="SloppyCell_00137" value="0"/>
+      <parameter constant="false" id="Kf_pRAF1_dephos" metaid="SloppyCell_00138" value="NaN"/>
+      <parameter constant="false" id="Kf_pRaf1_pRaf1_unbind" metaid="SloppyCell_00139" value="NaN"/>
+      <parameter constant="false" id="Kr_pRaf1_pRaf1_unbind" metaid="SloppyCell_00140" value="NaN"/>
+      <parameter constant="false" id="Kf_BRaf_pRaf1_unbind" metaid="SloppyCell_00141" value="NaN"/>
+      <parameter constant="false" id="Kr_BRaf_pRaf1_unbind" metaid="SloppyCell_00142" value="NaN"/>
+      <parameter constant="false" id="Kf_sorafenib_BRaf_bind_cyt" metaid="SloppyCell_00143" value="NaN"/>
+      <parameter constant="false" id="Kr_sorafenib_BRaf_bind_cyt" metaid="SloppyCell_00144" value="NaN"/>
+      <parameter constant="true" id="Kr_MEK_phos" metaid="SloppyCell_00145" value="0"/>
+      <parameter constant="false" id="Kf_MEK_phos" metaid="SloppyCell_00146" value="NaN"/>
+      <parameter constant="true" id="Kr_MEK_dephos" metaid="SloppyCell_00147" value="0"/>
+      <parameter constant="false" id="Kf_MEK_dephos" metaid="SloppyCell_00148" value="NaN"/>
+      <parameter constant="true" id="Kr_ERK_phos" metaid="SloppyCell_00149" value="0"/>
+      <parameter constant="false" id="Kf_ERK_phos" metaid="SloppyCell_00150" value="NaN"/>
+      <parameter constant="true" id="Kr_ERK_dephos" metaid="SloppyCell_00151" value="0"/>
+      <parameter constant="false" id="Kf_ERK_dephos" metaid="SloppyCell_00152" value="NaN"/>
+      <parameter constant="false" id="Kf_RAS_iBRAF_bind" metaid="SloppyCell_00153" value="NaN"/>
+      <parameter constant="false" id="Kr_RAS_iBRAF_bind" metaid="SloppyCell_00154" value="NaN"/>
+      <parameter constant="false" id="Kf_iBRaf_dim" metaid="SloppyCell_00155" value="NaN"/>
+      <parameter constant="false" id="Kr_iBRaf_dim" metaid="SloppyCell_00156" value="NaN"/>
+      <parameter constant="false" id="Kf_iBRaf_Raf1_bind" metaid="SloppyCell_00157" value="NaN"/>
+      <parameter constant="false" id="Kr_iBRaf_Raf1_bind" metaid="SloppyCell_00158" value="NaN"/>
+      <parameter constant="true" id="Kr_Raf1_iBRaf_phos" metaid="SloppyCell_00159" value="0"/>
+      <parameter constant="false" id="Kf_Raf1_iBRaf_phos" metaid="SloppyCell_00160" value="NaN"/>
+      <parameter constant="false" id="Kf_pRaf1_iBRaf_unbind" metaid="SloppyCell_00161" value="NaN"/>
+      <parameter constant="false" id="Kr_pRaf1_iBRaf_unbind" metaid="SloppyCell_00162" value="NaN"/>
+      <parameter constant="false" id="Kf_BRAF_dim" metaid="SloppyCell_00163" value="NaN"/>
+      <parameter constant="false" id="Kr_BRAF_dim" metaid="SloppyCell_00164" value="NaN"/>
+      <parameter constant="true" id="Kr_Ras_pRaf1_dp" metaid="SloppyCell_00165" value="0"/>
+      <parameter constant="false" id="Kf_Ras_pRaf1_dp" metaid="SloppyCell_00166" value="NaN"/>
+      <parameter constant="true" id="Kr_Ras_Raf1_nfp" metaid="SloppyCell_00167" value="0"/>
+      <parameter constant="false" id="Kf_Ras_Raf1_nfp" metaid="SloppyCell_00168" value="NaN"/>
+      <parameter constant="true" id="Kr_neg_fdbk_unbind_RASt_nfpRAF1" metaid="SloppyCell_00169" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbk_unbind_RASt_nfpRAF1" metaid="SloppyCell_00170" value="NaN"/>
+      <parameter constant="true" id="Kr_neg_fdbk_dephos_pRaf1" metaid="SloppyCell_00171" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbk_dephos_pRaf1" metaid="SloppyCell_00172" value="NaN"/>
+      <parameter constant="true" id="Kr_BRAF_nfp" metaid="SloppyCell_00173" value="0"/>
+      <parameter constant="false" id="Kf_BRAF_nfp" metaid="SloppyCell_00174" value="NaN"/>
+      <parameter constant="true" id="Kr_neg_fdbk_unbind_RASt_nfpBRAF" metaid="SloppyCell_00175" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbk_unbind_RASt_nfpBRAF" metaid="SloppyCell_00176" value="NaN"/>
+      <parameter constant="true" id="Kr_neg_fdbk_dephos_pBRAF" metaid="SloppyCell_00177" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbk_dephos_pBRAF" metaid="SloppyCell_00178" value="NaN"/>
+      <parameter constant="false" id="Kf_BRaf_iBRaf_dim" metaid="SloppyCell_00179" value="NaN"/>
+      <parameter constant="false" id="Kr_BRaf_iBRaf_dim" metaid="SloppyCell_00180" value="NaN"/>
+      <parameter constant="true" id="Kr_Ras_iRaf_nfp" metaid="SloppyCell_00181" value="0"/>
+      <parameter constant="false" id="Kf_Ras_iRaf_nfp" metaid="SloppyCell_00182" value="NaN"/>
+      <parameter constant="true" id="Kr_neg_fdbk_unbind_piRaf1_RASt" metaid="SloppyCell_00183" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbk_unbind_piRaf1_RASt" metaid="SloppyCell_00184" value="NaN"/>
+      <parameter constant="true" id="Kr_neg_fdbck_dephos_piRaf" metaid="SloppyCell_00185" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbck_dephos_piRaf" metaid="SloppyCell_00186" value="NaN"/>
+      <parameter constant="true" id="Kr_Ras_iBRaf_nfp" metaid="SloppyCell_00187" value="0"/>
+      <parameter constant="false" id="Kf_Ras_iBRaf_nfp" metaid="SloppyCell_00188" value="NaN"/>
+      <parameter constant="true" id="Kr_neg_fdbk_unbind_piBRaf_RASt" metaid="SloppyCell_00189" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbk_unbind_piBRaf_RASt" metaid="SloppyCell_00190" value="NaN"/>
+      <parameter constant="true" id="Kr_neg_fdbk_dephos_iBRAF" metaid="SloppyCell_00191" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbk_dephos_iBRAF" metaid="SloppyCell_00192" value="NaN"/>
+      <parameter constant="false" id="Kf_iRaf_iBRaf_dim" metaid="SloppyCell_00193" value="NaN"/>
+      <parameter constant="false" id="Kr_iRaf_iBRaf_dim" metaid="SloppyCell_00194" value="NaN"/>
+      <parameter constant="false" id="Kf_EGF_bind" metaid="SloppyCell_00195" value="NaN"/>
+      <parameter constant="false" id="Kr_EGF_bind" metaid="SloppyCell_00196" value="NaN"/>
+      <parameter constant="false" id="Kf_mEL_dim" metaid="SloppyCell_00197" value="NaN"/>
+      <parameter constant="false" id="Kr_mEL_dim" metaid="SloppyCell_00198" value="NaN"/>
+      <parameter constant="false" id="Kf_mELmEL_phos_dephos" metaid="SloppyCell_00199" value="NaN"/>
+      <parameter constant="false" id="Kr_mELmEL_phos_dephos" metaid="SloppyCell_00200" value="NaN"/>
+      <parameter constant="true" id="Kr_RAS_GTP_bind" metaid="SloppyCell_00201" value="0"/>
+      <parameter constant="false" id="Kf_RAS_GTP_bind" metaid="SloppyCell_00202" value="NaN"/>
+      <parameter constant="true" id="Kr_RAS_GTPhydro" metaid="SloppyCell_00203" value="0"/>
+      <parameter constant="false" id="Kf_RAS_GTPhydro" metaid="SloppyCell_00204" value="NaN"/>
+      <parameter constant="false" id="Kf_E_G2SOS_bind" metaid="SloppyCell_00205" value="NaN"/>
+      <parameter constant="false" id="Kr_E_G2SOS_bind" metaid="SloppyCell_00206" value="NaN"/>
+      <parameter constant="false" id="Kf_E_G2_bind" metaid="SloppyCell_00207" value="NaN"/>
+      <parameter constant="false" id="Kr_E_G2_bind" metaid="SloppyCell_00208" value="NaN"/>
+      <parameter constant="false" id="Kf_GRB2_SOS_bind_cyt" metaid="SloppyCell_00209" value="NaN"/>
+      <parameter constant="false" id="Kr_GRB2_SOS_bind_cyt" metaid="SloppyCell_00210" value="NaN"/>
+      <parameter constant="false" id="Kf_EG2_SOS_bind" metaid="SloppyCell_00211" value="NaN"/>
+      <parameter constant="false" id="Kr_EG2_SOS_bind" metaid="SloppyCell_00212" value="NaN"/>
+      <parameter constant="true" id="Kr_neg_fdbk_dephos_pSOS" metaid="SloppyCell_00213" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbk_dephos_pSOS" metaid="SloppyCell_00214" value="NaN"/>
+      <parameter constant="true" id="Kr_neg_fdbk_phos_of_SOS" metaid="SloppyCell_00215" value="0"/>
+      <parameter constant="false" id="Kf_neg_fdbk_phos_of_SOS" metaid="SloppyCell_00216" value="NaN"/>
+      <parameter constant="true" id="I" metaid="SloppyCell_00217" value="0"/>
+      <parameter constant="true" id="netValence" metaid="SloppyCell_00218" value="1"/>
+    </listOfParameters>
+    <listOfRules>
+      <assignmentRule metaid="SloppyCell_00219" variable="Raf1_pm_param">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <apply>
+            <plus/>
+            <ci> Ras_pRaf1 </ci>
+            <apply>
+              <times/>
+              <cn type="integer"> 2 </cn>
+              <ci> Ras_pRaf1_Raf1_tetramer </ci>
+            </apply>
+            <ci> Ras_BRaf_Raf1_tetramer </ci>
+            <ci> Ras_iRaf1 </ci>
+            <ci> Ras_Raf1 </ci>
+            <apply>
+              <times/>
+              <cn type="integer"> 2 </cn>
+              <ci> Ras_iRaf1_tetramer </ci>
+            </apply>
+            <ci> Ras_Braf_iRaf1_tetramer </ci>
+            <ci> Ras_BRaf_pRaf1_tetramer </ci>
+            <apply>
+              <times/>
+              <cn type="integer"> 2 </cn>
+              <ci> Ras_pRaf1_tetramer </ci>
+            </apply>
+            <ci> Ras_nfpiRaf1 </ci>
+            <ci> Ras_nfpRaf1 </ci>
+            <ci> Ras_iRaf1_iBRaf1_tetramer </ci>
+            <ci> Ras_Raf1_iBRaf_tetramer </ci>
+            <ci> Ras_pRaf1_iBRaf_tetramer </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00220" variable="Raf1_cyt_param">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <apply>
+            <plus/>
+            <ci> Raf1 </ci>
+            <ci> pRaf1 </ci>
+            <ci> iRaf1 </ci>
+            <ci> nfpRaf1 </ci>
+            <ci> nfpiRaf1 </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00221" variable="boundRaf_frac_parameter">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <apply>
+            <times/>
+            <ci> Raf1_pm_param </ci>
+            <apply>
+              <divide/>
+              <cn type="integer"> 1 </cn>
+              <apply>
+                <plus/>
+                <ci> Raf1_cyt_param </ci>
+                <ci> Raf1_pm_param </ci>
+              </apply>
+            </apply>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00222" variable="active_Raf">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <apply>
+            <plus/>
+            <apply>
+              <times/>
+              <cn type="integer"> 2 </cn>
+              <ci> BRaf_dimer </ci>
+            </apply>
+            <ci> Ras_BRaf_Raf1_tetramer </ci>
+            <apply>
+              <times/>
+              <cn type="integer"> 2 </cn>
+              <ci> Ras_BRaf_pRaf1_tetramer </ci>
+            </apply>
+            <ci> Ras_pRaf1_iBRaf_tetramer </ci>
+            <ci> Ras_pRaf1 </ci>
+            <ci> Ras_pRaf1_Raf1_tetramer </ci>
+            <apply>
+              <times/>
+              <cn type="integer"> 2 </cn>
+              <ci> Ras_pRaf1_tetramer </ci>
+            </apply>
+            <ci> pRaf1 </ci>
+            <ci> BRaf_iBRaf_dimer </ci>
+            <ci> Ras_Braf_iRaf1_tetramer </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00223" variable="RasGTP_parameter">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <apply>
+            <plus/>
+            <ci> Ras_GTP </ci>
+            <apply>
+              <times/>
+              <cn type="integer"> 2 </cn>
+              <apply>
+                <plus/>
+                <ci> Ras_iRaf1_tetramer </ci>
+                <ci> Ras_Braf_iRaf1_tetramer </ci>
+                <ci> Ras_BRaf_Raf1_tetramer </ci>
+                <ci> Ras_pRaf1_Raf1_tetramer </ci>
+                <ci> Ras_BRaf_pRaf1_tetramer </ci>
+                <ci> Ras_pRaf1_tetramer </ci>
+                <ci> BRaf_dimer </ci>
+                <ci> BRaf_iBRaf_dimer </ci>
+                <ci> iBRaf_dimer </ci>
+                <ci> Ras_iRaf1_iBRaf1_tetramer </ci>
+                <ci> Ras_Raf1_iBRaf_tetramer </ci>
+                <ci> Ras_pRaf1_iBRaf_tetramer </ci>
+              </apply>
+            </apply>
+            <ci> Ras_BRaf </ci>
+            <ci> Ras_iRaf1 </ci>
+            <ci> Ras_pRaf1 </ci>
+            <ci> Ras_Raf1 </ci>
+            <ci> Ras_nfpRaf1 </ci>
+            <ci> Ras_nfpiRaf1 </ci>
+            <ci> Ras_iBRaf </ci>
+            <ci> Ras_nfpiBRaf </ci>
+            <ci> Ras_nfpBRaf </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00224" variable="pRaf1_total">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <apply>
+            <plus/>
+            <ci> Ras_pRaf1 </ci>
+            <ci> Ras_pRaf1_iBRaf_tetramer </ci>
+            <ci> Ras_pRaf1_tetramer </ci>
+            <ci> Ras_BRaf_pRaf1_tetramer </ci>
+            <ci> pRaf1 </ci>
+            <ci> Ras_pRaf1_Raf1_tetramer </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00225" variable="Kf_Ras_Raf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00226" variable="Kr_Ras_Raf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00227" variable="Kf_BRAF_RAF1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00228" variable="Kr_BRAF_RAF1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00229" variable="Kf_BRAF_RAF1_phos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kpR1 </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00230" variable="Kf_RAS_pRAF1_unbind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00231" variable="Kr_RAS_pRAF1_unbind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00232" variable="Kf_RAS_BRAF_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kBf </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00233" variable="Kr_RAS_BRAF_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kBr </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00234" variable="Kf_pRaf1_Raf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00235" variable="Kr_pRaf1_Raf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00236" variable="Kf_pRAF1_RAF1_phos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kpR1 </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00237" variable="Kf_sorafenib_Raf1_bind_cyt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kSon </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00238" variable="Kr_sorafenib_Raf1_bind_cyt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kSoff </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00239" variable="Kf_Ras_iRaf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kiR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00240" variable="Kr_Ras_iRaf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kiR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00241" variable="Kf_iRaf1_iRaf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00242" variable="Kr_iRaf1_iRaf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00243" variable="Kf_BRaf_iRaf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00244" variable="Kr_BRaf_iRaf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00245" variable="Kf_pRAF1_dephos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdpR1 </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00246" variable="Kf_pRaf1_pRaf1_unbind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00247" variable="Kr_pRaf1_pRaf1_unbind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00248" variable="Kf_BRaf_pRaf1_unbind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00249" variable="Kr_BRaf_pRaf1_unbind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00250" variable="Kf_sorafenib_BRaf_bind_cyt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kSon </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00251" variable="Kr_sorafenib_BRaf_bind_cyt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kSoff </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00252" variable="Kf_MEK_phos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <apply>
+            <times/>
+            <ci> kpMEK </ci>
+            <ci> active_Raf </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00253" variable="Kf_MEK_dephos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdpMEK </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00254" variable="Kf_ERK_phos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <apply>
+            <times/>
+            <ci> kpERK </ci>
+            <ci> pMEK </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00255" variable="Kf_ERK_dephos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdpERK </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00256" variable="Kf_RAS_iBRAF_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kiBf </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00257" variable="Kr_RAS_iBRAF_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kiBr </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00258" variable="Kf_iBRaf_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00259" variable="Kr_iBRaf_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00260" variable="Kf_iBRaf_Raf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00261" variable="Kr_iBRaf_Raf1_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00262" variable="Kf_Raf1_iBRaf_phos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kpR1 </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00263" variable="Kf_pRaf1_iBRaf_unbind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00264" variable="Kr_pRaf1_iBRaf_unbind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00265" variable="Kf_BRAF_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00266" variable="Kr_BRAF_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00267" variable="Kf_Ras_pRaf1_dp">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdpR1 </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00268" variable="Kf_Ras_Raf1_nfp">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <apply>
+            <times/>
+            <ci> knfpBR1 </ci>
+            <ci> pERK </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00269" variable="Kf_neg_fdbk_unbind_RASt_nfpRAF1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kfpR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00270" variable="Kf_neg_fdbk_dephos_pRaf1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdpR1 </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00271" variable="Kf_BRAF_nfp">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <apply>
+            <times/>
+            <ci> knfpBR1 </ci>
+            <ci> pERK </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00272" variable="Kf_neg_fdbk_unbind_RASt_nfpBRAF">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kfpBr </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00273" variable="Kf_neg_fdbk_dephos_pBRAF">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdpR1 </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00274" variable="Kf_BRaf_iBRaf_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00275" variable="Kr_BRaf_iBRaf_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00276" variable="Kf_Ras_iRaf_nfp">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <apply>
+            <times/>
+            <ci> kpR1 </ci>
+            <ci> pERK </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00277" variable="Kf_neg_fdbk_unbind_piRaf1_RASt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> knfpiR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00278" variable="Kf_neg_fdbck_dephos_piRaf">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdpR1 </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00279" variable="Kf_Ras_iBRaf_nfp">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <apply>
+            <times/>
+            <ci> knfpBR1 </ci>
+            <ci> pERK </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00280" variable="Kf_neg_fdbk_unbind_piBRaf_RASt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> knfpiBr </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00281" variable="Kf_neg_fdbk_dephos_iBRAF">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdpR1 </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00282" variable="Kf_iRaf_iBRaf_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00283" variable="Kr_iRaf_iBRaf_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdR1r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00284" variable="Kf_EGF_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <apply>
+            <times/>
+            <ci> kEf </ci>
+            <ci> EGF </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00285" variable="Kr_EGF_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kEr </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00286" variable="Kf_mEL_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdEf </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00287" variable="Kr_mEL_dim">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdEr </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00288" variable="Kf_mELmEL_phos_dephos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kcatE </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00289" variable="Kr_mELmEL_phos_dephos">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdp </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00290" variable="Kf_RAS_GTP_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <apply>
+            <times/>
+            <ci> kRgneslow </ci>
+            <ci> EG2SOS </ci>
+            <apply>
+              <divide/>
+              <cn type="integer"> 1 </cn>
+              <apply>
+                <plus/>
+                <ci> Kmgneslow </ci>
+                <ci> Ras_GDP </ci>
+              </apply>
+            </apply>
+          </apply>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00291" variable="Kf_RAS_GTPhydro">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kRhydro </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00292" variable="Kf_E_G2SOS_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kG2SOSf </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00293" variable="Kr_E_G2SOS_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kG2SOSr </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00294" variable="Kf_E_G2_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kG2f </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00295" variable="Kr_E_G2_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kG2r </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00296" variable="Kf_GRB2_SOS_bind_cyt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kSOSf </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00297" variable="Kr_GRB2_SOS_bind_cyt">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kSOSr </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00298" variable="Kf_EG2_SOS_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kSOSf </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00299" variable="Kr_EG2_SOS_bind">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kSOSr </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00300" variable="Kf_neg_fdbk_dephos_pSOS">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <ci> kdpSOS </ci>
+        </math>
+            </assignmentRule>
+      <assignmentRule metaid="SloppyCell_00301" variable="Kf_neg_fdbk_phos_of_SOS">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">        
+          <apply>
+            <times/>
+            <ci> knfpSOS </ci>
+            <ci> pERK </ci>
+          </apply>
+        </math>
+            </assignmentRule>
+    </listOfRules>
+    <listOfReactions>
+      <reaction id="Ras_Raf1_bind" metaid="SloppyCell_00302">
+        <listOfReactants>
+          <speciesReference species="Ras_GTP" stoichiometry="1"/>
+          <speciesReference species="Raf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_Raf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_Ras_Raf1_bind </ci>
+                  <ci> Ras_GTP </ci>
+                  <ci> Raf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_Ras_Raf1_bind </ci>
+                    <ci> Ras_Raf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="BRAF_RAF1_bind" metaid="SloppyCell_00303">
+        <listOfReactants>
+          <speciesReference species="Ras_BRaf" stoichiometry="1"/>
+          <speciesReference species="Ras_Raf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_BRaf_Raf1_tetramer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_BRAF_RAF1_bind </ci>
+                  <ci> Ras_BRaf </ci>
+                  <ci> Ras_Raf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_BRAF_RAF1_bind </ci>
+                    <ci> Ras_BRaf_Raf1_tetramer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="BRAF_RAF1_phos" metaid="SloppyCell_00304">
+        <listOfReactants>
+          <speciesReference species="Ras_BRaf_Raf1_tetramer" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_BRaf_pRaf1_tetramer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_BRAF_RAF1_phos </ci>
+                  <ci> Ras_BRaf_Raf1_tetramer </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_BRAF_RAF1_phos </ci>
+                    <ci> Ras_BRaf_pRaf1_tetramer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="RAS_pRAF1_unbind" metaid="SloppyCell_00305">
+        <listOfReactants>
+          <speciesReference species="Ras_pRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_GTP" stoichiometry="1"/>
+          <speciesReference species="pRaf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_RAS_pRAF1_unbind </ci>
+                  <ci> Ras_pRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_RAS_pRAF1_unbind </ci>
+                    <ci> pRaf1 </ci>
+                    <ci> Ras_GTP </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="RAS_BRAF_bind" metaid="SloppyCell_00306">
+        <listOfReactants>
+          <speciesReference species="Ras_GTP" stoichiometry="1"/>
+          <speciesReference species="BRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_BRaf" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_RAS_BRAF_bind </ci>
+                  <ci> BRaf </ci>
+                  <ci> Ras_GTP </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_RAS_BRAF_bind </ci>
+                    <ci> Ras_BRaf </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="pRaf1_Raf1_bind" metaid="SloppyCell_00307">
+        <listOfReactants>
+          <speciesReference species="Ras_Raf1" stoichiometry="1"/>
+          <speciesReference species="Ras_pRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_pRaf1_Raf1_tetramer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_pRaf1_Raf1_bind </ci>
+                  <ci> Ras_pRaf1 </ci>
+                  <ci> Ras_Raf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_pRaf1_Raf1_bind </ci>
+                    <ci> Ras_pRaf1_Raf1_tetramer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="pRAF1_RAF1_phos" metaid="SloppyCell_00308">
+        <listOfReactants>
+          <speciesReference species="Ras_pRaf1_Raf1_tetramer" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_pRaf1_tetramer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_pRAF1_RAF1_phos </ci>
+                  <ci> Ras_pRaf1_Raf1_tetramer </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_pRAF1_RAF1_phos </ci>
+                    <ci> Ras_pRaf1_tetramer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="sorafenib_Raf1_bind_cyt" metaid="SloppyCell_00309">
+        <listOfReactants>
+          <speciesReference species="sorafenib" stoichiometry="1"/>
+          <speciesReference species="Raf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="iRaf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_sorafenib_Raf1_bind_cyt </ci>
+                  <ci> sorafenib </ci>
+                  <ci> Raf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_sorafenib_Raf1_bind_cyt </ci>
+                    <ci> iRaf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="Ras_iRaf1_bind" metaid="SloppyCell_00310">
+        <listOfReactants>
+          <speciesReference species="Ras_GTP" stoichiometry="1"/>
+          <speciesReference species="iRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_iRaf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_Ras_iRaf1_bind </ci>
+                  <ci> iRaf1 </ci>
+                  <ci> Ras_GTP </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_Ras_iRaf1_bind </ci>
+                    <ci> Ras_iRaf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="iRaf1_iRaf1_bind" metaid="SloppyCell_00311">
+        <listOfReactants>
+          <speciesReference species="Ras_iRaf1" stoichiometry="2"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_iRaf1_tetramer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_iRaf1_iRaf1_bind </ci>
+                  <apply>
+                    <power/>
+                    <ci> Ras_iRaf1 </ci>
+                    <cn type="integer"> 2 </cn>
+                  </apply>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_iRaf1_iRaf1_bind </ci>
+                    <ci> Ras_iRaf1_tetramer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="BRaf_iRaf1_bind" metaid="SloppyCell_00312">
+        <listOfReactants>
+          <speciesReference species="Ras_BRaf" stoichiometry="1"/>
+          <speciesReference species="Ras_iRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_Braf_iRaf1_tetramer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_BRaf_iRaf1_bind </ci>
+                  <ci> Ras_BRaf </ci>
+                  <ci> Ras_iRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_BRaf_iRaf1_bind </ci>
+                    <ci> Ras_Braf_iRaf1_tetramer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="pRAF1_dephos" metaid="SloppyCell_00313">
+        <listOfReactants>
+          <speciesReference species="pRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Raf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_pRAF1_dephos </ci>
+                  <ci> pRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_pRAF1_dephos </ci>
+                    <ci> Raf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="pRaf1_pRaf1_unbind" metaid="SloppyCell_00314">
+        <listOfReactants>
+          <speciesReference species="Ras_pRaf1_tetramer" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_pRaf1" stoichiometry="2"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_pRaf1_pRaf1_unbind </ci>
+                  <ci> Ras_pRaf1_tetramer </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_pRaf1_pRaf1_unbind </ci>
+                    <apply>
+                      <power/>
+                      <ci> Ras_pRaf1 </ci>
+                      <cn type="integer"> 2 </cn>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="BRaf_pRaf1_unbind" metaid="SloppyCell_00315">
+        <listOfReactants>
+          <speciesReference species="Ras_BRaf_pRaf1_tetramer" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_BRaf" stoichiometry="1"/>
+          <speciesReference species="Ras_pRaf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_BRaf_pRaf1_unbind </ci>
+                  <ci> Ras_BRaf_pRaf1_tetramer </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_BRaf_pRaf1_unbind </ci>
+                    <ci> Ras_BRaf </ci>
+                    <ci> Ras_pRaf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="sorafenib_BRaf_bind_cyt" metaid="SloppyCell_00316">
+        <listOfReactants>
+          <speciesReference species="sorafenib" stoichiometry="1"/>
+          <speciesReference species="BRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="iBRaf" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_sorafenib_BRaf_bind_cyt </ci>
+                  <ci> sorafenib </ci>
+                  <ci> BRaf </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_sorafenib_BRaf_bind_cyt </ci>
+                    <ci> iBRaf </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="MEK_phos" metaid="SloppyCell_00317">
+        <listOfReactants>
+          <speciesReference species="MEK" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pMEK" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_MEK_phos </ci>
+                  <ci> MEK </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_MEK_phos </ci>
+                    <ci> pMEK </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="MEK_dephos" metaid="SloppyCell_00318">
+        <listOfReactants>
+          <speciesReference species="pMEK" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="MEK" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_MEK_dephos </ci>
+                  <ci> pMEK </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_MEK_dephos </ci>
+                    <ci> MEK </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="ERK_phos" metaid="SloppyCell_00319">
+        <listOfReactants>
+          <speciesReference species="ERK" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pERK" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_ERK_phos </ci>
+                  <ci> ERK </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_ERK_phos </ci>
+                    <ci> pERK </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="ERK_dephos" metaid="SloppyCell_00320">
+        <listOfReactants>
+          <speciesReference species="pERK" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="ERK" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_ERK_dephos </ci>
+                  <ci> pERK </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_ERK_dephos </ci>
+                    <ci> ERK </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="RAS_iBRAF_bind" metaid="SloppyCell_00321">
+        <listOfReactants>
+          <speciesReference species="Ras_GTP" stoichiometry="1"/>
+          <speciesReference species="iBRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_iBRaf" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_RAS_iBRAF_bind </ci>
+                  <ci> iBRaf </ci>
+                  <ci> Ras_GTP </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_RAS_iBRAF_bind </ci>
+                    <ci> Ras_iBRaf </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="iBRaf_dim" metaid="SloppyCell_00322">
+        <listOfReactants>
+          <speciesReference species="Ras_iBRaf" stoichiometry="2"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="iBRaf_dimer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_iBRaf_dim </ci>
+                  <apply>
+                    <power/>
+                    <ci> Ras_iBRaf </ci>
+                    <cn type="integer"> 2 </cn>
+                  </apply>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_iBRaf_dim </ci>
+                    <ci> iBRaf_dimer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="iBRaf_Raf1_bind" metaid="SloppyCell_00323">
+        <listOfReactants>
+          <speciesReference species="Ras_iBRaf" stoichiometry="1"/>
+          <speciesReference species="Ras_Raf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_Raf1_iBRaf_tetramer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_iBRaf_Raf1_bind </ci>
+                  <ci> Ras_Raf1 </ci>
+                  <ci> Ras_iBRaf </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_iBRaf_Raf1_bind </ci>
+                    <ci> Ras_Raf1_iBRaf_tetramer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="Raf1_iBRaf_phos" metaid="SloppyCell_00324">
+        <listOfReactants>
+          <speciesReference species="Ras_Raf1_iBRaf_tetramer" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_pRaf1_iBRaf_tetramer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_Raf1_iBRaf_phos </ci>
+                  <ci> Ras_Raf1_iBRaf_tetramer </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_Raf1_iBRaf_phos </ci>
+                    <ci> Ras_pRaf1_iBRaf_tetramer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="pRaf1_iBRaf_unbind" metaid="SloppyCell_00325">
+        <listOfReactants>
+          <speciesReference species="Ras_pRaf1_iBRaf_tetramer" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_iBRaf" stoichiometry="1"/>
+          <speciesReference species="Ras_pRaf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_pRaf1_iBRaf_unbind </ci>
+                  <ci> Ras_pRaf1_iBRaf_tetramer </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_pRaf1_iBRaf_unbind </ci>
+                    <ci> Ras_iBRaf </ci>
+                    <ci> Ras_pRaf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="BRAF_dim" metaid="SloppyCell_00326">
+        <listOfReactants>
+          <speciesReference species="Ras_BRaf" stoichiometry="2"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="BRaf_dimer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_BRAF_dim </ci>
+                  <apply>
+                    <power/>
+                    <ci> Ras_BRaf </ci>
+                    <cn type="integer"> 2 </cn>
+                  </apply>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_BRAF_dim </ci>
+                    <ci> BRaf_dimer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="Ras_pRaf1_dp" metaid="SloppyCell_00327">
+        <listOfReactants>
+          <speciesReference species="Ras_pRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_Raf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_Ras_pRaf1_dp </ci>
+                  <ci> Ras_pRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_Ras_pRaf1_dp </ci>
+                    <ci> Ras_Raf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="Ras_Raf1_nfp" metaid="SloppyCell_00328">
+        <listOfReactants>
+          <speciesReference species="Ras_Raf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_nfpRaf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_Ras_Raf1_nfp </ci>
+                  <ci> Ras_Raf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_Ras_Raf1_nfp </ci>
+                    <ci> Ras_nfpRaf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="neg_fdbk_unbind_RASt_nfpRAF1" metaid="SloppyCell_00329">
+        <listOfReactants>
+          <speciesReference species="Ras_nfpRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_GTP" stoichiometry="1"/>
+          <speciesReference species="nfpRaf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbk_unbind_RASt_nfpRAF1 </ci>
+                  <ci> Ras_nfpRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbk_unbind_RASt_nfpRAF1 </ci>
+                    <ci> Ras_GTP </ci>
+                    <ci> nfpRaf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="neg_fdbk_dephos_pRaf1" metaid="SloppyCell_00330">
+        <listOfReactants>
+          <speciesReference species="nfpRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Raf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbk_dephos_pRaf1 </ci>
+                  <ci> nfpRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbk_dephos_pRaf1 </ci>
+                    <ci> Raf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="BRAF_nfp" metaid="SloppyCell_00331">
+        <listOfReactants>
+          <speciesReference species="Ras_BRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_nfpBRaf" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_BRAF_nfp </ci>
+                  <ci> Ras_BRaf </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_BRAF_nfp </ci>
+                    <ci> Ras_nfpBRaf </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="neg_fdbk_unbind_RASt_nfpBRAF" metaid="SloppyCell_00332">
+        <listOfReactants>
+          <speciesReference species="Ras_nfpBRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="nfpBRaf" stoichiometry="1"/>
+          <speciesReference species="Ras_GTP" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbk_unbind_RASt_nfpBRAF </ci>
+                  <ci> Ras_nfpBRaf </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbk_unbind_RASt_nfpBRAF </ci>
+                    <ci> Ras_GTP </ci>
+                    <ci> nfpBRaf </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="neg_fdbk_dephos_pBRAF" metaid="SloppyCell_00333">
+        <listOfReactants>
+          <speciesReference species="nfpBRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="BRaf" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbk_dephos_pBRAF </ci>
+                  <ci> nfpBRaf </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbk_dephos_pBRAF </ci>
+                    <ci> BRaf </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="BRaf_iBRaf_dim" metaid="SloppyCell_00334">
+        <listOfReactants>
+          <speciesReference species="Ras_iBRaf" stoichiometry="1"/>
+          <speciesReference species="Ras_BRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="BRaf_iBRaf_dimer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_BRaf_iBRaf_dim </ci>
+                  <ci> Ras_iBRaf </ci>
+                  <ci> Ras_BRaf </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_BRaf_iBRaf_dim </ci>
+                    <ci> BRaf_iBRaf_dimer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="Ras_iRaf_nfp" metaid="SloppyCell_00335">
+        <listOfReactants>
+          <speciesReference species="Ras_iRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_nfpiRaf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_Ras_iRaf_nfp </ci>
+                  <ci> Ras_iRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_Ras_iRaf_nfp </ci>
+                    <ci> Ras_nfpiRaf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="neg_fdbk_unbind_piRaf1_RASt" metaid="SloppyCell_00336">
+        <listOfReactants>
+          <speciesReference species="Ras_nfpiRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_GTP" stoichiometry="1"/>
+          <speciesReference species="nfpiRaf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbk_unbind_piRaf1_RASt </ci>
+                  <ci> Ras_nfpiRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbk_unbind_piRaf1_RASt </ci>
+                    <ci> nfpiRaf1 </ci>
+                    <ci> Ras_GTP </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="neg_fdbck_dephos_piRaf" metaid="SloppyCell_00337">
+        <listOfReactants>
+          <speciesReference species="nfpiRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="iRaf1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbck_dephos_piRaf </ci>
+                  <ci> nfpiRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbck_dephos_piRaf </ci>
+                    <ci> iRaf1 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="Ras_iBRaf_nfp" metaid="SloppyCell_00338">
+        <listOfReactants>
+          <speciesReference species="Ras_iBRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_nfpiBRaf" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_Ras_iBRaf_nfp </ci>
+                  <ci> Ras_iBRaf </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_Ras_iBRaf_nfp </ci>
+                    <ci> Ras_nfpiBRaf </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="neg_fdbk_unbind_piBRaf_RASt" metaid="SloppyCell_00339">
+        <listOfReactants>
+          <speciesReference species="Ras_nfpiBRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_GTP" stoichiometry="1"/>
+          <speciesReference species="nfpiBRaf" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbk_unbind_piBRaf_RASt </ci>
+                  <ci> Ras_nfpiBRaf </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbk_unbind_piBRaf_RASt </ci>
+                    <ci> nfpiBRaf </ci>
+                    <ci> Ras_GTP </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="neg_fdbk_dephos_iBRAF" metaid="SloppyCell_00340">
+        <listOfReactants>
+          <speciesReference species="nfpiBRaf" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="iBRaf" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbk_dephos_iBRAF </ci>
+                  <ci> nfpiBRaf </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbk_dephos_iBRAF </ci>
+                    <ci> iBRaf </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="iRaf_iBRaf_dim" metaid="SloppyCell_00341">
+        <listOfReactants>
+          <speciesReference species="Ras_iBRaf" stoichiometry="1"/>
+          <speciesReference species="Ras_iRaf1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_iRaf1_iBRaf1_tetramer" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_iRaf_iBRaf_dim </ci>
+                  <ci> Ras_iBRaf </ci>
+                  <ci> Ras_iRaf1 </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_iRaf_iBRaf_dim </ci>
+                    <ci> Ras_iRaf1_iBRaf1_tetramer </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="EGF_bind" metaid="SloppyCell_00342">
+        <listOfReactants>
+          <speciesReference species="mE" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="mEL" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_EGF_bind </ci>
+                  <ci> mE </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_EGF_bind </ci>
+                    <ci> mEL </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="mEL_dim" metaid="SloppyCell_00343">
+        <listOfReactants>
+          <speciesReference species="mEL" stoichiometry="2"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="mELmEL" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_mEL_dim </ci>
+                  <apply>
+                    <power/>
+                    <ci> mEL </ci>
+                    <cn type="integer"> 2 </cn>
+                  </apply>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_mEL_dim </ci>
+                    <ci> mELmEL </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="mELmEL_phos_dephos" metaid="SloppyCell_00344">
+        <listOfReactants>
+          <speciesReference species="mELmEL" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="E" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_mELmEL_phos_dephos </ci>
+                  <ci> mELmEL </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_mELmEL_phos_dephos </ci>
+                    <ci> E </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="RAS_GTP_bind" metaid="SloppyCell_00345">
+        <listOfReactants>
+          <speciesReference species="Ras_GDP" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_GTP" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_RAS_GTP_bind </ci>
+                  <ci> Ras_GDP </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_RAS_GTP_bind </ci>
+                    <ci> Ras_GTP </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="RAS_GTPhydro" metaid="SloppyCell_00346">
+        <listOfReactants>
+          <speciesReference species="Ras_GTP" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Ras_GDP" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_RAS_GTPhydro </ci>
+                  <ci> Ras_GTP </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_RAS_GTPhydro </ci>
+                    <ci> Ras_GDP </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="E_G2SOS_bind" metaid="SloppyCell_00347">
+        <listOfReactants>
+          <speciesReference species="GRB2_SOS" stoichiometry="1"/>
+          <speciesReference species="E" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="EG2SOS" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_E_G2SOS_bind </ci>
+                  <ci> GRB2_SOS </ci>
+                  <ci> E </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_E_G2SOS_bind </ci>
+                    <ci> EG2SOS </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="E_G2_bind" metaid="SloppyCell_00348">
+        <listOfReactants>
+          <speciesReference species="GRB2" stoichiometry="1"/>
+          <speciesReference species="E" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="EG2" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_E_G2_bind </ci>
+                  <ci> GRB2 </ci>
+                  <ci> E </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_E_G2_bind </ci>
+                    <ci> EG2 </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="GRB2_SOS_bind_cyt" metaid="SloppyCell_00349">
+        <listOfReactants>
+          <speciesReference species="SOS" stoichiometry="1"/>
+          <speciesReference species="GRB2" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="GRB2_SOS" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_GRB2_SOS_bind_cyt </ci>
+                  <ci> GRB2 </ci>
+                  <ci> SOS </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_GRB2_SOS_bind_cyt </ci>
+                    <ci> GRB2_SOS </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="EG2_SOS_bind" metaid="SloppyCell_00350">
+        <listOfReactants>
+          <speciesReference species="EG2" stoichiometry="1"/>
+          <speciesReference species="SOS" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="EG2SOS" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_EG2_SOS_bind </ci>
+                  <ci> EG2 </ci>
+                  <ci> SOS </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_EG2_SOS_bind </ci>
+                    <ci> EG2SOS </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="neg_fdbk_dephos_pSOS" metaid="SloppyCell_00351">
+        <listOfReactants>
+          <speciesReference species="nfpSOS" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="SOS" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbk_dephos_pSOS </ci>
+                  <ci> nfpSOS </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbk_dephos_pSOS </ci>
+                    <ci> SOS </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> cytoplasm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+      <reaction id="neg_fdbk_phos_of_SOS" metaid="SloppyCell_00352">
+        <listOfReactants>
+          <speciesReference species="EG2SOS" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="EG2" stoichiometry="1"/>
+          <speciesReference species="nfpSOS" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">          
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <apply>
+                  <times/>
+                  <ci> Kf_neg_fdbk_phos_of_SOS </ci>
+                  <ci> EG2SOS </ci>
+                </apply>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> Kr_neg_fdbk_phos_of_SOS </ci>
+                    <ci> EG2 </ci>
+                    <ci> nfpSOS </ci>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> pm </ci>
+            </apply>
+          </math>
+                </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>
