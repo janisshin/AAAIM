@@ -35,6 +35,7 @@ from core.model_info import (
     format_prompt,
     get_all_reaction_ids,
     get_all_species_ids,
+    get_species_display_names,
 )
 
 
@@ -291,6 +292,67 @@ def _collect_existing_annotations(
     return existing_annotations, qualifier_annotations, existing_annotation_databases
 
 
+def _resolve_annotate(annotate: str, entity_type: EntityType, method: str) -> str:
+    """Return ``species``, ``reactions``, or ``both``.
+
+    ``entity_type="reaction"`` or ``method="rulebased"`` still selects reactions
+    when the caller leaves ``annotate`` at the default (``"species"``).
+    """
+    value = (annotate or "species").strip().lower()
+    if value in ("reaction", "reactions"):
+        return "reactions"
+    if value == "both":
+        return "both"
+    if value != "species":
+        logger.warning("Unknown annotate=%r, using species", annotate)
+    if entity_type == EntityType.REACTION or method == "rulebased":
+        return "reactions"
+    return "species"
+
+
+def _chebi_rows(df: Optional[pd.DataFrame]) -> pd.DataFrame:
+    """Keep recommendation rows whose annotation is a ChEBI identifier."""
+    if df is None or df.empty or "annotation" not in df.columns:
+        return pd.DataFrame(columns=["id", "annotation"])
+    out = df.copy()
+    if "id" in out.columns:
+        out = out[out["id"].astype(str) != "Reason:"]
+    mask = out["annotation"].astype(str).str.upper().str.startswith("CHEBI:")
+    return out.loc[mask].reset_index(drop=True)
+
+
+def _species_recommendations_from_model(model_file: str) -> pd.DataFrame:
+    """Build a species recommendation table from ChEBI annotations already in the SBML."""
+    annotations, _ = find_species_with_annotations_and_qualifiers(model_file, DatabaseID.CHEBI.value)
+    names = get_species_display_names(model_file)
+    rows = []
+    for species_id, ids in annotations.items():
+        for ann in ids:
+            s = str(ann).strip()
+            if not s:
+                continue
+            if not s.upper().startswith("CHEBI:"):
+                s = f"CHEBI:{s}"
+            rows.append({
+                "id": species_id,
+                "display_name": names.get(species_id, species_id),
+                "annotation": s,
+                "match_score": 1.0,
+            })
+    return pd.DataFrame(rows)
+
+
+def _load_species_recommendations(model_file: str, species_recommendations_df) -> pd.DataFrame:
+    """Resolve species ChEBI rows from a DataFrame, CSV path, or the model itself."""
+    if species_recommendations_df is None:
+        df = _species_recommendations_from_model(model_file)
+    elif isinstance(species_recommendations_df, (str, Path)):
+        df = pd.read_csv(species_recommendations_df)
+    else:
+        df = species_recommendations_df
+    return _chebi_rows(df)
+
+
 def annotate_single_model(
     model_file: str,
     llm_model: str = "gpt-4o-mini",
@@ -301,29 +363,42 @@ def annotate_single_model(
     database: str | DatabaseID | Sequence[str | DatabaseID] = DatabaseID.CHEBI,
     tax_id: str = None,
     chunk_size: int = 50,
-    species_recommendations_df = None) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+    species_recommendations_df = None,
+    annotate: str = "species",
+    csv_path: Optional[str] = None,
+) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """
     Annotate a single model that has no or limited existing annotations.
 
-    This is the main function users will call to get annotation recommendations
-    for all species in a model, regardless of existing annotations.
+    ``annotate`` selects the target:
+        ``"species"`` — species only (default)
+        ``"reactions"`` — KEGG reactions only (needs species ChEBI annotations)
+        ``"both"`` — species first, then reactions from those recommendations
 
     Args:
         model_file: Path to SBML model file
         llm_model: LLM model to use ("gpt-4o-mini" or an OpenRouter "meta-llama/..." model)
-        method: Method to use for database search ("direct", "rag")
-        top_k: Number of top candidates to return per species
+        method: Method to use for database search ("direct", "rag"); reactions use
+            rule-based KEGG matching plus LLM ranking
+        top_k: Number of top candidates to return per entity
         max_entities: Maximum number of entities to annotate (None for all)
-        entity_type: Type of entities to annotate ("chemical", "gene", "protein", "auto")
+        entity_type: Type of entities to annotate ("chemical", "gene", "protein",
+            "auto", "reaction")
         database: Target database ("chebi", "ncbigene", "uniprot") or a list of
             databases when entity_type is "auto"
         tax_id: For gene/protein annotations, the organism's tax_id for species-specific lookup
         chunk_size: Size of chunks to split large models into (default: 50, None for no chunking)
+        species_recommendations_df: Species recommendation table or CSV path. Used
+            when annotating reactions; if omitted, ChEBI terms already in the model
+            are used
+        annotate: ``"species"``, ``"reactions"``, or ``"both"``
+        csv_path: Output CSV path (default: ``<model>_recommendations.csv``)
 
     Returns:
-        Tuple of (recommendations_df, metrics_dict)
-        - recommendations_df: AMAS-compatible DataFrame with annotation recommendations
-        - metrics_dict: Dictionary with evaluation metrics and timing information
+        AnnotationResult. Species tables are on ``species_recommendations_df``;
+        reaction tables are on ``reaction_recommendations_df``.
+        ``recommendations_df`` is the primary table for the mode that ran
+        (species-only or reactions).
     """
     start_time = time.time()
 
@@ -347,6 +422,78 @@ def annotate_single_model(
     logger.info(f"Entity type: {entity_type.value}, Database: {_database_log_label(databases)}")
     if tax_id:
         logger.info(f"Using organism-specific search for tax_id: {tax_id}")
+
+    annotate = _resolve_annotate(annotate, entity_type, method)
+    if csv_path is None:
+        csv_path = f"{Path(model_file).name}_recommendations.csv"
+
+    if annotate == "both":
+        species_entity_type = (
+            EntityType.CHEMICAL if entity_type == EntityType.REACTION else entity_type
+        )
+        species_method = "direct" if method == "rulebased" else method
+        species_database: str | DatabaseID | Sequence[str | DatabaseID] = database
+        if entity_type == EntityType.REACTION:
+            species_database = DatabaseID.CHEBI
+            species_method = "direct"
+        species_result = annotate_single_model(
+            model_file,
+            llm_model=llm_model,
+            method=species_method,
+            top_k=top_k,
+            max_entities=max_entities,
+            entity_type=species_entity_type,
+            database=species_database,
+            tax_id=tax_id,
+            chunk_size=chunk_size,
+            annotate="species",
+            csv_path=f"{Path(model_file).name}_species_recommendations.csv",
+        )
+        if not hasattr(species_result, "species_recommendations_df"):
+            return species_result
+        species_df = species_result.species_recommendations_df
+        chebi_df = _chebi_rows(species_df)
+        if chebi_df.empty:
+            logger.warning("No ChEBI species annotations to drive reaction annotation")
+            species_result.reaction_recommendations_df = pd.DataFrame()
+            return species_result
+        reaction_result = annotate_single_model(
+            model_file,
+            llm_model=llm_model,
+            method="rulebased",
+            top_k=top_k,
+            max_entities=max_entities,
+            entity_type=EntityType.REACTION,
+            database=DatabaseID.KEGG,
+            tax_id=tax_id,
+            chunk_size=chunk_size,
+            species_recommendations_df=chebi_df,
+            annotate="reactions",
+            csv_path=f"{Path(model_file).name}_reaction_recommendations.csv",
+        )
+        if hasattr(reaction_result, "recommendations_df"):
+            reaction_result.species_recommendations_df = species_df
+            reaction_result.metrics = {**species_result.metrics, "reaction": reaction_result.metrics}
+            return reaction_result
+        species_result.reaction_recommendations_df = pd.DataFrame()
+        species_result.metrics = {**species_result.metrics, "reaction": reaction_result[1]}
+        return species_result
+
+    if annotate == "reactions":
+        entity_type = EntityType.REACTION
+        databases = [DatabaseID.KEGG]
+        method = "rulebased"
+        species_recommendations_df = _load_species_recommendations(
+            model_file, species_recommendations_df
+        )
+        if species_recommendations_df.empty:
+            logger.error(
+                "No species ChEBI annotations available for reaction annotation. "
+                "Run annotate='species' first or pass species_recommendations_df."
+            )
+            return pd.DataFrame(), {
+                "error": "No species ChEBI annotations available for reaction annotation"
+            }
 
     # Always define a system prompt so conversation history construction can't fail.
     system_prompt = get_system_prompt(entity_type)
@@ -398,30 +545,40 @@ def annotate_single_model(
     # Step 3
     if method == 'rulebased':
         logger.info(f">>>Step 3: Rule-based search of KEGG Reaction Annotations...<<<")
-        from core.reaction.annotation_workflow import run_kegg_annotation_workflow_rulebased
+        from core.reaction.annotation_workflow import (
+            rank_kegg_annotations_with_llm,
+            run_kegg_annotation_workflow_rulebased,
+        )
         search_start = time.time()
         kegg_annotation_workflow_result = run_kegg_annotation_workflow_rulebased(
             model_file,
             species_recommendations_df,
             existing_annotations=existing_annotations,
         )
-
-
         search_time = time.time() - search_start
         logger.info(f"Rule-based search completed in {search_time:.2f}s")
 
-        logger.info(f">>>Step 4: Ranking the recommended annotiations with the LLM ({llm_model}) ...<<<")
+        if kegg_annotation_workflow_result is None:
+            return pd.DataFrame(), {"error": "KEGG reaction annotation failed"}
+
+        logger.info(f">>>Step 4: Ranking the recommended annotations with the LLM ({llm_model}) ...<<<")
         llm_start = time.time()
-
-        #### fill this in
-
+        ranked_df = rank_kegg_annotations_with_llm(
+            model_file,
+            kegg_annotation_workflow_result.kegg_recommendations,
+            llm_model=llm_model,
+            top_k=top_k,
+            csv_path=csv_path,
+        )
         llm_time = time.time() - llm_start
         logger.info(f"LLM completed reviewing the recommended reactions in {llm_time:.2f}s")
 
-        # Step 5
         logger.info(">>>Step 5: Generating recommendation table...<<<")
-
-        recommendations_df = kegg_annotation_workflow_result.kegg_recommendations
+        recommendations_df = (
+            ranked_df
+            if not ranked_df.empty
+            else kegg_annotation_workflow_result.kegg_recommendations
+        )
 
     else:
         # Format prompt for LLM
@@ -597,7 +754,6 @@ def annotate_single_model(
     if not recommendations_df.empty and "id" in recommendations_df.columns:
         recommendations_df = recommendations_df[recommendations_df["id"] != "Reason:"].reset_index(drop=True)
 
-    csv_path = f"{Path(model_file).name}_recommendations.csv"
     recommendations_df.to_csv(csv_path, index=False)
     print(f"Recommendations saved to {csv_path}")
     logger.info(f"Annotation completed in {total_time:.2f}s – {len(recommendations_df)} recommendations")
@@ -606,7 +762,7 @@ def annotate_single_model(
     combined_response = "\n\n".join(all_responses)
     combined_assistant_message = assistant_messages[0] if len(assistant_messages) == 1 else None
 
-    return AnnotationResult(
+    result = AnnotationResult(
         recommendations_df, metrics,
         model_file=model_file,
         conversation_history=build_initial_conversation(
@@ -627,6 +783,13 @@ def annotate_single_model(
         model_info=model_info,
         csv_path=csv_path,
     )
+    if annotate == "reactions":
+        result.reaction_recommendations_df = recommendations_df
+        result.species_recommendations_df = species_recommendations_df
+    else:
+        result.species_recommendations_df = recommendations_df
+        result.reaction_recommendations_df = None
+    return result
 
 
 def _database_name(database: str | DatabaseID) -> str:
@@ -997,15 +1160,9 @@ def print_results(results_df: pd.DataFrame):
 # Main interface function for users
 def annotate_model(model_file: str, **kwargs) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """
-    Main interface function for annotating a single model.
+    Annotate species, reactions, or both in an SBML model.
 
-    This is the primary function users should call for models without existing annotations.
-
-    Args:
-        model_file: Path to SBML model file
-        **kwargs: Additional arguments passed to annotate_single_model
-
-    Returns:
-        Tuple of (recommendations_df, metrics_dict)
+    Pass ``annotate="species"`` (default), ``"reactions"``, or ``"both"``.
+    Other keyword arguments are forwarded to :func:`annotate_single_model`.
     """
     return annotate_single_model(model_file, **kwargs)

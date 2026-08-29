@@ -67,7 +67,7 @@ ENTITY_DATABASE_MAPPING: Dict[EntityType, List[DatabaseID]] = {
     EntityType.GENE: [DatabaseID.NCBIGENE],
     EntityType.PROTEIN: [DatabaseID.UNIPROT],
     EntityType.COMPLEX: [DatabaseID.CHEBI, DatabaseID.UNIPROT, DatabaseID.NCBIGENE],
-    # EntityType.REACTION: [DatabaseID.RHEA, DatabaseID.EC, DatabaseID.KEGG],
+    EntityType.REACTION: [DatabaseID.KEGG],
 }
 
 

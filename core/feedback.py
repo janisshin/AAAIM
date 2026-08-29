@@ -75,6 +75,8 @@ class AnnotationResult:
         csv_path: str = None,
     ):
         self.recommendations_df = recommendations_df
+        self.species_recommendations_df = None
+        self.reaction_recommendations_df = None
         self.metrics = metrics
 
         # Internal context (not exposed in metrics)

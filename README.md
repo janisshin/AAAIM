@@ -1,6 +1,6 @@
 # AAAIM — Auto-Annotator via AI for Modeling
 
-AAAIM is an LLM-powered tool that annotates biosimulation models (SBML) with standardized ontology terms from ChEBI, NCBI Gene, UniProt, and KEGG.
+AAAIM is an LLM-powered tool that annotates biosimulation models (SBML) with standardized ontology terms from ChEBI, NCBI Gene, UniProt, and KEGG. You can annotate **species**, **reactions**, or **both**.
 
 ![AAAIM Workflow](docs/AAAIM%20workflow.png)
 
@@ -39,13 +39,14 @@ For other models like OpenAI models, just pass the model name, e.g. "gpt-4o-mini
 ```python
 from core import annotate_model
 
-# Annotate all species — entity types are detected automatically
 result = annotate_model(
     model_file="path/to/model.xml",
+    annotate="both",                  # "species" (default) | "reactions" | "both"
     entity_type="auto",               # detects chemical / gene / protein / complex
-    database=["chebi", "uniprot"]     # databases to search
+    database=["chebi", "uniprot"],    # databases to search for species
 )
-# A CSV is saved automatically.
+# result.species_recommendations_df    → species
+# result.reaction_recommendations_df   → KEGG reactions (when annotate is "reactions" or "both")
 ```
 
 Run the bundled example (uses a test SBML model):
@@ -132,12 +133,25 @@ python setup_rag.py --tax_id 10090         # mouse
 Then pass `method="rag"` to `annotate_model()` or `curate_model()`.
 
 ---
+## Databases Supported
+
+| Database     | Annotates                         | `entity_type` / `annotate`      |
+| ------------ | --------------------------------- | ------------------------------- |
+| **ChEBI**    | Chemicals, metabolites            | `chemical`                      |
+| **NCBI Gene**| Genes                             | `gene`                          |
+| **UniProt**  | Proteins                          | `protein`                       |
+| **KEGG**     | Metabolic reactions               | `annotate="reactions"` or `"both"` |
+
+Use `entity_type="auto"` with a `database` list (for example `["chebi", "uniprot"]`) to assign each species to the matching database. Reaction annotation needs species ChEBI terms — from a prior species run, a CSV, or annotations already in the model.
+
+---
 
 ## Full Documentation
 
 See [docs/README.md](docs/README.md) for:
 
 - All parameters for `annotate_model` / `curate_model`
+- Species, reaction, and combined annotation workflows
 - Per-database annotation examples
 - Feedback API reference
 - Evaluation utilities
