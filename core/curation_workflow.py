@@ -18,6 +18,7 @@ from core.model_info import find_species_with_chebi_annotations, find_species_wi
 from core.llm_interface import get_system_prompt, query_llm_message, parse_llm_response
 from core.data_types import Recommendation
 from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, load_uniprot_label_dict, load_ncbigene_label_dict, load_chebi_label_dict
+from core.annotation_workflow import _silence_internal_logs, _vprint
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +33,8 @@ def curate_single_model(model_file: str,
                   entity_type: str | EntityType = EntityType.CHEMICAL,
                   database: str | DatabaseID = DatabaseID.CHEBI,
                   tax_id: str = None,
-                  chunk_size: int = 50) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+                  chunk_size: int = 50,
+                  verbose: bool = False) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """
     This is the main function users will call to get curation recommendations
     for a model that already has existing annotations.
@@ -47,6 +49,7 @@ def curate_single_model(model_file: str,
         database: Target database ("chebi", "ncbigene", "uniprot")
         tax_id: For gene/protein annotations, the organism's tax_id for species-specific lookup
         chunk_size: Size of chunks to split large models into (default: 50, None for no chunking)
+        verbose: If True, print a short progress summary. Default False.
         
     Returns:
         Tuple of (recommendations_df, metrics_dict)
@@ -54,6 +57,7 @@ def curate_single_model(model_file: str,
         - metrics_dict: Dictionary with evaluation metrics and timing information
     """
     start_time = time.time()
+    _silence_internal_logs()
     
     logger.info(f"Starting curation for model: {model_file}")
     logger.info(f"Using LLM model: {llm_model}")
@@ -234,8 +238,8 @@ def curate_single_model(model_file: str,
     
     logger.info(f"Parsed synonyms for {len(synonyms_dict)} entities")
 
-    if reason:
-        print(f"LLM Reason: {reason}")
+    # if reason:
+    #     print(f"LLM Reason: {reason}")
 
     # Search database
     logger.info(f">>>Step 4: Searching {database.value} database...<<<")
@@ -288,8 +292,9 @@ def curate_single_model(model_file: str,
 
     csv_path = f"{Path(model_file).name}_recommendations.csv"
     recommendations_df.to_csv(csv_path, index=False)
-    print(f"Recommendations saved to {csv_path}")
-    logger.info(f"Curation completed in {total_time:.2f}s – {len(recommendations_df)} recommendations")
+    print(f"Saved {len(recommendations_df)} recommendations to {csv_path}")
+    _vprint(verbose, f"Finished in {total_time:.1f}s")
+    # logger.info(f"Curation completed in {total_time:.2f}s – {len(recommendations_df)} recommendations")
 
     from core.feedback import AnnotationResult, build_initial_conversation
     combined_prompt = "\n\n".join(all_prompts)

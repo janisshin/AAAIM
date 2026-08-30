@@ -342,6 +342,15 @@ def _species_recommendations_from_model(model_file: str) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def _silence_internal_logs() -> None:
+    logging.getLogger("core").setLevel(logging.WARNING)
+
+
+def _vprint(verbose: bool, msg: str) -> None:
+    if verbose:
+        print(msg)
+
+
 def _load_species_recommendations(model_file: str, species_recommendations_df) -> pd.DataFrame:
     """Resolve species ChEBI rows from a DataFrame, CSV path, or the model itself."""
     if species_recommendations_df is None:
@@ -366,6 +375,8 @@ def annotate_single_model(
     species_recommendations_df = None,
     annotate: str = "species",
     csv_path: Optional[str] = None,
+    verbose: bool = False,
+    em_max_iterations: int = 5,
 ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """
     Annotate a single model that has no or limited existing annotations.
@@ -393,6 +404,9 @@ def annotate_single_model(
             are used
         annotate: ``"species"``, ``"reactions"``, or ``"both"``
         csv_path: Output CSV path (default: ``<model>_recommendations.csv``)
+        verbose: If True, print a short progress summary. Default False.
+        em_max_iterations: Reaction EM rematch rounds (default 5). Use 0 to skip
+            EM, or 1–2 for a faster run.
 
     Returns:
         AnnotationResult. Species tables are on ``species_recommendations_df``;
@@ -401,6 +415,7 @@ def annotate_single_model(
         (species-only or reactions).
     """
     start_time = time.time()
+    _silence_internal_logs()
 
     # Ensure these locals always exist (rulebased path doesn't query the LLM).
     all_prompts: List[str] = []
@@ -408,9 +423,9 @@ def annotate_single_model(
     assistant_messages: List[Dict[str, Any]] = []
     system_prompt: str = ""
 
-    logger.info(f"Starting annotation for model: {model_file}")
-    logger.info(f"Using LLM model: {llm_model}")
-    logger.info(f"Using method: {method} for database search")
+    # logger.info(f"Starting annotation for model: {model_file}")
+    # logger.info(f"Using LLM model: {llm_model}")
+    # logger.info(f"Using method: {method} for database search")
     entity_type = _normalize_entity_type(entity_type)
     databases = _normalize_databases(database)
     if entity_type != EntityType.AUTO and len(databases) > 1:
@@ -428,6 +443,7 @@ def annotate_single_model(
         csv_path = f"{Path(model_file).name}_recommendations.csv"
 
     if annotate == "both":
+        _vprint(verbose, f"Annotating species and reactions: {Path(model_file).name}")
         species_entity_type = (
             EntityType.CHEMICAL if entity_type == EntityType.REACTION else entity_type
         )
@@ -448,6 +464,7 @@ def annotate_single_model(
             chunk_size=chunk_size,
             annotate="species",
             csv_path=f"{Path(model_file).name}_species_recommendations.csv",
+            verbose=verbose,
         )
         if not hasattr(species_result, "species_recommendations_df"):
             return species_result
@@ -470,6 +487,8 @@ def annotate_single_model(
             species_recommendations_df=chebi_df,
             annotate="reactions",
             csv_path=f"{Path(model_file).name}_reaction_recommendations.csv",
+            verbose=verbose,
+            em_max_iterations=em_max_iterations,
         )
         if hasattr(reaction_result, "recommendations_df"):
             reaction_result.species_recommendations_df = species_df
@@ -531,6 +550,11 @@ def annotate_single_model(
         entities_to_evaluate = all_entity_ids
         logger.info(f"Annotate all {len(entities_to_evaluate)} entities")
 
+    if annotate == "reactions":
+        _vprint(verbose, f"Reactions: {len(entities_to_evaluate)} in model, ranking with {llm_model}")
+    else:
+        _vprint(verbose, f"Species: {len(entities_to_evaluate)} entities, {llm_model}")
+
     # Step 2: Extract model context
     logger.info(">>>Step 2: Extracting model context...<<<")
 
@@ -550,10 +574,12 @@ def annotate_single_model(
             run_kegg_annotation_workflow_rulebased,
         )
         search_start = time.time()
+        from core.reaction.amendment_config import ConvergenceConfig
         kegg_annotation_workflow_result = run_kegg_annotation_workflow_rulebased(
             model_file,
             species_recommendations_df,
             existing_annotations=existing_annotations,
+            convergence_config=ConvergenceConfig(max_iterations=em_max_iterations),
         )
         search_time = time.time() - search_start
         logger.info(f"Rule-based search completed in {search_time:.2f}s")
@@ -561,24 +587,22 @@ def annotate_single_model(
         if kegg_annotation_workflow_result is None:
             return pd.DataFrame(), {"error": "KEGG reaction annotation failed"}
 
-        logger.info(f">>>Step 4: Ranking the recommended annotations with the LLM ({llm_model}) ...<<<")
-        llm_start = time.time()
-        ranked_df = rank_kegg_annotations_with_llm(
-            model_file,
-            kegg_annotation_workflow_result.kegg_recommendations,
-            llm_model=llm_model,
-            top_k=top_k,
-            csv_path=csv_path,
-        )
-        llm_time = time.time() - llm_start
-        logger.info(f"LLM completed reviewing the recommended reactions in {llm_time:.2f}s")
-
-        logger.info(">>>Step 5: Generating recommendation table...<<<")
-        recommendations_df = (
-            ranked_df
-            if not ranked_df.empty
-            else kegg_annotation_workflow_result.kegg_recommendations
-        )
+        kegg_df = kegg_annotation_workflow_result.kegg_recommendations
+        if kegg_df.empty:
+            _vprint(verbose, "No KEGG reaction candidates found; skipping LLM ranking.")
+            llm_time = 0.0
+            recommendations_df = kegg_df
+        else:
+            llm_start = time.time()
+            ranked_df = rank_kegg_annotations_with_llm(
+                model_file,
+                kegg_df,
+                llm_model=llm_model,
+                top_k=top_k,
+                csv_path=csv_path,
+            )
+            llm_time = time.time() - llm_start
+            recommendations_df = ranked_df if not ranked_df.empty else kegg_df
 
     else:
         # Format prompt for LLM
@@ -706,8 +730,8 @@ def annotate_single_model(
 
         logger.info(f"Parsed synonyms for {len(synonyms_dict)} entities")
 
-        if reason:
-            print(f"LLM Reason: {reason}")
+        # if reason:
+        #     print(f"LLM Reason: {reason}")
 
         # Step 4: Search database
         if method not in ("direct", "rag"):
@@ -755,8 +779,9 @@ def annotate_single_model(
         recommendations_df = recommendations_df[recommendations_df["id"] != "Reason:"].reset_index(drop=True)
 
     recommendations_df.to_csv(csv_path, index=False)
-    print(f"Recommendations saved to {csv_path}")
-    logger.info(f"Annotation completed in {total_time:.2f}s – {len(recommendations_df)} recommendations")
+    print(f"Saved {len(recommendations_df)} recommendations to {csv_path}")
+    _vprint(verbose, f"Finished in {total_time:.1f}s")
+    # logger.info(f"Annotation completed in {total_time:.2f}s – {len(recommendations_df)} recommendations")
 
     combined_prompt = "\n\n".join(all_prompts)
     combined_response = "\n\n".join(all_responses)
@@ -1163,6 +1188,7 @@ def annotate_model(model_file: str, **kwargs) -> Tuple[pd.DataFrame, Dict[str, A
     Annotate species, reactions, or both in an SBML model.
 
     Pass ``annotate="species"`` (default), ``"reactions"``, or ``"both"``.
+    Set ``verbose=True`` for a short progress summary.
     Other keyword arguments are forwarded to :func:`annotate_single_model`.
     """
     return annotate_single_model(model_file, **kwargs)

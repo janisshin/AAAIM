@@ -23,10 +23,6 @@ from .species_probability import init_species_probs_from_dict
 from .utils import check_environment, extract_reaction_participants, map_chebi_to_kegg
 from utils.constants import EntityType
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-)
 logger = logging.getLogger(__name__)
 
 
@@ -70,23 +66,23 @@ def run_kegg_annotation_workflow_rulebased(
         logger.error("Environment check failed. Please fix the issues and try again.")
         return None
 
-    logger.info("Analyzing model: %s", model_file)
+    # logger.info("Analyzing model: %s", model_file)
 
     reaction_ids = get_all_reaction_ids(model_file)
     model_info = extract_model_info(model_file, reaction_ids, entity_type)
 
-    logger.info("Step 2: Map ChEBI IDs to KEGG Compound IDs")
+    # logger.info("Step 2: Map ChEBI IDs to KEGG Compound IDs")
     _, high_score_recommendations = map_chebi_to_kegg(recommendations_df)
 
-    logger.info("\nSample of ChEBI to KEGG mapping:")
-    if not high_score_recommendations.empty:
-        logger.info(
-            high_score_recommendations[
-                ["id", "display_name", "annotation", "KEGG_ID", "match_score"]
-            ].head()
-        )
+    # logger.info("\nSample of ChEBI to KEGG mapping:")
+    # if not high_score_recommendations.empty:
+    #     logger.info(
+    #         high_score_recommendations[
+    #             ["id", "display_name", "annotation", "KEGG_ID", "match_score"]
+    #         ].head()
+    #     )
 
-    logger.info("Step 3: Begin rule-based matching to identify reactions")
+    # logger.info("Step 3: Begin rule-based matching to identify reactions")
     reactions, _ = extract_reactions_from_sbml(
         model_file,
         list(high_score_recommendations["id"].unique()),
@@ -118,6 +114,16 @@ def run_kegg_annotation_workflow_rulebased(
         {},
     )
 
+    if kegg_recommendations_df.empty or "match_score" not in kegg_recommendations_df.columns:
+        logger.warning("No KEGG reaction candidates generated.")
+        empty = pd.DataFrame()
+        return KeggAnnotationWorkflowResult(
+            high_score_recommendations=high_score_recommendations,
+            kegg_recommendations=empty,
+            scored_reactions=empty,
+            updated_participants=empty,
+        )
+
     kegg_recommendations_df["match_score_norm"] = (
         kegg_recommendations_df["match_score"]
         / kegg_recommendations_df.groupby("id")["match_score"].transform("sum")
@@ -147,30 +153,37 @@ def run_kegg_annotation_workflow_rulebased(
     likelihood_calc = LikelihoodCalculator(cofactor_config, matching_config, convergence_config)
     scored_df = likelihood_calc.compute_reaction_likelihoods(init_probs, kegg_recommendations_df)
 
-    updated_participants_df, _ = update_participant_likelihoods(
-        high_score_recommendations,
-        scored_df,
-        model_file,
-        model_info=model_info,
-        kegg_features=kegg_features,
-        reactions=reactions,
-        reaction_ids=reaction_ids,
-        entity_type=entity_type,
-        database=database,
-        cofactor_config=cofactor_config,
-        convergence_config=convergence_config,
-    )
-
-    logger.info("\nSample of participants with updated likelihoods after convergence:")
-    if not updated_participants_df.empty:
-        logger.info(
-            updated_participants_df[["id", "display_name", "KEGG_ID", "participant_likelihood"]].head()
+    if convergence_config.max_iterations <= 0:
+        updated_participants_df = high_score_recommendations.copy()
+        if "participant_likelihood" not in updated_participants_df.columns:
+            updated_participants_df["participant_likelihood"] = updated_participants_df.get(
+                "match_score", 0.0
+            )
+    else:
+        updated_participants_df, _ = update_participant_likelihoods(
+            high_score_recommendations,
+            scored_df,
+            model_file,
+            model_info=model_info,
+            kegg_features=kegg_features,
+            reactions=reactions,
+            reaction_ids=reaction_ids,
+            entity_type=entity_type,
+            database=database,
+            cofactor_config=cofactor_config,
+            convergence_config=convergence_config,
         )
+
+    # logger.info("\nSample of participants with updated likelihoods after convergence:")
+    # if not updated_participants_df.empty:
+    #     logger.info(
+    #         updated_participants_df[["id", "display_name", "KEGG_ID", "participant_likelihood"]].head()
+    #     )
 
     updated_participants_df.sort_values(by="participant_likelihood", ascending=False, inplace=True)
     scored_df.sort_values(by="likelihood", ascending=False, inplace=True)
 
-    logger.info("KEGG annotation workflow completed successfully.")
+    # logger.info("KEGG annotation workflow completed successfully.")
     return KeggAnnotationWorkflowResult(
         high_score_recommendations=high_score_recommendations,
         kegg_recommendations=kegg_recommendations_df,
@@ -257,7 +270,7 @@ def rank_kegg_annotations_with_llm(
 
     if csv_path is not None:
         result_df.to_csv(csv_path, index=False)
-        logger.info("%s updated with KEGG DEFINITIONs", csv_path)
+        # logger.info("%s updated with KEGG DEFINITIONs", csv_path)
 
     reaction_ids = get_all_reaction_ids(model_file)
     id_to_equation = map_reaction_ids_to_stoichiometry_strings(model_file)
@@ -267,7 +280,7 @@ def rank_kegg_annotations_with_llm(
 
     for reaction_id in reaction_ids:
         model_reaction = id_to_equation.get(reaction_id, reaction_id)
-        logger.info("Ranking candidates for %s", model_reaction)
+        # logger.info("Ranking candidates for %s", model_reaction)
 
         sub = result_df[result_df["id"] == reaction_id]
         reaction_annotation_choices = _build_reaction_annotation_choices(sub)
@@ -282,7 +295,7 @@ def rank_kegg_annotations_with_llm(
         response_text = query_llm(prompt, model=llm_model, entity_type=EntityType.REACTION)
         response_lines = [ln.strip() for ln in (response_text or "").splitlines() if ln.strip()]
 
-        logger.info("%s -> %s", reaction_id, response_lines)
+        # logger.info("%s -> %s", reaction_id, response_lines)
 
         if len(response_lines) == 1 and response_lines[0] == "UNK":
             continue
@@ -290,7 +303,7 @@ def rank_kegg_annotations_with_llm(
         ranked_reaction_ids.append(reaction_id)
         ranked_responses.append(response_lines[:top_k])
 
-    logger.info("Collected LLM rankings for %d reactions", len(ranked_responses))
+    # logger.info("Collected LLM rankings for %d reactions", len(ranked_responses))
 
     ranked_rows: list[pd.DataFrame] = []
     for reaction_id, kegg_ids in zip(ranked_reaction_ids, ranked_responses):
@@ -311,6 +324,6 @@ def rank_kegg_annotations_with_llm(
     base = Path(csv_path) if csv_path else Path(f"{Path(model_file).name}_recommendations")
     ranked_out_path = base.with_name(base.stem + "_llm_ranked.csv")
     ranked_df.to_csv(ranked_out_path, index=False)
-    logger.info("LLM-ranked recommendations saved to %s", ranked_out_path)
+    # logger.info("LLM-ranked recommendations saved to %s", ranked_out_path)
 
     return ranked_df

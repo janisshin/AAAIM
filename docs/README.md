@@ -341,6 +341,8 @@ result = annotate_model(
     top_k = 3,						 # number of top database candidates to return per entity (use 10 for reactions)
     chunk_size = 50,					 # split large models into chunks of 50 entities (None for no chunking)
     species_recommendations_df = None,			 # species table or CSV; used when annotate="reactions"
+    verbose = False,					 # True for a short progress summary
+    em_max_iterations = 5,				 # reaction EM rematch rounds; 0 skips EM
 )
 
 # Direct access to qualifier tracking functions

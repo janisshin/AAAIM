@@ -44,6 +44,7 @@ result = annotate_model(
     annotate="both",                  # "species" (default) | "reactions" | "both"
     entity_type="auto",               # detects chemical / gene / protein / complex
     database=["chebi", "uniprot"],    # databases to search for species
+    verbose=False,                    # True for a short progress summary
 )
 # result.species_recommendations_df    → species
 # result.reaction_recommendations_df   → KEGG reactions (when annotate is "reactions" or "both")

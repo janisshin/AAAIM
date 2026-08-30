@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 def check_environment(model_file: str) -> bool:
     """Check if the environment is properly configured."""
     available_dbs = get_available_databases()
-    logger.info(f"Available databases: {available_dbs}")
+    # logger.info(f"Available databases: {available_dbs}")
     
     all_ok = True
     

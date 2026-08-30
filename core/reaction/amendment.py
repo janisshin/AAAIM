@@ -217,8 +217,8 @@ class LikelihoodCalculator:
         DEPRECATED: This method is kept for backward compatibility.
         Use compute_rscores() for EM-style algorithm.
         """
-        logger.warning("compute_reaction_likelihoods is deprecated. Use compute_rscores() instead.")
-        logger.info(f"Computing likelihoods for {len(kegg_recommendations_df)} reactions")
+        # logger.warning("compute_reaction_likelihoods is deprecated. Use compute_rscores() instead.")
+        # logger.info(f"Computing likelihoods for {len(kegg_recommendations_df)} reactions")
         logger.debug(f"Reactions in init_probs: {len(init_probs)}")
         
         result_df = kegg_recommendations_df.copy()
