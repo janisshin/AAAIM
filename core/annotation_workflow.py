@@ -26,8 +26,13 @@ from core.database_search import (
     load_uniprot_label_dict,
 )
 from core.feedback import AnnotationResult, build_initial_conversation
-from core.llm_interface import get_system_prompt, query_llm_message, parse_llm_response
-from utils.constants import DatabaseID, EntityType, get_database_for_entity_type
+from core.llm_interface import get_system_prompt, query_llm, query_llm_message, parse_llm_response
+from utils.constants import (
+    SPECIES_ANNOTATION_RANKING_PROMPT,
+    DatabaseID,
+    EntityType,
+    get_database_for_entity_type,
+)
 from core.model_info import (
     extract_model_info,
     find_reactions_with_kegg_annotations,
@@ -351,6 +356,126 @@ def _vprint(verbose: bool, msg: str) -> None:
         print(msg)
 
 
+def _build_species_annotation_choices(sub_df: pd.DataFrame) -> str:
+    lines: List[str] = []
+    seen: set[str] = set()
+    for _, row in sub_df.iterrows():
+        ann = str(row.get("annotation", "")).strip()
+        if not ann or ann.lower() == "nan":
+            continue
+        key = ann.upper()
+        if key in seen:
+            continue
+        seen.add(key)
+        label = row.get("annotation_label", "")
+        if label is None or (isinstance(label, float) and label != label):
+            label = ""
+        lines.append(f"{ann}: {label}".rstrip())
+    return "\n".join(lines)
+
+
+def _ranking_notes_block(notes: Optional[str]) -> str:
+    text = (notes or "").strip()
+    return f"Model notes:\n{text}\n\n" if text else ""
+
+
+def _parse_ranked_id_lines(response_text: Optional[str]) -> Dict[str, List[str]]:
+    """Parse ``entity_id: ID[, ID...]`` lines from a batched ranking response."""
+    parsed: Dict[str, List[str]] = {}
+    for line in (response_text or "").splitlines():
+        line = line.strip()
+        if not line or ":" not in line:
+            continue
+        entity_id, rest = line.split(":", 1)
+        entity_id = entity_id.strip()
+        if not entity_id:
+            continue
+        ids: List[str] = []
+        for part in rest.split(","):
+            tok = part.strip().split()[0] if part.strip() else ""
+            if tok and tok.upper() != "UNK":
+                ids.append(tok)
+        parsed[entity_id] = ids
+    return parsed
+
+
+def _species_ranking_context(species_id: str, sub_df: pd.DataFrame) -> str:
+    display = ""
+    curated = ""
+    if "display_name" in sub_df.columns and not sub_df.empty:
+        display = str(sub_df["display_name"].iloc[0] or "")
+    if "curated_name" in sub_df.columns and not sub_df.empty:
+        curated = str(sub_df["curated_name"].iloc[0] or "")
+    context = f"{species_id}: {display}" if display else species_id
+    if curated and curated not in (display, species_id, "nan"):
+        context += f"\nSynonyms: {curated}"
+    return context
+
+
+def rank_species_annotations_with_llm(
+    model_file: str,
+    recommendations_df: pd.DataFrame,
+    llm_model: str = "gpt-4o-mini",
+    n_return: int = 3,
+    model_notes: str = "",
+) -> pd.DataFrame:
+    """Re-rank species candidates with an LLM and keep at most *n_return* IDs per species.
+
+    Species with ``n_return`` or fewer candidates are left as-is. Remaining
+    species are ranked in a single LLM call.
+    """
+    if recommendations_df.empty or "annotation" not in recommendations_df.columns:
+        return recommendations_df
+
+    result_df = recommendations_df.copy()
+    reason_df = result_df[result_df["id"] == "Reason:"] if "id" in result_df.columns else result_df.iloc[0:0]
+    work_df = result_df[result_df["id"] != "Reason:"] if "id" in result_df.columns else result_df
+    notes_block = _ranking_notes_block(model_notes)
+
+    ranked_rows: List[pd.DataFrame] = []
+    to_rank: List[Tuple[str, pd.DataFrame, str]] = []
+    for species_id in work_df["id"].unique():
+        sub = work_df[work_df["id"] == species_id]
+        choices = _build_species_annotation_choices(sub)
+        if not choices.strip() or choices.count("\n") + 1 <= n_return:
+            ranked_rows.append(sub)
+            continue
+        to_rank.append((str(species_id), sub, choices))
+
+    if to_rank:
+        entities = "\n\n".join(
+            f"{_species_ranking_context(sid, sub)}\n{choices}"
+            for sid, sub, choices in to_rank
+        )
+        prompt = SPECIES_ANNOTATION_RANKING_PROMPT.format(
+            n_return=n_return,
+            model_notes=notes_block,
+            entities=entities,
+        )
+        parsed = _parse_ranked_id_lines(
+            query_llm(prompt, model=llm_model, entity_type=EntityType.CHEMICAL)
+        )
+        for sid, sub, _choices in to_rank:
+            selected = parsed.get(sid)
+            if selected is None:
+                ranked_rows.append(sub)
+                continue
+            if not selected:
+                empty = sub[sub["annotation"].astype(str).str.strip().isin(["", "nan"])]
+                ranked_rows.append(empty if not empty.empty else sub.iloc[0:0])
+                continue
+            ann_upper = sub["annotation"].astype(str).str.strip().str.upper()
+            for ann_id in selected[:n_return]:
+                rows = sub[ann_upper == ann_id.upper()]
+                if not rows.empty:
+                    ranked_rows.append(rows.iloc[[0]])
+
+    ranked_df = pd.concat(ranked_rows, ignore_index=True) if ranked_rows else work_df.iloc[0:0].copy()
+    if not reason_df.empty:
+        ranked_df = pd.concat([reason_df, ranked_df], ignore_index=True)
+    return ranked_df
+
+
 def _load_species_recommendations(model_file: str, species_recommendations_df) -> pd.DataFrame:
     """Resolve species ChEBI rows from a DataFrame, CSV path, or the model itself."""
     if species_recommendations_df is None:
@@ -367,6 +492,7 @@ def annotate_single_model(
     llm_model: str = "gpt-4o-mini",
     method: str = "direct",
     top_k: int = 3,
+    n_return: int = 3,
     max_entities: int = None,
     entity_type: str | EntityType = EntityType.CHEMICAL,
     database: str | DatabaseID | Sequence[str | DatabaseID] = DatabaseID.CHEBI,
@@ -391,7 +517,11 @@ def annotate_single_model(
         llm_model: LLM model to use ("gpt-4o-mini" or an OpenRouter "meta-llama/..." model)
         method: Method to use for database search ("direct", "rag"); reactions use
             rule-based KEGG matching plus LLM ranking
-        top_k: Number of top candidates to return per entity
+        top_k: Number of database candidates to retrieve per entity (direct/RAG).
+            Synonym generation is fixed at 3.
+        n_return: Number of IDs the final LLM ranking keeps per entity
+            (species and reactions). Default 3. Ranking is skipped when a
+            species or reaction has ``n_return`` or fewer candidates.
         max_entities: Maximum number of entities to annotate (None for all)
         entity_type: Type of entities to annotate ("chemical", "gene", "protein",
             "auto", "reaction")
@@ -457,6 +587,7 @@ def annotate_single_model(
             llm_model=llm_model,
             method=species_method,
             top_k=top_k,
+            n_return=n_return,
             max_entities=max_entities,
             entity_type=species_entity_type,
             database=species_database,
@@ -479,6 +610,7 @@ def annotate_single_model(
             llm_model=llm_model,
             method="rulebased",
             top_k=top_k,
+            n_return=n_return,
             max_entities=max_entities,
             entity_type=EntityType.REACTION,
             database=DatabaseID.KEGG,
@@ -598,8 +730,9 @@ def annotate_single_model(
                 model_file,
                 kegg_df,
                 llm_model=llm_model,
-                top_k=top_k,
+                n_return=n_return,
                 csv_path=csv_path,
+                model_notes=(model_info or {}).get("model_notes", "") or "",
             )
             llm_time = time.time() - llm_start
             recommendations_df = ranked_df if not ranked_df.empty else kegg_df
@@ -634,7 +767,7 @@ def annotate_single_model(
                 logger.info(f"Processing chunk {chunk_idx + 1}/{len(species_chunks)} ({len(chunk)} entities)")
 
                 # Format prompt for this chunk
-                prompt = format_prompt(model_file, chunk, entity_type, top_k)
+                prompt = format_prompt(model_file, chunk, entity_type)
 
                 if not prompt:
                     logger.error(f"Failed to format prompt for chunk {chunk_idx + 1}")
@@ -690,7 +823,7 @@ def annotate_single_model(
 
         else:
             # Single prompt for all entities
-            prompt = format_prompt(model_file, entities_to_evaluate, entity_type, top_k)
+            prompt = format_prompt(model_file, entities_to_evaluate, entity_type)
 
             if not prompt:
                 logger.error("Failed to format prompt")
@@ -768,6 +901,22 @@ def annotate_single_model(
             existing_annotation_databases=existing_annotation_databases,
         )
 
+        if top_k > n_return:
+            logger.info(">>>Step 6: Ranking species candidates with LLM...<<<")
+            rank_start = time.time()
+            ranked_df = rank_species_annotations_with_llm(
+                model_file,
+                recommendations_df,
+                llm_model=llm_model,
+                n_return=n_return,
+                model_notes=(model_info or {}).get("model_notes", "") or "",
+            )
+            llm_time += time.time() - rank_start
+            if not ranked_df.empty:
+                recommendations_df = ranked_df
+        else:
+            logger.info("Skipping species LLM ranking (top_k <= n_return)")
+
     # Step 10: Calculate metrics
     total_time = time.time() - start_time
 
@@ -802,6 +951,7 @@ def annotate_single_model(
         method=method,
         llm_model=llm_model,
         top_k=top_k,
+        n_return=n_return,
         tax_id=tax_id,
         existing_annotations=existing_annotations,
         qualifier_annotations=qualifier_annotations,
@@ -1189,6 +1339,8 @@ def annotate_model(model_file: str, **kwargs) -> Tuple[pd.DataFrame, Dict[str, A
 
     Pass ``annotate="species"`` (default), ``"reactions"``, or ``"both"``.
     Set ``verbose=True`` for a short progress summary.
+    ``top_k`` is the species retrieval pool; ``n_return`` (default 3) is
+    how many IDs the final LLM ranking keeps.
     Other keyword arguments are forwarded to :func:`annotate_single_model`.
     """
     return annotate_single_model(model_file, **kwargs)

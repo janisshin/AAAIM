@@ -70,6 +70,8 @@ Set `annotate` to choose what to annotate:
 - **Metrics**: Accuracy is NA when no existing annotations available
 - **Large Models**: Automatically splits models with >50 species into chunks to avoid LLM context limits
 
+Species annotation uses two size knobs. `top_k` is how many ontology IDs direct/RAG retrieval keeps per species (default 3). `n_return` is how many of those the final LLM ranking returns (default 3). Synonym generation is fixed at 3 and is not controlled by either parameter. The LLM ranking step runs only when there are more candidates than `n_return`, and then all such entities are ranked in one LLM call (not one call per entity). Set `top_k` higher than `n_return` (for example `top_k=10`, `n_return=3`) when you want the LLM to choose from a larger pool. Reactions ignore `top_k` at retrieval (all matching KEGG candidates are generated) and use the same skip rule. If every reaction already has `n_return` or fewer candidates, ranking is skipped and no `*_llm_ranked.csv` is written.
+
 #### Chemical Annotation (ChEBI)
 
 ```python
@@ -154,7 +156,7 @@ from core import annotate_model
 result = annotate_model(
     model_file="path/to/model.xml",
     annotate="reactions",
-    top_k=10,
+    n_return=3,
 )
 
 # Or pass a species recommendation table / CSV
@@ -162,7 +164,7 @@ result = annotate_model(
     model_file="path/to/model.xml",
     annotate="reactions",
     species_recommendations_df="model.xml_recommendations.csv",
-    top_k=10,
+    n_return=3,
 )
 ```
 
@@ -173,7 +175,7 @@ result = annotate_model(
 1. Map species ChEBI IDs to KEGG compound IDs (ontology walk when there is no direct map)
 2. Match each model reaction to KEGG reactions by participant sets, with staged ChEBI relaxation and optional cofactor filtering
 3. Collapse near-redundant candidates and score them
-4. Re-rank remaining candidates with an LLM using the model reaction equation and KEGG DEFINITION text
+4. Re-rank remaining candidates with an LLM using the model reaction equation and KEGG DEFINITION text, keeping `n_return` IDs
 
 The output CSV lists candidate KEGG reaction IDs per model reaction, ordered by rank. Use the same `update_annotation` column (`add` / `delete` / `ignore`) as for species, then `update_annotation()` to write them into the SBML.
 
@@ -185,7 +187,8 @@ result = annotate_model(
     annotate="both",
     entity_type="chemical",   # or "auto"
     database="chebi",
-    top_k=10,
+    top_k=10,                 # retrieval pool per species
+    n_return=3,               # final LLM-ranked IDs per entity
 )
 
 print(result.species_recommendations_df)    # species
@@ -338,7 +341,8 @@ result = annotate_model(
     entity_type = "gene",				 # type of entities to annotate ("chemical", "gene", "protein", "auto", "reaction")
     database = "ncbigene",				 # database to use ("chebi", "ncbigene", "uniprot", "kegg") or list for auto mode
     method = "direct",					 # species search: "direct" or "rag"; reactions always use rule-based matching + LLM ranking
-    top_k = 3,						 # number of top database candidates to return per entity (use 10 for reactions)
+    top_k = 10,						 # database candidates to retrieve per species (direct/RAG)
+    n_return = 3,					 # IDs kept after the final LLM ranking (species and reactions)
     chunk_size = 50,					 # split large models into chunks of 50 entities (None for no chunking)
     species_recommendations_df = None,			 # species table or CSV; used when annotate="reactions"
     verbose = False,					 # True for a short progress summary
@@ -415,15 +419,15 @@ print_evaluation_results(
 
 ### Direct matching
 
-After LLM performs synonym normalization, use direct dictionary matching to find ontology ID and report hit counting. Returns the top_k candidates with the highest hit counts.
+After LLM performs synonym normalization (3 synonyms), use direct dictionary matching to find ontology IDs and report hit counting. Retrieval keeps the `top_k` IDs with the highest hit counts. An LLM then re-ranks those candidates and returns `n_return` IDs.
 
 ### Rule-based reaction matching + LLM ranking
 
-Used when `annotate="reactions"` or `annotate="both"`. After species ChEBI IDs are mapped to KEGG compounds, candidate KEGG reactions are retrieved by aligning substrate and product sets (the model participants must be a subset of the KEGG reaction). ChEBI ontology relaxation reconciles differences in chemical granularity (for example glucose vs hexose). Common cofactors can be excluded from matching. The LLM then ranks the remaining KEGG DEFINITION strings against the model reaction equation; it does not invent IDs that were not generated as candidates.
+Used when `annotate="reactions"` or `annotate="both"`. After species ChEBI IDs are mapped to KEGG compounds, candidate KEGG reactions are retrieved by aligning substrate and product sets (the model participants must be a subset of the KEGG reaction). ChEBI ontology relaxation reconciles differences in chemical granularity (for example glucose vs hexose). Common cofactors can be excluded from matching. The LLM then ranks the remaining KEGG DEFINITION strings against the model reaction equation, using `n_return` and the model notes in the prompt, and keeps `n_return` IDs. A reaction with `n_return` or fewer candidates skips this call. The LLM does not invent IDs that were not generated as candidates.
 
 ### Retrival augmented generation (RAG)
 
-After LLM performs synonym normalization, use RAG with embeddings to find the top_k most similar ontology terms based on cosine similarity.
+After LLM performs synonym normalization (3 synonyms), use RAG with embeddings to find the most similar ontology terms by cosine similarity. Retrieval keeps the `top_k` nearest IDs. An LLM then re-ranks those candidates and returns `n_return` IDs.
 
 To use RAG, create embeddings of the ontology first:
 

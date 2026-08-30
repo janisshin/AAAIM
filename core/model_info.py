@@ -985,7 +985,8 @@ def format_prompt(
         species_ids: List of species IDs to include in the prompt
         entity_type: Type of entity ("chemical" for species, "gene" for gene products, "protein" for protein products,
                         "reaction" for reactions, "auto" for automatic entity type detection)
-        top_k: Number of synonyms to request from LLM (default: 3)
+        top_k: Number of synonyms to request from LLM (fixed at 3 in the
+            annotation workflow; extra synonyms rarely add better database hits)
         context: If True, include full model context (model name, reactions, notes). 
                  If False, only include display names. (default: True)
         

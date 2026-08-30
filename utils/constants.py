@@ -342,35 +342,40 @@ J3: "Isocitrate dehydrogenase"
 Reason: these reactions match the reactions found in the TCA cycle """
 
 
-REACTION_ANNOTATION_RANKING_PROMPT = """Task: Select the best matching KEGG reaction ID(s).
+SPECIES_ANNOTATION_RANKING_PROMPT = """Task: For each species, select up to {n_return} best matching annotation ID(s).
 
-Model reaction:
-{model_reaction}
-
-Candidate KEGG reactions:
-{reaction_annotation_choices}
+{model_notes}{entities}
 
 Instructions:
-- Choose only from the provided KEGG IDs.
-- Return the ID(s) only. Do NOT explain your reasoning. Do NOT include any other text.
-- Order multiple IDs from best to worst match.
-- If none match, return: UNK
+- Choose only from the IDs listed under that species.
+- Return at most {n_return} ID(s) per species.
+- If none match for a species, return UNK for that species.
+- Do NOT explain your reasoning. Do NOT include any other text.
+
+Output format (one species per line):
+species_id: ID[, ID...]
+
+Example:
+s_glc: CHEBI:17234, CHEBI:4167
+s_atp: CHEBI:15422
+"""
+
+
+REACTION_ANNOTATION_RANKING_PROMPT = """Task: For each reaction, select up to {n_return} best matching KEGG reaction ID(s).
+
+{model_notes}{entities}
+
+Instructions:
+- Choose only from the KEGG IDs listed under that reaction.
+- Return at most {n_return} ID(s) per reaction.
+- If none match for a reaction, return UNK for that reaction.
+- Do NOT explain your reasoning. Do NOT include any other text.
 - If multiple candidates differ only in specificity, rank the most general reaction highest (e.g., fructose > D-fructose > beta-D-fructose).
 - Consider biochemical equivalence (e.g., isomers, implicit conversions like DHAP ↔ G3P).
 
-Output format:
-One ID per line.
+Output format (one reaction per line):
+reaction_id: ID[, ID...]
 
 Example:
-Model reaction:
-J4: F16BP -> 2 G3P
-
-Candidate KEGG reactions:
-R01068: D-Fructose 1,6-bisphosphate <=> Glycerone phosphate + D-Glyceraldehyde 3-phosphate
-R10049: Methylglyoxal + D-Fructose 1,6-bisphosphate <=> D-Glyceraldehyde 3-phosphate + 6-Deoxy-5-ketofructose 1-phosphate
-R01070: beta-D-Fructose 1,6-bisphosphate <=> Glycerone phosphate + D-Glyceraldehyde 3-phosphate
-
-Output:
-R01068
-R01070
+J4: R01068, R01070
 """

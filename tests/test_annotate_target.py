@@ -4,11 +4,15 @@ from pathlib import Path
 
 import pandas as pd
 
+from unittest.mock import patch
+
 from core.annotation_workflow import (
     _chebi_rows,
     _load_species_recommendations,
+    _parse_ranked_id_lines,
     _resolve_annotate,
     _species_recommendations_from_model,
+    rank_species_annotations_with_llm,
 )
 from utils.constants import EntityType
 
@@ -50,8 +54,59 @@ def test_species_recommendations_from_model_and_csv():
     assert from_csv["annotation"].str.upper().str.startswith("CHEBI:").all()
 
 
+def test_rank_species_annotations_keeps_n_return_in_llm_order():
+    df = pd.DataFrame([
+        {"id": "s1", "display_name": "glucose", "curated_name": "glucose",
+         "annotation": "CHEBI:4167", "annotation_label": "D-glucopyranose"},
+        {"id": "s1", "display_name": "glucose", "curated_name": "glucose",
+         "annotation": "CHEBI:17234", "annotation_label": "glucose"},
+        {"id": "s1", "display_name": "glucose", "curated_name": "glucose",
+         "annotation": "CHEBI:42758", "annotation_label": "aldehyde-D-glucose"},
+        {"id": "s2", "display_name": "ATP", "curated_name": "ATP",
+         "annotation": "CHEBI:15422", "annotation_label": "ATP"},
+    ])
+    with patch("core.annotation_workflow.query_llm", return_value="s1: CHEBI:17234, CHEBI:4167") as mock_llm:
+        out = rank_species_annotations_with_llm(
+            "dummy.xml", df, n_return=2, model_notes="glycolysis model"
+        )
+    mock_llm.assert_called_once()
+    prompt = mock_llm.call_args[0][0]
+    assert "up to 2" in prompt
+    assert "glycolysis model" in prompt
+    assert "s1" in prompt and "s2" not in prompt.split("Instructions:")[0]
+    s1 = out[out["id"] == "s1"]
+    assert list(s1["annotation"]) == ["CHEBI:17234", "CHEBI:4167"]
+    s2 = out[out["id"] == "s2"]
+    assert list(s2["annotation"]) == ["CHEBI:15422"]
+
+
+def test_parse_ranked_id_lines():
+    assert _parse_ranked_id_lines("s1: CHEBI:17234, CHEBI:4167\nODC: UNK") == {
+        "s1": ["CHEBI:17234", "CHEBI:4167"],
+        "ODC": [],
+    }
+
+
+def test_rank_species_skips_llm_when_pool_fits_n_return():
+    df = pd.DataFrame([
+        {"id": "s1", "display_name": "glucose", "curated_name": "glucose",
+         "annotation": "CHEBI:4167", "annotation_label": "D-glucopyranose"},
+        {"id": "s1", "display_name": "glucose", "curated_name": "glucose",
+         "annotation": "CHEBI:17234", "annotation_label": "glucose"},
+        {"id": "s1", "display_name": "glucose", "curated_name": "glucose",
+         "annotation": "CHEBI:42758", "annotation_label": "aldehyde-D-glucose"},
+    ])
+    with patch("core.annotation_workflow.query_llm") as mock_llm:
+        out = rank_species_annotations_with_llm("dummy.xml", df, n_return=3)
+    mock_llm.assert_not_called()
+    assert list(out["annotation"]) == ["CHEBI:4167", "CHEBI:17234", "CHEBI:42758"]
+
+
 if __name__ == "__main__":
     test_resolve_annotate()
     test_chebi_rows_filters_reason_and_non_chebi()
     test_species_recommendations_from_model_and_csv()
+    test_parse_ranked_id_lines()
+    test_rank_species_annotations_keeps_n_return_in_llm_order()
+    test_rank_species_skips_llm_when_pool_fits_n_return()
     print("ok")

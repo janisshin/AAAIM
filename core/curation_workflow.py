@@ -18,7 +18,11 @@ from core.model_info import find_species_with_chebi_annotations, find_species_wi
 from core.llm_interface import get_system_prompt, query_llm_message, parse_llm_response
 from core.data_types import Recommendation
 from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, load_uniprot_label_dict, load_ncbigene_label_dict, load_chebi_label_dict
-from core.annotation_workflow import _silence_internal_logs, _vprint
+from core.annotation_workflow import (
+    _silence_internal_logs,
+    _vprint,
+    rank_species_annotations_with_llm,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +33,7 @@ def curate_single_model(model_file: str,
                   llm_model: str = "gpt-4o-mini",
                   method: str = "direct",
                   top_k: int = 3,
+                  n_return: int = 3,
                   max_entities: int = None,
                   entity_type: str | EntityType = EntityType.CHEMICAL,
                   database: str | DatabaseID = DatabaseID.CHEBI,
@@ -43,7 +48,8 @@ def curate_single_model(model_file: str,
         model_file: Path to SBML model file
         llm_model: LLM model to use ("gpt-4o-mini" or an OpenRouter "meta-llama/..." model)
         method: Method to use for database search ("direct", "rag")
-        top_k: Number of top candidates to return per species
+        top_k: Number of database candidates to retrieve per species
+        n_return: Number of IDs the final LLM ranking keeps per species. Default 3.
         max_entities: Maximum number of entities to annotate (None for all)
         entity_type: Type of entities to annotate ("chemical", "gene", "protein", "auto")
         database: Target database ("chebi", "ncbigene", "uniprot")
@@ -144,7 +150,7 @@ def curate_single_model(model_file: str,
             logger.info(f"Processing chunk {chunk_idx + 1}/{len(species_chunks)} ({len(chunk)} entities)")
             
             # Format prompt for this chunk
-            prompt = format_prompt(model_file, chunk, entity_type, top_k)
+            prompt = format_prompt(model_file, chunk, entity_type)
             
             if not prompt:
                 logger.error(f"Failed to format prompt for chunk {chunk_idx + 1}")
@@ -198,7 +204,7 @@ def curate_single_model(model_file: str,
         
     else:
         # Single prompt for all entities
-        prompt = format_prompt(model_file, specs_to_evaluate, entity_type, top_k)
+        prompt = format_prompt(model_file, specs_to_evaluate, entity_type)
         
         if not prompt:
             logger.error("Failed to format prompt")
@@ -249,7 +255,7 @@ def curate_single_model(model_file: str,
         if method == "direct":
             recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database=DatabaseID.CHEBI.value, top_k=top_k)
         elif method == "rag":
-            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database=DatabaseID.CHEBI.value)
+            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database=DatabaseID.CHEBI.value, top_k=top_k)
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
@@ -257,7 +263,7 @@ def curate_single_model(model_file: str,
         if method == "direct":
             recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database=DatabaseID.NCBIGENE.value, tax_id=tax_id, top_k=top_k)
         elif method == "rag":
-            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database=DatabaseID.NCBIGENE.value, tax_id=tax_id)
+            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database=DatabaseID.NCBIGENE.value, tax_id=tax_id, top_k=top_k)
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
@@ -265,7 +271,7 @@ def curate_single_model(model_file: str,
         if method == "direct":
             recommendations = get_species_recommendations_direct(specs_to_evaluate, synonyms_dict, database=DatabaseID.UNIPROT.value, tax_id=tax_id, top_k=top_k)
         elif method == "rag":
-            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database=DatabaseID.UNIPROT.value, tax_id=tax_id)
+            recommendations = get_species_recommendations_rag(specs_to_evaluate, synonyms_dict, database=DatabaseID.UNIPROT.value, tax_id=tax_id, top_k=top_k)
         else:
             logger.error(f"Invalid method: {method}")
             return pd.DataFrame(), {"error": f"Invalid method: {method}"}
@@ -283,6 +289,19 @@ def curate_single_model(model_file: str,
         model_file, recommendations, existing_annotations, model_info, entity_type.value, database.value, qualifier_annotations,
         synonyms_dict=synonyms_dict, reason=reason
     )
+
+    if top_k > n_return:
+        rank_start = time.time()
+        ranked_df = rank_species_annotations_with_llm(
+            model_file,
+            recommendations_df,
+            llm_model=llm_model,
+            n_return=n_return,
+            model_notes=(model_info or {}).get("model_notes", "") or "",
+        )
+        llm_time += time.time() - rank_start
+        if not ranked_df.empty:
+            recommendations_df = ranked_df
     
     # Step 9: Calculate metrics
     total_time = time.time() - start_time
@@ -316,6 +335,7 @@ def curate_single_model(model_file: str,
         method=method,
         llm_model=llm_model,
         top_k=top_k,
+        n_return=n_return,
         tax_id=tax_id,
         existing_annotations=existing_annotations,
         qualifier_annotations=qualifier_annotations,
@@ -584,6 +604,7 @@ def curate_model(model_file: str, **kwargs) -> Tuple[pd.DataFrame, Dict[str, Any
     Args:
         model_file: Path to SBML model file
         **kwargs: Additional arguments passed to curate_single_model
+            (``top_k`` for retrieval, ``n_return`` for the final LLM ranking)
         
     Returns:
         Tuple of (recommendations_df, metrics_dict)

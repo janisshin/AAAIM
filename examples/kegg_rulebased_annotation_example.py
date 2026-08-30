@@ -39,7 +39,7 @@ def main() -> None:
         model_file=model_file,
         llm_model=llm_model,
         annotate="reactions",
-        top_k=TOP_K,
+        n_return=TOP_K,
         species_recommendations_df=species_csv,
     )
 
@@ -51,6 +51,7 @@ def main() -> None:
     #     entity_type="chemical",
     #     database="chebi",
     #     top_k=TOP_K,
+    #     n_return=3,
     # )
     # print(result.species_recommendations_df.head())
     # print(result.reaction_recommendations_df.head())

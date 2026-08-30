@@ -68,6 +68,7 @@ class AnnotationResult:
         method: str,
         llm_model: str,
         top_k: int,
+        n_return: int = 3,
         tax_id: str = None,
         existing_annotations: Optional[Dict[str, List[str]]] = None,
         qualifier_annotations: Optional[Dict[str, List[str]]] = None,
@@ -88,6 +89,7 @@ class AnnotationResult:
         self._method = method
         self._llm_model = llm_model
         self._top_k = top_k
+        self._n_return = n_return
         self._tax_id = tax_id
         self._existing_annotations = existing_annotations or {}
         self._qualifier_annotations = qualifier_annotations or {}
@@ -127,6 +129,7 @@ class AnnotationResult:
             method=self._method,
             llm_model=self._llm_model,
             top_k=self._top_k,
+            n_return=self._n_return,
             tax_id=self._tax_id,
             existing_annotations=self._existing_annotations,
             qualifier_annotations=self._qualifier_annotations,
@@ -249,6 +252,7 @@ def _revise_recommendations(
     method: str = "direct",
     llm_model: str = "gpt-4o-mini",
     top_k: int = 3,
+    n_return: int = 3,
     tax_id: str = None,
     existing_annotations: Optional[Dict[str, List[str]]] = None,
     qualifier_annotations: Optional[Dict[str, List[str]]] = None,
@@ -314,6 +318,7 @@ def _revise_recommendations(
         _normalize_databases,
         _normalize_entity_type,
         _search_databases,
+        rank_species_annotations_with_llm,
     )
 
     entity_type = _normalize_entity_type(entity_type)
@@ -339,6 +344,16 @@ def _revise_recommendations(
         species_database=species_database,
         candidate_databases=candidate_databases,
     )
+    if top_k > n_return:
+        ranked_df = rank_species_annotations_with_llm(
+            model_file,
+            updated_df,
+            llm_model=llm_model,
+            n_return=n_return,
+            model_notes=(model_info or {}).get("model_notes", "") or "",
+        )
+        if not ranked_df.empty:
+            updated_df = ranked_df
 
     total_time = time.time() - start_time
     metrics = {

@@ -1,27 +1,12 @@
 file,type,id,display_name,curated_name,annotation,annotation_label,match_score,status,update_annotation,qualifier
 BIOMD0000000190.xml,chemical,A,S-adenosylmethioninamine,S-adenosylmethioninamine,CHEBI:15625,S-adenosylmethioninamine,1.0,original and predicted,keep,is
 BIOMD0000000190.xml,chemical,AcCoA,Acetyl-CoA,Acetyl-CoA,CHEBI:15351,acetyl-CoA,1.0,original and predicted,keep,is
-BIOMD0000000190.xml,chemical,AcCoA,Acetyl-CoA,Acetyl-CoA,CHEBI:57288,acetyl-CoA(4-),0.6666666666666666,predicted only,ignore,is
 BIOMD0000000190.xml,chemical,CoA,CoA,Coenzyme A,CHEBI:15346,coenzyme A,1.0,original and predicted,keep,is
-BIOMD0000000190.xml,chemical,CoA,CoA,Coenzyme A,CHEBI:57287,coenzyme A(4-),0.5,predicted only,ignore,is
-BIOMD0000000190.xml,chemical,D,Spermidine,Spermidine,CHEBI:16610,spermidine,1.0,original and predicted,keep,is
-BIOMD0000000190.xml,chemical,D,Spermidine,Spermidine,CHEBI:57834,spermidine(3+),0.5,predicted only,ignore,is
-BIOMD0000000190.xml,chemical,Met,Methionine,Methionine,CHEBI:16643,L-methionine,1.0,original and predicted,keep,is
-BIOMD0000000190.xml,chemical,Met,Methionine,Methionine,CHEBI:16811,methionine,0.5,predicted only,ignore,is
-BIOMD0000000190.xml,chemical,Met,Methionine,Methionine,CHEBI:64558,methionine zwitterion,0.5,predicted only,ignore,is
-BIOMD0000000190.xml,chemical,ORN,L-Ornithine,L-Ornithine,CHEBI:15729,L-ornithine,0.6666666666666666,original and predicted,keep,is
-BIOMD0000000190.xml,chemical,ORN,L-Ornithine,L-Ornithine,CHEBI:46911,L-ornithinium(1+),0.6666666666666666,predicted only,ignore,is
-BIOMD0000000190.xml,chemical,ORN,L-Ornithine,L-Ornithine,CHEBI:18257,ornithine,0.3333333333333333,predicted only,ignore,is
+BIOMD0000000190.xml,chemical,D,Spermidine,Spermidine,CHEBI:16610,spermidine,0.6666666666666666,original and predicted,keep,is
+BIOMD0000000190.xml,chemical,Met,Methionine,Methionine,CHEBI:16643,L-methionine,0.6666666666666666,original and predicted,keep,is
+BIOMD0000000190.xml,chemical,ORN,L-Ornithine,Ornithine,CHEBI:15729,L-ornithine,0.3333333333333333,original and predicted,keep,is
 BIOMD0000000190.xml,chemical,P,Putrescine,Putrescine,CHEBI:17148,putrescine,1.0,original and predicted,keep,is
-BIOMD0000000190.xml,chemical,P,Putrescine,Putrescine,CHEBI:326268,"1,4-butanediammonium",0.3333333333333333,predicted only,ignore,is
-BIOMD0000000190.xml,chemical,S,Spermine,Spermine,CHEBI:15746,spermine,1.0,original and predicted,keep,is
-BIOMD0000000190.xml,chemical,S,Spermine,Spermine,CHEBI:45725,spermine(4+),0.5,predicted only,ignore,is
-BIOMD0000000190.xml,chemical,S,Spermine,Spermine,CHEBI:83547,N(4)-aminopropylspermidine,0.5,predicted only,ignore,is
+BIOMD0000000190.xml,chemical,S,Spermine,Spermine,CHEBI:15746,spermine,0.6666666666666666,original and predicted,keep,is
 BIOMD0000000190.xml,chemical,SAM,S-adenosyl-L-methionine,S-adenosyl-L-methionine,CHEBI:15414,S-adenosyl-L-methionine,1.0,original and predicted,keep,is
-BIOMD0000000190.xml,chemical,SAM,S-adenosyl-L-methionine,S-adenosyl-L-methionine,CHEBI:67040,S-adenosyl-L-methioninate,0.6666666666666666,predicted only,ignore,is
-BIOMD0000000190.xml,chemical,SAM,S-adenosyl-L-methionine,S-adenosyl-L-methionine,CHEBI:59789,S-adenosyl-L-methionine zwitterion,0.3333333333333333,predicted only,ignore,is
-BIOMD0000000190.xml,chemical,aD,N1-Acetylspermidine,N1-Acetylspermidine,CHEBI:22204,acetylspermidine,,original only,keep,is
-BIOMD0000000190.xml,chemical,aD,N1-Acetylspermidine,N1-Acetylspermidine,CHEBI:17927,N(1)-acetylspermidine,0.6666666666666666,predicted only,add,is
-BIOMD0000000190.xml,chemical,aD,N1-Acetylspermidine,N1-Acetylspermidine,CHEBI:58324,N(1)-acetylspermidinium(2+),0.6666666666666666,predicted only,ignore,is
-BIOMD0000000190.xml,chemical,aS,N1-Acetylspermine,N1-Acetylspermine,CHEBI:17312,N(1)-acetylspermine,0.6666666666666666,original and predicted,keep,is
-BIOMD0000000190.xml,chemical,aS,N1-Acetylspermine,N1-Acetylspermine,CHEBI:58101,N(1)-acetylsperminium(3+),0.6666666666666666,predicted only,ignore,is
+BIOMD0000000190.xml,chemical,aD,N1-Acetylspermidine,N1-Acetylspermidine,CHEBI:17927,N(1)-acetylspermidine,0.3333333333333333,predicted only,ignore,is
+BIOMD0000000190.xml,chemical,aS,N1-Acetylspermine,N1-Acetylspermine,CHEBI:17312,N(1)-acetylspermine,0.3333333333333333,original and predicted,keep,is
