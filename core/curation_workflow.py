@@ -21,6 +21,7 @@ from core.database_search import get_species_recommendations_direct, get_species
 from core.annotation_workflow import (
     _apply_reason_comments,
     _notes_plus_message,
+    _output_csv,
     _print_run_summary,
     _silence_internal_logs,
     _vprint,
@@ -42,6 +43,7 @@ def curate_single_model(model_file: str,
                   database: str | DatabaseID = DatabaseID.CHEBI,
                   tax_id: str = None,
                   chunk_size: int = 50,
+                  save_to: Optional[str] = None,
                   verbose: bool = False,
                   message: str = "") -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """
@@ -59,6 +61,8 @@ def curate_single_model(model_file: str,
         database: Target database ("chebi", "ncbigene", "uniprot")
         tax_id: For gene/protein annotations, the organism's tax_id for species-specific lookup
         chunk_size: Size of chunks to split large models into (default: 50, None for no chunking)
+        save_to: Output file prefix. Recommendations are saved to
+            ``<save_to>_species.csv``. Default is the model filename.
         verbose: If True, print a short progress summary. Default False.
         message: Optional user note included in LLM prompts.
         
@@ -309,7 +313,7 @@ def curate_single_model(model_file: str,
         recommendations_df, existing_annotations, max_entities, total_time, llm_time, search_time
     )
 
-    csv_path = f"{Path(model_file).name}_recommendations.csv"
+    csv_path = _output_csv(save_to, model_file, "species")
     if not recommendations_df.empty and "id" in recommendations_df.columns:
         recommendations_df = recommendations_df[recommendations_df["id"] != "Reason:"].reset_index(drop=True)
     recommendations_df.to_csv(csv_path, index=False)
@@ -593,7 +597,8 @@ def curate_model(model_file: str, **kwargs) -> Tuple[pd.DataFrame, Dict[str, Any
     Args:
         model_file: Path to SBML model file
         **kwargs: Additional arguments passed to curate_single_model
-            (``top_k`` for retrieval, ``n_return`` for the final LLM ranking)
+            (``top_k`` for retrieval, ``n_return`` for the final LLM ranking,
+            ``save_to`` for the output file prefix)
         
     Returns:
         Tuple of (recommendations_df, metrics_dict)

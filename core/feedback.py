@@ -141,7 +141,7 @@ class AnnotationResult:
         self._conversation_history = updated_history
         self.recommendations_df = updated_df
 
-        csv_path = _versioned_csv_path(self._model_file, self._revision_count)
+        csv_path = _versioned_csv_path(self._csv_path or self._model_file, self._revision_count)
         updated_df.to_csv(csv_path, index=False)
         print(f"Revised recommendations (v{self._revision_count}) saved to {csv_path}")
 
@@ -201,10 +201,10 @@ class AnnotationResult:
 # Internal helpers
 # ---------------------------------------------------------------------------
 
-def _versioned_csv_path(model_file: str, revision: int) -> str:
-    """Generate ``<model>_recommendations_v<N>.csv``."""
-    stem = Path(model_file).name
-    return f"{stem}_recommendations_v{revision}.csv"
+def _versioned_csv_path(csv_path: str, revision: int) -> str:
+    """Generate ``<saved-prefix>_v<N>.csv`` from the last written file."""
+    p = Path(csv_path)
+    return str(p.with_name(f"{p.stem}_v{revision}{p.suffix}"))
 
 
 def _build_feedback_prompt(feedback: str) -> str:

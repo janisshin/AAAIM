@@ -53,8 +53,9 @@ recommendations_df, metrics = annotate_model("model.xml", ...)
 ```
 
 A recommendations CSV is saved automatically after every run and after every
-feedback revision. The filename printed to the console tells you where it was
-written.
+feedback revision. Pass ``save_to`` to set the file prefix (default: the model
+filename). Species go to ``<save_to>_species.csv`` and reactions to
+``<save_to>_reactions.csv``.
 
 ### 1. Annotation Workflow (for new models)
 
@@ -164,7 +165,7 @@ result = annotate_model(
 result = annotate_model(
     model_file="path/to/model.xml",
     annotate="reactions",
-    species_recommendations_df="model.xml_recommendations.csv",
+    species_recommendations_df="model.xml_species.csv",
     n_return=3,
 )
 ```
@@ -190,6 +191,7 @@ result = annotate_model(
     database="chebi",
     top_k=10,                 # retrieval pool per species
     n_return=3,               # final LLM-ranked IDs per entity
+    save_to="modelA_gpt5",    # writes modelA_gpt5_species.csv and modelA_gpt5_reactions.csv
 )
 
 print(result.species_recommendations_df)    # species
@@ -197,7 +199,7 @@ print(result.reaction_recommendations_df)   # KEGG reactions
 print(result.metrics["reaction"])           # reaction-only metrics
 ```
 
-Species recommendations are saved to `<model>_species_recommendations.csv`. Reaction recommendations are saved to `<model>_reaction_recommendations.csv`.
+Species recommendations are saved to `<save_to>_species.csv`. Reaction recommendations are saved to `<save_to>_reactions.csv`. If `save_to` is omitted, the model filename is used as the prefix.
 
 If the species step produces no ChEBI rows, reaction annotation is skipped and `reaction_recommendations_df` is empty.
 
@@ -294,9 +296,9 @@ Every revision writes a new file so that earlier recommendations are
 never lost:
 
 ```
-model.xml_recommendations.csv       ← initial run
-model.xml_recommendations_v1.csv    ← after 1st revision
-model.xml_recommendations_v2.csv    ← after 2nd revision
+model.xml_species.csv       ← initial run
+model.xml_species_v1.csv    ← after 1st revision
+model.xml_species_v2.csv    ← after 2nd revision
 ```
 
 #### Advanced control
@@ -346,6 +348,7 @@ result = annotate_model(
     n_return = 3,					 # IDs kept after the final LLM ranking (species and reactions)
     chunk_size = 50,					 # split large models into chunks of 50 entities (None for no chunking)
     species_recommendations_df = None,			 # species table or CSV; used when annotate="reactions"
+    save_to = None,					 # output prefix; writes <save_to>_species.csv / <save_to>_reactions.csv
     verbose = False,					 # True for a short progress summary
     em_max_iterations = 5,				 # reaction EM rematch rounds; 0 skips EM
     message = "This is a model for human metabolism", # optional user message to the LLM

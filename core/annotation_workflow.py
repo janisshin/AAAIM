@@ -581,6 +581,10 @@ def _load_species_recommendations(model_file: str, species_recommendations_df) -
     return _chebi_rows(df)
 
 
+def _output_csv(save_to: Optional[str], model_file: str, kind: str) -> str:
+    return f"{save_to or Path(model_file).name}_{kind}.csv"
+
+
 def annotate_single_model(
     model_file: str,
     llm_model: str = "gpt-4o-mini",
@@ -594,7 +598,7 @@ def annotate_single_model(
     chunk_size: int = 50,
     species_recommendations_df = None,
     annotate: str = "species",
-    csv_path: Optional[str] = None,
+    save_to: Optional[str] = None,
     verbose: bool = False,
     em_max_iterations: int = 5,
     message: str = "",
@@ -628,7 +632,9 @@ def annotate_single_model(
             when annotating reactions; if omitted, ChEBI terms already in the model
             are used
         annotate: ``"species"``, ``"reactions"``, or ``"both"``
-        csv_path: Output CSV path (default: ``<model>_recommendations.csv``)
+        save_to: Output file prefix. Species go to ``<save_to>_species.csv``
+            and reactions to ``<save_to>_reactions.csv``. Default is the
+            model filename (e.g. ``model.xml_species.csv``).
         verbose: If True, print a short progress summary. Default False.
         em_max_iterations: Reaction EM rematch rounds (default 5). Use 0 to skip
             EM, or 1–2 for a faster run.
@@ -665,8 +671,9 @@ def annotate_single_model(
         logger.info(f"Using organism-specific search for tax_id: {tax_id}")
 
     annotate = _resolve_annotate(annotate, entity_type, method)
-    if csv_path is None:
-        csv_path = f"{Path(model_file).name}_recommendations.csv"
+    csv_path = _output_csv(
+        save_to, model_file, "reactions" if annotate == "reactions" else "species"
+    )
 
     if annotate == "both":
         _vprint(verbose, f"Annotating species and reactions: {Path(model_file).name}")
@@ -690,7 +697,7 @@ def annotate_single_model(
             tax_id=tax_id,
             chunk_size=chunk_size,
             annotate="species",
-            csv_path=f"{Path(model_file).name}_species_recommendations.csv",
+            save_to=save_to,
             verbose=verbose,
             message=message,
         )
@@ -715,7 +722,7 @@ def annotate_single_model(
             chunk_size=chunk_size,
             species_recommendations_df=chebi_df,
             annotate="reactions",
-            csv_path=f"{Path(model_file).name}_reaction_recommendations.csv",
+            save_to=save_to,
             verbose=verbose,
             em_max_iterations=em_max_iterations,
             message=message,
@@ -1429,6 +1436,8 @@ def annotate_model(model_file: str, **kwargs) -> Tuple[pd.DataFrame, Dict[str, A
     Set ``verbose=True`` for a short progress summary.
     ``top_k`` is the species retrieval pool; ``n_return`` (default 3) is
     how many IDs the final LLM ranking keeps.
+    ``save_to`` is the output file prefix (``<save_to>_species.csv`` /
+    ``<save_to>_reactions.csv``).
     Other keyword arguments are forwarded to :func:`annotate_single_model`
     (including ``message`` for extra LLM prompt text).
     """
