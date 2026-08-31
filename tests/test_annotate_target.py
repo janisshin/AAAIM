@@ -7,7 +7,9 @@ import pandas as pd
 from unittest.mock import patch
 
 from core.annotation_workflow import (
+    _apply_reason_comments,
     _chebi_rows,
+    _extract_reason_comments,
     _load_species_recommendations,
     _parse_ranked_id_lines,
     _resolve_annotate,
@@ -102,6 +104,55 @@ def test_rank_species_skips_llm_when_pool_fits_n_return():
     assert list(out["annotation"]) == ["CHEBI:4167", "CHEBI:17234", "CHEBI:42758"]
 
 
+def test_reason_comment_once_per_chunk():
+    df = pd.DataFrame([
+        {"id": "s2", "annotation": "CHEBI:1"},
+        {"id": "s2", "annotation": "CHEBI:2"},
+        {"id": "s1", "annotation": "CHEBI:3"},
+        {"id": "s3", "annotation": "CHEBI:4"},
+    ])
+    out = _apply_reason_comments(df, {
+        "s1": "Chunk 1: glucose synonyms",
+        "s3": "Chunk 2: ATP synonyms",
+    })
+    comments = list(out["comment"])
+    assert comments[2] == "Chunk 1: glucose synonyms"
+    assert comments[3] == "Chunk 2: ATP synonyms"
+    assert comments[0] == "" and comments[1] == ""
+    assert _extract_reason_comments(out) == {
+        "s1": "Chunk 1: glucose synonyms",
+        "s3": "Chunk 2: ATP synonyms",
+    }
+
+
+def test_rank_preserves_comment_on_first_row():
+    df = pd.DataFrame([
+        {"id": "s1", "display_name": "glucose", "curated_name": "glucose",
+         "annotation": "CHEBI:4167", "annotation_label": "D-glucopyranose",
+         "comment": "mapped from display names"},
+        {"id": "s1", "display_name": "glucose", "curated_name": "glucose",
+         "annotation": "CHEBI:17234", "annotation_label": "glucose",
+         "comment": ""},
+        {"id": "s1", "display_name": "glucose", "curated_name": "glucose",
+         "annotation": "CHEBI:42758", "annotation_label": "aldehyde-D-glucose",
+         "comment": ""},
+    ])
+    with patch("core.annotation_workflow.query_llm", return_value="s1: CHEBI:17234, CHEBI:4167"):
+        out = rank_species_annotations_with_llm("dummy.xml", df, n_return=2)
+    assert list(out["annotation"]) == ["CHEBI:17234", "CHEBI:4167"]
+    assert list(out["comment"]) == ["mapped from display names", ""]
+
+
+def test_format_prompt_includes_message():
+    from core.model_info import format_prompt, get_all_species_ids
+    ids = get_all_species_ids(str(MODEL_190))[:1]
+    with_msg = format_prompt(str(MODEL_190), ids, message="Prefer KEGG names.")
+    without = format_prompt(str(MODEL_190), ids)
+    assert "// User message:" in with_msg
+    assert "Prefer KEGG names." in with_msg
+    assert "Prefer KEGG names." not in without
+
+
 if __name__ == "__main__":
     test_resolve_annotate()
     test_chebi_rows_filters_reason_and_non_chebi()
@@ -109,4 +160,7 @@ if __name__ == "__main__":
     test_parse_ranked_id_lines()
     test_rank_species_annotations_keeps_n_return_in_llm_order()
     test_rank_species_skips_llm_when_pool_fits_n_return()
+    test_reason_comment_once_per_chunk()
+    test_rank_preserves_comment_on_first_row()
+    test_format_prompt_includes_message()
     print("ok")

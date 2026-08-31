@@ -975,6 +975,7 @@ def format_prompt(
     entity_type: str | EntityType = EntityType.CHEMICAL,
     top_k: int = 3,
     context: bool = True,
+    message: str = "",
 ) -> str:
     """
     Format the information for the LLM prompt.
@@ -989,6 +990,7 @@ def format_prompt(
             annotation workflow; extra synonyms rarely add better database hits)
         context: If True, include full model context (model name, reactions, notes). 
                  If False, only include display names. (default: True)
+        message: Optional user note appended to the prompt
         
     Returns:
         Formatted prompt string
@@ -999,6 +1001,12 @@ def format_prompt(
         exclude_types = ['reaction']
         types = [e.value for e in EntityType if e.value not in exclude_types]
         return ', '.join(types)
+
+    def _finish(prompt: str) -> str:
+        text = (message or "").strip()
+        if text:
+            prompt += f"\n\n// User message:\n{text}\n"
+        return prompt
     if isinstance(entity_type, str):
         try:
             entity_type = EntityType(entity_type)
@@ -1051,7 +1059,7 @@ def format_prompt(
             prompt += f"Specify the entity type in parentheses after each species ID.\n"
             prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all species after 'Reason:' by the end.\n\n"
             prompt += 'SpeciesA (entity_type): "name1", "name2", …\nSpeciesB (entity_type): …\nReason: …'
-            return prompt
+            return _finish(prompt)
         
         # SBML-qual models have boolean transitions
         prompt = f"Now annotate these:\n{entity_type_str.title()} to annotate: {', '.join(species_ids)}\n"
@@ -1076,7 +1084,7 @@ def format_prompt(
         prompt += f"\nReturn up to {top_k} standardized names or common synonyms for each {entity_type_str}, ranked by likelihood. Provide components names for complexes, which may exceed the limit of {top_k}.\n"
         prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type_str}s after 'Reason:' by the end.\n\n"
         prompt += 'SpeciesA: "name1", "name2", …\nSpeciesB: …\nReason: …'
-        return prompt
+        return _finish(prompt)
 
     elif model_type == ModelType.SBML_FBC:
         if entity_type == EntityType.AUTO:
@@ -1106,7 +1114,7 @@ def format_prompt(
             prompt += f"Specify the entity type in parentheses after each species ID.\n"
             prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all species after 'Reason:' by the end.\n\n"
             prompt += 'SpeciesA (entity_type): "name1", "name2", …\nSpeciesB (entity_type): …\nReason: …'
-            return prompt
+            return _finish(prompt)
         
         elif entity_type in (EntityType.GENE, EntityType.PROTEIN):
             # SBML-fbc models don't have reactions for genes or proteins
@@ -1127,7 +1135,7 @@ def format_prompt(
             prompt += f"\nReturn up to {top_k} standardized names or common synonyms for each {entity_type_str}, ranked by likelihood.\n"
             prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type_str}s after 'Reason:' by the end.\n\n"
             prompt += 'SpeciesA: "name1", "name2", …\nSpeciesB: …\nReason: …'
-            return prompt
+            return _finish(prompt)
         
         else: # FBC, chemicals, same as SBML
             prompt = f"Now annotate these:\n{entity_type_str.title()} to annotate: {', '.join(species_ids)}\n"
@@ -1152,7 +1160,7 @@ def format_prompt(
             prompt += f"\nReturn up to {top_k} standardized names or common synonyms for each {entity_type_str}, ranked by likelihood. Provide components names for complexes, which may exceed the limit of {top_k}.\n"
             prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type_str}s after 'Reason:' by the end.\n\n"
             prompt += 'SpeciesA: "name1", "name2", …\nSpeciesB: …\nReason: …'
-            return prompt             
+            return _finish(prompt)             
     
     else:  # SBML
         if entity_type == EntityType.REACTION:
@@ -1185,7 +1193,7 @@ def format_prompt(
             prompt += f"\nReturn up to {top_k} standardized names or common synonyms for each reaction, ranked by likelihood.\n"
             prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all {entity_type_str} after 'Reason:' by the end.\n\n"
             prompt += 'ReactionA: "name1", "name2", …\nReactionB: …\nReason: …'
-            return prompt
+            return _finish(prompt)
         
         elif entity_type == EntityType.AUTO:
             # Auto entity type detection for regular SBML models
@@ -1214,7 +1222,7 @@ def format_prompt(
             prompt += f"Specify the entity type in parentheses after each species ID.\n"
             prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all species after 'Reason:' by the end.\n\n"
             prompt += 'SpeciesA (entity_type): "name1", "name2", …\nSpeciesB (entity_type): …\nReason: …'
-            return prompt
+            return _finish(prompt)
         
         else:
             prompt = f"Now annotate these:\n{entity_type_str.title()} to annotate: {', '.join(species_ids)}\n"
@@ -1244,4 +1252,4 @@ def format_prompt(
                 prompt += f"\nReturn up to {top_k} standardized names or common synonyms for each {entity_type_str}, ranked by likelihood. Provide components names for complexes, which may exceed the limit of {top_k}.\n"
                 prompt += f"Use the below format, do not include any other text except the synonyms.\n\n"
                 prompt += 'SpeciesA: "name1", "name2", …\nSpeciesB: …'
-            return prompt 
+            return _finish(prompt) 

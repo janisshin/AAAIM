@@ -356,6 +356,87 @@ def _vprint(verbose: bool, msg: str) -> None:
         print(msg)
 
 
+def _apply_reason_comments(
+    df: pd.DataFrame,
+    reason: str | Dict[str, str],
+) -> pd.DataFrame:
+    """Put LLM reason text in ``comment``, once, on the first row of each key."""
+    df = df.copy()
+    if df.empty:
+        df["comment"] = pd.Series(dtype=str)
+        return df
+    df["comment"] = ""
+    if not reason:
+        return df
+    if isinstance(reason, dict):
+        leftover: List[str] = []
+        for eid, text in reason.items():
+            if not text:
+                continue
+            idxs = df.index[df["id"] == eid]
+            if len(idxs):
+                df.at[idxs[0], "comment"] = text
+            else:
+                leftover.append(text)
+        if leftover:
+            empty = df.index[df["comment"] == ""]
+            target = empty[0] if len(empty) else df.index[0]
+            extra = " ".join(leftover)
+            existing = df.at[target, "comment"]
+            df.at[target, "comment"] = f"{existing} {extra}".strip() if existing else extra
+        return df
+    df.at[df.index[0], "comment"] = reason
+    return df
+
+
+def _extract_reason_comments(df: pd.DataFrame) -> Dict[str, str]:
+    """Collect non-empty comment values, one per entity id."""
+    if df.empty or "comment" not in df.columns or "id" not in df.columns:
+        return {}
+    comments: Dict[str, str] = {}
+    for eid, group in df.groupby("id", sort=False):
+        if str(eid) == "Reason:":
+            continue
+        vals = [c for c in group["comment"].fillna("").astype(str) if c.strip() and c != "nan"]
+        if vals:
+            comments[str(eid)] = vals[0]
+    return comments
+
+
+def _print_run_summary(
+    df: pd.DataFrame,
+    entity_word: str = "species",
+    reason: str | Dict[str, str] = "",
+) -> None:
+    """Print annotation counts and the LLM reason after a run."""
+    if df is None or df.empty:
+        print(f"Found 0 annotations for 0 {entity_word}.")
+    else:
+        work = df[df["id"].astype(str) != "Reason:"] if "id" in df.columns else df
+        n_entities = int(work["id"].nunique()) if "id" in work.columns else 0
+        if "annotation" in work.columns:
+            has_ann = work["annotation"].astype(str).str.strip()
+            pred = work[~has_ann.isin(["", "nan"])]
+        else:
+            pred = work.iloc[0:0]
+        n_ann = len(pred)
+        n_with = int(pred["id"].nunique()) if "id" in pred.columns and not pred.empty else 0
+        print(f"Found {n_ann} annotations for {n_with} of {n_entities} {entity_word}.")
+
+    texts: List[str] = []
+    if isinstance(reason, dict):
+        texts = [t for t in reason.values() if t]
+    elif reason:
+        texts = [reason]
+    if texts:
+        if len(texts) == 1:
+            print(f"LLM Reason: {texts[0]}")
+        else:
+            print("LLM Reason:")
+            for text in texts:
+                print(f"  {text}")
+
+
 def _build_species_annotation_choices(sub_df: pd.DataFrame) -> str:
     lines: List[str] = []
     seen: set[str] = set()
@@ -377,6 +458,14 @@ def _build_species_annotation_choices(sub_df: pd.DataFrame) -> str:
 def _ranking_notes_block(notes: Optional[str]) -> str:
     text = (notes or "").strip()
     return f"Model notes:\n{text}\n\n" if text else ""
+
+
+def _notes_plus_message(notes: Optional[str], message: str = "") -> str:
+    text = (notes or "").strip()
+    msg = (message or "").strip()
+    if not msg:
+        return text
+    return f"{text}\n\nUser message:\n{msg}".strip()
 
 
 def _parse_ranked_id_lines(response_text: Optional[str]) -> Dict[str, List[str]]:
@@ -430,6 +519,7 @@ def rank_species_annotations_with_llm(
     result_df = recommendations_df.copy()
     reason_df = result_df[result_df["id"] == "Reason:"] if "id" in result_df.columns else result_df.iloc[0:0]
     work_df = result_df[result_df["id"] != "Reason:"] if "id" in result_df.columns else result_df
+    comments = _extract_reason_comments(work_df)
     notes_block = _ranking_notes_block(model_notes)
 
     ranked_rows: List[pd.DataFrame] = []
@@ -471,6 +561,10 @@ def rank_species_annotations_with_llm(
                     ranked_rows.append(rows.iloc[[0]])
 
     ranked_df = pd.concat(ranked_rows, ignore_index=True) if ranked_rows else work_df.iloc[0:0].copy()
+    if comments:
+        ranked_df = _apply_reason_comments(ranked_df, comments)
+    elif "comment" not in ranked_df.columns:
+        ranked_df["comment"] = ""
     if not reason_df.empty:
         ranked_df = pd.concat([reason_df, ranked_df], ignore_index=True)
     return ranked_df
@@ -503,6 +597,7 @@ def annotate_single_model(
     csv_path: Optional[str] = None,
     verbose: bool = False,
     em_max_iterations: int = 5,
+    message: str = "",
 ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """
     Annotate a single model that has no or limited existing annotations.
@@ -537,6 +632,7 @@ def annotate_single_model(
         verbose: If True, print a short progress summary. Default False.
         em_max_iterations: Reaction EM rematch rounds (default 5). Use 0 to skip
             EM, or 1–2 for a faster run.
+        message: Optional user note included in LLM prompts.
 
     Returns:
         AnnotationResult. Species tables are on ``species_recommendations_df``;
@@ -596,6 +692,7 @@ def annotate_single_model(
             annotate="species",
             csv_path=f"{Path(model_file).name}_species_recommendations.csv",
             verbose=verbose,
+            message=message,
         )
         if not hasattr(species_result, "species_recommendations_df"):
             return species_result
@@ -621,6 +718,7 @@ def annotate_single_model(
             csv_path=f"{Path(model_file).name}_reaction_recommendations.csv",
             verbose=verbose,
             em_max_iterations=em_max_iterations,
+            message=message,
         )
         if hasattr(reaction_result, "recommendations_df"):
             reaction_result.species_recommendations_df = species_df
@@ -698,6 +796,8 @@ def annotate_single_model(
 
     logger.info(f"Extracted context for model: {model_info['model_name']}")
 
+    reason: str | Dict[str, str] = ""
+
     # Step 3
     if method == 'rulebased':
         logger.info(f">>>Step 3: Rule-based search of KEGG Reaction Annotations...<<<")
@@ -732,7 +832,9 @@ def annotate_single_model(
                 llm_model=llm_model,
                 n_return=n_return,
                 csv_path=csv_path,
-                model_notes=(model_info or {}).get("model_notes", "") or "",
+                model_notes=_notes_plus_message(
+                    (model_info or {}).get("model_notes", ""), message
+                ),
             )
             llm_time = time.time() - llm_start
             recommendations_df = ranked_df if not ranked_df.empty else kegg_df
@@ -760,14 +862,14 @@ def annotate_single_model(
             # Process each chunk and accumulate results
             all_synonyms_dict = {}
             all_entity_type_dict = {}
-            all_reasons = []
+            reason_by_id: Dict[str, str] = {}
             total_llm_time = 0
 
             for chunk_idx, chunk in enumerate(species_chunks):
                 logger.info(f"Processing chunk {chunk_idx + 1}/{len(species_chunks)} ({len(chunk)} entities)")
 
                 # Format prompt for this chunk
-                prompt = format_prompt(model_file, chunk, entity_type)
+                prompt = format_prompt(model_file, chunk, entity_type, message=message)
 
                 if not prompt:
                     logger.error(f"Failed to format prompt for chunk {chunk_idx + 1}")
@@ -806,15 +908,11 @@ def annotate_single_model(
                 all_synonyms_dict.update(chunk_synonyms_dict)
                 all_entity_type_dict.update(chunk_entity_type_dict)
 
-                # Accumulate reasons
-                if chunk_reason:
-                    all_reasons.append(f"Chunk {chunk_idx + 1}: {chunk_reason}")
+                if chunk_reason and chunk:
+                    prefix = f"Chunk {chunk_idx + 1}: " if len(species_chunks) > 1 else ""
+                    reason_by_id[chunk[0]] = f"{prefix}{chunk_reason}"
 
-            # Combine all reasons
-            if all_reasons:
-                reason = ' '.join(all_reasons)
-            else:
-                reason = ""
+            reason = reason_by_id
 
             # Use accumulated synonyms
             synonyms_dict = all_synonyms_dict
@@ -823,7 +921,7 @@ def annotate_single_model(
 
         else:
             # Single prompt for all entities
-            prompt = format_prompt(model_file, entities_to_evaluate, entity_type)
+            prompt = format_prompt(model_file, entities_to_evaluate, entity_type, message=message)
 
             if not prompt:
                 logger.error("Failed to format prompt")
@@ -862,9 +960,6 @@ def annotate_single_model(
             return pd.DataFrame(), {"error": "Failed to parse LLM response"}
 
         logger.info(f"Parsed synonyms for {len(synonyms_dict)} entities")
-
-        # if reason:
-        #     print(f"LLM Reason: {reason}")
 
         # Step 4: Search database
         if method not in ("direct", "rag"):
@@ -909,7 +1004,9 @@ def annotate_single_model(
                 recommendations_df,
                 llm_model=llm_model,
                 n_return=n_return,
-                model_notes=(model_info or {}).get("model_notes", "") or "",
+                model_notes=_notes_plus_message(
+                    (model_info or {}).get("model_notes", ""), message
+                ),
             )
             llm_time += time.time() - rank_start
             if not ranked_df.empty:
@@ -929,6 +1026,11 @@ def annotate_single_model(
 
     recommendations_df.to_csv(csv_path, index=False)
     print(f"Saved {len(recommendations_df)} recommendations to {csv_path}")
+    _print_run_summary(
+        recommendations_df,
+        entity_word="reactions" if annotate == "reactions" else "species",
+        reason=reason,
+    )
     _vprint(verbose, f"Finished in {total_time:.1f}s")
     # logger.info(f"Annotation completed in {total_time:.2f}s – {len(recommendations_df)} recommendations")
 
@@ -1031,7 +1133,7 @@ def _generate_recommendation_table(model_file: str,
                                  database: str | DatabaseID | Sequence[str | DatabaseID] = DatabaseID.CHEBI.value,
                                  qualifier_annotations: Dict[str, List[str]] = None,
                                  synonyms_dict: Dict[str, List[str]] = None,
-                                 reason: str = "",
+                                 reason: str | Dict[str, str] = "",
                                  entity_type_dict: Optional[Dict[str, str]] = None,
                                  species_database: Optional[Dict[str, str]] = None,
                                  candidate_databases: Optional[Dict[Tuple[str, str], str]] = None,
@@ -1048,7 +1150,7 @@ def _generate_recommendation_table(model_file: str,
         database: Database or list of databases used for search
         qualifier_annotations: Dictionary of qualifier annotations
         synonyms_dict: Dictionary mapping species IDs to LLM-suggested synonyms
-        reason: LLM reasoning text
+        reason: LLM reasoning text, or per-entity map for chunked runs
         entity_type_dict: Optional mapping of species IDs to detected entity types
         species_database: Optional mapping of species IDs to the database searched
         candidate_databases: Optional mapping of (species_id, candidate) to database
@@ -1097,7 +1199,7 @@ def _generate_recommendation_table(model_file: str,
     seen_pairs = set()
 
     for rec in recommendations:
-        curated_name = synonyms_dict.get(rec.id, [""])[0]
+        curated_name = ", ".join(synonyms_dict.get(rec.id) or [])
         rec_type = row_type(rec.id)
 
         if not rec.candidates:
@@ -1171,7 +1273,7 @@ def _generate_recommendation_table(model_file: str,
                 if (species_id, ann) not in seen_pairs:
                     rec_db = row_database(species_id, ann)
                     candidate_display = f"{rec_db.upper()}:{ann}"
-                    curated_name = synonyms_dict.get(species_id, [""])[0]
+                    curated_name = ", ".join(synonyms_dict.get(species_id) or [])
 
                     if qualifier_annotations:
                         specific_qualifier = qualifier_annotations.get(species_id, {}).get(ann, 'is')
@@ -1201,21 +1303,7 @@ def _generate_recommendation_table(model_file: str,
         df = df.sort_values(by=['id', '_status_order']).reset_index(drop=True)
         df = df.drop(columns=['_status_order'])
 
-    if reason:
-        reason_row = pd.DataFrame([{
-            'file': filename, 'type': '', 'id': 'Reason:',
-            'display_name': reason, 'curated_name': '',
-            'annotation': '', 'annotation_label': '',
-            'match_score': None, 'status': '',
-            'update_annotation': '', 'qualifier': ''
-        }])
-        if df.empty:
-            df = reason_row
-        else:
-            reason_row = reason_row.reindex(columns=df.columns)
-            df = pd.concat([reason_row, df], ignore_index=True)
-
-    return df
+    return _apply_reason_comments(df, reason)
 
 
 
@@ -1341,6 +1429,7 @@ def annotate_model(model_file: str, **kwargs) -> Tuple[pd.DataFrame, Dict[str, A
     Set ``verbose=True`` for a short progress summary.
     ``top_k`` is the species retrieval pool; ``n_return`` (default 3) is
     how many IDs the final LLM ranking keeps.
-    Other keyword arguments are forwarded to :func:`annotate_single_model`.
+    Other keyword arguments are forwarded to :func:`annotate_single_model`
+    (including ``message`` for extra LLM prompt text).
     """
     return annotate_single_model(model_file, **kwargs)

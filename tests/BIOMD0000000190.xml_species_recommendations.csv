@@ -1,12 +1,12 @@
-file,type,id,display_name,curated_name,annotation,annotation_label,match_score,status,update_annotation,qualifier
-BIOMD0000000190.xml,chemical,A,S-adenosylmethioninamine,S-adenosylmethioninamine,CHEBI:15625,S-adenosylmethioninamine,1.0,original and predicted,keep,is
-BIOMD0000000190.xml,chemical,AcCoA,Acetyl-CoA,Acetyl-CoA,CHEBI:15351,acetyl-CoA,1.0,original and predicted,keep,is
-BIOMD0000000190.xml,chemical,CoA,CoA,Coenzyme A,CHEBI:15346,coenzyme A,1.0,original and predicted,keep,is
-BIOMD0000000190.xml,chemical,D,Spermidine,Spermidine,CHEBI:16610,spermidine,0.6666666666666666,original and predicted,keep,is
-BIOMD0000000190.xml,chemical,Met,Methionine,Methionine,CHEBI:16643,L-methionine,0.6666666666666666,original and predicted,keep,is
-BIOMD0000000190.xml,chemical,ORN,L-Ornithine,Ornithine,CHEBI:15729,L-ornithine,0.3333333333333333,original and predicted,keep,is
-BIOMD0000000190.xml,chemical,P,Putrescine,Putrescine,CHEBI:17148,putrescine,1.0,original and predicted,keep,is
-BIOMD0000000190.xml,chemical,S,Spermine,Spermine,CHEBI:15746,spermine,0.6666666666666666,original and predicted,keep,is
-BIOMD0000000190.xml,chemical,SAM,S-adenosyl-L-methionine,S-adenosyl-L-methionine,CHEBI:15414,S-adenosyl-L-methionine,1.0,original and predicted,keep,is
-BIOMD0000000190.xml,chemical,aD,N1-Acetylspermidine,N1-Acetylspermidine,CHEBI:17927,N(1)-acetylspermidine,0.3333333333333333,predicted only,ignore,is
-BIOMD0000000190.xml,chemical,aS,N1-Acetylspermine,N1-Acetylspermine,CHEBI:17312,N(1)-acetylspermine,0.3333333333333333,original and predicted,keep,is
+file,type,id,display_name,curated_name,annotation,annotation_label,match_score,status,update_annotation,qualifier,comment
+BIOMD0000000190.xml,chemical,A,S-adenosylmethioninamine,"S-adenosylmethioninamine, dcSAM, Decarboxylated S-adenosylmethionine",CHEBI:15625,S-adenosylmethioninamine,1.0,original and predicted,keep,is,"All species in this polyamine metabolism model are small-molecule metabolites or cofactors. SAM and A are key methyl group donors in the pathway (with A being the decarboxylated form). P (putrescine), D (spermidine), and S (spermine) are the core polyamines. Met and ORN are amino acid precursors. AcCoA and CoA are essential cofactors for acetylation reactions. The acetylated forms aS and aD are intermediate metabolites in the acetylation/degradation pathway. No proteins, genes, or complexes are present in this list—all are chemicals."
+BIOMD0000000190.xml,chemical,AcCoA,Acetyl-CoA,"Acetyl-CoA, Acetyl coenzyme A",CHEBI:15351,acetyl-CoA,1.0,original and predicted,keep,is,
+BIOMD0000000190.xml,chemical,CoA,CoA,"Coenzyme A, CoA, CoASH",CHEBI:15346,coenzyme A,1.0,original and predicted,keep,is,
+BIOMD0000000190.xml,chemical,D,Spermidine,Spermidine,CHEBI:16610,spermidine,1.0,original and predicted,keep,is,
+BIOMD0000000190.xml,chemical,Met,Methionine,"Methionine, L-Methionine",CHEBI:16643,L-methionine,1.0,original and predicted,keep,is,
+BIOMD0000000190.xml,chemical,ORN,L-Ornithine,"L-Ornithine, Ornithine",CHEBI:15729,L-ornithine,0.5,original and predicted,keep,is,
+BIOMD0000000190.xml,chemical,P,Putrescine,"Putrescine, 1,4-Diaminobutane",CHEBI:17148,putrescine,1.0,original and predicted,keep,is,
+BIOMD0000000190.xml,chemical,S,Spermine,Spermine,CHEBI:15746,spermine,1.0,original and predicted,keep,is,
+BIOMD0000000190.xml,chemical,SAM,S-adenosyl-L-methionine,"S-adenosyl-L-methionine, AdoMet, SAM",CHEBI:15414,S-adenosyl-L-methionine,1.0,original and predicted,keep,is,
+BIOMD0000000190.xml,chemical,aD,N1-Acetylspermidine,N1-Acetylspermidine,CHEBI:17927,N(1)-acetylspermidine,1.0,predicted only,add,is,
+BIOMD0000000190.xml,chemical,aS,N1-Acetylspermine,N1-Acetylspermine,CHEBI:17312,N(1)-acetylspermine,1.0,original and predicted,keep,is,

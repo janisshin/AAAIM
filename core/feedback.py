@@ -434,7 +434,7 @@ def _default_get_feedback(recommendations_df: pd.DataFrame, iteration: int) -> s
     else:
         display_df = recommendations_df[recommendations_df['id'] != 'Reason:'] if 'id' in recommendations_df.columns else recommendations_df
         cols = ["id", "display_name", "curated_name", "annotation", "annotation_label",
-                "match_score", "status", "update_annotation"]
+                "match_score", "status", "update_annotation", "comment"]
         display_cols = [c for c in cols if c in display_df.columns]
         print(display_df[display_cols].to_string(index=False))
 

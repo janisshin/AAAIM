@@ -29,8 +29,8 @@ def main():
     # Configuration
     model_curation_file = "tests/test_models/BIOMD0000000190.xml"
     model_file = "tests/test_models/190_few_anno.xml"
-    llm_model = "gpt-4o-mini"
-    # llm_model = "meta-llama/llama-3.3-70b-instruct:free"
+    llm_model = "openrouter/free"
+    # llm_model = "gpt-4o-mini"
     max_entities = 5  # None will evaluate all species
     
     # Check if model file exists
@@ -40,9 +40,14 @@ def main():
         return
     
     # Check API keys
-    if not os.getenv("OPENAI_API_KEY") and not os.getenv("OPENROUTER_API_KEY"):
+    if llm_model.startswith("openrouter/") and not os.getenv("OPENROUTER_API_KEY"):
         print("Warning: No API keys found in environment.")
-        print("Set OPENAI_API_KEY or OPENROUTER_API_KEY to use LLM features.")
+        print("Set OPENROUTER_API_KEY to use LLM features.")
+        return
+    
+    if llm_model.startswith("gpt-") and not os.getenv("OPENAI_API_KEY"):
+        print("Warning: No API keys found in environment.")
+        print("Set OPENAI_API_KEY to use LLM features.")
         return
     
     print(f"Model file: {model_file}")

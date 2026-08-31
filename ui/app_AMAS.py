@@ -284,6 +284,7 @@ app.layout = html.Div(
                         {"name": "ID", "id": "id"},
                         {"name": "Display Name", "id": "display name"},
                         {"name": "Curated Name", "id": "curated_name"},
+                        {"name": "Comment", "id": "comment"},
                         {"name": "Annotation", "id": "annotation"},
                         {"name": "Annotation Label", "id": "annotation label"},
                         {"name": "Match Score", "id": "match score"},

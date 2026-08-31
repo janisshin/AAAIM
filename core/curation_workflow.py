@@ -19,6 +19,9 @@ from core.llm_interface import get_system_prompt, query_llm_message, parse_llm_r
 from core.data_types import Recommendation
 from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, load_uniprot_label_dict, load_ncbigene_label_dict, load_chebi_label_dict
 from core.annotation_workflow import (
+    _apply_reason_comments,
+    _notes_plus_message,
+    _print_run_summary,
     _silence_internal_logs,
     _vprint,
     rank_species_annotations_with_llm,
@@ -39,7 +42,8 @@ def curate_single_model(model_file: str,
                   database: str | DatabaseID = DatabaseID.CHEBI,
                   tax_id: str = None,
                   chunk_size: int = 50,
-                  verbose: bool = False) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+                  verbose: bool = False,
+                  message: str = "") -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """
     This is the main function users will call to get curation recommendations
     for a model that already has existing annotations.
@@ -56,6 +60,7 @@ def curate_single_model(model_file: str,
         tax_id: For gene/protein annotations, the organism's tax_id for species-specific lookup
         chunk_size: Size of chunks to split large models into (default: 50, None for no chunking)
         verbose: If True, print a short progress summary. Default False.
+        message: Optional user note included in LLM prompts.
         
     Returns:
         Tuple of (recommendations_df, metrics_dict)
@@ -143,14 +148,14 @@ def curate_single_model(model_file: str,
         
         # Process each chunk and accumulate results
         all_synonyms_dict = {}
-        all_reasons = []
+        reason_by_id: Dict[str, str] = {}
         total_llm_time = 0
         
         for chunk_idx, chunk in enumerate(species_chunks):
             logger.info(f"Processing chunk {chunk_idx + 1}/{len(species_chunks)} ({len(chunk)} entities)")
             
             # Format prompt for this chunk
-            prompt = format_prompt(model_file, chunk, entity_type)
+            prompt = format_prompt(model_file, chunk, entity_type, message=message)
             
             if not prompt:
                 logger.error(f"Failed to format prompt for chunk {chunk_idx + 1}")
@@ -188,15 +193,11 @@ def curate_single_model(model_file: str,
             # Accumulate synonyms
             all_synonyms_dict.update(chunk_synonyms_dict)
             
-            # Accumulate reasons
-            if chunk_reason:
-                all_reasons.append(f"Chunk {chunk_idx + 1}: {chunk_reason}")
-        
-        # Combine all reasons
-        if all_reasons:
-            reason = ' '.join(all_reasons)
-        else:
-            reason = ""
+            if chunk_reason and chunk:
+                prefix = f"Chunk {chunk_idx + 1}: " if len(species_chunks) > 1 else ""
+                reason_by_id[chunk[0]] = f"{prefix}{chunk_reason}"
+
+        reason = reason_by_id
         
         # Use accumulated synonyms
         synonyms_dict = all_synonyms_dict
@@ -204,7 +205,7 @@ def curate_single_model(model_file: str,
         
     else:
         # Single prompt for all entities
-        prompt = format_prompt(model_file, specs_to_evaluate, entity_type)
+        prompt = format_prompt(model_file, specs_to_evaluate, entity_type, message=message)
         
         if not prompt:
             logger.error("Failed to format prompt")
@@ -243,9 +244,6 @@ def curate_single_model(model_file: str,
         return pd.DataFrame(), {"error": "Failed to parse LLM response"}
     
     logger.info(f"Parsed synonyms for {len(synonyms_dict)} entities")
-
-    # if reason:
-    #     print(f"LLM Reason: {reason}")
 
     # Search database
     logger.info(f">>>Step 4: Searching {database.value} database...<<<")
@@ -297,7 +295,9 @@ def curate_single_model(model_file: str,
             recommendations_df,
             llm_model=llm_model,
             n_return=n_return,
-            model_notes=(model_info or {}).get("model_notes", "") or "",
+            model_notes=_notes_plus_message(
+                (model_info or {}).get("model_notes", ""), message
+            ),
         )
         llm_time += time.time() - rank_start
         if not ranked_df.empty:
@@ -310,8 +310,11 @@ def curate_single_model(model_file: str,
     )
 
     csv_path = f"{Path(model_file).name}_recommendations.csv"
+    if not recommendations_df.empty and "id" in recommendations_df.columns:
+        recommendations_df = recommendations_df[recommendations_df["id"] != "Reason:"].reset_index(drop=True)
     recommendations_df.to_csv(csv_path, index=False)
     print(f"Saved {len(recommendations_df)} recommendations to {csv_path}")
+    _print_run_summary(recommendations_df, entity_word="species", reason=reason)
     _vprint(verbose, f"Finished in {total_time:.1f}s")
     # logger.info(f"Curation completed in {total_time:.2f}s – {len(recommendations_df)} recommendations")
 
@@ -351,7 +354,7 @@ def _generate_recommendation_table(model_file: str,
                                  database: str = DatabaseID.CHEBI.value,
                                  qualifier_annotations: Dict[str, List[str]] = None,
                                  synonyms_dict: Dict[str, List[str]] = None,
-                                 reason: str = "") -> pd.DataFrame:
+                                 reason: str | Dict[str, str] = "") -> pd.DataFrame:
     """
     Generate AMAS-compatible recommendation table.
     
@@ -364,7 +367,7 @@ def _generate_recommendation_table(model_file: str,
         database: Database being used for search
         qualifier_annotations: Dictionary of qualifier annotations
         synonyms_dict: Dictionary mapping species IDs to LLM-suggested synonyms
-        reason: LLM reasoning text
+        reason: LLM reasoning text, or per-entity map for chunked runs
         
     Returns:
         DataFrame in AMAS format
@@ -378,7 +381,7 @@ def _generate_recommendation_table(model_file: str,
 
     seen_pairs = set()
     for rec in recommendations:
-        curated_name = synonyms_dict.get(rec.id, [""])[0]
+        curated_name = ", ".join(synonyms_dict.get(rec.id) or [])
 
         if not rec.candidates:
             if qualifier_annotations and rec.id in qualifier_annotations and qualifier_annotations[rec.id]:
@@ -449,7 +452,7 @@ def _generate_recommendation_table(model_file: str,
         for ann in ann_list:
             if (species_id, ann) not in seen_pairs:
                 candidate_display = f"{database.upper()}:{ann}"
-                curated_name = synonyms_dict.get(species_id, [""])[0]
+                curated_name = ", ".join(synonyms_dict.get(species_id) or [])
 
                 if qualifier_annotations:
                     specific_qualifier = qualifier_annotations.get(species_id, {}).get(ann, 'is')
@@ -480,21 +483,7 @@ def _generate_recommendation_table(model_file: str,
         df = df.sort_values(by=['id', '_status_order']).reset_index(drop=True)
         df = df.drop(columns=['_status_order'])
 
-    if reason:
-        reason_row = pd.DataFrame([{
-            'file': filename, 'type': '', 'id': 'Reason:',
-            'display_name': reason, 'curated_name': '',
-            'annotation': '', 'annotation_label': '',
-            'match_score': None, 'status': '',
-            'update_annotation': '', 'qualifier': ''
-        }])
-        if df.empty:
-            df = reason_row
-        else:
-            reason_row = reason_row.reindex(columns=df.columns)
-            df = pd.concat([reason_row, df], ignore_index=True)
-
-    return df
+    return _apply_reason_comments(df, reason)
 
 def _calculate_metrics(recommendations_df: pd.DataFrame,
                       existing_annotations: Dict[str, List[str]],

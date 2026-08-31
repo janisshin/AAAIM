@@ -80,7 +80,8 @@ from core import annotate_model
 result = annotate_model(
     model_file="path/to/model.xml",
     entity_type="chemical",
-    database="chebi"
+    database="chebi",
+    message="user message to the LLM here (optional)",
 )
 ```
 
@@ -129,7 +130,7 @@ print(result.recommendations_df[['species_id', 'type', 'synonyms_LLM', 'predicti
 
 **How it works:**
 
-- The LLM analyzes each species in context (display names, reactions, model notes) to determine its type
+- The LLM analyzes each species in context (display names, reactions, model notes, and optional user message) to determine its type
 - Detected types: `chemical`, `gene`, `protein`, `complex`, or `unknown`
 - Database matching is performed using the appropriate database for each detected type
 - The `database` parameter accepts a list to specify which databases to use:
@@ -335,7 +336,7 @@ A summary of added/removed annotations will be printed after update.
 result = annotate_model(
     model_file = "path/to/model.xml",
     annotate = "species",				 # "species", "reactions", or "both"
-    llm_model = "meta-llama/llama-3.3-70b-instruct:free",       # the LLM model used to predict annotations
+    llm_model = "gpt-4o-mini",       # the LLM model used to predict annotations
     # llm_model = "openrouter/free",			 # OpenRouter free model; reasoning is automatic when supported
     max_entities = 100,					 # maximum number of entities to annotate (None for all)
     entity_type = "gene",				 # type of entities to annotate ("chemical", "gene", "protein", "auto", "reaction")
@@ -347,6 +348,7 @@ result = annotate_model(
     species_recommendations_df = None,			 # species table or CSV; used when annotate="reactions"
     verbose = False,					 # True for a short progress summary
     em_max_iterations = 5,				 # reaction EM rematch rounds; 0 skips EM
+    message = "This is a model for human metabolism", # optional user message to the LLM
 )
 
 # Direct access to qualifier tracking functions
