@@ -1,0 +1,24 @@
+{
+  "benchmark_version": "phase1-v1",
+  "manifest_sha256": "8e0d65e5e089b8ed34eae69d7d4db542ef9133d86a2b6d0b41b36abe26cbe11e",
+  "registry_sha256": "276fddf707a2946e3b2b487c7ca35bd11b30f0f754a35920b7b2ce5113816423",
+  "artifact_sha256": {
+    "reactions.csv": "f11ebc6f4d0734deb14c054caf277b81695b22668017d70af9c43cd6146004f1",
+    "model_summary.csv": "90210acf3d2e05c1a6b94f38aee25c4c0663b96383d7fdb5fdf32392a7f2f3d8",
+    "model_context.csv": "94ea74e1506183b5b1ebd231d5cf24b33824e71b6a5188c9f2b588ff16cd9f1d",
+    "model_clusters.csv": "9878d843888077e4b3ac8110260492bdbb81491f2d8197eca702ee35ce8e48fb",
+    "exclusions.csv": "d71b0614016e3c0693d6f6d860af41ea4f9d582aad3dbd697124d699afdaafb5",
+    "pipeline_failures.csv": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "duplicate_groups.csv": "56e62170cee8fffe2a0270a7130cd83db43e188e9bba6b403582286a10e67460",
+    "species_annotations.csv": "99320d1da098215211d0364b70e719a6e59383b82383a30e3436f96d8abafd82",
+    "parser_diagnostics.csv": "889e72069702858817a07c275c68cb1640bf70e2ef362ea202a931a4afe56b06",
+    "benchmark_summary.json": "8cbf037495f7ed72d02c06fc462ef414878588f83717ae877c520722ebca71ab",
+    "invariants.json": "fdee658cef1094805735de5fd1e013d05e4f34cc6d8a8bec1ca9ad68aa0701fb"
+  },
+  "counts": {
+    "models_included": 74,
+    "total_ground_truth_reactions": 5838,
+    "evaluable_reactions": 5816
+  },
+  "invariants_all_passed": true
+}

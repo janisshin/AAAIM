@@ -598,6 +598,10 @@ def annotate_single_model(
     verbose: bool = False,
     em_max_iterations: int = 5,
     message: str = "",
+    evaluate_candidates: bool = False,
+    include_exchange_reactions: bool = False,
+    cofactor_config=None,
+    disable_ontology_relaxation: bool = False,
 ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """
     Annotate a single model that has no or limited existing annotations.
@@ -812,6 +816,10 @@ def annotate_single_model(
             species_recommendations_df,
             existing_annotations=existing_annotations,
             convergence_config=ConvergenceConfig(max_iterations=em_max_iterations),
+            evaluate_candidates=bool(evaluate_candidates),
+            include_exchange_reactions=bool(include_exchange_reactions),
+            cofactor_config=cofactor_config,
+            disable_ontology_relaxation=bool(disable_ontology_relaxation),
         )
         search_time = time.time() - search_start
         logger.info(f"Rule-based search completed in {search_time:.2f}s")
