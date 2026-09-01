@@ -270,7 +270,10 @@ def main() -> int:
     }
 
     args.registry.parent.mkdir(parents=True, exist_ok=True)
-    args.registry.write_text(json.dumps(registry, indent=2) + "\n", encoding="utf-8")
+    # newline="\n" so the registry bytes (and thus its digest) are identical on
+    # every platform and match the LF-normalised blob stored by git.
+    with args.registry.open("w", encoding="utf-8", newline="\n") as fh:
+        fh.write(json.dumps(registry, indent=2) + "\n")
     logger.info(
         "Registry written to %s (ok=%d, mismatch=%d, failed=%d)",
         args.registry,

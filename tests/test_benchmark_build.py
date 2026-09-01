@@ -453,6 +453,40 @@ def test_repeated_builds_are_byte_identical(tmp_path):
     assert first == second, f"non-deterministic build:\n{first}\n{second}"
 
 
+def test_artifacts_use_lf_and_digests_match_bytes(tmp_path):
+    """Artifacts must be LF-terminated and VERSION.json digests must match.
+
+    ``Path.write_text`` silently converts ``\\n`` to ``\\r\\n`` on Windows, which
+    made the recorded digests platform-dependent and stopped them matching the
+    LF-normalised blobs git stores.
+    """
+    models_dir = tmp_path / "models"
+    models_dir.mkdir()
+    write_model(
+        models_dir / "SYN0300.xml",
+        [
+            {
+                "id": "R1",
+                "reactants": ["A"],
+                "products": ["B"],
+                "kegg_uris": ["http://identifiers.org/kegg.reaction/R00024"],
+            }
+        ],
+    )
+    manifest = tmp_path / "manifest.txt"
+    manifest.write_text("SYN0300\n", encoding="utf-8")
+
+    out = tmp_path / "out"
+    _run_build(models_dir, out, manifest)
+
+    version = json.loads((out / "VERSION.json").read_text(encoding="utf-8"))
+    for name, expected in version["artifact_sha256"].items():
+        raw = (out / name).read_bytes()
+        assert b"\r\n" not in raw, f"{name} contains CRLF; digests would not survive checkout"
+        actual = hashlib.sha256(raw).hexdigest()
+        assert actual == expected, f"{name} digest does not match its bytes"
+
+
 def test_build_reconciles_and_separates_failures(tmp_path):
     """Included + excluded + pipeline failures must equal the manifest exactly."""
     models_dir = tmp_path / "models"

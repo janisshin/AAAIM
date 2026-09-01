@@ -873,6 +873,18 @@ def sha256_of(path: Path) -> str:
     return h.hexdigest()
 
 
+def write_json(path: Path, payload: object) -> None:
+    """Write JSON with LF endings on every platform.
+
+    ``Path.write_text`` translates ``\\n`` to ``\\r\\n`` on Windows, which would
+    make the recorded SHA-256 digests platform-dependent and stop them matching
+    the LF-normalised blobs stored by git.
+    """
+    text = json.dumps(payload, indent=2) + "\n"
+    with path.open("w", encoding="utf-8", newline="\n") as fh:
+        fh.write(text)
+
+
 def write_csv(df: pd.DataFrame, path: Path, sort_by: Optional[List[str]] = None) -> None:
     """Deterministic CSV: stable sort, fixed line terminator, no index."""
     if sort_by and not df.empty:
@@ -1011,9 +1023,7 @@ def main() -> int:
             "in benchmark/data/RECONCILIATION.md rather than engineered away.",
         },
     }
-    (args.output_dir / "benchmark_summary.json").write_text(
-        json.dumps(summary, indent=2) + "\n", encoding="utf-8"
-    )
+    write_json(args.output_dir / "benchmark_summary.json", summary)
 
     invariants = check_invariants(
         manifest_ids=manifest_ids,
@@ -1023,9 +1033,7 @@ def main() -> int:
         exclusions_df=exclusions_df,
         cluster_of=cluster_of,
     )
-    (args.output_dir / "invariants.json").write_text(
-        json.dumps(invariants, indent=2) + "\n", encoding="utf-8"
-    )
+    write_json(args.output_dir / "invariants.json", invariants)
 
     artifacts = [
         "reactions.csv",
@@ -1056,9 +1064,7 @@ def main() -> int:
         },
         "invariants_all_passed": invariants["all_passed"],
     }
-    (args.output_dir / "VERSION.json").write_text(
-        json.dumps(version, indent=2) + "\n", encoding="utf-8"
-    )
+    write_json(args.output_dir / "VERSION.json", version)
 
     logger.info("Summary: %s", json.dumps({k: v for k, v in summary.items() if k != "historical_reference"}))
     logger.info(
