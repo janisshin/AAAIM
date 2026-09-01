@@ -1,6 +1,6 @@
 {
   "benchmark_version": "phase1-v1",
-  "manifest_sha256": "8e0d65e5e089b8ed34eae69d7d4db542ef9133d86a2b6d0b41b36abe26cbe11e",
+  "manifest_sha256": "3fd01d100bf544af9217722b5fe4a7204cf82aea9ec391571eae11965e26a861",
   "registry_sha256": "8ba6de7b4171309828a043fa83835dcb1c47d202952152fa945119fa8cb1e367",
   "artifact_sha256": {
     "reactions.csv": "f11ebc6f4d0734deb14c054caf277b81695b22668017d70af9c43cd6146004f1",
