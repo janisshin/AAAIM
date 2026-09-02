@@ -192,7 +192,7 @@ def curate_single_model(model_file: str,
                 continue
             
             # Parse LLM response
-            chunk_synonyms_dict, chunk_entity_type_dict, chunk_reason = parse_llm_response(result, entity_type)
+            chunk_synonyms_dict, chunk_entity_type_dict, chunk_reason, _chunk_components = parse_llm_response(result, entity_type)
             
             # Accumulate synonyms
             all_synonyms_dict.update(chunk_synonyms_dict)
@@ -241,7 +241,7 @@ def curate_single_model(model_file: str,
             return pd.DataFrame(), {"error": f"LLM query failed: {e}"}
         
         # Parse LLM response
-        synonyms_dict, entity_type_dict, reason = parse_llm_response(result, entity_type)
+        synonyms_dict, entity_type_dict, reason, _component_dict = parse_llm_response(result, entity_type)
     
     if not synonyms_dict:
         logger.error("Failed to parse LLM response")

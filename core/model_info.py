@@ -1002,6 +1002,21 @@ def format_prompt(
         types = [e.value for e in EntityType if e.value not in exclude_types]
         return ', '.join(types)
 
+    def _auto_format_instructions(limit: int) -> str:
+        options = _get_entity_type_options()
+        return (
+            f"\nFor each species, determine its entity type ({options}).\n"
+            f"Return up to {limit} standardized names or common synonyms for each species, ranked by likelihood.\n"
+            f"For complexes, list ALL components (this may exceed {limit}); "
+            f"group each component's synonyms and tag its type (chemical, protein, or gene).\n"
+            f"Specify the entity type in parentheses after each species ID.\n"
+            f"Use the below format, do not include any other text except the synonyms, "
+            f"and give short reasons for all species after 'Reason:' by the end.\n\n"
+            'SpeciesA (chemical): "name1", "name2", …\n'
+            'SpeciesB (complex): "name1", "name2" (protein); "name3" (chemical)\n'
+            "Reason: …"
+        )
+
     def _finish(prompt: str) -> str:
         text = (message or "").strip()
         if text:
@@ -1053,12 +1068,7 @@ def format_prompt(
                 prompt += "\n"
                 prompt += f'// Notes:\n"{model_info["model_notes"]}"\n'
             
-            entity_type_options = _get_entity_type_options()
-            prompt += f"\nFor each species, determine its entity type ({entity_type_options}).\n"
-            prompt += f"Return up to {top_k} standardized names or common synonyms for each species, ranked by likelihood.\n"
-            prompt += f"Specify the entity type in parentheses after each species ID.\n"
-            prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all species after 'Reason:' by the end.\n\n"
-            prompt += 'SpeciesA (entity_type): "name1", "name2", …\nSpeciesB (entity_type): …\nReason: …'
+            prompt += _auto_format_instructions(top_k)
             return _finish(prompt)
         
         # SBML-qual models have boolean transitions
@@ -1108,12 +1118,7 @@ def format_prompt(
                 prompt += "\n"
                 prompt += f'// Notes:\n"{model_info["model_notes"]}"\n'
             
-            entity_type_options = _get_entity_type_options()
-            prompt += f"\nFor each species, determine its entity type ({entity_type_options}).\n"
-            prompt += f"Return up to {top_k} standardized names or common synonyms for each species, ranked by likelihood. Provide components names for complexes, which may exceed the limit of {top_k}.\n"
-            prompt += f"Specify the entity type in parentheses after each species ID.\n"
-            prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all species after 'Reason:' by the end.\n\n"
-            prompt += 'SpeciesA (entity_type): "name1", "name2", …\nSpeciesB (entity_type): …\nReason: …'
+            prompt += _auto_format_instructions(top_k)
             return _finish(prompt)
         
         elif entity_type in (EntityType.GENE, EntityType.PROTEIN):
@@ -1216,12 +1221,7 @@ def format_prompt(
                 prompt += "\n"
                 prompt += f'// Notes:\n"{model_info["model_notes"]}"\n'
             
-            entity_type_options = _get_entity_type_options()
-            prompt += f"\nFor each species, determine its entity type ({entity_type_options}).\n"
-            prompt += f"Return up to {top_k} standardized names or common synonyms for each species, ranked by likelihood. Provide components names for complexes, which may exceed the limit of {top_k}.\n"
-            prompt += f"Specify the entity type in parentheses after each species ID.\n"
-            prompt += f"Use the below format, do not include any other text except the synonyms, and give short reasons for all species after 'Reason:' by the end.\n\n"
-            prompt += 'SpeciesA (entity_type): "name1", "name2", …\nSpeciesB (entity_type): …\nReason: …'
+            prompt += _auto_format_instructions(top_k)
             return _finish(prompt)
         
         else:

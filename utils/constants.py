@@ -233,8 +233,10 @@ ENTITY_TYPE_OPTIONS = ", ".join(
 )
 
 SYSTEM_PROMPT_AUTO = f"""You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized names for ontology lookup, and determine the entity type for each species.
-For each species, identify entity type from the following options: [{ENTITY_TYPE_OPTIONS}]. Specify the entity type in parentheses after the species ID, followed by synonyms. Note that amino acids and tRNAs are considered as chemical. 
-For complexes, do not give the name of the complex, only list standardized names of the chemical and protein components, separated by commas (no other symbols like ":" or "-"). E.g., for "EGF-EGFR^2", return "EGF", "EGFR".
+For each species, identify entity type from the following options: [{ENTITY_TYPE_OPTIONS}]. Specify the entity type in parentheses after the species ID, followed by synonyms. Note that amino acids and tRNAs are considered as chemical.
+For complexes, list ALL components (do not omit any). Do not give the name of the complex; only list standardized names of the chemical, protein, and gene components. Group each component's synonyms and tag that component's type. E.g., for "EGF-EGFR^2", return "EGF" (protein); "EGFR" (protein). The number of components may exceed the per-species synonym limit.
+Family abbreviations must be expanded to specific names (e.g., RAS → "HRAS", "KRAS", "NRAS"); do not use the family token as a search name.
+Protein–ligand bound forms (e.g., Ras-GTP, Ras-GDP) are complexes: list the protein and the ligand as separate typed components.
 Try your best to give the most likely terminology without modifications (e.g., no "phosphorylated") or extra information (e.g., no "protein", "complex", or localization terms like "nuclear").
 
 Here is one example:
@@ -254,8 +256,8 @@ This should return:
 A (chemical): "glucose", "D-glucose"
 B (chemical): "ATP", "adenosine triphosphate"
 C (protein): "Hexokinase-1", "HK1"
-D (complex): "glucose", "ATP", "Hexokinase-1"
-Reason: A and B are small-molecule substrates (chemicals), C is the enzyme (protein), and D represents the enzyme–substrate complex. For the complex D, the complex name and extra info ("complex", "active") are removed, and only the standardized names of its components are listed.
+D (complex): "glucose", "D-glucose" (chemical); "ATP" (chemical); "Hexokinase-1", "HK1" (protein)
+Reason: A and B are small-molecule substrates (chemicals), C is the enzyme (protein), and D represents the enzyme–substrate complex. All three components of D are listed, each with its entity type. Extra info ("complex", "active") is removed.
 """
 
 SYSTEM_PROMPT_CHEMICAL = """You are a biomedical knowledge assistant. Your task is to normalize names from biochemical models into standardized names for ontology lookup on ChEBI. 

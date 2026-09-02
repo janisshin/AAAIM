@@ -26,7 +26,13 @@ from core.database_search import (
     load_uniprot_label_dict,
 )
 from core.feedback import AnnotationResult, build_initial_conversation
-from core.llm_interface import get_system_prompt, query_llm, query_llm_message, parse_llm_response
+from core.llm_interface import (
+    format_component_curated_name,
+    get_system_prompt,
+    parse_llm_response,
+    query_llm,
+    query_llm_message,
+)
 from utils.constants import (
     SPECIES_ANNOTATION_RANKING_PROMPT,
     DatabaseID,
@@ -114,6 +120,7 @@ def _search_one_database(
     top_k: int,
     tax_id: str = None,
     model_info: Dict[str, Any] = None,
+    model_type: str = None,
 ) -> List[Recommendation]:
     """Search a single database and return Recommendation objects."""
     if database not in SUPPORTED_SEARCH_DATABASES:
@@ -126,6 +133,8 @@ def _search_one_database(
         )
     if method == "rag":
         kwargs: Dict[str, Any] = {"database": database, "tax_id": tax_id, "top_k": top_k}
+        if model_type:
+            kwargs["model_type"] = model_type
         if database == DatabaseID.KEGG.value and model_info:
             reaction_definitions = [i.split(":")[1] for i in model_info.get("reactions", [])]
             kwargs["reaction_participants"] = [
@@ -135,6 +144,80 @@ def _search_one_database(
 
     logger.error(f"Invalid method: {method}")
     return []
+
+
+def _extend_search_hits(
+    species_id: str,
+    recs: List[Recommendation],
+    database: str,
+    all_candidates: List[str],
+    all_candidate_names: List[str],
+    all_scores: List[float],
+    candidate_databases: Dict[Tuple[str, str], str],
+) -> None:
+    """Append one-database hits onto a complex recommendation."""
+    for rec in recs:
+        if rec.id != species_id:
+            continue
+        all_candidates.extend(rec.candidates)
+        all_candidate_names.extend(rec.candidate_names)
+        all_scores.extend(rec.match_score)
+        for candidate in rec.candidates:
+            candidate_databases[(species_id, candidate)] = database
+
+
+def _search_complex_species(
+    species_id: str,
+    synonyms_dict: Dict[str, List[str]],
+    allowed_names: List[str],
+    method: str,
+    top_k: int,
+    tax_id: str = None,
+    model_info: Dict[str, Any] = None,
+    components: Optional[List[Tuple[str, List[str]]]] = None,
+    model_type: str = None,
+) -> Tuple[Recommendation, Dict[Tuple[str, str], str]]:
+    """Search a complex: per-component DB if typed, else every allowed database."""
+    candidate_databases: Dict[Tuple[str, str], str] = {}
+    all_candidates: List[str] = []
+    all_candidate_names: List[str] = []
+    all_scores: List[float] = []
+
+    if components:
+        for comp_type, names in components:
+            db = get_database_for_entity_type(comp_type, allowed_names)
+            if db is None:
+                logger.warning(
+                    f"No database for complex component type '{comp_type}' "
+                    f"in {allowed_names} ({species_id})"
+                )
+                continue
+            recs = _search_one_database(
+                [species_id], {species_id: names}, db, method, top_k,
+                tax_id, model_info, model_type,
+            )
+            _extend_search_hits(
+                species_id, recs, db,
+                all_candidates, all_candidate_names, all_scores, candidate_databases,
+            )
+    else:
+        for db in allowed_names:
+            recs = _search_one_database(
+                [species_id], synonyms_dict, db, method, top_k,
+                tax_id, model_info, model_type,
+            )
+            _extend_search_hits(
+                species_id, recs, db,
+                all_candidates, all_candidate_names, all_scores, candidate_databases,
+            )
+
+    return Recommendation(
+        id=species_id,
+        synonyms=synonyms_dict.get(species_id, []),
+        candidates=all_candidates,
+        candidate_names=all_candidate_names,
+        match_score=all_scores,
+    ), candidate_databases
 
 
 def _search_databases(
@@ -147,6 +230,7 @@ def _search_databases(
     tax_id: str = None,
     entity_type_dict: Optional[Dict[str, str]] = None,
     model_info: Dict[str, Any] = None,
+    component_dict: Optional[Dict[str, List[Tuple[str, List[str]]]]] = None,
 ) -> Tuple[List[Recommendation], Dict[str, str], Dict[Tuple[str, str], str]]:
     """Search the appropriate database(s) for each entity.
 
@@ -156,6 +240,7 @@ def _search_databases(
     species_database: Dict[str, str] = {}
     candidate_databases: Dict[Tuple[str, str], str] = {}
     allowed_names = [db.value for db in databases]
+    component_dict = component_dict or {}
 
     if entity_type == EntityType.AUTO:
         logger.info(f">>>Step 4: Searching databases {_database_log_label(databases)}...<<<")
@@ -180,34 +265,18 @@ def _search_databases(
                 continue
 
             if detected_type == "complex":
+                typed = sum(1 for sid in species_list if component_dict.get(sid))
                 logger.info(
-                    f"Searching all databases {allowed_names} for {len(species_list)} complex entities"
+                    f"Searching {len(species_list)} complex entities "
+                    f"({typed} with per-component types) in {allowed_names}"
                 )
                 for species_id in species_list:
-                    all_candidates: List[str] = []
-                    all_candidate_names: List[str] = []
-                    all_scores: List[float] = []
-                    for db in allowed_names:
-                        db_recs = _search_one_database(
-                            [species_id], synonyms_dict, db, method, top_k, tax_id, model_info
-                        )
-                        for rec in db_recs:
-                            if rec.id != species_id:
-                                continue
-                            all_candidates.extend(rec.candidates)
-                            all_candidate_names.extend(rec.candidate_names)
-                            all_scores.extend(rec.match_score)
-                            for candidate in rec.candidates:
-                                candidate_databases[(species_id, candidate)] = db
-                    all_recommendations.append(
-                        Recommendation(
-                            id=species_id,
-                            synonyms=synonyms_dict.get(species_id, []),
-                            candidates=all_candidates,
-                            candidate_names=all_candidate_names,
-                            match_score=all_scores,
-                        )
+                    rec, cand_dbs = _search_complex_species(
+                        species_id, synonyms_dict, allowed_names, method, top_k,
+                        tax_id, model_info, component_dict.get(species_id),
                     )
+                    candidate_databases.update(cand_dbs)
+                    all_recommendations.append(rec)
                 continue
 
             target_database = get_database_for_entity_type(detected_type, allowed_names)
@@ -526,6 +595,9 @@ def rank_species_annotations_with_llm(
     to_rank: List[Tuple[str, pd.DataFrame, str]] = []
     for species_id in work_df["id"].unique():
         sub = work_df[work_df["id"] == species_id]
+        if "type" in sub.columns and str(sub["type"].iloc[0]).lower() == "complex":
+            ranked_rows.append(sub)
+            continue
         choices = _build_species_annotation_choices(sub)
         if not choices.strip() or choices.count("\n") + 1 <= n_return:
             ranked_rows.append(sub)
@@ -856,6 +928,7 @@ def annotate_single_model(
         assistant_messages = []
         system_prompt = get_system_prompt(entity_type)
         entity_type_dict: Dict[str, str] = {}
+        component_dict: Dict[str, List[Tuple[str, List[str]]]] = {}
 
         if chunk_size and len(entities_to_evaluate) > chunk_size:
             logger.info(f"Breaking {len(entities_to_evaluate)} entities into chunks of {chunk_size}")
@@ -869,6 +942,7 @@ def annotate_single_model(
             # Process each chunk and accumulate results
             all_synonyms_dict = {}
             all_entity_type_dict = {}
+            all_component_dict: Dict[str, List[Tuple[str, List[str]]]] = {}
             reason_by_id: Dict[str, str] = {}
             total_llm_time = 0
 
@@ -909,11 +983,12 @@ def annotate_single_model(
                     continue
 
                 # Parse LLM response
-                chunk_synonyms_dict, chunk_entity_type_dict, chunk_reason = parse_llm_response(result, entity_type)
+                chunk_synonyms_dict, chunk_entity_type_dict, chunk_reason, chunk_component_dict = parse_llm_response(result, entity_type)
 
                 # Accumulate synonyms and detected entity types
                 all_synonyms_dict.update(chunk_synonyms_dict)
                 all_entity_type_dict.update(chunk_entity_type_dict)
+                all_component_dict.update(chunk_component_dict)
 
                 if chunk_reason and chunk:
                     prefix = f"Chunk {chunk_idx + 1}: " if len(species_chunks) > 1 else ""
@@ -924,6 +999,7 @@ def annotate_single_model(
             # Use accumulated synonyms
             synonyms_dict = all_synonyms_dict
             entity_type_dict = all_entity_type_dict
+            component_dict = all_component_dict
             llm_time = total_llm_time
 
         else:
@@ -960,7 +1036,7 @@ def annotate_single_model(
                 return pd.DataFrame(), {"error": f"LLM query failed: {e}"}
 
             # Parse LLM response
-            synonyms_dict, entity_type_dict, reason = parse_llm_response(result, entity_type)
+            synonyms_dict, entity_type_dict, reason, component_dict = parse_llm_response(result, entity_type)
 
         if not synonyms_dict:
             logger.error("Failed to parse LLM response")
@@ -987,6 +1063,7 @@ def annotate_single_model(
             tax_id=tax_id,
             entity_type_dict=entity_type_dict,
             model_info=model_info,
+            component_dict=component_dict,
         )
         search_time = time.time() - search_start
         logger.info(f"Database search completed in {search_time:.2f}s")
@@ -1001,6 +1078,7 @@ def annotate_single_model(
             species_database=species_database,
             candidate_databases=candidate_databases,
             existing_annotation_databases=existing_annotation_databases,
+            component_dict=component_dict,
         )
 
         if top_k > n_return:
@@ -1144,7 +1222,8 @@ def _generate_recommendation_table(model_file: str,
                                  entity_type_dict: Optional[Dict[str, str]] = None,
                                  species_database: Optional[Dict[str, str]] = None,
                                  candidate_databases: Optional[Dict[Tuple[str, str], str]] = None,
-                                 existing_annotation_databases: Optional[Dict[Tuple[str, str], str]] = None) -> pd.DataFrame:
+                                 existing_annotation_databases: Optional[Dict[Tuple[str, str], str]] = None,
+                                 component_dict: Optional[Dict[str, List[Tuple[str, List[str]]]]] = None) -> pd.DataFrame:
     """
     Generate AMAS-compatible recommendation table.
 
@@ -1180,6 +1259,8 @@ def _generate_recommendation_table(model_file: str,
         candidate_databases = {}
     if existing_annotation_databases is None:
         existing_annotation_databases = {}
+    if component_dict is None:
+        component_dict = {}
 
     default_entity_type = _entity_type_name(entity_type)
     default_databases = _normalize_database_names(database)
@@ -1203,10 +1284,16 @@ def _generate_recommendation_table(model_file: str,
     def label_for(db_id: str, database_name: str) -> str:
         return label_dicts.get(database_name, {}).get(db_id, db_id)
 
+    def curated_for(species_id: str) -> str:
+        comps = component_dict.get(species_id)
+        if comps:
+            return format_component_curated_name(comps)
+        return ", ".join(synonyms_dict.get(species_id) or [])
+
     seen_pairs = set()
 
     for rec in recommendations:
-        curated_name = ", ".join(synonyms_dict.get(rec.id) or [])
+        curated_name = curated_for(rec.id)
         rec_type = row_type(rec.id)
 
         if not rec.candidates:
@@ -1280,7 +1367,7 @@ def _generate_recommendation_table(model_file: str,
                 if (species_id, ann) not in seen_pairs:
                     rec_db = row_database(species_id, ann)
                     candidate_display = f"{rec_db.upper()}:{ann}"
-                    curated_name = ", ".join(synonyms_dict.get(species_id) or [])
+                    curated_name = curated_for(species_id)
 
                     if qualifier_annotations:
                         specific_qualifier = qualifier_annotations.get(species_id, {}).get(ann, 'is')

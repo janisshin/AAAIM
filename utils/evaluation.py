@@ -103,6 +103,7 @@ def reset_rate_limiter():
 
 from core.model_info import find_species_with_chebi_annotations, find_species_with_annotations_and_qualifiers, extract_model_info, format_prompt, find_species_with_ncbigene_annotations, find_species_with_uniprot_annotations, get_species_display_names, detect_model_format
 from core.llm_interface import SYSTEM_PROMPT, query_llm, parse_llm_response, get_system_prompt
+from core.annotation_workflow import _search_complex_species
 from core.data_types import Recommendation
 from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, clear_chromadb_cache
 from utils.constants import REF_CHEBI2LABEL, REF_NCBIGENE2LABEL, REF_UNIPROT2LABEL, REF_CHEBI2FORMULA, CHEBI_URI_PATTERNS, NCBIGENE_URI_PATTERNS, UNIPROT_URI_PATTERNS, ModelType, EntityType, DatabaseID, get_database_for_entity_type
@@ -538,6 +539,30 @@ def find_species_with_protein_annotations(model_file: str, bqbiol_qualifiers: li
     # Return all species that have UniProt annotations
     return existing_annotations, qualifier_annotations
 
+def _eval_search_complexes(
+    species_list: List[str],
+    synonyms_dict: Dict[str, List[str]],
+    allowed_databases: List[str],
+    method: str,
+    top_k: int,
+    tax_id: Any,
+    model_type: str,
+    component_dict: Optional[Dict] = None,
+    verbose: bool = True,
+) -> List[Recommendation]:
+    """Search complex species using per-component types when available."""
+    component_dict = component_dict or {}
+    recs = []
+    for species_id in species_list:
+        with suppress_outputs(verbose):
+            rec, _cand = _search_complex_species(
+                species_id, synonyms_dict, allowed_databases, method, top_k,
+                tax_id, None, component_dict.get(species_id), model_type,
+            )
+        recs.append(rec)
+    return recs
+
+
 def _get_database_for_entity_type(entity_type: str, 
                                    allowed_databases: Optional[List[str]] = None) -> Optional[str]:
     """
@@ -667,6 +692,7 @@ def evaluate_single_model(model_file: str,
         if verbose:
             logger.info(f"Evaluating {len(specs_to_evaluate)} entities in {model_name}")
         
+        component_dict = {}
         # Break down large models into chunks
         if chunk_size:
             species_chunks = []
@@ -682,6 +708,7 @@ def evaluate_single_model(model_file: str,
             # Process each chunk and accumulate results
             all_synonyms_dict = {}
             all_entity_type_dict = {}
+            all_component_dict = {}
             all_reasons = []
             total_llm_time = 0
             
@@ -707,11 +734,12 @@ def evaluate_single_model(model_file: str,
                 total_llm_time += chunk_llm_time
                 
                 # Parse LLM response
-                chunk_synonyms_dict, chunk_entity_type_dict, chunk_reason = parse_llm_response(llm_response, entity_type)
+                chunk_synonyms_dict, chunk_entity_type_dict, chunk_reason, chunk_component_dict = parse_llm_response(llm_response, entity_type)
 
                 # Accumulate synonyms and entity types
                 all_synonyms_dict.update(chunk_synonyms_dict)
                 all_entity_type_dict.update(chunk_entity_type_dict)
+                all_component_dict.update(chunk_component_dict)
                 
                 # Accumulate reasons
                 if chunk_reason:
@@ -730,6 +758,7 @@ def evaluate_single_model(model_file: str,
             # Use accumulated synonyms for database search
             synonyms_dict = all_synonyms_dict
             entity_type_dict = all_entity_type_dict
+            component_dict = all_component_dict
             llm_time = total_llm_time
         else:
             # Extract model context and query LLM
@@ -747,7 +776,7 @@ def evaluate_single_model(model_file: str,
             llm_response = query_llm(prompt, system_prompt, model=llm_model, entity_type=entity_type)
             llm_time = time.time() - llm_start
             # Parse LLM response
-            synonyms_dict, entity_type_dict, reason = parse_llm_response(llm_response, entity_type)
+            synonyms_dict, entity_type_dict, reason, component_dict = parse_llm_response(llm_response, entity_type)
 
         # Search database
         search_start = time.time()
@@ -787,58 +816,14 @@ def evaluate_single_model(model_file: str,
                         all_recommendations.append(empty_rec)
                     continue
                 
-                # Special handling for complexes: query ALL provided databases
+                # Special handling for complexes: per-component DB, or all DBs if untyped
                 if detected_type == "complex":
                     if verbose:
-                        logger.info(f"Searching all databases {allowed_databases} for {len(species_list)} complex entities")
-                    
-                    for species_id in species_list:
-                        all_candidates = []
-                        all_candidate_names = []
-                        all_scores = []
-                        species_synonyms = synonyms_dict.get(species_id, [])
-                        
-                        # Search each allowed database for this complex
-                        for db in allowed_databases:
-                            with suppress_outputs(verbose):
-                                if method == "direct":
-                                    if db == "chebi":
-                                        db_recs = get_species_recommendations_direct([species_id], synonyms_dict, database="chebi", top_k=top_k)
-                                    elif db == "ncbigene":
-                                        db_recs = get_species_recommendations_direct([species_id], synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
-                                    elif db == "uniprot":
-                                        db_recs = get_species_recommendations_direct([species_id], synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
-                                    else:
-                                        continue
-                                elif method == "rag":
-                                    if db == "chebi":
-                                        db_recs = get_species_recommendations_rag([species_id], synonyms_dict, database="chebi", top_k=top_k, model_type=model_type)
-                                    elif db == "ncbigene":
-                                        db_recs = get_species_recommendations_rag([species_id], synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k, model_type=model_type)
-                                    elif db == "uniprot":
-                                        db_recs = get_species_recommendations_rag([species_id], synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k, model_type=model_type)
-                                    else:
-                                        continue
-                                else:
-                                    continue
-                            
-                            # Collect results from this database
-                            if db_recs:
-                                for rec in db_recs:
-                                    if rec.id == species_id:
-                                        all_candidates.extend(rec.candidates)
-                                        all_candidate_names.extend(rec.candidate_names)
-                                        all_scores.extend(rec.match_score)
-                        
-                        # Create combined recommendation for this complex (no top_k limit)
-                        complex_rec = Recommendation(
-                            id=species_id,
-                            synonyms=species_synonyms,
-                            candidates=all_candidates,
-                            candidate_names=all_candidate_names,
-                            match_score=all_scores
-                        )
-                        all_recommendations.append(complex_rec)
+                        logger.info(f"Searching {len(species_list)} complex entities in {allowed_databases}")
+                    all_recommendations.extend(_eval_search_complexes(
+                        species_list, synonyms_dict, allowed_databases, method, top_k,
+                        tax_id, model_type, component_dict, verbose,
+                    ))
                     continue
                 
                 # Get appropriate database for this entity type
@@ -965,7 +950,7 @@ def evaluate_single_model(model_file: str,
                 llm_time += retry_llm_time
                 
                 # Parse retry LLM response
-                retry_synonyms_dict, retry_entity_type_dict, retry_reason = parse_llm_response(retry_llm_response, entity_type)
+                retry_synonyms_dict, retry_entity_type_dict, retry_reason, retry_component_dict = parse_llm_response(retry_llm_response, entity_type)
                 
                 # if verbose:
                 #     logger.info(f"Retry LLM response: \n{retry_llm_response}")
@@ -977,6 +962,8 @@ def evaluate_single_model(model_file: str,
                         synonyms_dict[species_id] = retry_synonyms_dict[species_id]
                     if species_id in retry_entity_type_dict:
                         entity_type_dict[species_id] = retry_entity_type_dict[species_id]
+                    if species_id in retry_component_dict:
+                        component_dict[species_id] = retry_component_dict[species_id]
                 
                 # Re-search database for species with empty predictions
                 retry_search_start = time.time()
@@ -1007,50 +994,10 @@ def evaluate_single_model(model_file: str,
                             continue
                         
                         if detected_type == "complex":
-                            for species_id in species_list:
-                                all_candidates = []
-                                all_candidate_names = []
-                                all_scores = []
-                                species_synonyms = synonyms_dict.get(species_id, [])
-                                
-                                for db in allowed_databases:
-                                    with suppress_outputs(verbose):
-                                        if method == "direct":
-                                            if db == "chebi":
-                                                db_recs = get_species_recommendations_direct([species_id], synonyms_dict, database="chebi", top_k=top_k)
-                                            elif db == "ncbigene":
-                                                db_recs = get_species_recommendations_direct([species_id], synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
-                                            elif db == "uniprot":
-                                                db_recs = get_species_recommendations_direct([species_id], synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
-                                            else:
-                                                continue
-                                        elif method == "rag":
-                                            if db == "chebi":
-                                                db_recs = get_species_recommendations_rag([species_id], synonyms_dict, database="chebi", top_k=top_k, model_type=model_type)
-                                            elif db == "ncbigene":
-                                                db_recs = get_species_recommendations_rag([species_id], synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k, model_type=model_type)
-                                            elif db == "uniprot":
-                                                db_recs = get_species_recommendations_rag([species_id], synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k, model_type=model_type)
-                                            else:
-                                                continue
-                                        else:
-                                            continue
-                                    
-                                    if db_recs:
-                                        for rec in db_recs:
-                                            if rec.id == species_id:
-                                                all_candidates.extend(rec.candidates)
-                                                all_candidate_names.extend(rec.candidate_names)
-                                                all_scores.extend(rec.match_score)
-                                
-                                complex_rec = Recommendation(
-                                    id=species_id,
-                                    synonyms=species_synonyms,
-                                    candidates=all_candidates,
-                                    candidate_names=all_candidate_names,
-                                    match_score=all_scores
-                                )
-                                retry_recommendations.append(complex_rec)
+                            retry_recommendations.extend(_eval_search_complexes(
+                                species_list, synonyms_dict, allowed_databases, method, top_k,
+                                tax_id, model_type, component_dict, verbose,
+                            ))
                             continue
                         
                         target_database = _get_database_for_entity_type(detected_type, allowed_databases)
@@ -1939,7 +1886,7 @@ def process_saved_llm_responses(response_folder: str,
         # Parse the LLM response
         try:
             # synonyms_dict, entity_type_dict, reason = parse_llm_response(result)
-            synonyms_dict, entity_type_dict, reason = parse_llm_response(content, entity_type)
+            synonyms_dict, entity_type_dict, reason, component_dict = parse_llm_response(content, entity_type)
         except Exception as e:
             logger.error(f"Error parsing LLM response for {response_file}: {e}")
             parse_errors.append(f"{response_file}: Error parsing LLM response - {str(e)}")
@@ -1997,58 +1944,14 @@ def process_saved_llm_responses(response_folder: str,
                             all_recommendations.append(empty_rec)
                         continue
                     
-                    # Special handling for complexes: query ALL provided databases
+                    # Special handling for complexes: per-component DB, or all DBs if untyped
                     if detected_type == "complex":
                         if verbose:
-                            logger.info(f"Searching all databases {allowed_databases} for {len(species_list)} complex entities")
-                        
-                        for species_id in species_list:
-                            all_candidates = []
-                            all_candidate_names = []
-                            all_scores = []
-                            species_synonyms = synonyms_dict.get(species_id, [])
-                            
-                            # Search each allowed database for this complex
-                            for db in allowed_databases:
-                                with suppress_outputs(verbose):
-                                    if method == "direct":
-                                        if db == "chebi":
-                                            db_recs = get_species_recommendations_direct([species_id], synonyms_dict, database="chebi", top_k=top_k)
-                                        elif db == "ncbigene":
-                                            db_recs = get_species_recommendations_direct([species_id], synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k)
-                                        elif db == "uniprot":
-                                            db_recs = get_species_recommendations_direct([species_id], synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k)
-                                        else:
-                                            continue
-                                    elif method == "rag":
-                                        if db == "chebi":
-                                            db_recs = get_species_recommendations_rag([species_id], synonyms_dict, database="chebi", top_k=top_k, model_type=model_type)
-                                        elif db == "ncbigene":
-                                            db_recs = get_species_recommendations_rag([species_id], synonyms_dict, database="ncbigene", tax_id=tax_id, top_k=top_k, model_type=model_type)
-                                        elif db == "uniprot":
-                                            db_recs = get_species_recommendations_rag([species_id], synonyms_dict, database="uniprot", tax_id=tax_id, top_k=top_k, model_type=model_type)
-                                        else:
-                                            continue
-                                    else:
-                                        continue
-                                
-                                # Collect results from this database
-                                if db_recs:
-                                    for rec in db_recs:
-                                        if rec.id == species_id:
-                                            all_candidates.extend(rec.candidates)
-                                            all_candidate_names.extend(rec.candidate_names)
-                                            all_scores.extend(rec.match_score)
-                            
-                            # Create combined recommendation for this complex (no top_k limit)
-                            complex_rec = Recommendation(
-                                id=species_id,
-                                synonyms=species_synonyms,
-                                candidates=all_candidates,
-                                candidate_names=all_candidate_names,
-                                match_score=all_scores
-                            )
-                            all_recommendations.append(complex_rec)
+                            logger.info(f"Searching {len(species_list)} complex entities in {allowed_databases}")
+                        all_recommendations.extend(_eval_search_complexes(
+                            species_list, synonyms_dict, allowed_databases, method, top_k,
+                            tax_id, model_type, component_dict, verbose,
+                        ))
                         continue
                     
                     # Get appropriate database for this entity type

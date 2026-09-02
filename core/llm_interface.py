@@ -412,17 +412,56 @@ def query_llm_with_history(messages: list, model: str = GPT_MINI_MODEL,
         return ""
 
 
+_COMPONENT_TYPE_TAG = re.compile(r'\((chemical|protein|gene)\)', re.IGNORECASE)
+
+
+def _extract_synonym_names(names_str: str) -> List[str]:
+    """Pull quoted and unquoted comma-separated names from a synonym fragment."""
+    names = []
+    quoted_items = re.findall(r'"([^"]*)"', names_str)
+    names.extend(quoted_items)
+    processed_str = names_str
+    for item in quoted_items:
+        processed_str = processed_str.replace(f'"{item}"', '')
+    for part in processed_str.split(','):
+        part = part.strip().strip(';')
+        if part and not part.isspace():
+            names.append(part)
+    return [name for name in names if name and not name.isspace()]
+
+
+def parse_typed_components(names_str: str) -> List[Tuple[str, List[str]]]:
+    """Parse 'names (type); names (type)' groups. Empty if no component type tags."""
+    matches = list(_COMPONENT_TYPE_TAG.finditer(names_str))
+    if not matches:
+        return []
+    components: List[Tuple[str, List[str]]] = []
+    last = 0
+    for match in matches:
+        names_part = names_str[last:match.start()].strip().strip(';,').strip()
+        names = _extract_synonym_names(names_part)
+        if names:
+            components.append((match.group(1).lower(), names))
+        last = match.end()
+    return components
+
+
+def format_component_curated_name(components: List[Tuple[str, List[str]]]) -> str:
+    """Display typed component groups, e.g. 'HRAS, KRAS (protein); GTP (chemical)'."""
+    return "; ".join(f"{', '.join(names)} ({typ})" for typ, names in components)
+
+
 def parse_llm_response(
     response,
     entity_type: str | EntityType = EntityType.AUTO,
-) -> Tuple[Dict[str, List[str]], Dict[str, str], str]:
+) -> Tuple[Dict[str, List[str]], Dict[str, str], str, Dict[str, List[Tuple[str, List[str]]]]]:
     """
     Parse the LLM response to extract species synonyms and entity types in the format:
     SpeciesA (chemical): "name1", "name2", ...
-    SpeciesB (gene): "name1", name2, ...
+    SpeciesB (complex): "name1", "name2" (protein); "name3" (chemical)
     Reason: ...
     
-    Extended to support automatic entity type detection.
+    Extended to support automatic entity type detection and per-component types.
     
     Args:
         response: The raw response string from the LLM
@@ -434,6 +473,8 @@ def parse_llm_response(
         - Dictionary mapping species IDs to lists of synonyms
         - Dictionary mapping species IDs to entity types
         - Reason string
+        - Dictionary mapping species IDs to typed component groups
+          (empty for species without per-component type tags)
     """
     # Remove markdown code block syntax if present
     response = re.sub(r'```.*?\n', '', response)
@@ -442,6 +483,7 @@ def parse_llm_response(
     # Initialize the dictionaries and reason
     synonyms_dict = {}
     entity_type_dict = {}
+    component_dict: Dict[str, List[Tuple[str, List[str]]]] = {}
     reason = ""
     
     # Split response into lines
@@ -504,26 +546,12 @@ def parse_llm_response(
             else:
                 entity_type_dict[species_id] = entity_type_str
 
-        # Extract all synonyms, handling both quoted and unquoted names
-        names = []
-
-        # First, extract all quoted items
-        quoted_items = re.findall(r'"([^"]*)"', names_str)
-        names.extend(quoted_items)
-
-        # Remove quoted parts from the string for further processing
-        processed_str = names_str
-        for item in quoted_items:
-            processed_str = processed_str.replace(f'"{item}"', '')
-
-        # Now extract unquoted items by splitting on commas
-        unquoted_parts = [part.strip() for part in processed_str.split(',')]
-        for part in unquoted_parts:
-            if part and not part.isspace():
-                names.append(part)
-
-        # Remove any empty strings that might have been added
-        names = [name for name in names if name and not name.isspace()]
+        components = parse_typed_components(names_str)
+        if components:
+            component_dict[species_id] = components
+            names = [name for _typ, group in components for name in group]
+        else:
+            names = _extract_synonym_names(names_str)
         if names:
             synonyms_dict[species_id] = names
 
@@ -538,4 +566,4 @@ def parse_llm_response(
             f.write(str(response))
         print(f"Error response saved to: {error_file}")
 
-    return synonyms_dict, entity_type_dict, reason 
+    return synonyms_dict, entity_type_dict, reason, component_dict 

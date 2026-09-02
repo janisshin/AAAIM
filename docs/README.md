@@ -138,7 +138,7 @@ print(result.recommendations_df[['species_id', 'type', 'synonyms_LLM', 'predicti
   - Chemicals → ChEBI
   - Genes → NCBI Gene
   - Proteins → UniProt
-  - Complexes → ChEBI, UniProt, or NCBI Gene
+  - Complexes → each component is searched in the database for that component's type (chemical → ChEBI, protein → UniProt, gene → NCBI Gene). The LLM lists all components, with a synonym group and type per component. Untyped (legacy) complex replies still search every allowed database.
 - Species with `unknown` type are included in results with their LLM-suggested synonyms but no database matches
 
 #### Reaction Annotation (KEGG)
@@ -479,7 +479,7 @@ When using `entity_type="auto"`, AAAIM automatically selects the appropriate dat
 | `chemical`    | ChEBI                     | Small molecules, metabolites, compounds        |
 | `gene`        | NCBI Gene                 | Genes, DNA sequences, gene symbols             |
 | `protein`     | UniProt                   | Proteins, enzymes                              |
-| `complex`     | ChEBI, UniProt, NCBI Gene | Protein complexes, chemical complexes          |
+| `complex`     | Per component (ChEBI / UniProt / NCBI Gene) | Each component is routed to its type's database |
 | `unknown`     | None                      | LLM synonyms included but no database matching |
 
 
