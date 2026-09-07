@@ -23,6 +23,15 @@ from core.model_info import (
 from core.llm_interface import get_system_prompt, query_llm, parse_llm_response
 from core.data_types import Recommendation
 from core.database_search import get_species_recommendations_direct, get_species_recommendations_rag, load_uniprot_label_dict, load_ncbigene_label_dict, load_chebi_label_dict
+from core.annotation_workflow import (
+    _apply_reason_comments,
+    _notes_plus_message,
+    _output_csv,
+    _print_run_summary,
+    _silence_internal_logs,
+    _vprint,
+    rank_species_annotations_with_llm,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +47,7 @@ def curate_single_model(model_file: str,
                   database: str | DatabaseID = DatabaseID.CHEBI,
                   tax_id: str = None,
                   chunk_size: int = 50,
+                  save_to: Optional[str] = None,
                   *,
                   evaluate_candidates: bool = False,
                   include_exchange_reactions: bool = False,
@@ -56,6 +66,10 @@ def curate_single_model(model_file: str,
         database: Target database ("chebi", "ncbigene", "uniprot")
         tax_id: For gene/protein annotations, the organism's tax_id for species-specific lookup
         chunk_size: Size of chunks to split large models into (default: 50, None for no chunking)
+        save_to: Output file prefix. Recommendations are saved to
+            ``<save_to>_species.csv``. Default is the model filename.
+        verbose: If True, print a short progress summary. Default False.
+        message: Optional user note included in LLM prompts.
         
     Returns:
         Tuple of (recommendations_df, metrics_dict)
@@ -198,7 +212,7 @@ def curate_single_model(model_file: str,
                 continue
             
             # Parse LLM response
-            chunk_synonyms_dict, chunk_entity_type_dict, chunk_reason = parse_llm_response(result, entity_type)
+            chunk_synonyms_dict, chunk_entity_type_dict, chunk_reason, _chunk_components = parse_llm_response(result, entity_type)
             
             # Accumulate synonyms
             all_synonyms_dict.update(chunk_synonyms_dict)
@@ -244,7 +258,7 @@ def curate_single_model(model_file: str,
             return pd.DataFrame(), {"error": f"LLM query failed: {e}"}
         
         # Parse LLM response
-        synonyms_dict, entity_type_dict, reason = parse_llm_response(result, entity_type)
+        synonyms_dict, entity_type_dict, reason, _component_dict = parse_llm_response(result, entity_type)
     
     if not synonyms_dict:
         logger.error("Failed to parse LLM response")
@@ -304,7 +318,9 @@ def curate_single_model(model_file: str,
         recommendations_df, existing_annotations, max_entities, total_time, llm_time, search_time
     )
 
-    csv_path = f"{Path(model_file).name}_recommendations.csv"
+    csv_path = _output_csv(save_to, model_file, "species")
+    if not recommendations_df.empty and "id" in recommendations_df.columns:
+        recommendations_df = recommendations_df[recommendations_df["id"] != "Reason:"].reset_index(drop=True)
     recommendations_df.to_csv(csv_path, index=False)
     print(f"Recommendations saved to {csv_path}")
     logger.info(f"Curation completed in {total_time:.2f}s – {len(recommendations_df)} recommendations")
@@ -591,6 +607,8 @@ def curate_model(model_file: str, **kwargs) -> Tuple[pd.DataFrame, Dict[str, Any
     Args:
         model_file: Path to SBML model file
         **kwargs: Additional arguments passed to curate_single_model
+            (``top_k`` for retrieval, ``n_return`` for the final LLM ranking,
+            ``save_to`` for the output file prefix)
         
     Returns:
         Tuple of (recommendations_df, metrics_dict)

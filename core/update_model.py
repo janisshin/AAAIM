@@ -89,7 +89,7 @@ def update_annotation(
     Only add/delete the specified ontology (e.g., CHEBI), preserving all other annotation terms (e.g., KEGG).
     """
     if recommendation_table is None:
-        recommendation_table = original_model_path + '_recommendations.csv'
+        recommendation_table = original_model_path + '_species.csv'
     if new_model_path is None:
         new_model_path = original_model_path + '_updated.xml'
     # Load model

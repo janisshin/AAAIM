@@ -141,7 +141,7 @@ class AnnotationResult:
         self._conversation_history = updated_history
         self.recommendations_df = updated_df
 
-        csv_path = _versioned_csv_path(self._model_file, self._revision_count)
+        csv_path = _versioned_csv_path(self._csv_path or self._model_file, self._revision_count)
         updated_df.to_csv(csv_path, index=False)
         print(f"Revised recommendations (v{self._revision_count}) saved to {csv_path}")
 
@@ -201,10 +201,10 @@ class AnnotationResult:
 # Internal helpers
 # ---------------------------------------------------------------------------
 
-def _versioned_csv_path(model_file: str, revision: int) -> str:
-    """Generate ``<model>_recommendations_v<N>.csv``."""
-    stem = Path(model_file).name
-    return f"{stem}_recommendations_v{revision}.csv"
+def _versioned_csv_path(csv_path: str, revision: int) -> str:
+    """Generate ``<saved-prefix>_v<N>.csv`` from the last written file."""
+    p = Path(csv_path)
+    return str(p.with_name(f"{p.stem}_v{revision}{p.suffix}"))
 
 
 def _build_feedback_prompt(feedback: str) -> str:
@@ -297,7 +297,7 @@ def _revise_recommendations(
 
     history.append(assistant_message)
 
-    synonyms_dict, entity_type_dict, reason = parse_llm_response(
+    synonyms_dict, entity_type_dict, reason, component_dict = parse_llm_response(
         llm_response, entity_type
     )
 
@@ -333,6 +333,7 @@ def _revise_recommendations(
         tax_id=tax_id,
         entity_type_dict=entity_type_dict,
         model_info=model_info,
+        component_dict=component_dict,
     )
     search_time = time.time() - search_start
 
@@ -343,6 +344,7 @@ def _revise_recommendations(
         entity_type_dict=entity_type_dict,
         species_database=species_database,
         candidate_databases=candidate_databases,
+        component_dict=component_dict,
     )
     if top_k > n_return:
         ranked_df = rank_species_annotations_with_llm(
@@ -382,6 +384,7 @@ def _run_database_search(
     entity_type: str = "chemical",
     entity_type_dict: Optional[Dict[str, str]] = None,
     model_info: Optional[Dict[str, Any]] = None,
+    component_dict: Optional[Dict] = None,
 ):
     """Thin dispatcher that mirrors the search logic in annotation_workflow."""
     from core.annotation_workflow import _normalize_databases, _normalize_entity_type, _search_databases
@@ -398,6 +401,7 @@ def _run_database_search(
         tax_id=tax_id,
         entity_type_dict=entity_type_dict,
         model_info=model_info,
+        component_dict=component_dict,
     )
     return recommendations
 

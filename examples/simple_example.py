@@ -156,7 +156,7 @@ def main():
         print("EXAMPLE 4: Updating model with new annotations")
         print("-" * 80)
         print("A recommendation table was generated for the user to inspect:", 
-              model_file+'_recommendations.csv')
+              model_file+'_species.csv')
         print("User can edit the 'update_annotation' column of the CSV.")
         print("-" * 80)
         print("Assuming the user wants to delete the first annotation and add the second...")

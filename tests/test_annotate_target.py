@@ -11,6 +11,7 @@ from core.annotation_workflow import (
     _chebi_rows,
     _extract_reason_comments,
     _load_species_recommendations,
+    _output_csv,
     _parse_ranked_id_lines,
     _resolve_annotate,
     _species_recommendations_from_model,
@@ -21,6 +22,12 @@ from utils.constants import EntityType
 ROOT = Path(__file__).resolve().parent.parent
 MODEL_190 = ROOT / "tests" / "test_models" / "BIOMD0000000190.xml"
 SPECIES_CSV = ROOT / "examples" / "glycolysis_part1-recommendations.csv"
+
+
+def test_output_csv_prefix():
+    assert _output_csv("modelA_gpt5", "foo.xml", "species") == "modelA_gpt5_species.csv"
+    assert _output_csv("modelA_gpt5", "foo.xml", "reactions") == "modelA_gpt5_reactions.csv"
+    assert _output_csv(None, "path/to/foo.xml", "species") == "foo.xml_species.csv"
 
 
 def test_resolve_annotate():
@@ -154,6 +161,7 @@ def test_format_prompt_includes_message():
 
 
 if __name__ == "__main__":
+    test_output_csv_prefix()
     test_resolve_annotate()
     test_chebi_rows_filters_reason_and_non_chebi()
     test_species_recommendations_from_model_and_csv()
