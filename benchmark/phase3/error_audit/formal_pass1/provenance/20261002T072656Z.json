@@ -1,0 +1,49 @@
+{
+  "schema": "aaaim-formal-pass1-provenance-v1",
+  "snapshot_id": "20261002T072656Z",
+  "supersedes_incomplete_snapshot": "20261001T214551Z",
+  "source_export_timestamp": "2026-10-02T07:26:56.344Z",
+  "dataset_id": "aaaim-formal-pass1-20260910",
+  "dataset_digest": "64a7eb4de27024da4c94b0b3c8b3ffab5e47a335fb1ee6e5656e280f279c2b7f",
+  "review_schema_version": "aaaim-human-review-v1",
+  "review_kind": "formal_pass1",
+  "canonical_review_digest": "edef6c781472ab5ecd4846ff6a33609f4ce80826382ae7566b00e4bf4903c1b5",
+  "raw_files": [
+    {
+      "path": "benchmark/phase3/error_audit/formal_pass1/raw/20261002T072656Z/pass1_review_reviewer.json",
+      "bytes": 24048,
+      "sha256": "c827123ad14d74575806bfd3002922328318b3dc08d2d2366fac2aed56c8d80f"
+    },
+    {
+      "path": "benchmark/phase3/error_audit/formal_pass1/raw/20261002T072656Z/pass1_review_reviewer.csv",
+      "bytes": 16202,
+      "sha256": "205496e0391b9daf7c822b1a7d2fa3758077920cf941d0d510d68e7554e8ef9f"
+    }
+  ],
+  "validation": {
+    "status": "complete",
+    "case_rows": 60,
+    "unique_audit_ids": 60,
+    "completed_reviews": 60,
+    "required_fields_complete": true,
+    "incomplete_audit_ids": [],
+    "reviewer_id_present": false,
+    "reviewer_id_warning": "The documented workflow requests a stable reviewer identifier, but the schema and Pass 2 gate permit a blank value.",
+    "json_csv_same_case_set": true,
+    "json_csv_same_judgments": true,
+    "audit_ids_match_frozen_sample": true,
+    "audit_ids_match_blinded_order": true,
+    "audit_order_matches_blinded_order": true,
+    "canonical_review_digest_valid": true,
+    "forbidden_system_or_sampling_keys": [],
+    "system_output_term_hits_in_human_fields": 0,
+    "exact_system_value_hits_in_human_fields": 0,
+    "pass2_gate_ready": true,
+    "validator_problems": []
+  },
+  "separation": {
+    "contains_raw_human_judgments_only": true,
+    "contains_derived_comparisons": false,
+    "contains_pass2_adjudications": false
+  }
+}

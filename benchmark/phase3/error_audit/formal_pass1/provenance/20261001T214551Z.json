@@ -1,0 +1,52 @@
+{
+  "schema": "aaaim-formal-pass1-provenance-v1",
+  "snapshot_id": "20261001T214551Z",
+  "source_export_timestamp": "2026-10-01T21:45:51.048Z",
+  "dataset_id": "aaaim-formal-pass1-20260910",
+  "dataset_digest": "64a7eb4de27024da4c94b0b3c8b3ffab5e47a335fb1ee6e5656e280f279c2b7f",
+  "review_schema_version": "aaaim-human-review-v1",
+  "review_kind": "formal_pass1",
+  "canonical_review_digest": "9c989aff3a93c74d978900a449611f94c70c5e4a74bb48aeb528aacb2179be71",
+  "raw_files": [
+    {
+      "path": "benchmark/phase3/error_audit/formal_pass1/raw/20261001T214551Z/pass1_review_reviewer.json",
+      "bytes": 23759,
+      "sha256": "de3e5fa560e758a98e7fa74c583935ca428a6cced68a4689999596a45de28899"
+    },
+    {
+      "path": "benchmark/phase3/error_audit/formal_pass1/raw/20261001T214551Z/pass1_review_reviewer.csv",
+      "bytes": 15912,
+      "sha256": "14f7b4c234d04fef29306d849ddd8249fea743be437940ba2d1e3ca1f53008f5"
+    }
+  ],
+  "validation": {
+    "status": "incomplete_checkpoint",
+    "case_rows": 60,
+    "unique_audit_ids": 60,
+    "completed_reviews": 58,
+    "required_fields_complete": false,
+    "incomplete_audit_ids": [
+      "P3EA0027",
+      "P3EA0025"
+    ],
+    "reviewer_id_present": false,
+    "json_csv_same_case_set": true,
+    "json_csv_same_judgments": true,
+    "audit_ids_match_frozen_sample": true,
+    "audit_ids_match_blinded_order": true,
+    "audit_order_matches_blinded_order": true,
+    "canonical_review_digest_valid": true,
+    "forbidden_system_or_sampling_keys": [],
+    "system_output_term_hits_in_human_fields": 0,
+    "exact_system_value_hits_in_human_fields": 0,
+    "pass2_gate_ready": false,
+    "validator_problems": [
+      "all 60 Pass 1 reviews must be complete"
+    ]
+  },
+  "separation": {
+    "contains_raw_human_judgments_only": true,
+    "contains_derived_comparisons": false,
+    "contains_pass2_adjudications": false
+  }
+}
