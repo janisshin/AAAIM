@@ -18,7 +18,7 @@ This update preserves historical benchmark results and revises the roadmap using
 | Phase 4 routing, uncertainty, and abstention | Bounded cached study complete and verified; routing failed the prespecified improvement requirement; grounded-fusion method retained |
 | Final method and evaluation freeze | Draft; after Phase 5 development and required outputs, not before |
 | Held-out test evaluation | Remains sealed; later one-time evaluation after the final freeze and run authorization |
-| Phase 5 robustness experiments | Local 163-reaction retrieval study complete; required degraded grounded comparison blocked on new outputs/authorization; not fully complete |
+| Phase 5 robustness experiments | Local retrieval study complete; corrected matched clean/degraded prompt design prepared, requiring 326 unit-level outputs/authorization; not fully complete |
 | Phase 6 packaging and manuscript | Remaining work; may proceed alongside Phase 5 |
 
 **Agreed order:** preserve completed Phase 3C baseline and Phase 4 selection → Phase 5 development → final method/evaluation freeze → later separately authorized held-out evaluation → finalize research reporting.
@@ -227,6 +227,8 @@ The implemented study used retrieved KEGG candidates and reaction-local evidence
 
 **Scope decision:** accept the implemented grounded-fusion validation pilot and scoped single-reviewer audit as completed Phase 3C work. The original broader comparison of heuristic, lexical, embedding, trained cross-encoder, and LLM rerankers is **not declared fulfilled**. Omitted comparisons remain documented scope limitations or future work; they are not automatically reopened.
 
+**Support-interpretation clarification:** read the [Phase 3C support addendum](benchmark/PHASE3C_SUPPORT_ADDENDUM.md) in the Phase 5 worktree/current branch. The historical 130 in-catalog direct answers without retrieved evidence include 49 correct reference matches; they are not 130 biological hallucinations. Grounded zero out-of-evidence IDs measures candidate-evidence compliance under different support opportunities, not zero biological errors. A bootstrap of those differently defined indicators does not establish reduced biological hallucination. The independently measured grounded 102/163 versus fusion 93/163 accuracy result and all frozen reports/definitions remain unchanged.
+
 #### Completed single-reviewer audit
 
 The reviewer completed 60 stratified cases in each of two sequential passes:
@@ -329,7 +331,7 @@ The prespecified bounded protocol (`benchmark/PHASE5.md` in the separate Phase 5
 
 Strict rule-based matching, BM25, the fixed selected encoder and the selected fusion were actually recomputed on degraded inputs. The strict-rule control is not presented as the historical iterative ontology-relaxation pipeline. Paired cluster/replicate intervals, Recall@1/3/5/10/100, truncated MRR, candidate counts/emptiness, stratum/cluster results and plots are under `benchmark/phase5/validation/`. The trained encoder is descriptively more stable than BM25 under identifier removal, with names retained; uncertainty versus fusion and limited development-sample generalizability remain explicit. No retraining or end-to-end method change is justified from these retrieval-only results.
 
-**Not fully complete:** the required paired grounded comparison is clean versus nominal 50% removal, seed 20261106, on the same 163 cases. All 163 changed requests require new responses; clean LLM outputs cannot be reused for them. The exact request/budget plan is prepared in dry-run mode, with no paid calls or fabricated predictions. Iterative ontology relaxation, direct LLM perturbation runs, additional grounded cells and full-validation expansion remain explicitly deferred optional extensions. The selected grounded-fusion method, completed Phase 3C study and single-reviewer audit remain unchanged; the test stays sealed.
+**Not fully complete:** the required grounded comparison is matched clean versus nominal 50% removal, seed 20261106, on the same 163 cases. Review of ea241ea found that the original builder changes all historical clean prompts through visible provenance; P3P0096 also has component-rank/score drift. Its one-arm plan is preserved as superseded. The corrected `phase5-grounded-no-provenance-v2` keeps accurate lineage in sidecars and serializes both arms identically with the same provider settings/schema. It requires 163 new clean plus 163 degraded case/arm outputs (326 attempts under the existing experimental-unit cache policy; 317 distinct bodies), not historical clean responses as sole matched controls. The proposed USD 30 maximum is unapproved, and execution remains disabled. Interleave pairs and disclose provider/temporal drift; even identical bodies and returned aliases do not guarantee unchanged hosted behavior. Retrieval results, architecture and the validated historical baseline remain unchanged; the proposed v2 prompt is not yet validated or finally frozen. Optional broader comparisons remain deferred, the completed single-reviewer audit is not reopened, and the test stays sealed.
 
 The original proposal below is retained as historical scope, not a declaration that every comparison has been run:
 
@@ -415,7 +417,7 @@ This is feasible for an October **writing start**, not necessarily an October su
 1. Preserve the completed Phase 3C baseline and single-reviewer audit; keep private review exports ignored.
 2. Preserve the verified Phase 4 worktree, protocol and negative routing result; retain the selected grounded-fusion method.
 3. Use the separate Phase 5 worktree and completed local retrieval robustness artifacts; keep fixed catalog/weights and unchanged reference labels.
-4. Resolve the prespecified 163-case, 50%-identifier-removal grounded validation plan and its explicit run/budget decision; do not substitute clean responses for changed prompts.
+4. Resolve the corrected matched v2 clean/degraded validation plan (163 pairs, 326 unit-level calls, proposed USD 30 cap) and its explicit run/budget decision; historical clean responses cannot be the sole matched controls for this changed prompt.
 5. Complete Phase 5 analysis after the required new outputs, or document an explicit later scope decision; do not mark retrieval-only work as full end-to-end robustness.
 6. Finalize the method/evaluation freeze after Phase 5 development; keep the held-out test sealed until the final freeze and separate run authorization.
 7. Reconcile the status and ownership of integration tests, EM ablation, species-side retrieval, external case studies, and packaging without assuming they were completed by the reaction study.
@@ -426,3 +428,4 @@ This is feasible for an October **writing start**, not necessarily an October su
 - 2026-09-03: Original roadmap status date; historical experiments and calendar targets retained where useful.
 - 2026-11-05: Updated implemented Phase 3 progress; accepted scoped Phase 3C completion; documented the single-reviewer audit decision; selected Phase 4 as next work; placed final method/evaluation freeze after Phase 4 and before the later held-out run.
 - 2026-11-06: Verified bounded Phase 4 completion and retained grounded-fusion selection; completed the local Phase 5 retrieval grid, documented the blocked primary grounded robustness run, and placed Phase 5 development before the final freeze and later authorized held-out evaluation.
+- 2026-11-06 review correction: preserved valid retrieval results, superseded the confounded one-arm request plan with matched v2 clean/degraded controls and sidecar provenance, and added the Phase 3C support-interpretation clarification without rewriting frozen metrics or reports.
