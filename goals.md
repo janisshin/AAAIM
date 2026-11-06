@@ -356,6 +356,29 @@ After the experimental design stabilizes:
 - Publish a research-oriented README, reproducible CLI, and documented release.
 - Write the preprint or technical report.
 
+## Additional docket: Luna's MODEL2507280001 request
+
+- [ ] Inspect the existing `test/MODEL2507280001-reaction-review` branch and reports before purchasing calls or duplicating work.
+- [ ] Confirm the remaining request for BioModels `MODEL2507280001` (SBML model `iLG335`) against LunaStarr's original request: test the existing reaction-annotation workflow without model/pipeline changes, with reproducible commands and results.
+- [ ] Reconcile previously reported retrieval outputs with current artifacts. Prior conversation records describe a 541-reaction Phase 3B review and files including `PHASE3_FULL_REPORT.md`, per-reaction/Top-10 CSVs and summaries; these are leads to verify, not newly certified results.
+- [ ] Identify whether grounded LLM selection, public species-to-reaction integration, or delivery of existing results remains outstanding. Scope and cost any missing run separately.
+- [ ] Deliver a concise collaborator handoff with outputs, coverage, abstentions/no-calls, mapping limitations, runtime/cost, and representative evidence. Treat this as an external case study; do not claim benchmark accuracy without verified independent reaction-level ground truth.
+- [ ] Check development/benchmark overlap before describing it as an independent external demonstration. Keep it separate from the sealed held-out benchmark.
+
+## Model-version decision before further paid runs
+
+Current reported Phase 5 runner and matched v2 plan use `gpt-5.6-terra`; no switch is recorded as selected or authorized. Resolve model choice before authorizing that plan.
+
+Official short-context Standard prices checked 2026-11-06: GPT-5.6 Terra $2 input/$12 output per million tokens; GPT-6.1 Terra $1 input/$5 output per million tokens. Actual task cost also depends on token usage, caching, tier and endpoint modifiers.
+
+- [ ] If considering GPT-6.1 Terra, run a bounded, prespecified validation comparison with the same evidence, prompt and comparable reasoning/output settings, after exact plan/budget authorization.
+- [ ] A model switch changes the scientific method. Preserve old results as model-specific historical findings.
+- [ ] Retain unchanged benchmark, rule-based/BM25/encoder/fusion results and completed human audit; these need not be repeated merely because the generator changes.
+- [ ] Evaluate the selected new generator on the full clean 163-case validation pilot and the matched degraded condition for Phase 5. Both paired conditions must use the same selected model and serialization.
+- [ ] Recompute or explicitly retire model-dependent routing/confidence conclusions if claiming them for the new model. Do not transfer old LLM confidence/results by assumption.
+- [ ] Revalidate schema, API settings, cache/ledger keys, identity policy, cost reservations, request-plan digest and final freeze. Old-model authorization and responses cannot silently authorize or supply a new-model run.
+- [ ] Keep held-out evaluation sealed until final model selection and freeze. A model change before unsealing does not require rerunning an already-unexecuted test.
+
 ## Project completion after Phase 5
 
 **Finishing Phase 5 completes the currently selected development experiments, not the entire project.** No further exploratory phase is automatically required. The remaining work is final evaluation, reproducibility, scope closure, and writing. Negative routing results and robustness limitations can be reported without starting another optimization cycle.
