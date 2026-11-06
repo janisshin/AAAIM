@@ -40,6 +40,11 @@ benchmark/models/
 benchmark/data/_*
 # Human-review exports are working records, not frozen benchmark artifacts.
 benchmark/phase3/error_audit/review_work/
+# New personal exports must stay local, including browser downloads saved beside
+# the reviewer. Existing historical tracked snapshots are left unchanged.
+benchmark/phase3/error_audit/reviewer/pass*_review_*.json
+benchmark/phase3/error_audit/reviewer/pass*_review_*.csv
+benchmark/phase3/error_audit/formal_pass1/raw/
 # Release archives are build artifacts; their digests are recorded in benchmark/dist/*.md.
 benchmark/dist/*.zip
 **/BioModels_251106
