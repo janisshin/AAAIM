@@ -1,11 +1,11 @@
 # AAAIM research project: goals and roadmap
 
-**Status updated:** 2026-11-06
-**Current priority:** Phase 5 robustness development on validation data, followed by final method/evaluation freeze, then a separately authorized held-out evaluation. Phase 4's bounded study is complete; manuscript preparation may proceed in parallel.
+**Status updated:** 2026-11-06  
+**Current priority:** finish Phase 5's valid grounded robustness comparison, then finalize the method/evaluation freeze, run the separately authorized held-out evaluation, and complete Phase 6 packaging and writing.
 
 ## Current status and agreed sequence
 
-This update preserves historical benchmark results and revises the roadmap using repository evidence and the user's explicit scope decisions. Current repository reports remain authoritative for exact configurations and metrics. The Phase 4 handoff, Phase 5 local retrieval artifacts and listed read-only verifiers were checked for this update; completion of other workstreams is not inferred.
+This update preserves historical benchmark results and revises the roadmap using reported project progress and the user's explicit scope decisions. Current repository reports remain authoritative for exact configurations and metrics. This document does not certify a new repository verification run.
 
 | Workstream | Status |
 |---|---|
@@ -15,15 +15,15 @@ This update preserves historical benchmark results and revises the roadmap using
 | Phase 3B learned full-catalog retrieval | Bi-encoder trained; lexical, dense, and fusion comparisons performed; verify exact experiment coverage in repository reports |
 | Phase 3C grounded-fusion validation pilot | Complete under its implemented scope |
 | Phase 3C human audit | Complete as a scoped single-reviewer, two-pass descriptive audit |
-| Phase 4 routing, uncertainty, and abstention | Bounded cached study complete and verified; routing failed the prespecified improvement requirement; grounded-fusion method retained |
-| Final method and evaluation freeze | Draft; after Phase 5 development and required outputs, not before |
+| Phase 4 routing, uncertainty, and abstention | Bounded cached study complete; grounded method retained |
+| Final method and evaluation freeze | Draft; finalize after Phase 5 and operational gates |
 | Held-out test evaluation | Remains sealed; later one-time evaluation after the final freeze and run authorization |
-| Phase 5 robustness experiments | Local retrieval study complete; corrected matched clean/degraded prompt design prepared, requiring 326 unit-level outputs/authorization; not fully complete |
-| Phase 6 packaging and manuscript | Remaining work; may proceed alongside Phase 5 |
+| Phase 5 robustness experiments | Local retrieval study complete; required grounded comparison and prompt-control fix pending |
+| Phase 6 packaging and manuscript | Remaining work; may proceed alongside Phase 4 |
 
-**Agreed order:** preserve completed Phase 3C baseline and Phase 4 selection → Phase 5 development → final method/evaluation freeze → later separately authorized held-out evaluation → finalize research reporting.
+**Agreed order:** preserve Phase 3C and completed Phase 4 selection → finish Phase 5 → final method/evaluation freeze → authorized held-out evaluation → Phase 6 packaging, scope closure, and manuscript.
 
-Phase 4 was originally stretch work and is now complete under its bounded protocol. The user has explicitly chosen Phase 5 before the final freeze. This does not make every older proposed experiment a requirement. Earlier calendar targets below are historical, not current deadlines.
+Phases 4 and 5 were originally stretch work; the user chose to pursue both. Phase 4 is complete under its bounded protocol. This does not make every older proposed experiment a requirement. Earlier calendar targets below are historical, not current deadlines.
 
 ### Other workstreams requiring a repository status check
 
@@ -227,8 +227,6 @@ The implemented study used retrieved KEGG candidates and reaction-local evidence
 
 **Scope decision:** accept the implemented grounded-fusion validation pilot and scoped single-reviewer audit as completed Phase 3C work. The original broader comparison of heuristic, lexical, embedding, trained cross-encoder, and LLM rerankers is **not declared fulfilled**. Omitted comparisons remain documented scope limitations or future work; they are not automatically reopened.
 
-**Support-interpretation clarification:** read the [Phase 3C support addendum](benchmark/PHASE3C_SUPPORT_ADDENDUM.md) in the Phase 5 worktree/current branch. The historical 130 in-catalog direct answers without retrieved evidence include 49 correct reference matches; they are not 130 biological hallucinations. Grounded zero out-of-evidence IDs measures candidate-evidence compliance under different support opportunities, not zero biological errors. A bootstrap of those differently defined indicators does not establish reduced biological hallucination. The independently measured grounded 102/163 versus fusion 93/163 accuracy result and all frozen reports/definitions remain unchanged.
-
 #### Completed single-reviewer audit
 
 The reviewer completed 60 stratified cases in each of two sequential passes:
@@ -252,9 +250,9 @@ Personal review exports and private case-level analyses remain ignored by Git. F
 
 ## Phase 4: Routed hybrid system, uncertainty, and abstention — bounded study complete
 
-The verified cached study used the same 163 validation reactions and fixed agreement/margin gates. The broadest gate retained 102 exact correct and 124 answered cases while reducing simulated grounded calls from 163 to 142 (12.9%), below the prespecified 20% minimum. No routed candidate was retained. The fixed confidence filter lost one correct answer and saved no calls. The selected method remains BM25 + trained epoch-1 bi-encoder RRF Top-10 followed by grounded LLM selection or abstention for every reaction. These are cached replay findings, not a new end-to-end execution or held-out result.
+Objective: reduce LLM use while retaining accuracy and coverage. The cached comparison found 93/163 correct for fusion Top-1, versus 102/163 correct and 124/163 answered for grounded selection. The broadest routing gate preserved the latter counts while simulating 142 instead of 163 LLM calls: a 12.9% reduction, below the prespecified 20% criterion. Confidence filtering lost one correct answer without saving calls. The selected method remains fusion followed by grounded selection or abstention on every reaction.
 
-The protocol, comparisons, plots, uncertainty, source checksums and method-selection rationale are under `benchmark/phase4/` in the completed Phase 4 worktree and the Phase 5 checksum-verified handoff. The original development objectives below remain for historical scope; their presence does not imply every proposed subsystem was implemented. No calibration fit or broader routing claim is established.
+These are cached-replay findings, not a newly executed end-to-end system or a measured speedup. The development protocol below is retained for traceability, not a requirement to repeat Phase 4.
 
 ### Objective and protocol
 
@@ -303,9 +301,9 @@ Use cluster-aware uncertainty estimates where feasible. Limit threshold search a
 
 Phase 4 is complete when the scoped implementation, reproducible validation comparisons, uncertainty/resource analysis, limitations, and method-selection rationale are documented and verified. A more complex router is not required merely to claim a new component.
 
-### Final method and evaluation freeze — after Phase 5 development
+### Final method and evaluation freeze — after Phase 5
 
-Phase 4 validation-based selection is complete. Freeze the selected method only after the required Phase 5 robustness comparison is resolved or explicitly rescoped, and operational evaluation gates are complete. Preserve Phase 3C as an unchanged comparison baseline throughout development. The updated package remains explicitly draft under `benchmark/phase5/freeze/` in the Phase 5 worktree; the earlier Phase 4 draft remains historical and unchanged.
+Finalize the method freeze only after Phase 5 and any resulting method decisions are complete. Preserve Phase 3C as an unchanged comparison baseline throughout development.
 
 The freeze package must specify:
 
@@ -325,15 +323,19 @@ If required outputs or decisions are missing, label the package a **draft freeze
 
 Execute the planned held-out evaluation only after the final freeze and separate authorization for the concrete run and any cost. Apply the frozen protocol without tuning on test outcomes. Document operational failures and deviations transparently; rerun only under predeclared failure/retry rules.
 
-## Phase 5: Robustness to degraded biological information — active; retrieval study complete, end-to-end comparison blocked
+## Phase 5: Robustness to degraded biological information — retrieval complete; grounded comparison pending
 
-The prespecified bounded protocol (`benchmark/PHASE5.md` in the separate Phase 5 worktree) evaluates 163 validation reactions, not all 969. Nineteen aligned conditions (3,097 query conditions) cover clean inputs, nominal 10/25/50/75% identifier-bundle removal with three seeds, each reaction side, one-hop frozen ChEBI ancestors, and three locally constrained synthetic sibling-corruption seeds. Names, equation text and stoichiometry remain present; realized doses, masking, unchanged/ineligible cases and query-local shared-species handling are reported explicitly.
+Objective: measure dependence on metabolite identifiers while preserving names, equation text, and stoichiometry. The local study covered 163 validation reactions across 19 conditions (3,097 aligned query conditions), recomputing strict-rule, BM25, trained-encoder, and fusion retrieval.
 
-Strict rule-based matching, BM25, the fixed selected encoder and the selected fusion were actually recomputed on degraded inputs. The strict-rule control is not presented as the historical iterative ontology-relaxation pipeline. Paired cluster/replicate intervals, Recall@1/3/5/10/100, truncated MRR, candidate counts/emptiness, stratum/cluster results and plots are under `benchmark/phase5/validation/`. The trained encoder is descriptively more stable than BM25 under identifier removal, with names retained; uncertainty versus fusion and limited development-sample generalizability remain explicit. No retraining or end-to-end method change is justified from these retrieval-only results.
+At nominal 75% identifier-bundle removal, mean Recall@10 changed from 73.6% to 55.2% for BM25, 74.2% to 74.4% for the trained encoder, and 81.6% to 73.0% for fusion. This stability concerns identifier loss with names retained, not loss of all biological evidence. Report realized doses, unchanged cases, uncertainty, and the development-pilot sampling limitation.
 
-**Not fully complete:** the required grounded comparison is matched clean versus nominal 50% removal, seed 20261106, on the same 163 cases. Review of ea241ea found that the original builder changes all historical clean prompts through visible provenance; P3P0096 also has component-rank/score drift. Its one-arm plan is preserved as superseded. The corrected `phase5-grounded-no-provenance-v2` keeps accurate lineage in sidecars and serializes both arms identically with the same provider settings/schema. It requires 163 new clean plus 163 degraded case/arm outputs (326 attempts under the existing experimental-unit cache policy; 317 distinct bodies), not historical clean responses as sole matched controls. The proposed USD 30 maximum is unapproved, and execution remains disabled. Interleave pairs and disclose provider/temporal drift; even identical bodies and returned aliases do not guarantee unchanged hosted behavior. Retrieval results, architecture and the validated historical baseline remain unchanged; the proposed v2 prompt is not yet validated or finally frozen. Optional broader comparisons remain deferred, the completed single-reviewer audit is not reopened, and the test stays sealed.
+The selected end-to-end method is unchanged. Retrieval findings alone do not establish grounded accuracy or abstention robustness.
 
-The original proposal below is retained as historical scope, not a declaration that every comparison has been run:
+Before the required grounded comparison, resolve the request-control finding: clean reconstruction changes model-visible provenance, and one case has an additional numerical/rank-field difference. Prove accurate complete-payload compatibility with the historical clean baseline or prepare matched clean/degraded requests under one serialization. Keep accurate operational provenance outside model-visible text where feasible. Re-estimate calls and cost if matched clean responses are necessary; the previous 163-call proposal is not an approved final plan.
+
+The local review verified perturbation reconstruction and saved retrieval metrics; GPU inference was not independently rerun. Phase 5 remains incomplete pending a valid grounded comparison and analysis.
+
+The roadmap perturbation families are:
 
 Systematically test the dependence on metabolite annotations:
 
@@ -353,6 +355,69 @@ After the experimental design stabilizes:
 - Generate manuscript figures and tables directly from frozen outputs.
 - Publish a research-oriented README, reproducible CLI, and documented release.
 - Write the preprint or technical report.
+
+## Project completion after Phase 5
+
+**Finishing Phase 5 completes the currently selected development experiments, not the entire project.** No further exploratory phase is automatically required. The remaining work is final evaluation, reproducibility, scope closure, and writing. Negative routing results and robustness limitations can be reported without starting another optimization cycle.
+
+### Gate 1: Close development and reporting
+
+- [ ] Resolve Phase 5 prompt controls and freeze the valid clean/degraded comparison.
+- [ ] Integrate and verify the persistent validation budget/cache runner using dry runs first.
+- [ ] Obtain authorization for the concrete validation request plan and hard budget, then execute and analyze it.
+- [ ] Report paired grounded correctness, coverage, selective accuracy, and reference-based abstention with clear denominators and uncertainty.
+- [ ] Finalize Phase 5 results, limitations, and experiment-coverage checklist.
+- [ ] Add the Phase 3C support-metric clarification: direct-mode in-catalog guesses without retrieved evidence and grounded out-of-evidence predictions have different definitions. The “130 → 0” count does not establish elimination of 130 biological errors or hallucinations. Preserve the independently measured 102/163 versus 93/163 accuracy result.
+- [ ] Preserve frozen historical artifacts; publish corrections in versioned amendments or addenda.
+
+The single-reviewer audit is already complete under its agreed scope. Independent second review and further adjudication are deferred, not completion blockers.
+
+### Gate 2: Final method and evaluation freeze
+
+- [ ] Pin selected methods/baselines, checkpoint and tokenizer, provider identity/drift policy, prompts, serialization, retrieval settings, thresholds if any, configurations, and code/artifact digests.
+- [ ] Integrate a working test executor with label separation, durable caches, persistent attempt/cost accounting, and fail-closed preflight checks.
+- [ ] Freeze primary/secondary metrics, cluster-aware uncertainty, eligibility/exclusions, failure/compliance handling, abstentions, and restart/retry rules.
+- [ ] Verify resources, availability, and pricing; obtain authorization for the concrete held-out run and budget.
+- [ ] Pass synthetic and permitted validation dry-run checks before test execution.
+
+Keep the freeze explicitly draft until its gates pass. Do not inspect held-out reactions, labels, predictions, or diagnostics during method development.
+
+### Gate 3: Held-out evaluation
+
+- [ ] Execute the planned one-time evaluation after the final freeze and run authorization.
+- [ ] Freeze predictions before joining labels and computing final results.
+- [ ] Report all eligible cases, failures, abstentions, resource use, and protocol deviations.
+- [ ] Compare against frozen baselines with prespecified metrics and uncertainty.
+- [ ] Make no test-driven method/prompt/threshold changes or selective reruns; operational retries follow the frozen rules.
+
+The stratified 163-reaction development pilot does not replace the independent final evaluation or establish population-wide accuracy.
+
+### Gate 4: Resolve broader scope and ownership
+
+For each older workstream, record an evidence path and owner, or an explicit deferral and its implication for paper claims. Do not automatically launch more experiments.
+
+| Workstream | Required closure |
+| --- | --- |
+| Combined species-to-reaction workflow and API tests | Verify handoff/error behavior or limit product integration claims |
+| Public documentation and examples | Confirm consistency with the supported interface |
+| EM ablation and default decision | Verify evidence or explicitly exclude this comparison/default optimization |
+| Species/gene/protein retrieval comparisons | Agree with LunaStarr on ownership, available results, and combined-paper scope |
+| Uncurated BioModels case studies | Include as qualitative demonstrations or defer; do not claim accuracy without ground truth |
+| Broad reranker comparison and other extensions | Document implemented coverage and deferred proposals |
+
+Scope closure may mean documenting a justified exclusion rather than running an experiment. Agree on reaction-side versus combined AAAIM manuscript scope with LunaStarr.
+
+### Gate 5: Phase 6 packaging and manuscript
+
+- [ ] Provide reproducible commands, configurations, seeds, environment/dependency documentation, provenance, and artifact verification.
+- [ ] Document checkpoint/tokenizer restoration, catalog access, and cache requirements while protecting credentials and private review exports.
+- [ ] Complete meaningful supported-pipeline tests and integration fixes needed for the actual release claims.
+- [ ] Generate final figures/tables from frozen outputs and reconcile every quantitative claim with its source.
+- [ ] Complete methods, results, discussion, limitations, availability statements, author contributions, and collaborator review.
+- [ ] Prepare the research README and release/archive materials; actual publication/release actions require separate authorization.
+- [ ] Finish the agreed preprint or technical report. Journal acceptance is not a prerequisite for finishing the development and writing deliverables.
+
+**Project completion criterion:** the scoped development study/audit are documented; final held-out evaluation is executed and reported; broader workstreams are resolved or explicitly deferred; reproducible artifacts are ready; and the agreed manuscript/report is complete. Publication and deployment are separately chosen milestones.
 
 ## Token-efficiency principle
 
@@ -414,18 +479,16 @@ This is feasible for an October **writing start**, not necessarily an October su
 
 ## Immediate next actions — current
 
-1. Preserve the completed Phase 3C baseline and single-reviewer audit; keep private review exports ignored.
-2. Preserve the verified Phase 4 worktree, protocol and negative routing result; retain the selected grounded-fusion method.
-3. Use the separate Phase 5 worktree and completed local retrieval robustness artifacts; keep fixed catalog/weights and unchanged reference labels.
-4. Resolve the corrected matched v2 clean/degraded validation plan (163 pairs, 326 unit-level calls, proposed USD 30 cap) and its explicit run/budget decision; historical clean responses cannot be the sole matched controls for this changed prompt.
-5. Complete Phase 5 analysis after the required new outputs, or document an explicit later scope decision; do not mark retrieval-only work as full end-to-end robustness.
-6. Finalize the method/evaluation freeze after Phase 5 development; keep the held-out test sealed until the final freeze and separate run authorization.
-7. Reconcile the status and ownership of integration tests, EM ablation, species-side retrieval, external case studies, and packaging without assuming they were completed by the reaction study.
-8. Continue manuscript methods, figure/table planning, and scope reconciliation in parallel. Phase 5 has been explicitly added before the final freeze; broader extensions remain optional.
+1. Fix Phase 5 prompt controls and publish the Phase 3C support-metric clarification.
+2. Finalize the grounded robustness plan, runner, and proposed budget without paid execution.
+3. After concrete authorization, execute/analyze the validation comparison and close Phase 5.
+4. Complete the gates above: final freeze, authorized held-out evaluation, broader scope/ownership decisions, and Phase 6 packaging/writing.
+5. Keep the test sealed until the final freeze and run authorization. Prepare manuscript material and collaborator scope decisions in parallel.
 
 ## Revision record
 
 - 2026-09-03: Original roadmap status date; historical experiments and calendar targets retained where useful.
 - 2026-11-05: Updated implemented Phase 3 progress; accepted scoped Phase 3C completion; documented the single-reviewer audit decision; selected Phase 4 as next work; placed final method/evaluation freeze after Phase 4 and before the later held-out run.
-- 2026-11-06: Verified bounded Phase 4 completion and retained grounded-fusion selection; completed the local Phase 5 retrieval grid, documented the blocked primary grounded robustness run, and placed Phase 5 development before the final freeze and later authorized held-out evaluation.
-- 2026-11-06 review correction: preserved valid retrieval results, superseded the confounded one-arm request plan with matched v2 clean/degraded controls and sidecar provenance, and added the Phase 3C support-interpretation clarification without rewriting frozen metrics or reports.
+
+- 2026-11-06: Recorded completed Phase 4, local Phase 5 retrieval results and pending controls, and explicit completion gates after Phase 5. This roadmap edit authorizes no new paid runs or test access.
+
