@@ -1,7 +1,33 @@
 # AAAIM research project: goals and roadmap
 
-**Status updated:** 2026-09-03  
-**Target:** begin manuscript drafting in October 2026 without waiting for every stretch experiment
+**Status updated:** 2026-11-06
+**Current priority:** Phase 5 robustness development on validation data, followed by final method/evaluation freeze, then a separately authorized held-out evaluation. Phase 4's bounded study is complete; manuscript preparation may proceed in parallel.
+
+## Current status and agreed sequence
+
+This update preserves historical benchmark results and revises the roadmap using repository evidence and the user's explicit scope decisions. Current repository reports remain authoritative for exact configurations and metrics. The Phase 4 handoff, Phase 5 local retrieval artifacts and listed read-only verifiers were checked for this update; completion of other workstreams is not inferred.
+
+| Workstream | Status |
+|---|---|
+| Phase 1 frozen benchmark | Complete |
+| Phase 2 rule-based retrieval baseline | Complete and frozen |
+| Phase 3A direct/open-set LLM pilot | Direct validation experiments completed; the broader original multi-mode proposal is not automatically fulfilled |
+| Phase 3B learned full-catalog retrieval | Bi-encoder trained; lexical, dense, and fusion comparisons performed; verify exact experiment coverage in repository reports |
+| Phase 3C grounded-fusion validation pilot | Complete under its implemented scope |
+| Phase 3C human audit | Complete as a scoped single-reviewer, two-pass descriptive audit |
+| Phase 4 routing, uncertainty, and abstention | Bounded cached study complete and verified; routing failed the prespecified improvement requirement; grounded-fusion method retained |
+| Final method and evaluation freeze | Draft; after Phase 5 development and required outputs, not before |
+| Held-out test evaluation | Remains sealed; later one-time evaluation after the final freeze and run authorization |
+| Phase 5 robustness experiments | Local 163-reaction retrieval study complete; required degraded grounded comparison blocked on new outputs/authorization; not fully complete |
+| Phase 6 packaging and manuscript | Remaining work; may proceed alongside Phase 5 |
+
+**Agreed order:** preserve completed Phase 3C baseline and Phase 4 selection → Phase 5 development → final method/evaluation freeze → later separately authorized held-out evaluation → finalize research reporting.
+
+Phase 4 was originally stretch work and is now complete under its bounded protocol. The user has explicitly chosen Phase 5 before the final freeze. This does not make every older proposed experiment a requirement. Earlier calendar targets below are historical, not current deadlines.
+
+### Other workstreams requiring a repository status check
+
+Upstream integration and public API tests, documentation fixes, EM ablation/default selection, species-side retrieval comparisons, and uncurated-model case studies remain in this roadmap. Their completion is not established by closing reaction-side Phase 3C. Review evidence and assign ownership before treating them as complete or as blockers for the manuscript.
 
 ## Project objective
 
@@ -96,11 +122,11 @@ The Phase 2 reporting and reproducibility issues have been resolved. Overall ret
 
 All Phase 2 invariants pass, aggregate artifacts and per-model caches are restorable, and verification is read-only. The snapshot is tagged `benchmark-phase2-v1`.
 
-## New upstream integration work — immediate priority
+## Upstream integration work — completion status to verify
 
 Upstream `main` now integrates species annotation and reaction annotation into one public workflow. Commit `1611464db16a2f55c0fc02a983275cdaa21cab26` introduced the documented `annotate="species"`, `annotate="reactions"`, and `annotate="both"` modes; subsequent upstream commits adjusted ranking and messages.
 
-This integration is strategically important because it turns the benchmarked reaction code into an end-user workflow. It must be validated before new modeling work is allowed to obscure basic product correctness.
+This integration is strategically important because it turns the benchmarked reaction code into an end-user workflow. Its validation remains a separate product-readiness workstream. Reconcile its current status with repository evidence; do not infer completion from the reaction benchmark experiments.
 
 ### Required integration validation
 
@@ -177,62 +203,135 @@ For each selected model:
 
 Phase 3 should address the observed bottleneck directly. It should not begin as a large reranking project confined to the existing candidate sets.
 
-### Phase 3A: Open-set recovery pilot — scaffold complete, live run pending
+### Phase 3A: Direct/open-set LLM validation — implemented experiments completed
 
-Construct a leakage-resistant, stratified evaluation sample containing:
+The cluster-separated split contains 3,497 train, 969 validation, and 1,350 test reactions. The exploratory validation pilot contains 163 reactions across five retrieval strata. Historical scaffolding considered three bounded context variants (489 prompts); do not infer that all scaffolded conditions were executed.
 
-- `unconstrained_candidate_set` reactions
-- `no_candidates` reactions
-- reactions with nonempty candidate sets that omit the correct answer
-- matched successful controls
+Direct LLM identification was evaluated as a research probe without retrieved candidate lists. Grounded retrieval and selection were subsequently evaluated in Phase 3C. Direct, tool-assisted, and closed-set conditions must be distinguished in the paper; the original proposal does not establish that every mode or context variant was completed.
 
-Compare three modes using compact, reaction-local context:
+KEGG-shaped reaction-ID leakage was detected and addressed during development. Preserve the implemented leakage checks, cached responses, runner accounting, and exact experiment provenance. Refer to frozen repository reports for executed model IDs, budgets, configurations, and results rather than the older planned starting model or credit allocation.
 
-1. **Direct LLM identification:** ask for a KEGG reaction without supplying candidates. This measures parametric knowledge or memorized biological associations.
-2. **Tool-assisted recovery:** allow database search or retrieval, require evidence, and allow abstention.
-3. **Existing closed-set selection:** retain the current candidate-constrained approach as a control where applicable.
+The held-out test has not been used for method selection and must remain sealed.
 
-The cluster-separated split and validation-only pilot have been created on `benchmark/phase-3`. The split contains 3,497 train, 969 validation, and 1,350 test reactions. The exploratory pilot contains 163 validation reactions across five retrieval strata and three bounded context variants (489 prompts). The held-out test set has not been used for method selection.
+### Phase 3B: Learned full-catalog retrieval — implemented study completed
 
-Ground-truth leakage from KEGG-shaped SBML reaction IDs was detected and fixed. The current `phase3-open-set-v3` prompts contain zero KEGG reaction IDs under the embedded-ID detector. Direct mode explicitly permits internal model knowledge while prohibiting external tools and candidate lists. Tool evidence is linked per prediction, and evidence outcomes evaluate top-1 support.
+A small pretrained bi-encoder was fine-tuned for full-catalog KEGG reaction retrieval. The implemented comparisons include BM25 lexical retrieval, off-the-shelf dense retrieval, learned retrieval, and reciprocal-rank fusion. The selected BM25–fine-tuned-bi-encoder fusion supplies the grounded Phase 3C candidate evidence.
 
-Next live step: implement and inspect a capped OpenAI runner, then run a nine-call operational smoke test using three validation reactions and all three context variants. The smoke test validates authentication, structured output, caching, token accounting, restart behavior, and budget enforcement; it is not an accuracy estimate. The current starting model is `gpt-5.6-terra`, subject to exact-version availability at run time. The PhD advisor has approved $20 in OpenAI credits; execution is waiting for the finance contact to add those credits to the account. The runner must still enforce a hard dollar limit and cache every response.
+Preserve model-cluster separation, query leakage guards, frozen catalog records, training/checkpoint provenance, negative-sampling details, and retrieval outputs. Use repository reports for exact encoder/checkpoint IDs, Recall@k, MRR, latency, and uncertainty estimates.
 
-### Phase 3B: Train a learned full-database bi-encoder — committed deliverable
+Do not assume that every proposed context ablation, rule-based candidate union, calibration experiment, or species-side retrieval comparison was performed. Identify these separately as implemented, deferred, or unverified.
 
-Train a small scientific text bi-encoder to retrieve from the complete frozen catalog of approximately 12,312 KEGG reactions, rather than only reorder candidates generated by the existing chemical rules. This is now a definite project deliverable, while its completion must not delay the October manuscript start.
+### Phase 3C: Grounded-fusion validation study — complete under implemented scope
 
-Each query may combine:
+The implemented study used retrieved KEGG candidates and reaction-local evidence for constrained LLM selection or abstention on the 163-reaction validation pilot. Preserve its exact method, outputs, mechanical metrics, and reports as the Phase 4 baseline.
 
-- The local SBML reaction equation
-- Participant names and available identifiers
-- A compact model title or pathway description
-- Limited neighboring-reaction context, tested through ablation
+**Scope decision:** accept the implemented grounded-fusion validation pilot and scoped single-reviewer audit as completed Phase 3C work. The original broader comparison of heuristic, lexical, embedding, trained cross-encoder, and LLM rerankers is **not declared fulfilled**. Omitted comparisons remain documented scope limitations or future work; they are not automatically reopened.
 
-Candidate documents may combine the KEGG equation, definition, enzyme/orthology fields, and reaction-class information. Remove or guard against KEGG-ID leakage from query text.
+#### Completed single-reviewer audit
 
-Use model-cluster-separated train/validation/test splits. Use chemically or textually similar KEGG reactions as hard negatives. Evaluate Recall@1/3/5/10, MRR, calibration, and results by evidence/failure stratum.
+The reviewer completed 60 stratified cases in each of two sequential passes:
 
-Compare the trained bi-encoder against the existing chemical rules, BM25, an off-the-shelf dense encoder, and BM25+dense RRF. Also evaluate a union or fusion of rule-based and learned candidates. This creates a clean progression from deterministic retrieval through untrained lexical/semantic retrieval to a model trained specifically for AAAIM.
+- Pass 1: blinded assessment of source labels, without system outputs.
+- Pass 2: evidence-informed assessment of system predictions and abstentions, retaining the original Pass 1 judgments.
 
-This learned retriever satisfies the goal of training a modern neural model while targeting the failure mode that Phase 2 actually revealed. Initial training should use the local RTX 3070 with mixed precision, conservative batch sizes, and gradient accumulation; rented compute is optional unless profiling demonstrates a real need. If integration, EM, and retrieval validation consume September, finalize the protocol and begin training in parallel with manuscript drafting rather than delaying writing.
+The revised exports validated with the expected frozen IDs, digests, required fields, and identical embedded Pass 1 judgments. Two assessment inconsistencies were clarified; no other answers changed. Original exports and previous analyses were preserved.
 
-### Phase 3C: Limited reranking study
+**Single-reviewer decision:** independent second review and inter-reviewer adjudication are deferred. This explicitly supersedes the original two-reviewer plan for the present scoped audit. The two passes are not independent reviews. Do not claim inter-reviewer agreement or independently adjudicated labels.
 
-Reranking remains useful but secondary. Evaluate it only where a correct answer is available to rank, emphasizing ambiguous or large candidate sets. Compare the existing heuristic, lexical similarity, embeddings, a trained cross-encoder, and an LLM reranker. Report both conditional improvements and their much smaller effect on overall benchmark accuracy.
+The final analysis is recorded locally under:
 
-## Phase 4: Routed hybrid system, uncertainty, and abstention — stretch for first manuscript
+`benchmark/phase3/error_audit/review_work/analysis_20261105_single_reviewer_final/`
 
-Build a system that chooses an appropriate path:
+Consult `AUDIT_SCOPE.md`, `FINAL_ASSESSMENT.md`, and `PHASE3C_CHECKLIST.md` for the decision and evidence. The reported 22 flagged cases remain findings or limitations, rather than automatic completion blockers; an insufficient-information case remains unresolved.
 
-- Small, high-confidence candidate set: inexpensive deterministic or learned ranking
-- Ambiguous or very large candidate set: stronger learned or LLM reranking
-- Empty or answer-absent candidate set: learned full-database retrieval or tool-assisted recovery
-- Insufficient evidence: abstain
+Audit counts describe a stratified sample. Do not generalize unweighted sample rates to the full validation set or benchmark. Do not convert reviewer judgments into corrected reference labels or corrected benchmark accuracy automatically. Disclose single-reviewer limitations, potential Pass 2 anchoring, and reviewer involvement in development where applicable.
 
-Evaluate calibration, correctness detection, answer-absence detection, accuracy-versus-coverage curves, confidence thresholds, and end-to-end selective accuracy. Controlled answer-absent cases may be created by removing the correct candidate from otherwise valid candidate sets.
+Personal review exports and private case-level analyses remain ignored by Git. Frozen labels, predictions, and original benchmark accuracy remain unchanged.
 
-## Phase 5: Robustness to degraded biological information — stretch for first manuscript
+## Phase 4: Routed hybrid system, uncertainty, and abstention — bounded study complete
+
+The verified cached study used the same 163 validation reactions and fixed agreement/margin gates. The broadest gate retained 102 exact correct and 124 answered cases while reducing simulated grounded calls from 163 to 142 (12.9%), below the prespecified 20% minimum. No routed candidate was retained. The fixed confidence filter lost one correct answer and saved no calls. The selected method remains BM25 + trained epoch-1 bi-encoder RRF Top-10 followed by grounded LLM selection or abstention for every reaction. These are cached replay findings, not a new end-to-end execution or held-out result.
+
+The protocol, comparisons, plots, uncertainty, source checksums and method-selection rationale are under `benchmark/phase4/` in the completed Phase 4 worktree and the Phase 5 checksum-verified handoff. The original development objectives below remain for historical scope; their presence does not imply every proposed subsystem was implemented. No calibration fit or broader routing claim is established.
+
+### Objective and protocol
+
+Determine whether a simple routing policy can improve the accuracy–coverage–resource tradeoff over the frozen Phase 3C method. Write the protocol before running experiments, including hypotheses, eligible data, candidate policies, confidence signals, threshold selection, baselines, metrics, resource limits, and stopping rules.
+
+Start with the smallest useful, interpretable routing study. Potential routes are:
+
+- Inexpensive deterministic or learned selection for high-confidence inputs.
+- Grounded LLM selection for ambiguous inputs.
+- Full-catalog retrieval when rule-based evidence is inadequate.
+- Abstention when available evidence is insufficient.
+
+Only include routes supported by the implementation and available evidence. Routing may use prediction-time features; it must never use ground-truth membership, known correctness, audit flags, or labels unavailable at deployment.
+
+### Data and development restrictions
+
+- Keep the held-out test sealed, including test-level diagnostics.
+- Fit models/calibration using training data and select methods using validation data.
+- Disclose that the validation pilot and human audit have already influenced development.
+- Do not use the human-reviewed sample as corrected training labels or tune specifically to its judgments.
+- Reuse cached outputs where scientifically valid. Label cached policy simulations distinctly from newly executed end-to-end evaluations.
+- Missing route outputs cannot be replaced by fabricated counterfactual predictions.
+- Begin with local implementation, tests, cached analysis, and bounded local experiments. Paid API calls or substantial new training/inference require an explicit run scope and budget decision; prepare runners in dry-run mode first.
+
+### Baselines and outcomes
+
+Compare the strongest existing retriever's Top-1 output, frozen Phase 3C grounded selection, a simple confidence-threshold policy, and the proposed routing policy on aligned eligible inputs.
+
+Evaluate where supported:
+
+- Overall accuracy, explicitly accounting for abstentions.
+- Coverage, selective accuracy, and risk–coverage curves.
+- Area under the risk–coverage curve, with its definition.
+- Correctness detection and reference-answer-absence detection.
+- Calibration when data and sample size support it.
+- Performance by retrieval stratum and model cluster.
+- LLM-call frequency, token usage, latency, and cost where measured.
+
+Keep reference-based mechanical evaluation separate from biological human judgments. Raw retrieval scores, margins, and LLM confidence are not calibrated probabilities by default.
+
+Controlled answer-absent cases may be constructed by removing **all** accepted reference IDs from candidate evidence. Mark them synthetic and report them separately. Absence of a reference answer is not proof that no biologically defensible candidate exists.
+
+Use cluster-aware uncertainty estimates where feasible. Limit threshold search and report validation-selection optimism. A negative result is acceptable: retain the stronger prior method if Phase 4 does not improve the stated tradeoff.
+
+### Completion criteria
+
+Phase 4 is complete when the scoped implementation, reproducible validation comparisons, uncertainty/resource analysis, limitations, and method-selection rationale are documented and verified. A more complex router is not required merely to claim a new component.
+
+### Final method and evaluation freeze — after Phase 5 development
+
+Phase 4 validation-based selection is complete. Freeze the selected method only after the required Phase 5 robustness comparison is resolved or explicitly rescoped, and operational evaluation gates are complete. Preserve Phase 3C as an unchanged comparison baseline throughout development. The updated package remains explicitly draft under `benchmark/phase5/freeze/` in the Phase 5 worktree; the earlier Phase 4 draft remains historical and unchanged.
+
+The freeze package must specify:
+
+- Exact selected methods and baselines.
+- Model/checkpoint identities, prompts, catalog/retrieval settings, routing rules, and thresholds.
+- Code revision, configurations, seeds, environments, and artifact digests.
+- Preprocessing, leakage protections, and split definitions.
+- Primary/secondary metrics and cluster-aware comparison/uncertainty procedures.
+- Failure, retry, caching, abstention, and exclusion rules.
+- Hard budget controls and cost/token accounting.
+- The held-out command and dry-run checks.
+- A prohibition on test-driven method changes and selective reruns.
+
+If required outputs or decisions are missing, label the package a **draft freeze** and identify the blockers. Do not claim a final freeze prematurely.
+
+### Later held-out evaluation
+
+Execute the planned held-out evaluation only after the final freeze and separate authorization for the concrete run and any cost. Apply the frozen protocol without tuning on test outcomes. Document operational failures and deviations transparently; rerun only under predeclared failure/retry rules.
+
+## Phase 5: Robustness to degraded biological information — active; retrieval study complete, end-to-end comparison blocked
+
+The prespecified bounded protocol (`benchmark/PHASE5.md` in the separate Phase 5 worktree) evaluates 163 validation reactions, not all 969. Nineteen aligned conditions (3,097 query conditions) cover clean inputs, nominal 10/25/50/75% identifier-bundle removal with three seeds, each reaction side, one-hop frozen ChEBI ancestors, and three locally constrained synthetic sibling-corruption seeds. Names, equation text and stoichiometry remain present; realized doses, masking, unchanged/ineligible cases and query-local shared-species handling are reported explicitly.
+
+Strict rule-based matching, BM25, the fixed selected encoder and the selected fusion were actually recomputed on degraded inputs. The strict-rule control is not presented as the historical iterative ontology-relaxation pipeline. Paired cluster/replicate intervals, Recall@1/3/5/10/100, truncated MRR, candidate counts/emptiness, stratum/cluster results and plots are under `benchmark/phase5/validation/`. The trained encoder is descriptively more stable than BM25 under identifier removal, with names retained; uncertainty versus fusion and limited development-sample generalizability remain explicit. No retraining or end-to-end method change is justified from these retrieval-only results.
+
+**Not fully complete:** the required paired grounded comparison is clean versus nominal 50% removal, seed 20261106, on the same 163 cases. All 163 changed requests require new responses; clean LLM outputs cannot be reused for them. The exact request/budget plan is prepared in dry-run mode, with no paid calls or fabricated predictions. Iterative ontology relaxation, direct LLM perturbation runs, additional grounded cells and full-validation expansion remain explicitly deferred optional extensions. The selected grounded-fusion method, completed Phase 3C study and single-reviewer audit remain unchanged; the test stays sealed.
+
+The original proposal below is retained as historical scope, not a declaration that every comparison has been run:
 
 Systematically test the dependence on metabolite annotations:
 
@@ -267,9 +366,9 @@ Use compact reaction-local prompts and route expensive calls selectively:
 
 This preserves the ability to measure an LLM's open-set biological knowledge without making the complete evaluation unnecessarily expensive.
 
-## Scope for an October manuscript start
+## Historical manuscript scope — September plan, status to reconcile
 
-Writing should begin in October even if every stretch experiment is not finished. The first manuscript needs a coherent minimum story, not every possible extension.
+The following priorities preserve the earlier plan for traceability. They are not evidence of current completion or current deadlines. The first manuscript needs a coherent minimum story; reconcile these items with repository reports and collaborator ownership while Phase 4 proceeds.
 
 ### Must-have before or during early October
 
@@ -297,7 +396,7 @@ Writing should begin in October even if every stretch experiment is not finished
 - A full-corpus EM run before the subset ablation demonstrates value.
 - Treating uncurated models as quantitative ground truth.
 
-## Feasible schedule
+## Historical schedule — superseded
 
 Assuming focused work begins now and LunaStarr can review asynchronously:
 
@@ -311,14 +410,19 @@ Assuming focused work begins now and LunaStarr can review asynchronously:
 
 This is feasible for an October **writing start**, not necessarily an October submission. A realistic first complete draft is late October to November if collaboration and compute are available. A polished submission is more plausibly November to December. The schedule should be revisited after the integration tests and EM subset ablation, because those are the largest near-term uncertainty reducers.
 
-## Immediate next actions
+## Immediate next actions — current
 
-1. Ask LunaStarr for the exact uncurated BioModels accession list and her expected outputs. Request the BM25 paper or implementation she had in mind when convenient; this does not block the standard BM25 baseline.
-2. Create a short-lived integration branch from current upstream `main`; do not merge the benchmark branch blindly.
-3. Turn the species→reaction handoff requirements into the end-to-end test matrix above.
-4. Review documentation against observed behavior and open narrowly scoped fixes.
-5. Design the EM subset and decision threshold before running it.
-6. Implement the OpenAI runner's hard budget guard while waiting for the approved $20 credit allocation.
-7. Specify the KEGG bi-encoder query/document formats, training pairs, negative-sampling policy, and evaluation metrics before training.
-8. Keep the Phase 3 test split sealed while integration and method-selection work proceeds.
-9. Start a manuscript outline no later than the final week of September, even if some experiments remain pending.
+1. Preserve the completed Phase 3C baseline and single-reviewer audit; keep private review exports ignored.
+2. Preserve the verified Phase 4 worktree, protocol and negative routing result; retain the selected grounded-fusion method.
+3. Use the separate Phase 5 worktree and completed local retrieval robustness artifacts; keep fixed catalog/weights and unchanged reference labels.
+4. Resolve the prespecified 163-case, 50%-identifier-removal grounded validation plan and its explicit run/budget decision; do not substitute clean responses for changed prompts.
+5. Complete Phase 5 analysis after the required new outputs, or document an explicit later scope decision; do not mark retrieval-only work as full end-to-end robustness.
+6. Finalize the method/evaluation freeze after Phase 5 development; keep the held-out test sealed until the final freeze and separate run authorization.
+7. Reconcile the status and ownership of integration tests, EM ablation, species-side retrieval, external case studies, and packaging without assuming they were completed by the reaction study.
+8. Continue manuscript methods, figure/table planning, and scope reconciliation in parallel. Phase 5 has been explicitly added before the final freeze; broader extensions remain optional.
+
+## Revision record
+
+- 2026-09-03: Original roadmap status date; historical experiments and calendar targets retained where useful.
+- 2026-11-05: Updated implemented Phase 3 progress; accepted scoped Phase 3C completion; documented the single-reviewer audit decision; selected Phase 4 as next work; placed final method/evaluation freeze after Phase 4 and before the later held-out run.
+- 2026-11-06: Verified bounded Phase 4 completion and retained grounded-fusion selection; completed the local Phase 5 retrieval grid, documented the blocked primary grounded robustness run, and placed Phase 5 development before the final freeze and later authorized held-out evaluation.
