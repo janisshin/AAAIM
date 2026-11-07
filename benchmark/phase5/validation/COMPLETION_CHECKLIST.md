@@ -11,13 +11,18 @@
 | Rule-based retrieval comparison | Complete for explicit strict control | existing strict filter/scorer recomputed on direct mappings; does not certify historical iterative Phase 2 workflow |
 | BM25, trained encoder and selected fusion | Complete locally | frozen_rankings.jsonl; fixed catalog/checkpoint, clean checks, no clean-ranking substitution |
 | Paired metrics, subgroups and cluster/replicate uncertainty | Complete | comparison_by_condition.csv, paired_family_summary.csv, paired_method_robustness.csv, subgroups.csv, plots |
-| Grounded selected-method robustness at 50% removal | Blocked, required | llm_dry_run.json and ignored _requests/primary_grounded_plan.jsonl: new responses require separate authorization/budget; retrieval-only is not full Phase 5 |
+| Real 163-case clean-control diagnostic | Complete | matched_prompt_v2/clean_control_diagnostic.json and field-level CSV; provenance changes in all cases plus explicit P3P0096 rank/score drift; full provider body checked |
+| Corrected paired prompt/control design | Prepared, not executed | phase5-grounded-no-provenance-v2: 163 matched clean + 163 degraded requests, identical serialization/settings/schema, accurate provenance in sidecars; historical responses are not sole controls |
+| Grounded selected-method robustness at 50% removal | Blocked, required | Active GPT-6.1 plan in llm_dry_run.json and matched_prompt_gpt61_v2/request_manifest.jsonl; 326 calls, $17.994805 total per-request reservation, USD 40 cap, USD 0 authorized; no GPT-5.6 response reuse |
+| Phase 3C support interpretation | Clarified | benchmark/PHASE3C_SUPPORT_ADDENDUM.md; 130 direct un-retrieved answers include 49 correct; zero outside-evidence IDs is compliance; 102 vs 93 accuracy preserved |
 | Other grounded perturbation cells and direct LLM recovery | Deferred optional | no compatible changed-input outputs; not every method-condition combination is required |
 | Iterative ontology relaxation / EM comparison | Deferred optional | existing expensive configuration not part of bounded strict-control study; no claim of execution |
 | All-969 validation, adaptation or retraining | Deferred optional | not part of current fixed 163-query protocol |
 | Human labels / audit reopening | Not required, excluded | completed scoped audit preserved; no private case judgments in Phase 5 artifacts |
-| Selected method decision | Complete, unchanged | keep Phase 4 grounded-fusion selection; retrieval-only results do not select a new end-to-end method |
+| Selected method decision | Validated architecture retained; v2 prompt pending | keep Phase 4 architecture/historical baseline; changed prompt is not yet end-to-end validated and cannot be declared finally frozen |
 | Final method/evaluation freeze | Draft, pending | ../freeze/evaluation_freeze.json; required Phase 5 outputs and later operational test gates remain missing |
 | Held-out evaluation | Sealed, not executed | no test reaction/label/prediction/diagnostic access; later separate authorization only |
 
 Overall: retrieval robustness study complete; Phase 5 not fully complete. Do not close the final freeze until the required bounded grounded comparison and operational gates are resolved or an explicit later scope decision changes those requirements.
+
+Persistent runner and paired response-freeze/analysis entry point: implemented and synthetic-tested. Locked 326-unit gpt-6.1-terra proposal: persistent_runner_gpt61_v2/EXECUTION_PROPOSAL.md (plan digest 2b80dd9e83108cdba2310121706af387bd770651a1f7648a87645a03ae0b0e8f). Paid outputs and biological analysis remain missing; Phase 5 remains incomplete.

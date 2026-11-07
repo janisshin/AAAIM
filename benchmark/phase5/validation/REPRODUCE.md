@@ -1,13 +1,13 @@
-# Local reproduction
+# GPT-6.1 matched-plan reproduction (no GPU or paid calls)
 
-Run from the isolated Phase 5 worktree, using a NEW output directory for preparation. SOURCE_ROOT is the preserved original workspace (no mixed-split loaders are called).
+Run from the Phase 5 worktree. SOURCE_ROOT is the preserved original workspace containing the frozen local catalog; all retrieval rankings are reused unchanged. Choose new plan/package names.
 
 ```powershell
-python -m benchmark.scripts.phase5_robustness prepare --source-root SOURCE_ROOT --out benchmark/phase5/_reproduced
-SOURCE_ROOT/benchmark/phase3/_phase3b_env/Scripts/python.exe -m benchmark.scripts.phase5_robustness dense --source-root SOURCE_ROOT --out benchmark/phase5/_reproduced
-python -m benchmark.scripts.phase5_robustness analyze --source-root SOURCE_ROOT --out benchmark/phase5/_reproduced
-python -m benchmark.scripts.phase5_llm_plan --dry-run --source-root SOURCE_ROOT --out benchmark/phase5/_reproduced
-python -m benchmark.scripts.phase5_reporting --source-root SOURCE_ROOT --out benchmark/phase5/_reproduced --plot-deps PHASE4_WORKTREE/benchmark/phase4/_deps
+python -m benchmark.scripts.phase5_llm_plan --dry-run --source-root SOURCE_ROOT --out benchmark/phase5/validation --plan-name NEW_GPT61_PLAN_NAME --model gpt-6.1-terra --no-publish-current
+python -m benchmark.scripts.phase5_runner --package benchmark/phase5/validation/NEW_GPT61_RUNNER_NAME --build-from benchmark/phase5/validation/NEW_GPT61_PLAN_NAME
+python -m benchmark.scripts.phase5_runner --package benchmark/phase5/validation/NEW_GPT61_RUNNER_NAME
+python -m benchmark.scripts.phase3c_support_clarification --source-root SOURCE_ROOT
+python -m benchmark.scripts.phase5_reporting --source-root SOURCE_ROOT --out benchmark/phase5/validation --no-plots
 ```
 
-SOURCE_ROOT and PHASE4_WORKTREE are recorded in the local handoff provenance. Plotting uses existing local Matplotlib dependencies; no downloads are needed. The existing GPU environment supplies pinned Torch/Transformers, while the normal benchmark environment supplies SBML/core matching dependencies. All trained weights/catalog/settings stay fixed. The reporting stage writes a new Phase 5 draft freeze and does not edit historical Phase 4 files. Paid execution is disabled.
+The builder writes new plans only; --no-publish-current preserves current dry-run/manifest pointers during independent reproduction. It never overwrites a named existing plan. Provider bodies are complete SDK 1.78.1 JSON request bodies including the strict response schema, pinned to Pydantic 2.13.5. GPT-6.1 Terra is documented for Responses and structured outputs; account-level availability is not checked. No provider client or HTTP transport is created. GPT-5.6 plans/results are preserved and cannot be used as GPT-6.1 outputs. Reverify the serializer before any paid run. Historical retrieval reproduction commands and the original confounded plan are retained under superseded/. The reporting stage changes mutable reports/current draft only; historical retrieval tables/figures, Phase 3C artifacts and Phase 4 files remain unchanged. Paid/held-out execution stays disabled.

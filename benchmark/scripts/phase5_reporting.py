@@ -63,8 +63,10 @@ def report(out, source):
     clean = {r["method"]: r for r in csv_rows(out / "comparison_by_condition.csv") if r["condition"] == "clean"}
     realized = csv_rows(out / "realized_corruptions.csv")
     llm = load(out / "llm_dry_run.json")
+    if llm.get("schema") != "phase5-matched-grounded-plan-v2":
+        raise ValueError("superseded/confounded v1 plan cannot serve as current reporting input; prepare matched v2 arms")
     lines = ["# Phase 5 robustness results and experiment coverage", "",
-             "Status: local retrieval study complete; Phase 5 overall remains blocked on the prespecified degraded grounded-LLM validation comparison. Selected method is unchanged: BM25 + epoch-1 trained bi-encoder RRF Top-10 followed by grounded selection/abstention for every reaction. No retraining, adaptation or policy retuning occurred.", "",
+             "Status: local retrieval study complete; Phase 5 overall remains blocked on the valid matched clean/degraded grounded-LLM comparison. The validated Phase 4/3C architecture and historical results are retained. The proposed comparison prompt is now phase5-grounded-no-provenance-v2 and requires new matched controls; it is not yet an end-to-end validated or final-frozen replacement. No retrieval, GPU inference, training or adaptation was rerun for the review fix.", "",
              "## Population and executed work", "",
              "Exactly 163 frozen validation reactions, 19 aligned query conditions (3,097 total): clean, four random removal fractions with three seeds each, reactant-side removal, product-side removal, one-hop ancestor replacement, and three sibling-corruption seeds. This is not all 969 validation reactions or a held-out evaluation. The 609 annotated participant bundles are query-level occurrences, not 609 unique model species; there are 1,306 distinct identifier links across these occurrences.",
              "All variants were actually rebuilt and reranked for strict rules, BM25, the trained encoder and the selected fusion. Only byte-identical query/mapping inputs were memoized; 1,573 unique query texts were encoded. One fixed catalog encoding was shared because the catalog did not change. No clean rankings were assigned to changed inputs.", "",
@@ -92,40 +94,71 @@ def report(out, source):
               "## Uncertainty and limitations", "",
               "Two thousand bootstrap draws, seed 20261106, pair clean and degraded query outcomes while resampling model clusters and stochastic perturbation replicate indices. The same 163 query denominator is used across conditions; three seeds are not 489 independent reactions. Deterministic side/ancestor conditions have only cluster variation. There are 12 clusters, three stochastic seeds and a development-stratified pilot; intervals are descriptive, not population-wide error bars or multiplicity-corrected confirmatory evidence. Individual-seed minima/maxima and stratum/cluster denominators are exported. Corruption generation never reads reference membership, audit flags or known correctness.", "",
               "## Missing end-to-end comparison and concrete resource decision", "",
-              f"The written primary end-to-end condition is {llm['condition']} on the same 163 cases. The dry plan contains {llm['new_calls_needed']} new requests and {llm['compatible_clean_cache_hits']} canonically identical clean-response reuses. No paid calls were made and no LLM predictions were fabricated for changed requests. Retrieval recall is not grounded accuracy or abstention robustness.",
-              f"At current public Standard short-context prices for the unchanged model, the input-estimate/historical-mean-output scenario is ${llm['estimated_cost_usd_at_historical_mean_output']:.2f}; the scenario allowing all 2,048 output tokens is ${llm['estimated_cost_usd_at_max_output_tokens']:.2f}. Those estimates are not guarantees. A 32,768-input-unit pessimistic reservation is ${llm['conservative_32768_input_reservation_total_usd']:.2f} for this plan; proposed hard cap $15, one attempt per missing request, zero currently authorized. No cache discount or regional modifier is assumed. [Official OpenAI API pricing](https://developers.openai.com/api/docs/pricing) was fetched on 2026-11-06; rates are recorded separately without changing old snapshots.",
-              "Expected value of the proposed run: measure paired grounded correctness, coverage, selective accuracy and reference-based abstention under 50% identifier removal. The decision required is authorization of this exact validation-only request plan and $15 maximum, with the selected model/settings unchanged. The CLI is dry-run-only; execute remains disabled. A persistent approved provider/cache/budget adapter must be integrated before live work; no new held-out executor is enabled.",
+              f"The corrected comparison has {llm['n_clean_requests']} clean and {llm['n_degraded_requests']} degraded requests ({llm['degraded_condition']}) for the same 163 validation pairs. The dry plan needs {llm['new_calls_needed']} unit-level calls and has {llm['compatible_historical_clean_cache_hits']} compatible historical clean reuses. There are {llm['unique_provider_bodies']} distinct provider bodies; existing per-experimental-unit cache policy is retained. No paid calls were made and no predictions fabricated. Historical clean responses are not the sole matched baseline for this changed prompt. Retrieval recall is not end-to-end correctness or abstention robustness.",
+              "The real unchanged-input diagnostic reconstructed all 163 requests through the original ea241ea construction path. All 163 differ in visible provenance (4,890 leaf differences). P3P0096 also changes E07's trained rank 70 to 69 and fused score 0.020850202429 to 0.020909832721; no candidate order, biological field or provider setting changes. Numeric drift is retained, not silently reset. See matched_prompt_gpt61_v2/CLEAN_CONTROL.md, its complete field-difference JSON/CSV and paired request checks. The v2 serializer omits operational lineage from model-visible evidence and records accurate new lineage in sidecars. Both arms use the same selected model, complete provider settings and typed response schema; literal input strings and all actual provider fields determine cache identity. The GPT-5.6 plan and the intermediate GPT-6.1 v1 plan remain preserved under their superseded snapshots.",
+              f"At the verified Standard short-context rate snapshot for the recorded model, the input-estimate/historical-mean-output scenario is ${llm['estimated_cost_usd_at_historical_mean_output']:.2f}; allowing all 2,048 output tokens gives ${llm['estimated_cost_usd_at_max_output_tokens']:.2f}. Estimates include both arms and the response schema and are not guarantees. A 32,768-input-unit pessimistic reservation is ${llm['conservative_32768_input_reservation_total_usd']:.2f}; proposed hard cap ${llm['proposed_hard_cap_usd']}, one attempt per unit-level request, zero currently authorized. No cache discount or regional modifier is assumed. [Official OpenAI API pricing](https://developers.openai.com/api/docs/pricing) was fetched on 2026-11-06; rates are recorded separately without changing old snapshots.",
+              f"Expected value: measure paired grounded correctness, coverage, selective accuracy and reference-based abstention under identifier removal using a consistent prompt. Both clean and degraded responses must be collected in an interleaved matched cohort, recording returned model, SDK, endpoint and time and pausing for identity drift. Identical bodies and identical returned aliases cannot guarantee unchanged hosted-model behavior. The required decision is separate authorization for the {llm['new_calls_needed']}-unit validation plan and USD {llm['proposed_hard_cap_usd']} ceiling. Execution stays disabled pending a separate exact-plan authorization; no held-out executor is enabled.",
               "Iterative ontology relaxation, direct LLM perturbation runs, other grounded perturbation cells, all-969 expansion and retraining are deferred optional extensions. Required comparisons are not silently replaced by clean cached outputs.", "",
+              "## Phase 3C support interpretation", "",
+              "See the [Phase 3C support addendum](../../PHASE3C_SUPPORT_ADDENDUM.md). The historical 130 direct in-catalog answers without retrieved evidence include 49 correct reference matches. They are not 130 biological hallucinations. Zero out-of-evidence grounded IDs is evidence compliance, not zero errors; there are still 22 in-evidence reference-incorrect selections. The independent accuracy comparison, grounded 102/163 versus fusion 93/163, is preserved. A bootstrap of differently defined support indicators does not establish reduced biological hallucination. Frozen reports/outputs/manifests remain unchanged.", "",
               "## Completion and next step", "",
               "See COMPLETION_CHECKLIST.md and freeze/evaluation_freeze.json. Phase 5 retrieval work is complete, overall Phase 5 is not complete while the required degraded grounded comparison is blocked. Final method selection remains the Phase 4 grounded-fusion method; no adaptation is justified by this retrieval-only study. Resolve the bounded validation run before finalizing the method/evaluation freeze, then integrate/authorize a separate later one-time held-out evaluation. The held-out test stays sealed.", ""]
+    runner_dir = "persistent_runner_gpt61_v2" if llm.get("model") == "gpt-6.1-terra" else "persistent_runner_v1"
+    runner_path = ROOT / "benchmark/phase5/validation" / runner_dir / "plan.json"
+    runner_plan = load(runner_path) if runner_path.exists() else None
+    checklist = CHECKLIST
+    if runner_plan:
+        lines.insert(2, f"**Current execution proposal:** {runner_dir}/EXECUTION_PROPOSAL.md; model {llm['model']}, implemented runner, 326 unit attempts maximum, USD {runner_plan['dollar_cap_nusd']/1e9:.2f} proposed ceiling, USD 0 authorized. The earlier model-specific budget paragraphs are preserved planning history, not live authorization.")
+        lines = [("Pre-runner planning snapshot, superseded for execution: " + line) if line.startswith("At the verified Standard") else line for line in lines]
+        est = runner_plan["estimates"]
+        lines += ["## Current persistent-runner proposal (supersedes the earlier GPT-5.6 execution plan)", "",
+            f"The 326 exact matched requests use {llm['model']} in both clean and degraded arms and contain 317 distinct provider bodies. The locked package is {runner_dir}/; its plan, model-specific unit cache keys, fixed interleaved order, duplicate groups and source hashes are frozen separately. One attempt per (condition, sample_id); a duplicate body is a separate stochastic call, not another independent biological sample. GPT-5.6 responses are never substituted for GPT-6.1 outputs.",
+            f"Plan digest: `{runner_plan['plan_digest']}`. The runner and response-freeze/paired-analysis entry point are implemented and tested locally with synthetic providers. Explicit recorded authorization is still required; current authorization is USD 0. See {runner_dir}/EXECUTION_PROPOSAL.md for live/resume commands and billing assumptions.",
+            f"For GPT-6.1 Terra, public Standard pricing gives USD {est['standard_no_write_mean_output_usd']:.2f} at estimated input plus the historical mean output scenario; default 30-minute writes raise that scenario to USD {est['standard_all_30m_writes_mean_output_usd']:.2f}. Estimated input plus all 2,048 output tokens and default writes is USD {est['standard_all_30m_writes_max_output_usd']:.2f}. For dispatch reservations, each complete provider-body UTF-8 byte count plus a 4,096-token wrapper allowance bounds input; all input is priced at default 30-minute cache-write rates, and maximum output is 2,048 tokens including reasoning. The maximum request bound is {est['maximum_input_token_bound']:,} input tokens (largest complete body {est['maximum_complete_body_bytes']:,} bytes); all requests remain below the 272,000-token long-context threshold. Reservations include Fast's 2x multiplier. The largest per-unit reservation is USD {runner_plan['reservation_nusd']/1e9:.5f}; the sum of all 326 per-unit reservations, including the maximum output allowance on every unit, is USD {runner_plan['total_reservations_nusd']/1e9:.6f}. The proposed USD {runner_plan['dollar_cap_nusd']/1e9:.2f} cap covers this full reserved cohort with USD {runner_plan['dollar_cap_nusd']/1e9-runner_plan['total_reservations_nusd']/1e9:.2f} remaining under these locked assumptions. Only a successful response with expected identity/tier, schema/evidence compliance and in-bound provider-reported usage releases the unused portion to a write-priced usage ceiling; this is not invoice reconciliation. Failed, noncompliant or uncertain attempts retain their full per-unit reservation; if metered usage implies more, the larger amount is accounted and execution halts before another dispatch. No account-specific surcharges are included.",
+            "All copies of the same production plan share an OS lock and durable ledger. Interrupted/uncertain attempts require documented no-retry reconciliation. The analysis first freezes all aligned responses, then opens only the frozen validation reference join. Failed and abstained units remain in denominators; cluster bootstrap pairs conditions on the same 163 reactions. The hosted model is documented publicly but account-specific availability remains unverified without inference. Held-out execution remains disabled.", ""]
+        checklist = checklist.replace("proposed USD 30 cap, zero authorization", f"GPT-6.1 Terra; USD {runner_plan['dollar_cap_nusd']/1e9:.2f} proposed cap, zero authorization")
+        checklist += f"\nPersistent runner and paired response-freeze/analysis entry point: implemented and synthetic-tested. Locked 326-unit {llm['model']} proposal: {runner_dir}/EXECUTION_PROPOSAL.md (plan digest {runner_plan['plan_digest']}). Paid outputs and biological analysis remain missing; Phase 5 remains incomplete.\n"
     (out / "REPORT.md").write_text("\n".join(lines), encoding="utf-8")
-    (out / "COMPLETION_CHECKLIST.md").write_text(CHECKLIST, encoding="utf-8")
+    (out / "COMPLETION_CHECKLIST.md").write_text(checklist, encoding="utf-8")
     freeze_dir = ROOT / "benchmark/phase5/freeze"
     freeze_dir.mkdir(exist_ok=True)
     prior = load(ROOT / "benchmark/phase4/freeze/evaluation_freeze.json")
     updated = {**prior, "schema": "phase5-evaluation-freeze-draft-v1", "status": "draft",
-               "phase5_status": "retrieval study complete; primary grounded robustness comparison blocked",
-               "method_selection": "unchanged grounded_llm_on_every_reaction over BM25 + trained epoch-1 RRF Top-10",
+               "phase5_status": "retrieval study complete; valid matched v2 clean/degraded grounded comparison blocked",
+               "method_selection": "validated architecture retained; v2 comparison prompt is proposed, not yet validated or finally frozen",
+               "phase5_comparison_prompt_version": llm["prompt_version"],
+               "review_fix_checksums": "benchmark/phase5/review_fixes/artifact_checksums.json",
+               "historical_clean_responses_are_matched_controls": False,
+               "phase5_clean_control_diagnostic": f"benchmark/phase5/validation/{llm['request_manifest'].split('/')[0]}/clean_control_diagnostic.json",
+               "phase3c_support_clarification": "benchmark/PHASE3C_SUPPORT_ADDENDUM.md",
                "sequence": "Phase 5 development -> final method/evaluation freeze -> later separately authorized held-out evaluation",
                "phase5_protocol": "benchmark/PHASE5.md", "phase5_prediction_freeze": load(out / "prediction_freeze.json"),
                "phase5_grounded_run_plan": llm,
-               "blockers": ["Required 50%-identifier-removal grounded validation outputs missing; budget and live-run authorization not supplied.",
-                            "Finish persistent validation runner integration using the frozen degraded requests; dry-run provider/schema/budget/cache behavior is testable without paid calls.",
+               "blockers": ["Both matched v2 clean and degraded validation outputs missing (326 case/arm requests); budget and live-run authorization not supplied.",
+                            f"Record separate exact-plan authorization, execute both matched {llm['model']} arms, freeze responses and finish paired analysis under the proposed USD {llm['proposed_hard_cap_usd']}/326-attempt cap.",
                             "Later held-out executor/label-sealing integration and held-out budget remain unfinished; held-out execution disabled.",
-                            "Lock hosted model identity/availability and drift policy before any final test freeze."],
+                            "Record hosted model identity/SDK/endpoint/time within an interleaved cohort; unchanged request bodies or aliases do not rule out hidden provider/temporal drift."],
                "preserved_history": "Phase 4 draft retained unchanged under benchmark/phase4/freeze; new planning package only",
                "phase5_reference_policy": "unchanged benchmark labels, no human-audit corrected labels",
                "adaptation_or_retraining": False}
+    if runner_plan:
+        updated["phase5_persistent_execution_plan"] = {"path": f"benchmark/phase5/validation/{runner_dir}/plan.json",
+            "plan_digest": runner_plan["plan_digest"], "attempt_cap": 326, "proposed_dollar_cap_usd": 40,
+            "currently_authorized_usd": 0, "per_call_reservation_usd": runner_plan["reservation_nusd"]/1e9,
+            "sum_worst_case_per_unit_reservations_usd": runner_plan["total_reservations_nusd"]/1e9,
+            "state": "implemented, dry-run verified; no live responses; analysis only synthetic-tested"}
+        updated["blockers"][1] = "Persistent runner implemented; record exact-plan authorization/billing assumptions, execute both matched arms, freeze responses and finish paired analysis. No authorization exists."
+        updated["blockers"][0] = f"Both matched {llm['model']} arms missing (326 unit attempts maximum); current USD {llm['proposed_hard_cap_usd']} ceiling is a proposal, not authorization. GPT-5.6 plans/results remain historical and are not reused."
     write(freeze_dir / "evaluation_freeze.json", updated)
     write(freeze_dir / "selected_method.json", load(ROOT / "benchmark/phase4/freeze/selected_method.json"))
     (out / "REPRODUCE.md").write_text(
-        "# Local reproduction\n\nRun from the isolated Phase 5 worktree, using a NEW output directory for preparation. SOURCE_ROOT is the preserved original workspace (no mixed-split loaders are called).\n\n```powershell\n"
-        "python -m benchmark.scripts.phase5_robustness prepare --source-root SOURCE_ROOT --out benchmark/phase5/_reproduced\n"
-        "SOURCE_ROOT/benchmark/phase3/_phase3b_env/Scripts/python.exe -m benchmark.scripts.phase5_robustness dense --source-root SOURCE_ROOT --out benchmark/phase5/_reproduced\n"
-        "python -m benchmark.scripts.phase5_robustness analyze --source-root SOURCE_ROOT --out benchmark/phase5/_reproduced\n"
-        "python -m benchmark.scripts.phase5_llm_plan --dry-run --source-root SOURCE_ROOT --out benchmark/phase5/_reproduced\n"
-        "python -m benchmark.scripts.phase5_reporting --source-root SOURCE_ROOT --out benchmark/phase5/_reproduced --plot-deps PHASE4_WORKTREE/benchmark/phase4/_deps\n"
-        "```\n\nSOURCE_ROOT and PHASE4_WORKTREE are recorded in the local handoff provenance. Plotting uses existing local Matplotlib dependencies; no downloads are needed. The existing GPU environment supplies pinned Torch/Transformers, while the normal benchmark environment supplies SBML/core matching dependencies. All trained weights/catalog/settings stay fixed. The reporting stage writes a new Phase 5 draft freeze and does not edit historical Phase 4 files. Paid execution is disabled.\n", encoding="utf-8")
+        "# GPT-6.1 matched-plan reproduction (no GPU or paid calls)\n\nRun from the Phase 5 worktree. SOURCE_ROOT is the preserved original workspace containing the frozen local catalog; all retrieval rankings are reused unchanged. Choose new plan/package names.\n\n```powershell\n"
+        "python -m benchmark.scripts.phase5_llm_plan --dry-run --source-root SOURCE_ROOT --out benchmark/phase5/validation --plan-name NEW_GPT61_PLAN_NAME --model gpt-6.1-terra --no-publish-current\n"
+        "python -m benchmark.scripts.phase5_runner --package benchmark/phase5/validation/NEW_GPT61_RUNNER_NAME --build-from benchmark/phase5/validation/NEW_GPT61_PLAN_NAME\n"
+        "python -m benchmark.scripts.phase5_runner --package benchmark/phase5/validation/NEW_GPT61_RUNNER_NAME\n"
+        "python -m benchmark.scripts.phase3c_support_clarification --source-root SOURCE_ROOT\n"
+        "python -m benchmark.scripts.phase5_reporting --source-root SOURCE_ROOT --out benchmark/phase5/validation --no-plots\n"
+        "```\n\nThe builder writes new plans only; --no-publish-current preserves current dry-run/manifest pointers during independent reproduction. It never overwrites a named existing plan. Provider bodies are complete SDK 1.78.1 JSON request bodies including the strict response schema, pinned to Pydantic 2.13.5. GPT-6.1 Terra is documented for Responses and structured outputs; account-level availability is not checked. No provider client or HTTP transport is created. GPT-5.6 plans/results are preserved and cannot be used as GPT-6.1 outputs. Reverify the serializer before any paid run. Historical retrieval reproduction commands and the original confounded plan are retained under superseded/. The reporting stage changes mutable reports/current draft only; historical retrieval tables/figures, Phase 3C artifacts and Phase 4 files remain unchanged. Paid/held-out execution stays disabled.\n", encoding="utf-8")
 
 
 CHECKLIST = """# Phase 5 completion checklist
@@ -141,12 +174,15 @@ CHECKLIST = """# Phase 5 completion checklist
 | Rule-based retrieval comparison | Complete for explicit strict control | existing strict filter/scorer recomputed on direct mappings; does not certify historical iterative Phase 2 workflow |
 | BM25, trained encoder and selected fusion | Complete locally | frozen_rankings.jsonl; fixed catalog/checkpoint, clean checks, no clean-ranking substitution |
 | Paired metrics, subgroups and cluster/replicate uncertainty | Complete | comparison_by_condition.csv, paired_family_summary.csv, paired_method_robustness.csv, subgroups.csv, plots |
-| Grounded selected-method robustness at 50% removal | Blocked, required | llm_dry_run.json and ignored _requests/primary_grounded_plan.jsonl: new responses require separate authorization/budget; retrieval-only is not full Phase 5 |
+| Real 163-case clean-control diagnostic | Complete | matched_prompt_v2/clean_control_diagnostic.json and field-level CSV; provenance changes in all cases plus explicit P3P0096 rank/score drift; full provider body checked |
+| Corrected paired prompt/control design | Prepared, not executed | phase5-grounded-no-provenance-v2: 163 matched clean + 163 degraded requests, identical serialization/settings/schema, accurate provenance in sidecars; historical responses are not sole controls |
+| Grounded selected-method robustness at 50% removal | Blocked, required | Active GPT-6.1 plan in llm_dry_run.json and matched_prompt_gpt61_v2/request_manifest.jsonl; 326 calls, $17.994805 total per-request reservation, USD 40 cap, USD 0 authorized; no GPT-5.6 response reuse |
+| Phase 3C support interpretation | Clarified | benchmark/PHASE3C_SUPPORT_ADDENDUM.md; 130 direct un-retrieved answers include 49 correct; zero outside-evidence IDs is compliance; 102 vs 93 accuracy preserved |
 | Other grounded perturbation cells and direct LLM recovery | Deferred optional | no compatible changed-input outputs; not every method-condition combination is required |
 | Iterative ontology relaxation / EM comparison | Deferred optional | existing expensive configuration not part of bounded strict-control study; no claim of execution |
 | All-969 validation, adaptation or retraining | Deferred optional | not part of current fixed 163-query protocol |
 | Human labels / audit reopening | Not required, excluded | completed scoped audit preserved; no private case judgments in Phase 5 artifacts |
-| Selected method decision | Complete, unchanged | keep Phase 4 grounded-fusion selection; retrieval-only results do not select a new end-to-end method |
+| Selected method decision | Validated architecture retained; v2 prompt pending | keep Phase 4 architecture/historical baseline; changed prompt is not yet end-to-end validated and cannot be declared finally frozen |
 | Final method/evaluation freeze | Draft, pending | ../freeze/evaluation_freeze.json; required Phase 5 outputs and later operational test gates remain missing |
 | Held-out evaluation | Sealed, not executed | no test reaction/label/prediction/diagnostic access; later separate authorization only |
 
@@ -159,8 +195,10 @@ def main(argv=None):
     parser.add_argument("--source-root", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--plot-deps", type=Path)
+    parser.add_argument("--no-plots", action="store_true", help="update mutable reports only; preserve historical retrieval figures")
     args = parser.parse_args(argv)
-    plot(args.out, args.plot_deps)
+    if not args.no_plots:
+        plot(args.out, args.plot_deps)
     report(args.out, args.source_root)
     return 0
 

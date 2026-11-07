@@ -18,7 +18,7 @@ This update preserves historical benchmark results and revises the roadmap using
 | Phase 4 routing, uncertainty, and abstention | Bounded cached study complete; grounded method retained |
 | Final method and evaluation freeze | Draft; finalize after Phase 5 and operational gates |
 | Held-out test evaluation | Remains sealed; later one-time evaluation after the final freeze and run authorization |
-| Phase 5 robustness experiments | Local retrieval study complete; required grounded comparison and prompt-control fix pending |
+| Phase 5 robustness experiments | Local retrieval study complete; corrected GPT-6.1 matched plan dry-run verified; separate execution authorization and outputs pending |
 | Phase 6 packaging and manuscript | Remaining work; may proceed alongside Phase 4 |
 
 **Agreed order:** preserve Phase 3C and completed Phase 4 selection → finish Phase 5 → final method/evaluation freeze → authorized held-out evaluation → Phase 6 packaging, scope closure, and manuscript.
@@ -331,7 +331,7 @@ At nominal 75% identifier-bundle removal, mean Recall@10 changed from 73.6% to 5
 
 The selected end-to-end method is unchanged. Retrieval findings alone do not establish grounded accuracy or abstention robustness.
 
-Before the required grounded comparison, resolve the request-control finding: clean reconstruction changes model-visible provenance, and one case has an additional numerical/rank-field difference. Prove accurate complete-payload compatibility with the historical clean baseline or prepare matched clean/degraded requests under one serialization. Keep accurate operational provenance outside model-visible text where feasible. Re-estimate calls and cost if matched clean responses are necessary; the previous 163-call proposal is not an approved final plan.
+The request-control finding is resolved by a matched `phase5-grounded-no-provenance-v2` design: accurate operational provenance is retained in sidecars, and both arms are rebuilt from the same frozen retrieval artifact and serializer. Historical clean requests are not a compatible baseline; all 326 matched requests are new calls. The historical GPT-5.6 plan/results are preserved, not reused. By user direction, the active plan is GPT-6.1 Terra in both arms, with a new model-specific cache namespace and plan digest. Public API/schema support is documented; account-level availability remains unverified.
 
 The local review verified perturbation reconstruction and saved retrieval metrics; GPU inference was not independently rerun. Phase 5 remains incomplete pending a valid grounded comparison and analysis.
 
@@ -367,11 +367,13 @@ After the experimental design stabilizes:
 
 ## Model-version decision before further paid runs
 
-Current reported Phase 5 runner and matched v2 plan use `gpt-5.6-terra`; no switch is recorded as selected or authorized. Resolve model choice before authorizing that plan.
+The selected model for the next matched clean/degraded validation comparison is `gpt-6.1-terra`, by user decision on 2026-11-06. The active dry-run package is `benchmark/phase5/validation/persistent_runner_gpt61_v2/`, plan digest `2b80dd9e83108cdba2310121706af387bd770651a1f7648a87645a03ae0b0e8f`; the matched request plan is `benchmark/phase5/validation/matched_prompt_gpt61_v2/`. It covers 163 pairs / 326 calls and 317 distinct bodies. GPT-5.6 plans/results and the intermediate GPT-6.1 v1 plan remain preserved as historical artifacts; their responses and authorizations do not transfer.
+
+Budget proposal for the new plan: public Standard estimates are $1.74 at estimated input plus historical mean output, $2.12 assuming all default 30-minute cache writes at that output scenario, or $5.22 with all cache writes and maximum 2,048-token outputs. Per-request reservations use the complete provider-body UTF-8 bytes plus a 4,096-token framing allowance, maximum output, all input at the 30-minute cache-write rate, and Fast 2x protection; long-context multipliers apply only if a request bound exceeds 272,000 tokens. The largest request bound is 20,936 input tokens; the largest per-unit reserve is $0.072820; all 326 pessimistic reservations sum to $17.994805. The proposed $40 cap covers all 326 request-bound reservations with about $22.01 remaining. A successful identity-checked, compliant response with in-bound provider-reported usage releases excess to a write-priced usage ceiling; this is not invoice reconciliation. Failed and uncertain attempts retain their full per-unit reservation. Current authorization: $0. Recheck pricing and obtain separate authorization for this exact digest before any paid execution.
 
 Official short-context Standard prices checked 2026-11-06: GPT-5.6 Terra $2 input/$12 output per million tokens; GPT-6.1 Terra $1 input/$5 output per million tokens. Actual task cost also depends on token usage, caching, tier and endpoint modifiers.
 
-- [ ] If considering GPT-6.1 Terra, run a bounded, prespecified validation comparison with the same evidence, prompt and comparable reasoning/output settings, after exact plan/budget authorization.
+- [x] Prepare and dry-run the bounded GPT-6.1 Terra comparison with identical matched-arm settings/schema and fresh clean/degraded requests. Do not execute until separate authorization for this exact plan and budget.
 - [ ] A model switch changes the scientific method. Preserve old results as model-specific historical findings.
 - [ ] Retain unchanged benchmark, rule-based/BM25/encoder/fusion results and completed human audit; these need not be repeated merely because the generator changes.
 - [ ] Evaluate the selected new generator on the full clean 163-case validation pilot and the matched degraded condition for Phase 5. Both paired conditions must use the same selected model and serialization.
@@ -385,8 +387,8 @@ Official short-context Standard prices checked 2026-11-06: GPT-5.6 Terra $2 inpu
 
 ### Gate 1: Close development and reporting
 
-- [ ] Resolve Phase 5 prompt controls and freeze the valid clean/degraded comparison.
-- [ ] Integrate and verify the persistent validation budget/cache runner using dry runs first.
+- [x] Resolve Phase 5 prompt controls and prepare the valid matched clean/degraded request design.
+- [x] Integrate and verify the persistent validation budget/cache runner using dry runs first.
 - [ ] Obtain authorization for the concrete validation request plan and hard budget, then execute and analyze it.
 - [ ] Report paired grounded correctness, coverage, selective accuracy, and reference-based abstention with clear denominators and uncertainty.
 - [ ] Finalize Phase 5 results, limitations, and experiment-coverage checklist.
@@ -514,4 +516,5 @@ This is feasible for an October **writing start**, not necessarily an October su
 - 2026-11-05: Updated implemented Phase 3 progress; accepted scoped Phase 3C completion; documented the single-reviewer audit decision; selected Phase 4 as next work; placed final method/evaluation freeze after Phase 4 and before the later held-out run.
 
 - 2026-11-06: Recorded completed Phase 4, local Phase 5 retrieval results and pending controls, and explicit completion gates after Phase 5. This roadmap edit authorizes no new paid runs or test access.
+- 2026-11-06: Selected GPT-6.1 Terra for the Phase 5 matched run. Preserved GPT-5.6 plans/results; prepared and dry-run verified the new 326-call paired plan and model-specific persistent budget/cache package. Proposed USD 40 cap; USD 0 authorized. No paid or held-out execution occurred.
 
