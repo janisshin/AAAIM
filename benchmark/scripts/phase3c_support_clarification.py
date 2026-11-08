@@ -2,9 +2,10 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
-from benchmark.scripts.phase5_robustness import ROOT, read_rows, write
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def support_counts(rows):
@@ -29,14 +30,15 @@ def support_counts(rows):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-root", type=Path, default=ROOT)
-    parser.add_argument("--out", type=Path, default=ROOT / "benchmark/phase5/review_fixes/phase3c_support_counts.json")
+    parser.add_argument("--out", type=Path, default=ROOT / "benchmark/phase3/phase3c_support_addendum/counts.json")
     args = parser.parse_args(argv)
-    rows = read_rows(args.source_root / "benchmark/phase3/phase3c_validation/answer_key_join.jsonl")
+    source = args.source_root / "benchmark/phase3/phase3c_validation/answer_key_join.jsonl"
+    rows = [json.loads(line) for line in source.read_text(encoding="utf-8").splitlines() if line.strip()]
     if len(rows) != 163 or len({r["sample_id"] for r in rows}) != 163:
         raise ValueError("exact frozen 163-row validation join required")
     result = support_counts(rows)
     args.out.parent.mkdir(parents=True, exist_ok=True)
-    write(args.out, result)
+    args.out.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
     print(result)
     return 0
 

@@ -1,15 +1,21 @@
 # Phase 3C addendum: evidence support is distinct from correctness
 
-This clarification supplements the frozen Phase 3C reports and conclusions. No historical output, metric definition, report or manifest is rewritten, and no biological judgment is supplied or revised.
+This clarification supplements the frozen Phase 3C report and conclusions. It does not rewrite historical outputs, metric definitions, reports or manifests, and it supplies no biological judgment.
 
-In `phase3c_validation.py`, `direct_unsupported` is true for a direct-mode answered case with at least one in-catalog ID. Direct mode was not supplied retrieved evidence and explicitly allowed internal model knowledge. The resulting count, 130/163, means **in-catalog direct answers made without retrieved evidence**. It includes all 49 exact-reference-correct direct answers and 81 exact-reference-incorrect answers. It is not a count of 130 biological errors, hallucinations, fabricated IDs or unsupported factual claims. Reference mismatches also do not by themselves establish biological hallucination.
+In `phase3c_validation.py`, `direct_unsupported` marks a direct-mode answer with an in-catalog identifier. Direct mode received no retrieved evidence and allowed internal model knowledge. The count **130/163** therefore means in-catalog direct answers made without retrieved evidence. It includes **49 exact-reference-correct** and **81 exact-reference-incorrect** answers. It is not a count of biological errors, hallucinations, fabricated identifiers or unsupported factual claims; reference mismatch alone does not establish biological hallucination.
 
-`grounded_unsupported` instead means an answered grounded prediction whose ID is outside the supplied Top-10 evidence. Zero such predictions is **out-of-evidence-ID compliance** under a candidate-constrained task. Grounded and direct modes offer different opportunities for evidence support: one has explicit retrieved candidates and an abstention instruction, the other has no retrieved evidence. These two support indicators do not define a shared biological hallucination endpoint.
+`grounded_unsupported` instead marks an answered grounded prediction whose identifier is outside its supplied Top-10 evidence. The observed **0/163** is out-of-evidence identifier compliance for a candidate-constrained task. Direct and grounded modes offer different opportunities for evidence support, so these indicators do not share a biological hallucination definition.
 
-The frozen grounded method answered 124/163 and abstained on 39/163. It still made 22 in-evidence exact-reference-incorrect selections. Full evidence compliance was 161/163; two abstentions incorrectly cited evidence, despite zero out-of-evidence IDs. Thus zero out-of-evidence predictions is neither zero errors nor perfect compliance on every schema/evidence rule.
+The grounded method answered **124/163** and abstained on **39/163**. It made **22 in-evidence, exact-reference-incorrect** selections. Full evidence compliance was **161/163**; two abstentions cited evidence incorrectly despite zero out-of-evidence predictions. Thus zero out-of-evidence predictions does not mean zero errors or perfect compliance with every evidence rule.
 
-The independently measured paired accuracy comparison remains **grounded 102/163 versus fusion 93/163**, a net nine exact matches (+5.52 percentage points). The original accuracy cluster-bootstrap interval [0.01, 0.141304] remains an accuracy result on this development pilot. Nothing in this addendum changes it or recalculates corrected benchmark accuracy.
+The independently measured paired accuracy remains **grounded 102/163 versus fusion 93/163**, a net nine exact matches. The reported cluster-bootstrap interval `[0.01, 0.141304]` is an accuracy interval. The historical bootstrap for `grounded_minus_phase3a_unsupported_output_rate` compares differently defined support indicators; its interval does **not** establish reduced biological hallucination. A biological hallucination comparison would require a separately specified, consistently applied endpoint and appropriate assessment; none is established here.
 
-The historical bootstrap for `grounded_minus_phase3a_unsupported_output_rate` contrasts the differently defined indicators above. Its interval excluding zero does **not** prove reduced biological hallucination. Read the frozen report's “130 → 0 unsupported outputs” conclusion in light of this definitional limitation. A biological hallucination comparison would require a separately specified, consistently applied endpoint and appropriate human/evidence assessment; it has not been established here. The completed scoped single-reviewer audit is not reopened or promoted to independent adjudication.
+The completed scoped single-reviewer audit remains complete. This clarification does not reopen it or imply independent adjudication.
 
-Aggregate verification: `benchmark/scripts/phase3c_support_clarification.py` reads only the frozen 163-row validation join and writes the clearly named counts under `benchmark/phase5/review_fixes/`. Its tests deliberately separate exact correctness from task-specific evidence compliance. Current Phase 5 reports and goals link to this addendum; the historical artifacts remain byte-for-byte intact.
+The new counts are generated from the frozen 163-row validation join by:
+
+```powershell
+python -m benchmark.scripts.phase3c_support_clarification
+```
+
+The count artifact is stored under `benchmark/phase3/phase3c_support_addendum/`; all original Phase 3C artifacts remain unchanged.
