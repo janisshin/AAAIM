@@ -303,7 +303,8 @@ def test_lost_reservation_ledger_cannot_repurchase_an_orphaned_cache(tmp_path):
         execute(path, plan, lambda b: pytest.fail("repurchase after ledger loss"), resume=True)
 
 
-def test_source_plan_change_invalidates_lock(tmp_path):
+def test_source_plan_change_invalidates_lock(tmp_path, monkeypatch):
+    monkeypatch.setattr(r, "ROOT", tmp_path)
     path, plan, _ = make_fixture(tmp_path)
     source = path / "source.json"
     r.atomic(source, {"synthetic": "original"})
