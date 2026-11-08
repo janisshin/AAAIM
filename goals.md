@@ -1,7 +1,7 @@
 # AAAIM research project: goals and roadmap
 
-**Status updated:** 2026-11-06
-**Current priority:** finish Phase 5's valid grounded robustness comparison, then finalize the method/evaluation freeze, run the separately authorized held-out evaluation, and complete Phase 6 packaging and writing.
+**Status updated:** 2026-11-07
+**Current priority:** review the consolidated canonical phase branches and Luna handoff; preserve Phase 5's paid-run pause. Luna's 541-request grounded plan prefers 2,048 total output tokens under a proposed $16 cap, with no execution authorization.
 
 ## Current status and agreed sequence
 
@@ -18,10 +18,11 @@ This update preserves historical benchmark results and revises the roadmap using
 | Phase 4 routing, uncertainty, and abstention | Bounded cached study complete; grounded method retained |
 | Final method and evaluation freeze | Draft; finalize after Phase 5 and operational gates |
 | Held-out test evaluation | Remains sealed; later one-time evaluation after the final freeze and run authorization |
-| Phase 5 robustness experiments | Local retrieval study complete; corrected GPT-6.1 matched plan dry-run verified; separate execution authorization and outputs pending |
+| Phase 5 robustness experiments | Local retrieval study and runner preparation complete; matched paid comparison paused, no funds allocated or execution authorized |
+| LunaStarr MODEL2507280001 request | Selected RRF retrieval verified for all 541 reactions; exact grounded plans prepared; predictions and biological review pending |
 | Phase 6 packaging and manuscript | Remaining work; may proceed alongside Phase 4 |
 
-**Agreed order:** preserve Phase 3C and completed Phase 4 selection → finish Phase 5 → final method/evaluation freeze → authorized held-out evaluation → Phase 6 packaging, scope closure, and manuscript.
+**Agreed order:** consolidate and review the phase/task branches and Luna handoff → execute Luna's grounded plan only after separate explicit authorization → revisit Phase 5 only through a fresh budget decision → final method/evaluation freeze → separately authorized held-out evaluation → Phase 6 packaging, scope closure, and manuscript.
 
 Phases 4 and 5 were originally stretch work; the user chose to pursue both. Phase 4 is complete under its bounded protocol. This does not make every older proposed experiment a requirement. Earlier calendar targets below are historical, not current deadlines.
 
@@ -358,12 +359,15 @@ After the experimental design stabilizes:
 
 ## Additional docket: Luna's MODEL2507280001 request
 
-- [ ] Inspect the existing `test/MODEL2507280001-reaction-review` branch and reports before purchasing calls or duplicating work.
-- [ ] Confirm the remaining request for BioModels `MODEL2507280001` (SBML model `iLG335`) against LunaStarr's original request: test the existing reaction-annotation workflow without model/pipeline changes, with reproducible commands and results.
-- [ ] Reconcile previously reported retrieval outputs with current artifacts. Prior conversation records describe a 541-reaction Phase 3B review and files including `PHASE3_FULL_REPORT.md`, per-reaction/Top-10 CSVs and summaries; these are leads to verify, not newly certified results.
-- [ ] Identify whether grounded LLM selection, public species-to-reaction integration, or delivery of existing results remains outstanding. Scope and cost any missing run separately.
-- [ ] Deliver a concise collaborator handoff with outputs, coverage, abstentions/no-calls, mapping limitations, runtime/cost, and representative evidence. Treat this as an external case study; do not claim benchmark accuracy without verified independent reaction-level ground truth.
-- [ ] Check development/benchmark overlap before describing it as an independent external demonstration. Keep it separate from the sealed held-out benchmark.
+- [x] Inspect and reconcile the historical case-study branch and original 541-reaction SBML.
+- [x] Keep the public ChEBI-to-KEGG rule-based diagnostic separately named; its 222 candidate-bearing and 319 no-candidate outcomes do not exclude cases from RRF.
+- [x] Verify the selected full-catalog BM25 + trained epoch-1 bi-encoder RRF rankings and all 541 reconstructed query texts; retain Top-10 evidence for every reaction.
+- [x] Prepare exact GPT-6.1 Terra grounded requests with accurate sidecar provenance and unit-specific cache identities.
+- [x] Assess 512 versus 2,048 total output tokens; prefer 2,048 because GPT-5.6 observations do not validate reducing GPT-6.1's output budget. Proposed 541-attempt reservation is USD 15.010828750 under a USD 16 cap, not authorized; current credit of USD 19.97 is user-reported and independently unverified.
+- [x] Prepare the local collaborator handoff and keep it unsent.
+- [ ] Produce grounded predictions only after explicit authorization, then review selections, abstentions and failures separately. Prior support judgments are descriptive, not independent ground truth or benchmark accuracy.
+
+The canonical task branch is `feature/luna-model2507280001`. Physical worktree paths and ignored request/case artifacts are preserved. The held-out benchmark remains sealed; Phase 5 receives no allocation. See `benchmark/BRANCHES.md` for branch ownership and archival recovery.
 
 ## Model-version decision before further paid runs
 
@@ -504,11 +508,11 @@ This is feasible for an October **writing start**, not necessarily an October su
 
 ## Immediate next actions — current
 
-1. Fix Phase 5 prompt controls and publish the Phase 3C support-metric clarification.
-2. Finalize the grounded robustness plan, runner, and proposed budget without paid execution.
-3. After concrete authorization, execute/analyze the validation comparison and close Phase 5.
-4. Complete the gates above: final freeze, authorized held-out evaluation, broader scope/ownership decisions, and Phase 6 packaging/writing.
-5. Keep the test sealed until the final freeze and run authorization. Prepare manuscript material and collaborator scope decisions in parallel.
+1. Review the consolidated canonical phase branches and the separate Luna task branch using `benchmark/BRANCHES.md`.
+2. Keep Luna's 541-request GPT-6.1 Terra plan at 2,048 total output tokens; its proposed USD 16 cap requires separate authorization before any paid execution.
+3. Keep Phase 5 paid execution paused and preserve every model-specific plan and completed result.
+4. Resolve broader scope/ownership, final freeze, later authorized held-out evaluation, and Phase 6 packaging/writing without launching new experiments during branch cleanup.
+5. Keep the held-out benchmark sealed and the collaborator handoff unsent unless separately authorized.
 
 ### LunaStarr MODEL2507280001 request — local status, updated 2026-11-07
 
@@ -530,3 +534,5 @@ This is feasible for an October **writing start**, not necessarily an October su
 - 2026-11-07: Completed the full local public reaction candidate stage, profiled and optimized repeated ontology expansion, corrected reaction-ID alignment, and froze complete no-call GPT-6.1 Terra request branches with pessimistic cost accounting. Targeted tests: 53 passed. Actual inference and biological review remain pending separate authorization and a verified spend guard; this work does not complete LunaStarr's full prediction/review request.
 - 2026-11-07: Corrected the LunaStarr MODEL2507280001 research analysis to use the selected full-catalog BM25 + trained epoch-1 bi-encoder RRF Top-10 pipeline, separately from public rule-based diagnostics. Reused archived retrieval outputs after validating the inference archive/checkpoint, catalog, SBML identity, all 541 rebuilt query texts, component ranks, RRF Top-100, and Top-10 evidence. Prepared 541 exact GPT-6.1 Terra grounded requests; no calls or held-out access. Estimated pessimistic reservation USD 10.855272500, proposed USD 12 cap conditional on verified available balance, not authorized. Candidate retrieval and request preparation are complete; actual grounded predictions and biological review remain pending.
 - 2026-11-07: Reassessed Luna's output budget: retain the established 2,048-token total output limit because no GPT-6.1 grounded usage validates reducing it. Preserved the 512-token plan and prepared both options from identical frozen inputs. Preferred 541-attempt plan reserves USD 15.010828750 under a proposed USD 16 cap (not authorized); current USD 19.97 credit is user-reported, independently unverified, leaving USD 3.97 unallocated at that cap. Phase 5 stays paused with no allocation. Exact plans, usage assessment, failure accounting and execution proposal are under the ignored isolated-worktree `selected_rrf_output_budget_20261107/` directory; actual grounded predictions and review remain pending.
+
+- 2026-11-07: Consolidated duplicate local integration branches into the canonical phase histories and renamed the Luna branch to `feature/luna-model2507280001`. Preserved all original tips in archive refs plus a verified local bundle, all frozen experiment artifacts, and ignored personal reports. Upstream review branches remain untouched. This cleanup authorizes no paid execution or held-out access.
