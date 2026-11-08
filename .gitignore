@@ -67,3 +67,6 @@ benchmark/phase5/validation/**/_analysis/
 benchmark/phase5/_runner_state/
 benchmark/phase5/validation/_superseded_preflight_*/
 benchmark/phase5/_pytest*/
+
+# Separate Git worktrees are archived independently.
+benchmark/integration_worktrees/
