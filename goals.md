@@ -48,6 +48,48 @@ pending separate scope and authorization; this status grants neither.
 
 ## Project objective
 
+### Manuscript reaction-results preparation (2026-11-09, local analysis branch)
+
+The isolated `analysis/manuscript-reaction-results-20261109` branch assembles
+verified development results without changing the public integration or frozen
+research artifacts. See [reproduction and scope](docs/manuscript_results_package.md).
+No results package, private review export, or personal case judgment is tracked.
+
+- **Completed offline:** reproducible historical retrieval (969 reactions),
+  historical GPT-5.6 grounded pilot (163), cached Phase 4 replay, executed
+  Phase 5 retrieval perturbation summaries, and the accepted single-reviewer
+  60-case audit. Tables, standalone figures, Results text, metric crosswalk,
+  case-study template, and draft held-out readiness checklist are assembled.
+- **New controls complete:** a protocol frozen before its outcomes compares
+  available reference species evidence with names-only input on all 969
+  validation reactions (18 models, 12 clusters). Uniform nonsemantic species-ID
+  aliases prevent intrinsic source-ID leakage in every arm. Selected resources
+  are unchanged; changed queries were reranked. Reference Top-10 recovery is
+  912/969 and names-only recovery is 859/969. These are new development controls,
+  separate from the historical 923/969 RRF result, not actual-prediction results.
+- **Propagation inputs missing:** existing Luna machine exports do not match
+  any validation model. Actual-prediction arm B therefore has zero observed
+  reactions. A no-call plan covers 1,063 participating species across 18 models;
+  34 exact normalization requests form its first frontier. Later dependent
+  species requests and their full cost require actual preceding outputs.
+- **Final annotation pending:** two exact 969-request GPT-6.1 Terra/low/strict
+  2,048-token plans are prepared for A/C; B requests remain explicitly pending.
+  Existing persistent guards validate each arm offline. A guarded species
+  adapter and cross-arm execution/provider controller remain required. All
+  proposed spending is unapproved and available credit is unverified.
+- **Unchanged boundaries:** the accepted audit is complete without independent
+  second review; biological uncertainty remains a disclosed limitation.
+  MODEL2507280001 has 541 Top-10 evidence sets, not measured annotation accuracy;
+  its grounded inference and biological review remain pending. Phase 5 paid
+  work remains paused. The held-out protocol remains draft and its data sealed.
+  Offline preparation authorized no inference or external messages. Publishing
+  its reproducibility code under subsequent authorization does not authorize
+  spending, held-out evaluation, or a merge.
+
+The original Phase 5 global checksum ledger has twelve stale planning/document
+entries; its numerical retrieval entries verify. The new package records every
+mismatch and does not rewrite that historical ledger or claim a blanket pass.
+
 AAAIM is already a biological annotation tool. This project is therefore not simply to build an annotation tool, but to turn AAAIM into a reproducible research system for studying metabolic reaction annotation when metabolite evidence and database retrieval are incomplete.
 
 The central research question is:
