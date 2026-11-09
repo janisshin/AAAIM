@@ -90,6 +90,37 @@ The original Phase 5 global checksum ledger has twelve stale planning/document
 entries; its numerical retrieval entries verify. The new package records every
 mismatch and does not rewrite that historical ledger or claim a blanket pass.
 
+### Review-informed reference sensitivity (2026-11-09, local isolated analysis)
+
+The `analysis/review-informed-reference-v1` branch adds a versioned, private
+reference overlay and deterministic rescoring of unchanged frozen predictions.
+It does not replace the original benchmark or its reported metrics. See the
+[manuscript-results index](docs/manuscript_results_package.md#reference-sensitivity).
+
+- Latest authoritative exports validate: 60 cases, matching embedded Pass 1,
+  schema/dataset/canonical digests and exact sample identities. The earlier
+  abstention-target inconsistencies are resolved in the actual exported answers.
+- The primary single-reviewer, review-informed version applies four explicit
+  Pass 1 replacements and zero additions. Two other replacement proposals are
+  held because later reference statements conflict. Three ambiguity findings
+  and two non-mappability findings also retain their original accepted sets:
+  seven unresolved reference findings in total, without a mandatory new review.
+- All 163 pilot cases remain in the denominator. The 103 unreviewed cases keep
+  unverified originals. On the same historical GPT-5.6 Terra predictions,
+  grounded agreement is 102/163 under original references and 104/163 under
+  the sensitivity view; fusion is 93/163 and 95/163. Their nine-case difference
+  and grounded answer coverage (124/163) remain unchanged. These are sensitivity
+  scores, not independently established biological accuracy or a corrected
+  969-case validation benchmark.
+- Completed offline: reference-change provenance, immutable view/checksums,
+  six-method retrieval rescoring using the established evaluator, eight-method
+  Top-1 comparison, reviewed-subset/stratum tables, paired transitions and cluster
+  uncertainty, manuscript text, and an optional human question packet.
+- Original labels, manifests, rankings, responses, exports and earlier private
+  packages remain intact. Phase 5 stays paused and held-out data sealed. Publishing
+  the reproducibility code under subsequent authorization does not authorize
+  inference, new biological adjudication, spending, or a merge.
+
 AAAIM is already a biological annotation tool. This project is therefore not simply to build an annotation tool, but to turn AAAIM into a reproducible research system for studying metabolic reaction annotation when metabolite evidence and database retrieval are incomplete.
 
 The central research question is:

@@ -55,3 +55,45 @@ length limits affect persistent runner fixtures. Never overwrite a frozen output
 directory. Resource paths and historical worktrees are explicit local inputs;
 their absence is an error or an explicitly skipped optional runner test, not
 permission to fabricate results.
+
+## Reference sensitivity
+
+The isolated `analysis/review-informed-reference-v1` branch adds
+`benchmark/scripts/reference_sensitivity.py`. Its ignored output is
+`_manuscript_results_work/reference_review_v1_release2/` in the
+`reference_sensitivity` worktree. The original results package remains in the
+sibling `manuscript_results` worktree, unchanged.
+
+This is a single-reviewer, review-informed reference version, not a fully
+corrected or independently adjudicated gold standard. Four explicit Pass 1
+replacements are actionable; no additional IDs are inferred from prediction
+assessments, taxonomy labels or inappropriate abstentions. Two contradictory
+cross-pass reference proposals are held. Ambiguity/non-mappability remain flagged
+without emptying reference sets or dropping cases. The 103 unreviewed pilot
+cases retain unverified originals. No 969-case correction claim is made.
+
+Start with `RESULTS.md`, `RETRIEVAL_TABLES.md`, `REVIEWED_SUBSET.md` and
+`METHODS_AND_LIMITATIONS.md` in the private output. `REFERENCE_VERSION.json`
+binds the policy, correction layer, derived 163-case view and original input
+checksums. The reference version has a content digest; generation refuses an
+existing destination. `MANIFEST.json` binds all output files.
+`case_scoring_diff_private.jsonl` traces every method/case, while
+`changed_outcomes_private.csv` contains the changed scores only.
+`source_validation.json` records actual differences from the earlier export,
+remaining discrepancies and authoritative export selection. Personal review
+records, the quote-bound conflict holds, and the optional question packet remain
+ignored by Git.
+
+The original grounded/fusion metrics (102/163 and 93/163) remain frozen results.
+The new view yields 104/163 and 95/163 on identical predictions, with unchanged
+coverage and a nine-case paired difference. Tables separate full-pilot and
+stratified reviewed-subset results; fixed sampling strata are not reassigned
+after rescoring. Historical GPT-5.6 inference remains distinct from pending
+GPT-6.1 work. Sensitivity does not independently establish better biological
+accuracy, finish propagation, unpause Phase 5 or finalize held-out evaluation.
+
+Run `python -m pytest tests/test_reference_sensitivity.py -q` for synthetic
+policy/denominator/alignment tests. `REPRODUCE.md` gives the exact no-call command
+and fresh-output policy; the same command plus `--verify-only` checks output
+and source checksums without rescoring. Two fresh builds must match every
+manifest entry. Existing frozen artifact verifiers are also run during a build.
