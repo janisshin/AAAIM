@@ -156,13 +156,8 @@ def normalize_planner_decision(raw: PlannerDecision | dict[str, Any]) -> Planner
                     if rid and rid not in deps:
                         deps.append(rid)
                         t["depends_on"] = deps
-    # Prefer local metabolm model id in select arguments.
-    for action in data.get("actions") or []:
-        if isinstance(action, dict) and action.get("tool") == "select_reaction_grounded":
-            args = dict(action.get("arguments") or {})
-            if str(args.get("llm_model", "")).startswith("gpt"):
-                args["llm_model"] = "metabolm-local"
-            action["arguments"] = args
+    # Do not rewrite llm_model identities. Unauthorized annotation backends are
+    # rejected later by validate_action / tool execution.
     return PlannerDecision.model_validate(data)
 
 

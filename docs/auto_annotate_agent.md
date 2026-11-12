@@ -10,10 +10,18 @@ This module does **not** replace the explicit APIs (`annotate_model`,
 
 ## Entry point
 
+Prefer dual roles: **planner** (orchestration) vs **inference** (biological
+annotation). Legacy `backend=` alone still works for offline MockBackend tests
+(same object for both roles). Do not combine `--backend` with
+`--planner`/`--inference`.
+
 ```python
 from core.agent import auto_annotate_model, ExecutionLimits
 from core.agent.backends.mock import MockBackend
+from core.agent.backends.openai_planner import OpenAIPlannerBackend
+from core.agent.backends.metabolm import MetaboLLMBackend
 
+# Offline control-loop (both roles = mock)
 result = auto_annotate_model(
     model_file="model.xml",
     request="Annotate missing entities in this model",
@@ -21,9 +29,22 @@ result = auto_annotate_model(
     resources=None,                 # or RetrievalResources(...) for real RRF
     reaction_retriever=None,        # injectable for tests
     output_dir="_auto_annotate_out",
-    limits=ExecutionLimits(),
+    limits=ExecutionLimits(),       # planner_spend_* default to zero paid calls
 )
 print(result.report.status, result.report.annotated_model_path)
+
+# Split roles (OpenAI orchestration + local MetaboLLM biology)
+# result = auto_annotate_model(
+#     "model.xml",
+#     planner=OpenAIPlannerBackend(),
+#     inference=MetaboLLMBackend(hf_cache=...),
+#     resources=RetrievalResources(...),
+#     limits=ExecutionLimits(
+#         planner_spend_authorized=True,   # explicit; default False
+#         planner_spend_cap_usd=0.05,      # hard cap; default 0.0
+#         authorized_annotation_models=["metabolm-local"],
+#     ),
+# )
 ```
 
 ### Synthetic demo (mock; no model cache)
@@ -33,7 +54,7 @@ python -m core.agent.cli model.xml --out _auto_annotate_out --backend mock
 python examples/auto_annotate_example.py --out _auto_annotate_demo_mock
 ```
 
-### Real local demo (MetaboLLM + catalog + encoder)
+### Real local demo (MetaboLLM planner + inference; catalog + encoder)
 
 ```powershell
 # Prefer the existing MetaboLLM env (parent AAAIM checkout when using the nested worktree)
@@ -49,6 +70,19 @@ $enc = Join-Path $repo "benchmark\integration_worktrees\rrf_grounded_api\_rrf_gr
 
 & $py examples/auto_annotate_real_local_example.py --out _auto_annotate_demo_real_local `
   --hf-cache $hf --catalog data/kegg/kegg_reaction_features.lzma --encoder $enc
+```
+
+### Dual-role CLI (OpenAI planner + MetaboLLM inference)
+
+Paid OpenAI planner dispatches default to **off** (`--planner-spend-cap-usd 0`
+and no `--planner-spend-authorized`). Do not combine with `--backend`.
+
+```powershell
+& $py -m core.agent.cli model.xml --out _auto_annotate_out `
+  --planner openai --inference metabolm `
+  --hf-cache $hf --catalog data/kegg/kegg_reaction_features.lzma `
+  --encoder $enc --device cpu `
+  --planner-spend-authorized --planner-spend-cap-usd 0.05
 ```
 
 ## Control loop
@@ -171,19 +205,22 @@ Get-Content _auto_annotate_out\provenance.json
   --resume-from _auto_annotate_out
 ```
 
-`checkpoint.json` uses **schema_version=2** (`AgentCheckpoint` in
+`checkpoint.json` uses **schema_version=3** (`AgentCheckpoint` in
 `core/agent/schemas.py`) and is written atomically (temp file + replace).
+v3 requires dual `planner` / `inference` identities plus a durable
+`planner_budget` ledger. Pre-v3 checkpoints cannot be resumed.
 
 Resume restores the saved plan, task/entity states, observations, completed
 action fingerprints, attempt/revision counts, species and reaction
-recommendations, reaction retrieval evidence, provenance, and execution-limit
-accounting, then **continues that plan** instead of generating an unrelated
-fresh plan.
+recommendations, reaction retrieval evidence, provenance, planner-only spend
+accounting, and execution-limit accounting, then **continues that plan**
+instead of generating an unrelated fresh plan.
 
-Compatibility is checked against source model SHA-256, backend identity
-(including MetaboLLM weight **and tokenizer/chat-template** content
-fingerprints), settings/limits/request, tool schema version, **content-based**
-resource identities, and the summary `cache_identity`.
+Compatibility is checked against source model SHA-256, composite
+planner/inference identity (including MetaboLLM weight **and
+tokenizer/chat-template** content fingerprints when used for inference),
+settings/limits/request, tool schema version, **content-based** resource
+identities, and the summary `cache_identity`.
 
 Retrieval resource identity (see `core/agent/resource_identity.py`) records
 catalog file SHA-256, selected-encoder manifest/file digests via
@@ -209,8 +246,40 @@ persisted `reaction_evidence`, and completed selection requires
 Unsupported or incompatible checkpoints are rejected with
 `CheckpointCompatibilityError` (missing file, corrupt JSON, missing /
 unsupported `schema_version`, incomplete fields, or envelope mismatch).
-**Pre-v2 checkpoints cannot be resumed** (v1 lacked content-based
+**Pre-v3 checkpoints cannot be resumed** (v2 lacked dual planner/inference
+identities and planner budget ledger; v1 also lacked content-based
 resource/tokenizer identity); restart without `resume_from`.
+
+## Role separation and planner budget
+
+- **Planner** (`OpenAIPlannerBackend`, model `gpt-6-luna`): Responses API +
+  strict JSON Schema structured outputs; `max_retries=0`; refuses
+  `generate()` / `grounded_transport()` biological paths.
+- **Inference** (local MetaboLLM / MockBackend): species annotation and
+  grounded reaction selection. `select_reaction_grounded.llm_model` must be in
+  `ExecutionLimits.authorized_annotation_models` (default `metabolm-local`);
+  unauthorized ids are rejected without rewrite.
+- **Budget** (planner-only): default `planner_spend_authorized=False` and
+  `planner_spend_cap_usd=0.0` (zero paid dispatches). Before each OpenAI call
+  the ledger computes a hard UTF-8-byte input-token bound, reserves
+  conservative Standard pricing (`$0.10` / `$0.50` per 1M in/out for
+  gpt-6-luna, checked 2026-11-12), persists the reservation, then dispatches.
+  Only validated usage is settled; uncertain/failed attempts retain exposure
+  against the cap. Biological/local MetaboLLM work is not billed here.
+
+### Live integrated demo proposal (not executed)
+
+**Goal:** one mixed-task SBML run with real OpenAI planner + real local
+MetaboLLM inference (species + RRF retrieve/select), no held-out access.
+
+**Preconditions (all required before any paid call):**
+
+1. Explicit spend authorization and hard USD cap (CLI flags / `ExecutionLimits`).
+2. Verified `OPENAI_API_KEY` and offline MetaboLLM HF cache + catalog + encoder.
+3. Mocked component tests green; no SDK retries; budget ledger persist path writable.
+4. Separate operator approval of the numeric cap for that session.
+
+**Not authorized by this document.** Defaults remain zero paid dispatches.
 
 Execution is **at-least-once**, not exactly-once: an `in_flight_action` is
 journaled before tool execution; if interruption occurs before the result is
@@ -254,7 +323,8 @@ limitation, not a product resume failure.
 | Example | Backend | Retrieval | Species | Claims |
 |---------|---------|-----------|---------|--------|
 | `examples/auto_annotate_example.py` | MockBackend | `SyntheticTinyRetriever` (not from `tests/`) | `mock_synthetic` | Control-loop only |
-| `examples/auto_annotate_real_local_example.py` | MetaboLLM | verified catalog + selected encoder (CPU) | `make_real_species_annotator` | Real LLM tool choice + retrieval; **not** biological accuracy |
+| `examples/auto_annotate_real_local_example.py` | MetaboLLM (both roles) | verified catalog + selected encoder (CPU) | `make_real_species_annotator` | Real LLM tool choice + retrieval; **not** biological accuracy |
+| CLI `--planner openai --inference metabolm` | OpenAI planner + MetaboLLM inference | same as real local | real species path | Integrated demo **proposed only** until spend authorized |
 
 Measured planner fit on the bounded real local demo (development model): ~749 input /
 169 output tokens with `planner_max_new_tokens=768` (not truncated).

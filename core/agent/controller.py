@@ -97,13 +97,35 @@ def _resource_identity(
     )
 
 
+def _resolve_roles(
+    *,
+    backend: Any,
+    planner: Any,
+    inference: Any,
+) -> tuple[Any, Any]:
+    """Resolve planner/inference backends with single-backend compat."""
+    if planner is None and inference is None:
+        if backend is None:
+            from core.agent.backends.mock import MockBackend
+
+            backend = MockBackend()
+        return backend, backend
+    if planner is not None and inference is not None:
+        return planner, inference
+    if planner is not None and inference is None:
+        return planner, backend if backend is not None else planner
+    return backend if backend is not None else inference, inference
+
+
 class AnnotationAgentController:
     def __init__(
         self,
         *,
         model_file: str,
         request: str,
-        backend: Any,
+        backend: Any = None,
+        planner: Any = None,
+        inference: Any = None,
         output_dir: str | Path,
         resources: Any = None,
         reaction_retriever: Any = None,
@@ -116,7 +138,10 @@ class AnnotationAgentController:
     ) -> None:
         self.model_file = str(model_file)
         self.request = request
-        self.backend = backend
+        self.planner, self.inference = _resolve_roles(
+            backend=backend, planner=planner, inference=inference
+        )
+        self.backend = self.planner  # compat alias for planning/unload
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.scope = scope
@@ -130,18 +155,35 @@ class AnnotationAgentController:
         from core.agent.species import resolve_species_annotator
 
         resolved_annotator, species_prov = resolve_species_annotator(
-            backend, species_annotator
+            self.inference, species_annotator
         )
+        grounded = getattr(self.inference, "grounded_transport", None)
+        if getattr(self.inference, "name", "") == "openai_planner":
+            grounded = None
+        species_backend = self.inference if hasattr(self.inference, "generate") else None
+        if getattr(species_backend, "name", "") == "openai_planner":
+            species_backend = None
+        self.budget_path = self.output_dir / "planner_budget.json"
+        if hasattr(self.planner, "configure_budget"):
+            self.planner.budget_path = self.budget_path
+            self.planner.configure_budget(
+                spend_authorized=bool(self.limits.planner_spend_authorized),
+                hard_cap_usd=float(self.limits.planner_spend_cap_usd),
+                max_attempts=int(self.limits.max_planning_turns),
+            )
         self.agent_resources = AgentResources(
             model_file=self.model_file,
             output_dir=self.output_dir,
             inventory=self.inventory,
             reaction_resources=resources,
             reaction_retriever=reaction_retriever,
-            grounded_transport=getattr(backend, "grounded_transport", None),
+            grounded_transport=grounded,
             species_annotator=resolved_annotator,
-            species_backend=backend if hasattr(backend, "generate") else None,
+            species_backend=species_backend,
             species_annotator_provenance=species_prov,
+            authorized_annotation_models=list(
+                self.limits.authorized_annotation_models or ["metabolm-local"]
+            ),
             allow_names_only_reactions=self.limits.allow_names_only_reactions,
             checkpoint_saver=self._save_checkpoint,
         )
@@ -167,11 +209,21 @@ class AnnotationAgentController:
             reaction_resources=resources,
             species_annotator_provenance=species_prov,
         )
-        backend_identity = (
-            backend.identity() if hasattr(backend, "identity") else {"backend": type(backend).__name__}
+        planner_identity = (
+            self.planner.identity()
+            if hasattr(self.planner, "identity")
+            else {"backend": type(self.planner).__name__, "role": "planner"}
         )
+        inference_identity = (
+            self.inference.identity()
+            if hasattr(self.inference, "identity")
+            else {"backend": type(self.inference).__name__, "role": "inference"}
+        )
+        composite_backend = {"planner": planner_identity, "inference": inference_identity}
         self.provenance: dict[str, Any] = {
-            "backend": backend_identity,
+            "backend": composite_backend,
+            "planner": planner_identity,
+            "inference": inference_identity,
             "settings": {
                 "scope": scope.value,
                 "limits": self.limits.model_dump(mode="json"),
@@ -183,14 +235,19 @@ class AnnotationAgentController:
             "planner_meta": [],
             "revisions": [],
             "inference_stages": [],
+            "planner_usage": {},
             "execution_semantics": "at_least_once",
         }
         # Absolute resource paths are audit-only; resume identity uses content fingerprints.
         self.provenance["resource_paths"] = dict(resource_paths)
-        if hasattr(backend, "resource_paths"):
-            self.provenance["backend_resource_paths"] = dict(getattr(backend, "resource_paths") or {})
-        if hasattr(backend, "load_info") and getattr(backend, "load_info"):
-            self.provenance["backend_load_info"] = dict(getattr(backend, "load_info") or {})
+        if hasattr(self.inference, "resource_paths"):
+            self.provenance["backend_resource_paths"] = dict(
+                getattr(self.inference, "resource_paths") or {}
+            )
+        if hasattr(self.inference, "load_info") and getattr(self.inference, "load_info"):
+            self.provenance["backend_load_info"] = dict(getattr(self.inference, "load_info") or {})
+        if hasattr(self.planner, "budget"):
+            self.provenance["planner_usage"] = self.planner.budget.summary()
         self.provenance["cache_identity"] = _cache_identity(
             self.inventory.sha256,
             self.provenance["backend"],
@@ -205,14 +262,21 @@ class AnnotationAgentController:
         return path / "checkpoint.json" if path.is_dir() else path
 
     def _build_checkpoint(self) -> AgentCheckpoint:
+        planner_budget = {}
+        if hasattr(self.planner, "budget"):
+            planner_budget = self.planner.budget.summary()
+            self.provenance["planner_usage"] = planner_budget
         return AgentCheckpoint(
-            schema_version=2,
+            schema_version=3,
             cache_identity=self.provenance["cache_identity"],
             model_sha256=self.inventory.sha256,
             backend=dict(self.provenance.get("backend") or {}),
+            planner=dict(self.provenance.get("planner") or {}),
+            inference=dict(self.provenance.get("inference") or {}),
             settings=dict(self.provenance.get("settings") or {}),
             tool_schema_version=TOOL_SCHEMA_VERSION,
             resource_identity=dict(self.resource_identity),
+            planner_budget=planner_budget,
             initial_plan=self.initial_plan,
             executed_plan=self.executed_plan,
             entity_states=dict(self.entity_states),
@@ -243,6 +307,12 @@ class AnnotationAgentController:
                 clarification_prompt=self.clarification_prompt,
                 execution_mode=self.provenance.get("execution_mode"),
                 llm_planning_succeeded=self.provenance.get("llm_planning_succeeded"),
+                planner_prompt_version=(self.provenance.get("planner") or {}).get(
+                    "prompt_version"
+                ),
+                planner_schema_version=(self.provenance.get("planner") or {}).get(
+                    "schema_version"
+                ),
             ),
             in_flight_action=self.in_flight_action,
         )
@@ -283,13 +353,13 @@ class AnnotationAgentController:
         if "schema_version" not in raw:
             raise CheckpointCompatibilityError(
                 "unsupported checkpoint: missing schema_version "
-                "(pre-v2 checkpoints cannot be resumed; restart without resume_from)"
+                "(pre-v3 checkpoints cannot be resumed; restart without resume_from)"
             )
-        if raw.get("schema_version") != 2:
+        if raw.get("schema_version") != 3:
             raise CheckpointCompatibilityError(
                 f"unsupported checkpoint schema_version={raw.get('schema_version')!r}; "
-                "only schema_version=2 is supported (v1 lacked content-based "
-                "resource/tokenizer identity; restart without resume_from)"
+                "only schema_version=3 is supported (requires dual planner/inference "
+                "identities and planner budget ledger; restart without resume_from)"
             )
         try:
             ckpt = AgentCheckpoint.model_validate(raw)
@@ -297,12 +367,20 @@ class AnnotationAgentController:
             raise CheckpointCompatibilityError(
                 f"incomplete or invalid checkpoint schema: {exc}"
             ) from exc
+        if not ckpt.planner or not ckpt.inference:
+            raise CheckpointCompatibilityError(
+                "checkpoint missing planner/inference identities required by schema_version=3"
+            )
 
         mismatches: list[str] = []
         if ckpt.model_sha256 != self.inventory.sha256:
             mismatches.append("model_sha256")
         if ckpt.backend != self.provenance["backend"]:
             mismatches.append("backend")
+        if ckpt.planner != self.provenance.get("planner"):
+            mismatches.append("planner")
+        if ckpt.inference != self.provenance.get("inference"):
+            mismatches.append("inference")
         if ckpt.settings != self.provenance["settings"]:
             mismatches.append("settings")
         if ckpt.tool_schema_version != TOOL_SCHEMA_VERSION:
@@ -341,6 +419,15 @@ class AnnotationAgentController:
             self.agent_resources.species_recommendations = pd.DataFrame(ckpt.species_recommendations)
         if ckpt.reaction_recommendations is not None:
             self.agent_resources.reaction_recommendations = pd.DataFrame(ckpt.reaction_recommendations)
+
+        if ckpt.planner_budget and hasattr(self.planner, "budget"):
+            from core.agent.planner_budget import PlannerBudgetLedger
+
+            self.planner.budget = PlannerBudgetLedger.from_dict(dict(ckpt.planner_budget))
+            self.planner.budget_path = self.budget_path
+            self.provenance["planner_usage"] = self.planner.budget.summary()
+            if self.budget_path is not None:
+                self.planner.budget.persist(self.budget_path)
 
         prov = ckpt.provenance
         self.provenance["planner_meta"] = list(prov.planner_meta)
@@ -822,6 +909,7 @@ class AnnotationAgentController:
                     action,
                     self.inventory,
                     known_task_ids=[t.task_id for t in self.executed_plan.tasks],
+                    authorized_annotation_models=self.limits.authorized_annotation_models,
                 )
             except PlanValidationError as exc:
                 obs = ToolObservation(
@@ -923,11 +1011,14 @@ class AnnotationAgentController:
 
         self._reconcile_terminal_pending(interrupted=interrupted and not accepted_finish)
         self._save_checkpoint()
-        if hasattr(self.backend, "unload"):
-            try:
-                self.backend.unload()
-            except Exception:
-                pass
+        for role_backend in (self.planner, self.inference):
+            if role_backend is not None and hasattr(role_backend, "unload"):
+                try:
+                    role_backend.unload()
+                except Exception:
+                    pass
+        if hasattr(self.planner, "budget"):
+            self.provenance["planner_usage"] = self.planner.budget.summary()
 
         report = export_artifacts(
             output_dir=self.output_dir,
@@ -979,6 +1070,8 @@ def auto_annotate_model(
     resources: Any = None,
     output_dir: str | Path = "auto_annotate_output",
     *,
+    planner: Any = None,
+    inference: Any = None,
     reaction_retriever: Any = None,
     scope: str | AnnotationScope = AnnotationScope.ADD_MISSING,
     limits: Optional[ExecutionLimits] = None,
@@ -987,21 +1080,30 @@ def auto_annotate_model(
     allow_structural_fallback: Optional[bool] = None,
     interrupt_after_actions: Optional[int] = None,
 ) -> AutoAnnotateResult:
-    """Public entry point for the automatic model-annotation agent."""
-    if backend is None:
+    """Public entry point for the automatic model-annotation agent.
+
+    Prefer ``planner=`` / ``inference=`` for split orchestration vs biological
+    annotation. Legacy ``backend=`` alone remains supported for offline MockBackend
+    tests (both roles). Conflicting simultaneous legacy/new wiring should be
+    resolved by callers before entry (CLI rejects conflicts).
+    """
+    if backend is None and planner is None and inference is None:
         from core.agent.backends.mock import MockBackend
 
         backend = MockBackend()
     if isinstance(scope, str):
         scope = AnnotationScope(scope)
-    # Real/metabolm backends default to no silent structural fallback.
+    # Real/openai/metabolm planners default to no silent structural fallback.
     if allow_structural_fallback is None:
-        backend_name = getattr(backend, "name", type(backend).__name__).lower()
-        allow_structural_fallback = backend_name in {"mock"}
+        role_objs = [o for o in (planner, inference, backend) if o is not None]
+        names = [getattr(o, "name", type(o).__name__).lower() for o in role_objs]
+        allow_structural_fallback = bool(names) and all(n == "mock" for n in names)
     controller = AnnotationAgentController(
         model_file=model_file,
         request=request,
         backend=backend,
+        planner=planner,
+        inference=inference,
         output_dir=output_dir,
         resources=resources,
         reaction_retriever=reaction_retriever,

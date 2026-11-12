@@ -36,6 +36,9 @@ class AgentResources:
     species_annotator: Optional[Callable[..., pd.DataFrame]] = None
     species_backend: Any = None
     species_annotator_provenance: dict[str, Any] = field(default_factory=dict)
+    authorized_annotation_models: list[str] = field(
+        default_factory=lambda: ["metabolm-local"]
+    )
     species_recommendations: Optional[pd.DataFrame] = None
     reaction_recommendations: Optional[pd.DataFrame] = None
     reaction_evidence: list[dict] = field(default_factory=list)
@@ -520,6 +523,21 @@ class ToolRegistry:
             )
         args = parse_tool_arguments(action.tool, action.arguments)
         llm_model = getattr(args, "llm_model", "metabolm-local")
+        allowed = {
+            str(m) for m in (self.resources.authorized_annotation_models or ["metabolm-local"])
+        }
+        if str(llm_model) not in allowed:
+            return _obs(
+                action,
+                ok=False,
+                error=(
+                    f"unauthorized annotation backend llm_model={llm_model!r}; "
+                    f"authorized={sorted(allowed)}"
+                ),
+                failure_kind=FailureKind.TECHNICAL_FAILURE,
+                inventory=self.resources.inventory,
+                skip_semantic=True,
+            )
         max_output_tokens = getattr(args, "max_output_tokens", 512)
         reasoning_effort = getattr(args, "reasoning_effort", "low")
         wanted = set(action.target_ids)
@@ -555,12 +573,23 @@ class ToolRegistry:
                 reasoning_effort=reasoning_effort,
                 max_output_tokens=max_output_tokens,
             )
-            # Local MetaboLLM cannot satisfy OpenAI Responses model-id equality checks.
-            # Wrap transport to present the requested model identity.
+            # Record actual transport model identity; do not rewrite.
             raw = transport(body)
-            if isinstance(raw, dict) and raw.get("model") != llm_model:
-                raw = dict(raw)
-                raw["model"] = llm_model
+            actual_model = None
+            if isinstance(raw, dict):
+                actual_model = raw.get("model")
+            if actual_model is not None and str(actual_model) != str(llm_model):
+                return _obs(
+                    action,
+                    ok=False,
+                    error=(
+                        f"inference transport model identity mismatch: "
+                        f"requested={llm_model!r} returned={actual_model!r}"
+                    ),
+                    failure_kind=FailureKind.TECHNICAL_FAILURE,
+                    inventory=self.resources.inventory,
+                    skip_semantic=True,
+                )
             status, answer, errors = grounded_mod.classify_response(raw, evidence, llm_model)
             row = {
                 "id": rid,

@@ -266,13 +266,42 @@ def check_evidence_consistency(
     return problems
 
 
+def check_authorized_annotation_model(
+    tool: str,
+    arguments: dict[str, Any] | None,
+    authorized_models: Iterable[str] | None,
+) -> list[str]:
+    """Reject tool args that request an unauthorized biological annotation backend.
+
+    Does not rewrite identities — callers must record actual planner/inference ids.
+    """
+    if tool != "select_reaction_grounded":
+        return []
+    allowed = {str(m) for m in (authorized_models or ["metabolm-local"])}
+    args = arguments or {}
+    requested = str(args.get("llm_model") or "metabolm-local")
+    if requested not in allowed:
+        return [
+            f"unauthorized annotation backend llm_model={requested!r} for {tool}; "
+            f"authorized={sorted(allowed)}"
+        ]
+    return []
+
+
 def validate_action(
     action: AgentAction,
     inventory: ModelInventory,
     *,
     known_task_ids: Iterable[str] | None = None,
+    authorized_annotation_models: Iterable[str] | None = None,
 ) -> SemanticCheckReport:
-    checks = ["allowlist", "argument_schema", "target_existence", "representation_support"]
+    checks = [
+        "allowlist",
+        "argument_schema",
+        "target_existence",
+        "representation_support",
+        "authorized_annotation_model",
+    ]
     problems: list[str] = []
     if action.tool not in ALLOWED_TOOLS:
         problems.append(f"tool not allowlisted: {action.tool}")
@@ -282,6 +311,11 @@ def validate_action(
         problems.append(f"argument schema invalid for {action.tool}: {exc}")
     problems.extend(check_target_existence(action.target_ids, inventory, tool=action.tool))
     problems.extend(check_representation_support(action.target_ids, inventory, tool=action.tool))
+    problems.extend(
+        check_authorized_annotation_model(
+            action.tool, action.arguments, authorized_annotation_models
+        )
+    )
     if known_task_ids is not None:
         checks.append("task_id_existence")
         known = set(known_task_ids)
@@ -310,8 +344,10 @@ def validate_plan(
         "representation_support",
         "dependency_validity",
         "action_semantic_checks",
+        "authorized_annotation_model",
     ]
     problems: list[str] = []
+    authorized = list(limits.authorized_annotation_models or ["metabolm-local"])
     task_ids = [t.task_id for t in plan.tasks]
     if len(task_ids) != len(set(task_ids)):
         problems.append("duplicate task_id")
@@ -328,10 +364,18 @@ def validate_plan(
         problems.extend(
             check_representation_support([task.target_id], inventory, tool=task.tool)
         )
+        problems.extend(
+            check_authorized_annotation_model(task.tool, task.arguments, authorized)
+        )
     problems.extend(check_dependency_validity(plan))
     for action in plan.actions:
         try:
-            validate_action(action, inventory, known_task_ids=task_ids)
+            validate_action(
+                action,
+                inventory,
+                known_task_ids=task_ids,
+                authorized_annotation_models=authorized,
+            )
         except PlanValidationError as exc:
             problems.append(str(exc))
     semantic = SemanticCheckReport(

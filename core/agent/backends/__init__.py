@@ -1,8 +1,9 @@
 """LLM backends for the automatic annotation agent."""
 
 from core.agent.backends.mock import MockBackend
+from core.agent.backends.openai_planner import OpenAIPlannerBackend
 
-__all__ = ["MockBackend"]
+__all__ = ["MockBackend", "OpenAIPlannerBackend"]
 
 try:
     from core.agent.backends.metabolm import MetaboLLMBackend, ensure_gpu_idle_enough

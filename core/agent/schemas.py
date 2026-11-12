@@ -454,6 +454,13 @@ class ExecutionLimits(StrictModel):
     allow_names_only_reactions: bool = True
     max_actions_per_turn: int = 3
     planner_max_new_tokens: int = 768
+    # Planner-only paid spend controls (default: zero paid dispatches).
+    planner_spend_authorized: bool = False
+    planner_spend_cap_usd: float = 0.0
+    # Biological annotation model ids permitted in tool arguments.
+    authorized_annotation_models: list[str] = Field(
+        default_factory=lambda: ["metabolm-local"]
+    )
 
     @classmethod
     def model_validate(cls, obj: Any, *args: Any, **kwargs: Any) -> "ExecutionLimits":
@@ -552,8 +559,9 @@ class AutoAnnotateResult(StrictModel):
 # Checkpoint / resume
 # ---------------------------------------------------------------------------
 
-# v2: content-based retrieval resource identity + MetaboLLM tokenizer fingerprints.
-CHECKPOINT_SCHEMA_VERSION: Literal[2] = 2
+# v3: dual planner/inference identities + durable planner-only spend ledger.
+# v2 checkpoints are rejected on resume (restart without resume_from).
+CHECKPOINT_SCHEMA_VERSION: Literal[3] = 3
 # Bump when allowlisted tool names or TOOL_ARG_MODELS / TOOL_RESULT_MODELS change.
 TOOL_SCHEMA_VERSION: Literal["agent-tools-v1"] = "agent-tools-v1"
 
@@ -579,6 +587,8 @@ class CheckpointProvenance(StrictModel):
     clarification_prompt: str = ""
     execution_mode: Optional[str] = None
     llm_planning_succeeded: Optional[bool] = None
+    planner_prompt_version: Optional[str] = None
+    planner_schema_version: Optional[str] = None
 
 
 class AgentCheckpoint(StrictModel):
@@ -588,15 +598,21 @@ class AgentCheckpoint(StrictModel):
     ``failure_revision_count``, ``last_planner_decision``) are required for
     multi-turn continue/finish loops. ``revision_count`` remains as a synonym
     of ``failure_revision_count`` for resume-plan compatibility.
+
+    schema_version=3 requires dual planner/inference identities and a planner
+    budget ledger. Older checkpoints cannot be resumed.
     """
 
-    schema_version: Literal[2] = CHECKPOINT_SCHEMA_VERSION
+    schema_version: Literal[3] = CHECKPOINT_SCHEMA_VERSION
     cache_identity: str
     model_sha256: str
     backend: dict[str, Any] = Field(default_factory=dict)
+    planner: dict[str, Any] = Field(default_factory=dict)
+    inference: dict[str, Any] = Field(default_factory=dict)
     settings: dict[str, Any] = Field(default_factory=dict)
     tool_schema_version: str = TOOL_SCHEMA_VERSION
     resource_identity: dict[str, Any] = Field(default_factory=dict)
+    planner_budget: dict[str, Any] = Field(default_factory=dict)
     initial_plan: Optional[AnnotationPlan] = None
     executed_plan: Optional[AnnotationPlan] = None
     entity_states: dict[str, EntityRuntimeState] = Field(default_factory=dict)

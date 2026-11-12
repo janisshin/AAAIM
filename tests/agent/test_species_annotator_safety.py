@@ -130,7 +130,8 @@ def test_mock_annotator_is_explicit_in_provenance(chemical_only_model, tmp_path)
     )
     assert result.provenance["species_annotator"]["kind"] == "mock_synthetic"
     assert result.provenance["species_annotator"]["explicit"] is True
-    assert result.provenance["backend"]["backend"] == "mock"
+    assert result.provenance["backend"]["planner"]["backend"] == "mock"
+    assert result.provenance["backend"]["inference"]["backend"] == "mock"
 
 
 def test_missing_resource_is_technical_failure_not_supported(tmp_path, monkeypatch):
