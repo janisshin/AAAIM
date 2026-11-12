@@ -344,10 +344,13 @@ def validate_plan(
         raise PlanValidationError("; ".join(problems))
     plan.limits = {
         "max_actions": limits.max_actions,
-        "max_revisions": limits.max_revisions,
+        "max_planning_turns": limits.max_planning_turns,
+        "max_failure_revisions": limits.max_failure_revisions,
         "max_retries": limits.max_retries,
         "max_runtime_sec": limits.max_runtime_sec,
         "allow_names_only_reactions": limits.allow_names_only_reactions,
+        "max_actions_per_turn": limits.max_actions_per_turn,
+        "planner_max_new_tokens": limits.planner_max_new_tokens,
     }
     return plan
 

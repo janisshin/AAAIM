@@ -25,13 +25,8 @@ MOCK_SYNTHETIC_ANNOTATIONS = {
 
 
 def _data_dir() -> Path:
-    """Resolve AAAIM data/ without importing chromadb-backed database_search."""
-    try:
-        from core.database_search import get_data_dir
-
-        return Path(get_data_dir())
-    except Exception:
-        return Path(__file__).resolve().parents[2] / "data"
+    """Resolve AAAIM data/ without importing database_search (avoids RAG/cygrpc)."""
+    return Path(__file__).resolve().parents[2] / "data"
 
 
 def species_database_available(database: str = "chebi") -> tuple[bool, str]:
@@ -161,7 +156,14 @@ def llm_backend_hook(backend: Any) -> Iterator[dict[str, Any]]:
                 }
             else:
                 prompt_messages.insert(0, {"role": "system", "content": schema_text})
-        generated = backend.generate(prompt_messages)
+        # Prefer the caller's completion budget; fall back above the planner default
+        # so structured species normalization JSON is less likely to truncate.
+        budget = max_completion_tokens if max_completion_tokens is not None else 1536
+        try:
+            generated = backend.generate(prompt_messages, max_new_tokens=int(budget))
+        except TypeError:
+            # Test stubs may only accept messages.
+            generated = backend.generate(prompt_messages)
         if generated.get("terminal_status") != "generated" or not generated.get("raw_text"):
             raise RuntimeError(
                 f"local species LLM failed: {generated.get('error') or generated.get('terminal_status')}"
@@ -181,6 +183,36 @@ def llm_backend_hook(backend: Any) -> Iterator[dict[str, Any]]:
         llm.query_llm_message_with_history = original  # type: ignore[assignment]
 
 
+def _species_frame_from_annotate_result(result: Any) -> pd.DataFrame:
+    """Normalize annotate_single_model success/error shapes into a DataFrame.
+
+    Success may return AnnotationResult; failure paths often return
+    ``(DataFrame, metrics_dict)`` without raising.
+    """
+    if result is None:
+        raise RuntimeError("species annotation returned no result")
+    if hasattr(result, "species_recommendations_df"):
+        frame = result.species_recommendations_df
+        if frame is None:
+            raise RuntimeError("species annotation returned no recommendations table")
+        return frame
+    if isinstance(result, tuple) and len(result) >= 1:
+        frame = result[0]
+        metrics = result[1] if len(result) > 1 and isinstance(result[1], dict) else {}
+        err = metrics.get("error") if isinstance(metrics, dict) else None
+        if err:
+            raise RuntimeError(f"species annotation failed: {err}")
+        if frame is None:
+            raise RuntimeError("species annotation returned empty failure payload")
+        if isinstance(frame, pd.DataFrame):
+            if frame.empty and err:
+                raise RuntimeError(f"species annotation failed: {err}")
+            return frame
+    raise RuntimeError(
+        f"unexpected species annotation result type: {type(result).__name__}"
+    )
+
+
 def make_real_species_annotator(
     backend: Any = None,
     *,
@@ -189,6 +221,7 @@ def make_real_species_annotator(
     effort: str = "low",
     validation: bool = True,
     llm_model: str = "metabolm-local",
+    max_completion_tokens: int = 1536,
     call_log: Optional[dict[str, Any]] = None,
 ) -> Callable[..., pd.DataFrame]:
     """Build a species annotator that uses the real AAAIM species pipeline."""
@@ -225,6 +258,7 @@ def make_real_species_annotator(
                 effort=effort,
                 validation=validation,
                 llm_model=llm_model,
+                max_completion_tokens=max_completion_tokens,
                 top_k=3,
                 n_return=1,
                 save_to=None,
@@ -243,9 +277,7 @@ def make_real_species_annotator(
                 "refusing hosted-provider fallback and synthetic identifiers"
             )
 
-        frame = result.species_recommendations_df
-        if frame is None:
-            raise RuntimeError("species annotation returned no recommendations table")
+        frame = _species_frame_from_annotate_result(result)
         frame = frame.copy()
         if "id" in frame.columns:
             frame = frame[frame["id"].astype(str).isin({str(t) for t in target_ids})].copy()

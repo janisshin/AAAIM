@@ -2,13 +2,14 @@
 from __future__ import annotations
 
 import json
+from collections import Counter
 from pathlib import Path
 
 import libsbml
 import pandas as pd
 import pytest
 
-from core.agent import AnnotationScope, ExecutionLimits, auto_annotate_model
+from core.agent import AnnotationScope, CheckpointCompatibilityError, ExecutionLimits, auto_annotate_model
 from core.agent.backends.mock import MockBackend
 from core.agent.inspect_model import inspect_sbml_model
 from core.agent.schemas import (
@@ -23,6 +24,41 @@ from core.agent.schemas import (
 )
 from core.agent.validate import PlanValidationError, validate_plan
 from tests.agent.conftest import TinyRetriever
+
+
+def _selected_answer():
+    return {
+        "abstain": False,
+        "predicted_kegg_id": "R00001",
+        "selected_evidence_rank": 1,
+        "supporting_evidence_ids": ["E01"],
+        "confidence": 0.7,
+        "reasoning_summary": "Synthetic selection",
+        "abstention_reason": None,
+    }
+
+
+def _tool_counts(result) -> Counter:
+    return Counter(o.tool for o in result.observations)
+
+
+def _entity_states(result) -> dict[str, str]:
+    return {k: v.state.value for k, v in sorted(result.entity_states.items())}
+
+
+def _task_states(result) -> dict[str, str]:
+    assert result.executed_plan is not None
+    return {t.task_id: t.state.value for t in result.executed_plan.tasks}
+
+
+def _reaction_ids(result) -> list[str]:
+    df = None
+    # recommendations may live only on resources via report path; use observations/result
+    if result.report.recommendations_path:
+        payload = json.loads(Path(result.report.recommendations_path).read_text(encoding="utf-8"))
+        rows = payload.get("reactions") or []
+        return [r.get("id") for r in rows if r.get("annotation")]
+    return []
 
 
 def test_inspect_mixed_does_not_classify_whole_file(mixed_model):
@@ -171,10 +207,16 @@ def test_revision_and_action_limits(chemical_only_model, tmp_path):
         str(chemical_only_model),
         backend=MockBackend(),
         output_dir=tmp_path / "limits",
-        limits=ExecutionLimits(max_actions=2, max_revisions=0),
+        limits=ExecutionLimits(max_actions=2, max_failure_revisions=0),
     )
     assert result.report.status in {"partial", "interrupted", "completed"}
-    assert result.provenance.get("stop_reason") in {None, "max_actions", "max_revisions"}
+    assert result.provenance.get("stop_reason") in {
+        None,
+        "max_actions",
+        "max_failure_revisions",
+        "max_planning_turns",
+        "max_revisions",
+    }
 
 
 def test_repeated_action_detection(chemical_only_model, tmp_path):
@@ -198,8 +240,8 @@ def test_repeated_action_detection(chemical_only_model, tmp_path):
         rationale="repeat",
     )
     decisions = [
-        PlannerDecision(decision="plan", tasks=inv_tasks, actions=[action, action, action]),
-        PlannerDecision(decision="stop", reason="stop"),
+        PlannerDecision(decision="continue", tasks=inv_tasks, actions=[action, action, action]),
+        PlannerDecision(decision="finish", reason="stop", tasks=inv_tasks),
     ]
     result = auto_annotate_model(
         str(chemical_only_model),
@@ -211,30 +253,302 @@ def test_repeated_action_detection(chemical_only_model, tmp_path):
     assert result.report is not None
 
 
-def test_interrupt_resume_skips_completed_work(chemical_only_model, tmp_path):
-    out1 = tmp_path / "run1"
-    result1 = auto_annotate_model(
+def test_interrupt_resume_after_species_annotation(chemical_only_model, tmp_path):
+    """Interrupt after species work; resume must not re-annotate or replan."""
+    out = tmp_path / "species_resume"
+    baseline = auto_annotate_model(
         str(chemical_only_model),
         backend=MockBackend(),
-        output_dir=out1,
+        output_dir=tmp_path / "species_base",
+    )
+    # chemical_only: two species annotate actions then export
+    interrupted = auto_annotate_model(
+        str(chemical_only_model),
+        backend=MockBackend(),
+        output_dir=out,
+        interrupt_after_actions=2,
+    )
+    assert interrupted.report.status == "interrupted"
+    ckpt = json.loads((out / "checkpoint.json").read_text(encoding="utf-8"))
+    assert ckpt["schema_version"] == 1
+    assert ckpt["executed_plan"] is not None
+    assert any(
+        t["tool"] == "annotate_species_candidates" and t["state"] == "completed"
+        for t in ckpt["executed_plan"]["tasks"]
+    )
+
+    backend2 = MockBackend()
+    resumed = auto_annotate_model(
+        str(chemical_only_model),
+        backend=backend2,
+        output_dir=out,
+        resume_from=out,
+    )
+    # May request finish/continue turns after the saved action group is exhausted,
+    # but must not re-execute completed species annotation.
+    assert resumed.report.status in {"completed", "partial"}
+    assert _entity_states(resumed) == _entity_states(baseline)
+    assert _tool_counts(resumed)["annotate_species_candidates"] == _tool_counts(baseline)[
+        "annotate_species_candidates"
+    ]
+    assert all(
+        o.action_id in {x.action_id for x in interrupted.observations}
+        for o in resumed.observations
+        if o.tool == "annotate_species_candidates"
+    )
+    for tid in resumed.report.completed_ids:
+        assert resumed.entity_states[tid].state == TaskState.COMPLETED
+    species_rows = json.loads(Path(resumed.report.recommendations_path).read_text(encoding="utf-8"))[
+        "species"
+    ]
+    ids = [r["id"] for r in species_rows]
+    assert len(ids) == len(set(ids))
+
+
+def test_interrupt_resume_between_retrieve_and_select(reaction_only_model, tmp_path):
+    out = tmp_path / "retrieve_resume"
+    retriever = TinyRetriever()
+    answer = _selected_answer()
+    baseline_ret = TinyRetriever()
+    baseline = auto_annotate_model(
+        str(reaction_only_model),
+        backend=MockBackend(grounded_responses={"default": answer}),
+        reaction_retriever=baseline_ret,
+        output_dir=tmp_path / "retrieve_base",
+    )
+    interrupted = auto_annotate_model(
+        str(reaction_only_model),
+        backend=MockBackend(grounded_responses={"default": answer}),
+        reaction_retriever=retriever,
+        output_dir=out,
         interrupt_after_actions=1,
     )
-    assert result1.report.status == "interrupted"
-    assert (out1 / "checkpoint.json").is_file()
-    out2 = tmp_path / "run2"
-    # Copy checkpoint into out2 and resume
-    out2.mkdir()
-    (out2 / "checkpoint.json").write_text((out1 / "checkpoint.json").read_text(encoding="utf-8"), encoding="utf-8")
-    # Fix cache identity by using same backend settings via resume_from of out1 directly
-    result2 = auto_annotate_model(
+    assert interrupted.report.status == "interrupted"
+    ckpt = json.loads((out / "checkpoint.json").read_text(encoding="utf-8"))
+    assert ckpt["reaction_evidence"], "evidence must be persisted before select"
+    assert retriever.retrieve_calls == 1
+
+    backend2 = MockBackend(grounded_responses={"default": answer})
+    resumed = auto_annotate_model(
+        str(reaction_only_model),
+        backend=backend2,
+        reaction_retriever=retriever,
+        output_dir=out,
+        resume_from=out,
+    )
+    assert retriever.retrieve_calls == 1  # no re-retrieve
+    assert any(o.tool == "select_reaction_grounded" and o.ok for o in resumed.observations)
+    assert _entity_states(resumed) == _entity_states(baseline)
+    assert _tool_counts(resumed)["retrieve_reaction_rrf"] == _tool_counts(baseline)[
+        "retrieve_reaction_rrf"
+    ]
+    assert all(
+        o.action_id in {x.action_id for x in interrupted.observations}
+        for o in resumed.observations
+        if o.tool == "retrieve_reaction_rrf"
+    )
+
+
+def test_interrupt_resume_after_select_before_write(reaction_only_model, tmp_path):
+    out = tmp_path / "select_resume"
+    answer = _selected_answer()
+    retriever = TinyRetriever()
+    baseline = auto_annotate_model(
+        str(reaction_only_model),
+        backend=MockBackend(grounded_responses={"default": answer}),
+        reaction_retriever=TinyRetriever(),
+        output_dir=tmp_path / "select_base",
+    )
+    interrupted = auto_annotate_model(
+        str(reaction_only_model),
+        backend=MockBackend(grounded_responses={"default": answer}),
+        reaction_retriever=retriever,
+        output_dir=out,
+        interrupt_after_actions=2,
+    )
+    assert interrupted.report.status == "interrupted"
+    ckpt = json.loads((out / "checkpoint.json").read_text(encoding="utf-8"))
+    assert ckpt["reaction_recommendations"] is not None
+    select_obs = [o for o in interrupted.observations if o.tool == "select_reaction_grounded"]
+    assert select_obs and select_obs[0].ok
+
+    backend2 = MockBackend(grounded_responses={"default": answer})
+    resumed = auto_annotate_model(
+        str(reaction_only_model),
+        backend=backend2,
+        reaction_retriever=retriever,
+        output_dir=out,
+        resume_from=out,
+    )
+    assert backend2.transport_calls == 0  # selection not repeated
+    assert _entity_states(resumed) == _entity_states(baseline)
+    assert _reaction_ids(resumed) == _reaction_ids(baseline)
+    assert _tool_counts(resumed)["select_reaction_grounded"] == _tool_counts(baseline)[
+        "select_reaction_grounded"
+    ]
+
+
+def test_interrupt_resume_during_plan_revision(reaction_only_model, tmp_path):
+    inv = inspect_sbml_model(str(reaction_only_model))
+    seed = MockBackend()._default_plan(inv)
+    decisions = [
+        seed,
+        PlannerDecision(
+            decision="continue",
+            tasks=list(seed.tasks),
+            actions=list(seed.actions),
+            reason="retry after transient retrieval failure",
+        ),
+    ]
+
+    class FlakyRetriever(TinyRetriever):
+        def retrieve(self, query):
+            if self.retrieve_calls == 0:
+                self.retrieve_calls += 1
+                raise RuntimeError("transient retrieval failure")
+            return super().retrieve(query)
+
+    out = tmp_path / "revision_resume"
+    answer = _selected_answer()
+    retriever = FlakyRetriever()
+    interrupted = auto_annotate_model(
+        str(reaction_only_model),
+        backend=MockBackend(decisions=list(decisions), grounded_responses={"default": answer}),
+        reaction_retriever=retriever,
+        output_dir=out,
+        interrupt_after_actions=1,
+        allow_structural_fallback=False,
+    )
+    assert interrupted.report.status == "interrupted"
+    assert interrupted.provenance.get("revisions")
+    ckpt = json.loads((out / "checkpoint.json").read_text(encoding="utf-8"))
+    assert ckpt["revision_count"] >= 1
+    assert ckpt["failure_revision_count"] >= 1
+    assert ckpt["executed_plan"]["plan_version"] >= 2
+
+    backend2 = MockBackend(decisions=[], grounded_responses={"default": answer})
+    resumed = auto_annotate_model(
+        str(reaction_only_model),
+        backend=backend2,
+        reaction_retriever=retriever,
+        output_dir=out,
+        resume_from=out,
+        allow_structural_fallback=False,
+    )
+    assert resumed.executed_plan.plan_version >= 2
+    assert resumed.provenance.get("revisions")
+    assert resumed.report.status in {"completed", "partial", "interrupted"}
+    # Failure revision was restored; successful retrieve happens at most once after the flake.
+    assert retriever.retrieve_calls == 2
+
+
+def test_resume_rejects_incompatible_and_corrupt_checkpoints(chemical_only_model, tmp_path):
+    out = tmp_path / "compat"
+    auto_annotate_model(
         str(chemical_only_model),
         backend=MockBackend(),
-        output_dir=out1,
-        resume_from=out1,
+        output_dir=out,
+        interrupt_after_actions=1,
     )
-    assert result2.report.status in {"completed", "partial", "interrupted"}
-    # Completed fingerprints should prevent duplicate purchases/work
-    assert result2.provenance["cache_identity"] == result1.provenance["cache_identity"]
+    ckpt_path = out / "checkpoint.json"
+    good = json.loads(ckpt_path.read_text(encoding="utf-8"))
+
+    # Changed settings / backend / tool schema / resources / model hash
+    for field, value in [
+        ("settings", {**good["settings"], "request": "different request"}),
+        ("backend", {**good["backend"], "backend": "other"}),
+        ("tool_schema_version", "agent-tools-v999"),
+        ("resource_identity", {**good["resource_identity"], "reaction_retriever": {"resource": "other"}}),
+        ("model_sha256", "0" * 64),
+    ]:
+        mutated = dict(good)
+        mutated[field] = value
+        # Keep cache_identity stale so mismatch is reported clearly
+        ckpt_path.write_text(json.dumps(mutated, indent=2), encoding="utf-8")
+        with pytest.raises(CheckpointCompatibilityError, match=field):
+            auto_annotate_model(
+                str(chemical_only_model),
+                backend=MockBackend(),
+                output_dir=out,
+                resume_from=out,
+            )
+
+    # Corrupt JSON
+    ckpt_path.write_text("{not-json", encoding="utf-8")
+    with pytest.raises(CheckpointCompatibilityError, match="corrupt"):
+        auto_annotate_model(
+            str(chemical_only_model),
+            backend=MockBackend(),
+            output_dir=out,
+            resume_from=out,
+        )
+
+    # Missing schema_version (pre-v1)
+    ckpt_path.write_text(json.dumps({"cache_identity": good["cache_identity"]}), encoding="utf-8")
+    with pytest.raises(CheckpointCompatibilityError, match="schema_version"):
+        auto_annotate_model(
+            str(chemical_only_model),
+            backend=MockBackend(),
+            output_dir=out,
+            resume_from=out,
+        )
+
+    # Incomplete / truncated required fields
+    ckpt_path.write_text(
+        json.dumps({"schema_version": 1, "cache_identity": "x"}),
+        encoding="utf-8",
+    )
+    with pytest.raises(CheckpointCompatibilityError, match="incomplete|invalid"):
+        auto_annotate_model(
+            str(chemical_only_model),
+            backend=MockBackend(),
+            output_dir=out,
+            resume_from=out,
+        )
+
+    # Missing checkpoint file
+    missing = tmp_path / "missing_dir"
+    missing.mkdir()
+    with pytest.raises(CheckpointCompatibilityError, match="not found"):
+        auto_annotate_model(
+            str(chemical_only_model),
+            backend=MockBackend(),
+            output_dir=missing,
+            resume_from=missing,
+        )
+
+
+def test_resume_clears_in_flight_for_at_least_once(chemical_only_model, tmp_path):
+    out = tmp_path / "inflight"
+    auto_annotate_model(
+        str(chemical_only_model),
+        backend=MockBackend(),
+        output_dir=out,
+        interrupt_after_actions=1,
+    )
+    ckpt = json.loads((out / "checkpoint.json").read_text(encoding="utf-8"))
+    # Simulate crash after tool started but before durable completion.
+    completed = list(ckpt["completed_fingerprints"])
+    assert completed
+    fp = completed[0]
+    action = next(
+        a for a in ckpt["executed_plan"]["actions"] if a["tool"] == "annotate_species_candidates"
+    )
+    ckpt["completed_fingerprints"] = [x for x in completed if x != fp]
+    ckpt["in_flight_action"] = {"action": action, "fingerprint": fp}
+    # Roll back that observation from the durable log for a realistic crash window.
+    ckpt["observations"] = [o for o in ckpt["observations"] if o.get("action_id") != action["action_id"]]
+    (out / "checkpoint.json").write_text(json.dumps(ckpt, indent=2), encoding="utf-8")
+
+    resumed = auto_annotate_model(
+        str(chemical_only_model),
+        backend=MockBackend(),
+        output_dir=out,
+        resume_from=out,
+    )
+    assert resumed.report.status in {"completed", "partial"}
+    annotate = [o for o in resumed.observations if o.tool == "annotate_species_candidates"]
+    assert annotate  # at-least-once re-execution allowed
 
 
 def test_output_preserves_source_and_unrelated_content(partial_annotation_model, tmp_path):

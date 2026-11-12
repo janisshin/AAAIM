@@ -171,18 +171,9 @@ class MockBackend:
                 )
             )
 
-        actions.append(
-            AgentAction(
-                action_id="act::export",
-                tool="export_reports",
-                target_ids=[],
-                task_ids=[],
-                arguments={},
-                rationale="export annotated copy and reports",
-            )
-        )
+        # Export is controller-owned after an accepted finish decision.
         return PlannerDecision(
-            decision="plan",
+            decision="continue",
             tasks=tasks,
             actions=actions,
             reason="mock default mixed-entity plan",
@@ -196,8 +187,14 @@ class MockBackend:
         prior_plan: Optional[AnnotationPlan] = None,
         observations: Sequence[ToolObservation] = (),
         revision_reason: str = "",
+        limits: Any = None,
+        entity_states: Any = None,
     ) -> PlannerDecision:
+        from core.agent.schemas import ExecutionLimits
+
         self.plan_calls += 1
+        lim = limits if isinstance(limits, ExecutionLimits) else ExecutionLimits()
+        max_n = max(1, int(lim.max_actions_per_turn))
         if self._fail_plan_times > 0:
             self._fail_plan_times -= 1
             raise RuntimeError("mock planner technical failure")
@@ -206,18 +203,58 @@ class MockBackend:
                 decision = self._decisions[self._call_i]
                 self._call_i += 1
                 return decision
-            return PlannerDecision(decision="stop", reason="no further scripted decisions")
-        if prior_plan is None:
-            return self._default_plan(inventory)
-        # After observations: continue until export, or stop if asked.
-        if revision_reason:
             return PlannerDecision(
-                decision="revise",
-                tasks=prior_plan.tasks,
-                actions=[a for a in prior_plan.actions if a.tool == "export_reports"],
-                reason=revision_reason or "mock revision after observation",
+                decision="finish",
+                reason="no further scripted decisions",
+                tasks=list(prior_plan.tasks) if prior_plan else [],
             )
-        return PlannerDecision(decision="continue", reason="mock continue")
+        full = self._default_plan(inventory)
+
+        def _incomplete_actions(actions: list[AgentAction]) -> list[AgentAction]:
+            if prior_plan is None:
+                return list(actions)
+            terminal = {
+                t.task_id
+                for t in prior_plan.tasks
+                if t.state
+                in {
+                    TaskState.COMPLETED,
+                    TaskState.SKIPPED,
+                    TaskState.FAILED,
+                    TaskState.UNRESOLVED,
+                }
+            }
+            out: list[AgentAction] = []
+            for a in actions:
+                if a.task_ids and all(tid in terminal for tid in a.task_ids):
+                    continue
+                out.append(a)
+            return out
+
+        # Track remaining default actions across ordinary planning turns.
+        if not hasattr(self, "_default_action_queue"):
+            self._default_action_queue = _incomplete_actions(full.actions)  # type: ignore[attr-defined]
+            self._default_tasks = list(full.tasks)  # type: ignore[attr-defined]
+        if revision_reason:
+            # Failure-driven revision: re-queue remaining work from the full default.
+            self._default_action_queue = _incomplete_actions(full.actions)  # type: ignore[attr-defined]
+            self._default_tasks = list(full.tasks)  # type: ignore[attr-defined]
+        queue: list[AgentAction] = list(getattr(self, "_default_action_queue", []))
+        if not queue:
+            return PlannerDecision(
+                decision="finish",
+                tasks=list(getattr(self, "_default_tasks", full.tasks)),
+                reason="mock finish: default action queue exhausted",
+            )
+        group = queue[:max_n]
+        self._default_action_queue = queue[max_n:]  # type: ignore[attr-defined]
+        return PlannerDecision(
+            decision="continue",
+            tasks=list(getattr(self, "_default_tasks", full.tasks)),
+            actions=group,
+            reason="mock continue action group"
+            + (f" after failure: {revision_reason}" if revision_reason else ""),
+        )
 
     def grounded_transport(self, provider_payload: Mapping[str, Any]) -> dict[str, Any]:
         self.transport_calls += 1

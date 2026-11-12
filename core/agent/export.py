@@ -8,6 +8,7 @@ from typing import Any, Optional
 import libsbml
 import pandas as pd
 
+from core.agent.io import atomic_write_json
 from core.agent.schemas import (
     AnnotationPlan,
     AutoAnnotateReport,
@@ -21,9 +22,7 @@ from core.update_model import update_annotation
 
 
 def _write_json(path: Path, payload: Any) -> str:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
-    return str(path)
+    return atomic_write_json(payload, path)
 
 
 def validate_sbml_file(path: str) -> tuple[bool, str]:
@@ -120,18 +119,43 @@ def export_artifacts(
 
     completed, unresolved, skipped, failed = [], [], [], []
     technical_errors, biological_reservations, recommendations = [], [], []
-    for tid, state in entity_states.items():
-        if state.state == TaskState.COMPLETED:
+    # Prefer entity_states; if a plan task is terminal and entity is still PENDING,
+    # align the report with the non-PENDING plan state.
+    plan_states: dict[str, TaskState] = {}
+    if executed_plan is not None:
+        for task in executed_plan.tasks:
+            prev = plan_states.get(task.target_id)
+            if prev is None or (
+                prev in {TaskState.PENDING, TaskState.RUNNING}
+                and task.state not in {TaskState.PENDING, TaskState.RUNNING}
+            ):
+                plan_states[task.target_id] = task.state
+
+    report_ids = set(entity_states) | set(plan_states)
+    for tid in report_ids:
+        state = entity_states.get(tid)
+        effective = state.state if state is not None else TaskState.PENDING
+        plan_state = plan_states.get(tid)
+        if (
+            plan_state is not None
+            and effective in {TaskState.PENDING, TaskState.RUNNING}
+            and plan_state not in {TaskState.PENDING, TaskState.RUNNING}
+        ):
+            effective = plan_state
+        if effective == TaskState.COMPLETED:
             completed.append(tid)
-        elif state.state == TaskState.UNRESOLVED:
+        elif effective == TaskState.UNRESOLVED:
             unresolved.append(tid)
-            biological_reservations.append(f"{tid}: {state.failure_kind.value} {'; '.join(state.notes)}".strip())
-        elif state.state == TaskState.SKIPPED:
+            notes = state.notes if state is not None else []
+            kind = state.failure_kind.value if state is not None else ""
+            biological_reservations.append(f"{tid}: {kind} {'; '.join(notes)}".strip())
+        elif effective == TaskState.SKIPPED:
             skipped.append(tid)
-        elif state.state == TaskState.FAILED:
+        elif effective == TaskState.FAILED:
             failed.append(tid)
-            technical_errors.append(f"{tid}: {'; '.join(state.notes)}".strip())
-        elif state.state == TaskState.PENDING:
+            notes = state.notes if state is not None else []
+            technical_errors.append(f"{tid}: {' '.join(notes)}".strip())
+        elif effective == TaskState.PENDING:
             unresolved.append(tid)
 
     for obs in observations:

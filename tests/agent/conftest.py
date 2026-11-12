@@ -153,9 +153,15 @@ class TinyRetriever:
         for i in range(1, 13)
     }
 
+    def __init__(self):
+        self.retrieve_calls = 0
+        # Instance copy so tests can mutate identity without cross-talk.
+        self.provenance = dict(type(self).provenance)
+
     def retrieve(self, query):
         from core.reaction import retrieval
 
+        self.retrieve_calls += 1
         docs = [
             {"kegg_id": kid, "text": retrieval.document_text(kid, fields)}
             for kid, fields in self.catalog.items()

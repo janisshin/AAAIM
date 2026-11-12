@@ -7,23 +7,39 @@ import time
 from pathlib import Path
 from typing import Any, Optional
 
+import pandas as pd
+
 from core.agent.export import export_artifacts
 from core.agent.inspect_model import entities_needing_annotation, inspect_sbml_model
-from core.agent.planner import request_plan
+from core.agent.io import atomic_write_json
+from core.agent.planner import PlannerRequestError, request_plan, validate_finish
 from core.agent.schemas import (
     AgentAction,
+    AgentCheckpoint,
     AnnotationPlan,
     AnnotationScope,
     AnnotationStatus,
     AutoAnnotateResult,
+    CheckpointCompatibilityError,
+    CheckpointProvenance,
     EntityRuntimeState,
     ExecutionLimits,
     FailureKind,
+    InFlightAction,
+    PlannerDecision,
     TaskState,
+    TOOL_SCHEMA_VERSION,
     ToolObservation,
 )
 from core.agent.tools import AgentResources, ToolRegistry
 from core.agent.validate import PlanValidationError, validate_action
+
+_TERMINAL_TASK_STATES = {
+    TaskState.COMPLETED,
+    TaskState.SKIPPED,
+    TaskState.FAILED,
+    TaskState.UNRESOLVED,
+}
 
 
 def _action_fingerprint(action: AgentAction) -> str:
@@ -37,19 +53,60 @@ def _action_fingerprint(action: AgentAction) -> str:
     return hashlib.sha256(blob).hexdigest()
 
 
-def _cache_identity(model_sha: str, backend_id: dict[str, Any], settings: dict[str, Any]) -> str:
+def _cache_identity(
+    model_sha: str,
+    backend_id: dict[str, Any],
+    settings: dict[str, Any],
+    *,
+    tool_schema_version: str,
+    resource_identity: dict[str, Any],
+) -> str:
     blob = json.dumps(
-        {"model_sha256": model_sha, "backend": backend_id, "settings": settings},
+        {
+            "model_sha256": model_sha,
+            "backend": backend_id,
+            "settings": settings,
+            "tool_schema_version": tool_schema_version,
+            "resource_identity": resource_identity,
+        },
         sort_keys=True,
         separators=(",", ":"),
     ).encode("utf-8")
     return hashlib.sha256(blob).hexdigest()
 
 
-def _load_checkpoint(path: Path) -> dict[str, Any]:
-    if not path.is_file():
-        return {}
-    return json.loads(path.read_text(encoding="utf-8"))
+def _resource_identity(
+    *,
+    reaction_retriever: Any,
+    reaction_resources: Any,
+    species_annotator_provenance: dict[str, Any],
+) -> dict[str, Any]:
+    retriever_prov: Any
+    if reaction_retriever is None:
+        retriever_prov = None
+    elif hasattr(reaction_retriever, "provenance"):
+        retriever_prov = getattr(reaction_retriever, "provenance")
+    else:
+        retriever_prov = {"type": type(reaction_retriever).__name__}
+
+    resources_prov: Any = None
+    if reaction_resources is not None:
+        if hasattr(reaction_resources, "provenance"):
+            resources_prov = getattr(reaction_resources, "provenance")
+        elif isinstance(reaction_resources, dict):
+            resources_prov = {
+                k: reaction_resources[k]
+                for k in ("catalog_id", "checkpoint", "sha256", "path")
+                if k in reaction_resources
+            } or {"type": "dict"}
+        else:
+            resources_prov = {"type": type(reaction_resources).__name__}
+
+    return {
+        "reaction_retriever": retriever_prov,
+        "reaction_resources": resources_prov,
+        "species_annotator": species_annotator_provenance or {},
+    }
 
 
 class AnnotationAgentController:
@@ -98,6 +155,7 @@ class AnnotationAgentController:
             species_backend=backend if hasattr(backend, "generate") else None,
             species_annotator_provenance=species_prov,
             allow_names_only_reactions=self.limits.allow_names_only_reactions,
+            checkpoint_saver=self._save_checkpoint,
         )
         self.tools = ToolRegistry(self.agent_resources)
         self.observations: list[ToolObservation] = []
@@ -106,75 +164,242 @@ class AnnotationAgentController:
         self.action_counts: dict[str, int] = {}
         self.initial_plan: Optional[AnnotationPlan] = None
         self.executed_plan: Optional[AnnotationPlan] = None
-        self.revision_count = 0
+        self.revision_count = 0  # failure-driven (compat)
+        self.failure_revision_count = 0
+        self.planning_turn_count = 0
+        self.last_planner_decision: Optional[str] = None
+        self.clarification_prompt = ""
         self.actions_executed = 0
+        self.in_flight_action: Optional[InFlightAction] = None
+        self._restored_from_checkpoint = False
+        self._awaiting_planning_turn = True
         self.started = time.time()
+        self.resource_identity = _resource_identity(
+            reaction_retriever=reaction_retriever,
+            reaction_resources=resources,
+            species_annotator_provenance=species_prov,
+        )
+        backend_identity = (
+            backend.identity() if hasattr(backend, "identity") else {"backend": type(backend).__name__}
+        )
         self.provenance: dict[str, Any] = {
-            "backend": backend.identity() if hasattr(backend, "identity") else {"backend": type(backend).__name__},
+            "backend": backend_identity,
             "settings": {
                 "scope": scope.value,
                 "limits": self.limits.model_dump(mode="json"),
                 "request": request,
             },
             "species_annotator": species_prov,
+            "tool_schema_version": TOOL_SCHEMA_VERSION,
+            "resource_identity": self.resource_identity,
             "planner_meta": [],
             "revisions": [],
             "inference_stages": [],
+            "execution_semantics": "at_least_once",
         }
+        # Absolute resource paths are audit-only; resume identity uses content fingerprints.
+        if hasattr(backend, "resource_paths"):
+            self.provenance["backend_resource_paths"] = dict(getattr(backend, "resource_paths") or {})
+        if hasattr(backend, "load_info") and getattr(backend, "load_info"):
+            self.provenance["backend_load_info"] = dict(getattr(backend, "load_info") or {})
         self.provenance["cache_identity"] = _cache_identity(
             self.inventory.sha256,
             self.provenance["backend"],
             self.provenance["settings"],
+            tool_schema_version=TOOL_SCHEMA_VERSION,
+            resource_identity=self.resource_identity,
         )
         if self.resume_from:
             self._restore_checkpoint(self.resume_from)
 
-    def _restore_checkpoint(self, path: Path) -> None:
-        data = _load_checkpoint(path / "checkpoint.json" if path.is_dir() else path)
-        if not data:
-            return
-        saved_identity = data.get("cache_identity")
-        if saved_identity and saved_identity != self.provenance["cache_identity"]:
-            raise RuntimeError(
-                "checkpoint cache identity incompatible with current settings/backend/model"
-            )
-        self.agent_resources.entity_identities = data.get("entity_identities") or {}
-        self.agent_resources.checkpoint = data.get("checkpoint") or {}
-        self.completed_fingerprints = set(data.get("completed_fingerprints") or [])
-        self.actions_executed = int(data.get("actions_executed") or 0)
-        if data.get("species_recommendations"):
-            import pandas as pd
+    def _checkpoint_path(self, path: Path) -> Path:
+        return path / "checkpoint.json" if path.is_dir() else path
 
-            self.agent_resources.species_recommendations = pd.DataFrame(
-                data["species_recommendations"]
-            )
-        if data.get("reaction_recommendations"):
-            import pandas as pd
-
-            self.agent_resources.reaction_recommendations = pd.DataFrame(
-                data["reaction_recommendations"]
-            )
-        for tid, payload in (data.get("entity_states") or {}).items():
-            self.entity_states[tid] = EntityRuntimeState.model_validate(payload)
-
-    def _save_checkpoint(self) -> None:
-        payload = {
-            "cache_identity": self.provenance["cache_identity"],
-            "entity_identities": self.agent_resources.entity_identities,
-            "checkpoint": self.agent_resources.checkpoint,
-            "completed_fingerprints": sorted(self.completed_fingerprints),
-            "actions_executed": self.actions_executed,
-            "entity_states": {k: v.model_dump(mode="json") for k, v in self.entity_states.items()},
-            "species_recommendations": None
+    def _build_checkpoint(self) -> AgentCheckpoint:
+        return AgentCheckpoint(
+            schema_version=1,
+            cache_identity=self.provenance["cache_identity"],
+            model_sha256=self.inventory.sha256,
+            backend=dict(self.provenance.get("backend") or {}),
+            settings=dict(self.provenance.get("settings") or {}),
+            tool_schema_version=TOOL_SCHEMA_VERSION,
+            resource_identity=dict(self.resource_identity),
+            initial_plan=self.initial_plan,
+            executed_plan=self.executed_plan,
+            entity_states=dict(self.entity_states),
+            observations=list(self.observations),
+            completed_fingerprints=sorted(self.completed_fingerprints),
+            action_counts=dict(self.action_counts),
+            actions_executed=self.actions_executed,
+            revision_count=self.failure_revision_count,
+            planning_turn_count=self.planning_turn_count,
+            failure_revision_count=self.failure_revision_count,
+            last_planner_decision=self.last_planner_decision,  # type: ignore[arg-type]
+            species_recommendations=None
             if self.agent_resources.species_recommendations is None
             else self.agent_resources.species_recommendations.fillna("").to_dict("records"),
-            "reaction_recommendations": None
+            reaction_recommendations=None
             if self.agent_resources.reaction_recommendations is None
             else self.agent_resources.reaction_recommendations.fillna("").to_dict("records"),
-        }
-        (self.output_dir / "checkpoint.json").write_text(
-            json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8"
+            reaction_evidence=list(self.agent_resources.reaction_evidence),
+            entity_identities=dict(self.agent_resources.entity_identities),
+            paths=dict(self.agent_resources.checkpoint),
+            provenance=CheckpointProvenance(
+                planner_meta=list(self.provenance.get("planner_meta") or []),
+                revisions=list(self.provenance.get("revisions") or []),
+                stop_reason=self.provenance.get("stop_reason"),
+                inference_stages=list(self.provenance.get("inference_stages") or []),
+                species_annotator=dict(self.provenance.get("species_annotator") or {}),
+                last_planner_decision=self.last_planner_decision,
+                clarification_prompt=self.clarification_prompt,
+                execution_mode=self.provenance.get("execution_mode"),
+                llm_planning_succeeded=self.provenance.get("llm_planning_succeeded"),
+            ),
+            in_flight_action=self.in_flight_action,
         )
+
+    def _validate_evidence_dependencies(self, ckpt: AgentCheckpoint) -> None:
+        retrieve_done = any(o.tool == "retrieve_reaction_rrf" and o.ok for o in ckpt.observations)
+        select_ok = any(o.tool == "select_reaction_grounded" and o.ok for o in ckpt.observations)
+        if ckpt.executed_plan is not None:
+            for task in ckpt.executed_plan.tasks:
+                if task.tool == "retrieve_reaction_rrf" and task.state == TaskState.COMPLETED:
+                    retrieve_done = True
+                if task.tool == "select_reaction_grounded" and task.state in {
+                    TaskState.COMPLETED,
+                    TaskState.UNRESOLVED,
+                }:
+                    select_ok = True
+        if (retrieve_done or select_ok) and not ckpt.reaction_evidence:
+            raise CheckpointCompatibilityError(
+                "checkpoint missing reaction_evidence required by completed retrieval/selection"
+            )
+        if select_ok and ckpt.reaction_recommendations is None:
+            raise CheckpointCompatibilityError(
+                "checkpoint missing reaction_recommendations required by completed selection"
+            )
+
+    def _restore_checkpoint(self, path: Path) -> None:
+        ckpt_path = self._checkpoint_path(path)
+        if not ckpt_path.is_file():
+            raise CheckpointCompatibilityError(
+                f"checkpoint not found at {ckpt_path}; cannot resume (pre-v1 or missing)"
+            )
+        try:
+            raw = json.loads(ckpt_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise CheckpointCompatibilityError(f"corrupt checkpoint JSON: {exc}") from exc
+        if not isinstance(raw, dict):
+            raise CheckpointCompatibilityError("checkpoint root must be a JSON object")
+        if "schema_version" not in raw:
+            raise CheckpointCompatibilityError(
+                "unsupported checkpoint: missing schema_version "
+                "(pre-v1 checkpoints cannot be resumed; restart without resume_from)"
+            )
+        if raw.get("schema_version") != 1:
+            raise CheckpointCompatibilityError(
+                f"unsupported checkpoint schema_version={raw.get('schema_version')!r}; "
+                "only schema_version=1 is supported"
+            )
+        try:
+            ckpt = AgentCheckpoint.model_validate(raw)
+        except Exception as exc:
+            raise CheckpointCompatibilityError(
+                f"incomplete or invalid checkpoint schema: {exc}"
+            ) from exc
+
+        mismatches: list[str] = []
+        if ckpt.model_sha256 != self.inventory.sha256:
+            mismatches.append("model_sha256")
+        if ckpt.backend != self.provenance["backend"]:
+            mismatches.append("backend")
+        if ckpt.settings != self.provenance["settings"]:
+            mismatches.append("settings")
+        if ckpt.tool_schema_version != TOOL_SCHEMA_VERSION:
+            mismatches.append("tool_schema_version")
+        if ckpt.resource_identity != self.resource_identity:
+            mismatches.append("resource_identity")
+        if ckpt.cache_identity != self.provenance["cache_identity"]:
+            mismatches.append("cache_identity")
+        if mismatches:
+            raise CheckpointCompatibilityError(
+                "checkpoint incompatible with current run: " + ", ".join(mismatches)
+            )
+
+        self._validate_evidence_dependencies(ckpt)
+
+        self.initial_plan = ckpt.initial_plan
+        self.executed_plan = ckpt.executed_plan
+        self.entity_states = dict(ckpt.entity_states)
+        self.observations = list(ckpt.observations)
+        self.completed_fingerprints = set(ckpt.completed_fingerprints)
+        self.action_counts = {k: int(v) for k, v in ckpt.action_counts.items()}
+        self.actions_executed = int(ckpt.actions_executed)
+        self.failure_revision_count = int(
+            getattr(ckpt, "failure_revision_count", None) or ckpt.revision_count or 0
+        )
+        self.revision_count = self.failure_revision_count
+        self.planning_turn_count = int(getattr(ckpt, "planning_turn_count", 0) or 0)
+        self.last_planner_decision = getattr(ckpt, "last_planner_decision", None)
+        self.clarification_prompt = str(
+            getattr(ckpt.provenance, "clarification_prompt", "") or ""
+        )
+        self.agent_resources.entity_identities = dict(ckpt.entity_identities)
+        self.agent_resources.checkpoint = dict(ckpt.paths)
+        self.agent_resources.reaction_evidence = list(ckpt.reaction_evidence)
+        if ckpt.species_recommendations is not None:
+            self.agent_resources.species_recommendations = pd.DataFrame(ckpt.species_recommendations)
+        if ckpt.reaction_recommendations is not None:
+            self.agent_resources.reaction_recommendations = pd.DataFrame(ckpt.reaction_recommendations)
+
+        prov = ckpt.provenance
+        self.provenance["planner_meta"] = list(prov.planner_meta)
+        self.provenance["revisions"] = list(prov.revisions)
+        if prov.stop_reason:
+            # Clear interrupt stop so a resumed run can continue unless limits hit again.
+            if prov.stop_reason != "interrupt_after_actions":
+                self.provenance["stop_reason"] = prov.stop_reason
+        self.provenance["inference_stages"] = list(prov.inference_stages)
+        if prov.species_annotator:
+            self.provenance["species_annotator"] = dict(prov.species_annotator)
+
+        # At-least-once: incomplete tool result before durable completion → re-execute.
+        if ckpt.in_flight_action is not None:
+            fp = ckpt.in_flight_action.fingerprint
+            if fp not in self.completed_fingerprints:
+                self.in_flight_action = None
+                self.provenance.setdefault("resume_notes", []).append(
+                    "cleared in_flight_action for at-least-once re-execution"
+                )
+                # Roll task/entity states back so the scheduler can retry the action.
+                if self.executed_plan is not None:
+                    inflight_task_ids = set(ckpt.in_flight_action.action.task_ids)
+                    for task in self.executed_plan.tasks:
+                        if task.task_id not in inflight_task_ids:
+                            continue
+                        if task.state in {TaskState.RUNNING, TaskState.COMPLETED}:
+                            task.state = TaskState.PENDING
+                            task.reason = "re-queued after incomplete durable record"
+                        est = self.entity_states.get(task.target_id)
+                        if est is not None and est.state in {
+                            TaskState.RUNNING,
+                            TaskState.COMPLETED,
+                        }:
+                            est.state = TaskState.PENDING
+            else:
+                self.in_flight_action = None
+
+        # Reset RUNNING tasks left by an interrupted save so they can run again.
+        if self.executed_plan is not None:
+            for task in self.executed_plan.tasks:
+                if task.state == TaskState.RUNNING:
+                    task.state = TaskState.PENDING
+
+        self._restored_from_checkpoint = self.executed_plan is not None
+
+    def _save_checkpoint(self) -> None:
+        ckpt = self._build_checkpoint()
+        atomic_write_json(ckpt.model_dump(mode="json"), self.output_dir / "checkpoint.json")
 
     def _init_entity_states(self) -> None:
         needed = entities_needing_annotation(
@@ -209,7 +434,7 @@ class AnnotationAgentController:
         task = by_id.get(task_id)
         if task is None:
             return False
-        if task.state in {TaskState.COMPLETED, TaskState.SKIPPED, TaskState.FAILED, TaskState.UNRESOLVED}:
+        if task.state in _TERMINAL_TASK_STATES:
             return False
         for dep in task.depends_on:
             dep_task = by_id.get(dep)
@@ -372,9 +597,52 @@ class AnnotationAgentController:
                 continue
             if action.task_ids and not all(self._task_ready(plan, tid) for tid in action.task_ids):
                 continue
-            # If all associated entities are already terminal without this action, skip
             pending.append(action)
         return pending
+
+    def _sync_terminal_tasks_to_entities(self, plan: AnnotationPlan) -> None:
+        """Mirror already-terminal plan tasks (e.g. ambiguous unresolved) into the ledger."""
+        for task in plan.tasks:
+            if task.state not in _TERMINAL_TASK_STATES:
+                continue
+            est = self.entity_states.setdefault(
+                task.target_id, EntityRuntimeState(target_id=task.target_id)
+            )
+            if est.state in {TaskState.PENDING, TaskState.RUNNING}:
+                est.state = task.state
+                est.failure_kind = task.failure_kind
+                if task.reason:
+                    est.notes.append(task.reason)
+
+    def _reconcile_terminal_pending(self, *, interrupted: bool) -> None:
+        """Promote leftover PENDING only on final (non-interrupted) shutdown.
+
+        Never demote entities/tasks that are already terminal.
+        """
+        if self.executed_plan is None:
+            return
+        if interrupted:
+            for task in self.executed_plan.tasks:
+                if task.state == TaskState.RUNNING:
+                    task.state = TaskState.PENDING
+            return
+        for task in self.executed_plan.tasks:
+            if task.state not in {TaskState.PENDING, TaskState.RUNNING}:
+                continue
+            est = self.entity_states.get(task.target_id)
+            if est is not None and est.state in _TERMINAL_TASK_STATES:
+                # Prefer existing entity terminal state; align task without demoting entity.
+                task.state = est.state
+                task.reason = task.reason or (est.notes[-1] if est.notes else "aligned to entity state")
+                continue
+            task.state = TaskState.UNRESOLVED
+            task.reason = task.reason or self.provenance.get("stop_reason") or "not executed"
+            est = self.entity_states.setdefault(
+                task.target_id, EntityRuntimeState(target_id=task.target_id)
+            )
+            if est.state in {TaskState.PENDING, TaskState.RUNNING}:
+                est.state = TaskState.UNRESOLVED
+                est.notes.append(task.reason)
 
     def run(self) -> AutoAnnotateResult:
         if not self.inventory.parse_ok:
@@ -401,19 +669,18 @@ class AnnotationAgentController:
             )
 
         self._init_entity_states()
-        plan, decision, meta = request_plan(
-            self.backend,
-            request=self.request,
-            inventory=self.inventory,
-            scope=self.scope,
-            limits=self.limits,
-            settings=self.provenance["settings"],
-            allow_structural_fallback=self.allow_structural_fallback,
-        )
-        self.provenance["planner_meta"].append(meta)
-        self.initial_plan = plan.model_copy(deep=True)
-        self.executed_plan = plan
+        if self._restored_from_checkpoint and self.executed_plan is not None:
+            if self.initial_plan is None:
+                self.initial_plan = self.executed_plan.model_copy(deep=True)
+            pending = self._pending_actions(self.executed_plan)
+            self._awaiting_planning_turn = not any(a.tool != "export_reports" for a in pending)
+        else:
+            self._awaiting_planning_turn = True
+            self.executed_plan = AnnotationPlan(scope=self.scope, tasks=[], actions=[])
+            self.initial_plan = None
+
         interrupted = False
+        accepted_finish = False
 
         while True:
             if time.time() - self.started > self.limits.max_runtime_sec:
@@ -432,20 +699,103 @@ class AnnotationAgentController:
                 self.provenance["stop_reason"] = "interrupt_after_actions"
                 break
 
+            assert self.executed_plan is not None
             pending = self._pending_actions(self.executed_plan)
-            # Prefer non-export actions first
             pending_non_export = [a for a in pending if a.tool != "export_reports"]
+
+            # Exhausting an action group triggers another planning turn — never auto-finish.
             if not pending_non_export:
-                # All work done or blocked → export
-                export_action = next((a for a in pending if a.tool == "export_reports"), None)
-                if export_action is not None:
-                    fp = _action_fingerprint(export_action)
-                    if fp not in self.completed_fingerprints:
-                        obs = self.tools.execute(export_action)
-                        self.observations.append(obs)
-                        self.completed_fingerprints.add(fp)
-                        self.actions_executed += 1
-                break
+                self._awaiting_planning_turn = True
+
+            if self._awaiting_planning_turn:
+                if self.planning_turn_count >= self.limits.max_planning_turns:
+                    interrupted = True
+                    self.provenance["stop_reason"] = "max_planning_turns"
+                    break
+                try:
+                    plan, decision, meta = request_plan(
+                        self.backend,
+                        request=self.request,
+                        inventory=self.inventory,
+                        scope=self.scope,
+                        limits=self.limits,
+                        prior_plan=(
+                            self.executed_plan
+                            if (
+                                self.planning_turn_count
+                                or self._restored_from_checkpoint
+                                or (self.executed_plan is not None and self.executed_plan.tasks)
+                            )
+                            else None
+                        ),
+                        observations=self.observations,
+                        revision_reason="",
+                        settings=self.provenance["settings"],
+                        allow_structural_fallback=self.allow_structural_fallback,
+                        entity_states=self.entity_states,
+                    )
+                except (PlannerRequestError, RuntimeError, PlanValidationError, ValueError) as exc:
+                    self.provenance["stop_reason"] = "planner_failure"
+                    self.provenance.setdefault("technical_errors", []).append(str(exc))
+                    meta_fail = getattr(exc, "meta", None) or {
+                        "error": str(exc),
+                        "fallback": False,
+                        "llm_planning_succeeded": False,
+                        "execution_mode": None,
+                    }
+                    meta_fail.setdefault("llm_planning_succeeded", False)
+                    self.provenance["planner_meta"].append(meta_fail)
+                    if meta_fail.get("raw_decision"):
+                        # Model produced output that failed validation — still LLM attempt.
+                        self.provenance["llm_planning_succeeded"] = False
+                        self.provenance["execution_mode"] = "llm_planning_invalid"
+                    break
+
+                self.planning_turn_count += 1
+                self._awaiting_planning_turn = False
+                self.last_planner_decision = decision.decision
+                self.provenance["planner_meta"].append(meta)
+                if meta.get("execution_mode"):
+                    self.provenance["execution_mode"] = meta["execution_mode"]
+                if meta.get("llm_planning_succeeded") is not None:
+                    self.provenance["llm_planning_succeeded"] = meta["llm_planning_succeeded"]
+                if meta.get("fallback"):
+                    self.provenance["execution_mode"] = "fallback_workflow_orchestration"
+                    self.provenance["llm_planning_succeeded"] = False
+
+                if decision.decision == "needs_clarification":
+                    self.clarification_prompt = (
+                        decision.clarification_prompt or decision.ask_user_prompt or decision.reason
+                    )
+                    self.provenance["stop_reason"] = "needs_clarification"
+                    self.provenance["clarification_prompt"] = self.clarification_prompt
+                    self._save_checkpoint()
+                    break
+
+                if decision.decision == "finish":
+                    problems = validate_finish(
+                        self.inventory,
+                        self.entity_states,
+                        self.scope,
+                        self.executed_plan,
+                    )
+                    if problems:
+                        self.provenance.setdefault("technical_errors", []).extend(problems)
+                        self.provenance["stop_reason"] = "premature_finish"
+                        self._awaiting_planning_turn = True
+                        continue
+                    accepted_finish = True
+                    if self.initial_plan is None:
+                        self.initial_plan = self.executed_plan.model_copy(deep=True)
+                    self._save_checkpoint()
+                    break
+
+                if self.initial_plan is None:
+                    self.initial_plan = plan.model_copy(deep=True)
+                self.executed_plan = plan
+                self._sync_terminal_tasks_to_entities(plan)
+                self._save_checkpoint()
+                continue
 
             action = pending_non_export[0]
             fp = _action_fingerprint(action)
@@ -459,8 +809,10 @@ class AnnotationAgentController:
                     "repeated equivalent action without new evidence",
                     FailureKind.TECHNICAL_FAILURE,
                 )
-                # Drop this action from the plan to avoid infinite loop
                 self.completed_fingerprints.add(fp)
+                self.in_flight_action = None
+                self._awaiting_planning_turn = True
+                self._save_checkpoint()
                 continue
 
             try:
@@ -482,61 +834,93 @@ class AnnotationAgentController:
                 self.observations.append(obs)
                 self.completed_fingerprints.add(fp)
                 self.actions_executed += 1
+                self.in_flight_action = None
+                self._save_checkpoint()
                 continue
 
             for tid in action.task_ids:
                 for task in self.executed_plan.tasks:
                     if task.task_id == tid:
                         task.state = TaskState.RUNNING
+
+            self.in_flight_action = InFlightAction(action=action, fingerprint=fp)
+            self._save_checkpoint()
             obs = self.tools.execute(action)
             self.observations.append(obs)
             self.actions_executed += 1
             revision_reason = self._apply_observation(self.executed_plan, action, obs)
             if obs.ok:
                 self.completed_fingerprints.add(fp)
+            self.in_flight_action = None
             self._save_checkpoint()
 
-            if revision_reason and self.revision_count < self.limits.max_revisions:
-                self.revision_count += 1
-                new_plan, new_decision, new_meta = request_plan(
-                    self.backend,
-                    request=self.request,
-                    inventory=self.inventory,
-                    scope=self.scope,
-                    limits=self.limits,
-                    prior_plan=self.executed_plan,
-                    observations=self.observations,
-                    revision_reason=revision_reason,
-                    settings=self.provenance["settings"],
-                    allow_structural_fallback=self.allow_structural_fallback,
-                )
+            if revision_reason:
+                if self.failure_revision_count >= self.limits.max_failure_revisions:
+                    self.provenance["stop_reason"] = "max_failure_revisions"
+                    continue
+                if self.planning_turn_count >= self.limits.max_planning_turns:
+                    self.provenance["stop_reason"] = "max_planning_turns"
+                    interrupted = True
+                    break
+                self.failure_revision_count += 1
+                self.revision_count = self.failure_revision_count
+                try:
+                    new_plan, new_decision, new_meta = request_plan(
+                        self.backend,
+                        request=self.request,
+                        inventory=self.inventory,
+                        scope=self.scope,
+                        limits=self.limits,
+                        prior_plan=self.executed_plan,
+                        observations=self.observations,
+                        revision_reason=revision_reason,
+                        settings=self.provenance["settings"],
+                        allow_structural_fallback=self.allow_structural_fallback,
+                        entity_states=self.entity_states,
+                    )
+                except (RuntimeError, PlanValidationError, ValueError) as exc:
+                    self.provenance["stop_reason"] = "planner_failure"
+                    self.provenance.setdefault("technical_errors", []).append(str(exc))
+                    break
+                self.planning_turn_count += 1
+                self.last_planner_decision = new_decision.decision
                 self.provenance["planner_meta"].append(new_meta)
                 self.provenance["revisions"].append(
-                    {"reason": revision_reason, "plan_version": new_plan.plan_version}
+                    {
+                        "reason": revision_reason,
+                        "plan_version": new_plan.plan_version,
+                        "kind": "failure_revision",
+                    }
                 )
-                # Preserve completed task states where task ids match
-                old_states = {t.task_id: t for t in self.executed_plan.tasks}
-                for task in new_plan.tasks:
-                    if task.task_id in old_states and old_states[task.task_id].state == TaskState.COMPLETED:
-                        task.state = TaskState.COMPLETED
-                self.executed_plan = new_plan
-            elif revision_reason and self.revision_count >= self.limits.max_revisions:
-                self.provenance["stop_reason"] = "max_revisions"
+                if new_meta.get("execution_mode"):
+                    self.provenance["execution_mode"] = new_meta["execution_mode"]
+                if new_decision.decision == "needs_clarification":
+                    self.clarification_prompt = (
+                        new_decision.clarification_prompt
+                        or new_decision.ask_user_prompt
+                        or new_decision.reason
+                    )
+                    self.provenance["stop_reason"] = "needs_clarification"
+                    self.provenance["clarification_prompt"] = self.clarification_prompt
+                    break
+                if new_decision.decision == "finish":
+                    problems = validate_finish(
+                        self.inventory, self.entity_states, self.scope, self.executed_plan
+                    )
+                    if problems:
+                        self.provenance.setdefault("technical_errors", []).extend(problems)
+                        self.provenance["stop_reason"] = "premature_finish"
+                        self._awaiting_planning_turn = True
+                    else:
+                        accepted_finish = True
+                        break
+                else:
+                    self.executed_plan = new_plan
+                    self._awaiting_planning_turn = False
+                self._save_checkpoint()
 
-        # Mark leftover pending reaction/species tasks that never ran
-        for task in self.executed_plan.tasks:
-            if task.state == TaskState.PENDING:
-                task.state = TaskState.UNRESOLVED
-                task.reason = task.reason or self.provenance.get("stop_reason") or "not executed"
-                est = self.entity_states.setdefault(
-                    task.target_id, EntityRuntimeState(target_id=task.target_id)
-                )
-                if est.state == TaskState.PENDING:
-                    est.state = TaskState.UNRESOLVED
-                    est.notes.append(task.reason)
-
+        self._reconcile_terminal_pending(interrupted=interrupted and not accepted_finish)
         self._save_checkpoint()
-        # Unload GPU backend before any potential encoder use elsewhere
         if hasattr(self.backend, "unload"):
             try:
                 self.backend.unload()
@@ -556,6 +940,23 @@ class AnnotationAgentController:
             provenance=self.provenance,
             interrupt=interrupted,
         )
+        if self.provenance.get("execution_mode") == "fallback_workflow_orchestration":
+            report.recommendations.append(
+                "execution_mode=fallback_workflow_orchestration: deterministic "
+                "structural plan ran after planner failure; not LLM planning success"
+            )
+            report.partial = True
+        if self.provenance.get("stop_reason") == "needs_clarification":
+            report.status = "partial"
+            report.partial = True
+            prompt = self.clarification_prompt or "user input required"
+            report.recommendations.append(f"needs_clarification: {prompt}")
+        if self.provenance.get("stop_reason") == "premature_finish":
+            report.status = "partial"
+            report.partial = True
+        for err in self.provenance.get("technical_errors") or []:
+            if err not in report.technical_errors:
+                report.technical_errors.append(err)
         return AutoAnnotateResult(
             report=report,
             inventory=self.inventory,
@@ -566,6 +967,7 @@ class AnnotationAgentController:
             output_dir=str(self.output_dir),
             provenance=self.provenance,
         )
+
 
 
 def auto_annotate_model(
@@ -580,7 +982,7 @@ def auto_annotate_model(
     limits: Optional[ExecutionLimits] = None,
     resume_from: Optional[str | Path] = None,
     species_annotator: Any = None,
-    allow_structural_fallback: bool = True,
+    allow_structural_fallback: Optional[bool] = None,
     interrupt_after_actions: Optional[int] = None,
 ) -> AutoAnnotateResult:
     """Public entry point for the automatic model-annotation agent."""
@@ -590,6 +992,10 @@ def auto_annotate_model(
         backend = MockBackend()
     if isinstance(scope, str):
         scope = AnnotationScope(scope)
+    # Real/metabolm backends default to no silent structural fallback.
+    if allow_structural_fallback is None:
+        backend_name = getattr(backend, "name", type(backend).__name__).lower()
+        allow_structural_fallback = backend_name in {"mock"}
     controller = AnnotationAgentController(
         model_file=model_file,
         request=request,

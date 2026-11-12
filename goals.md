@@ -52,13 +52,18 @@ pending separate scope and authorization; this status grants neither.
 
 **Status:** implemented on `feature/auto-annotate-agent` (isolated worktree) under
 `core/agent/`. This is a product workstream, not a new numbered research phase.
-Offline controller/species-safety tests and RRF compatibility tests passed.
-Species annotation no longer defaults to synthetic IDs: MockBackend uses an
-explicit `mock_synthetic` annotator recorded in provenance; real backends use
-`make_real_species_annotator` (`annotate_single_model` + local DB retrieval +
-MetaboLLM hooks). Missing resources fail as technical errors. Schema/semantic
-validation does not certify biological correctness. No held-out access, paid
-APIs, or frozen-result changes.
+Offline controller/species-safety/planning-turn tests passed. Species annotation
+no longer defaults to synthetic IDs: MockBackend uses an explicit `mock_synthetic`
+annotator; real backends use `make_real_species_annotator`. Planning uses
+explicit `continue` / `finish` / `needs_clarification` with bounded action
+groups; exhausting a group re-plans rather than auto-finishing. Finish validates
+the scope ledger. Ordinary planning-turn limits are separate from failure
+revisions. Real mode disables silent structural fallback; synthetic vs real
+examples are split (`examples/auto_annotate_example.py` vs
+`examples/auto_annotate_real_local_example.py`). The earlier MetaboLLM demo that
+truncated and fell back to a Mock structural plan is **not** evidence of real LLM
+planning. Schema/semantic validation does not certify biological correctness.
+No held-out access, paid APIs, or frozen-result changes.
 
 ### User goal and scope
 
@@ -843,3 +848,5 @@ This is feasible for an October **writing start**, not necessarily an October su
 - 2026-11-09: Added public API integration status for `feature/rrf-grounded-public-api` / Draft PR #25 without merging phase branches. Recorded manuscript reaction-results and review-informed reference-sensitivity analysis branches. Added the planned automatic model-annotation agent module as a product workstream (roadmap/design; implementation tracked separately). No paid execution, held-out access, or evaluation-freeze change.
 - 2026-11-11: Implemented `core/agent` automatic annotation module on isolated `feature/auto-annotate-agent`. Pydantic plans/actions/tool I/O plus semantic checks (targets, deps, evidence); MockBackend tests 27 passed; RRF compatibility 73 passed / 2 skipped; bounded MetaboLLM demo on synthetic mixed model with structural planning fallback after truncated planner JSON, unresolved ambiguous species, and validated annotated copy/reports. No biological accuracy claim, paid APIs, held-out access, commit, or merge.
 - 2026-11-12: Fixed species path so synthetic CHEBI/NCBIGene/UniProt IDs are mock/test-only; real backends use direct DB retrieval + local MetaboLLM hooks; identity/qualifier tools call real assessments or report unavailability; regression tests cover no implicit synthetic fallback, evidence-dependent candidates, technical failure on missing resources, and unresolved/abstain write refusal.
+- 2026-11-12: Strengthened auto-annotate interruption/resume: versioned `AgentCheckpoint` schema, full plan/state/evidence restore, compatibility rejection, atomic checkpoint writes, at-least-once in-flight journaling, and stronger interrupt/resume tests. No paid calls, held-out access, commit, or merge.
+- 2026-11-12: Incremental planning controller (`continue`/`finish`/`needs_clarification`), separate planning-turn vs failure-revision limits, configurable planner token budget with compact prompts, labeled real-mode fallback policy, synthetic vs real examples (no TinyRetriever on real path), planning-turn tests; checkpoint fields for planning turns coordinated with resume schema. Real local MetaboLLM demo outcomes recorded separately from mock tests. No biological accuracy claim, paid APIs, held-out access, commit, or merge.

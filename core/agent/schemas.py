@@ -10,7 +10,7 @@ from __future__ import annotations
 from enum import Enum
 from typing import Any, Literal, Optional
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 # Reuse the strict grounded selection schema from the public reaction path.
 from core.reaction.grounded import GroundedAnnotation
@@ -438,21 +438,82 @@ class EntityRuntimeState(StrictModel):
 
 
 class ExecutionLimits(StrictModel):
+    """Runtime budgets for the annotation controller.
+
+    ``max_planning_turns`` counts ordinary continue/re-plan turns after action
+    groups. ``max_failure_revisions`` counts failure-driven replans only.
+    ``planner_max_new_tokens`` is configurable and justified by measured fit;
+    512 is not a mandatory ceiling.
+    """
+
     max_actions: int = 40
-    max_revisions: int = 6
+    max_planning_turns: int = 12
+    max_failure_revisions: int = 6
     max_retries: int = 2
     max_runtime_sec: float = 600.0
     allow_names_only_reactions: bool = True
+    max_actions_per_turn: int = 3
+    planner_max_new_tokens: int = 768
+
+    @classmethod
+    def model_validate(cls, obj: Any, *args: Any, **kwargs: Any) -> "ExecutionLimits":
+        # Backward-compatible alias used by older tests/callers.
+        if isinstance(obj, dict) and "max_revisions" in obj and "max_failure_revisions" not in obj:
+            obj = {**obj, "max_failure_revisions": obj.pop("max_revisions")}
+        elif isinstance(obj, dict) and "max_revisions" in obj:
+            obj = {k: v for k, v in obj.items() if k != "max_revisions"}
+        return super().model_validate(obj, *args, **kwargs)
+
+    def __init__(self, **data: Any) -> None:
+        if "max_revisions" in data and "max_failure_revisions" not in data:
+            data["max_failure_revisions"] = data.pop("max_revisions")
+        elif "max_revisions" in data:
+            data.pop("max_revisions")
+        super().__init__(**data)
+
+    @property
+    def max_revisions(self) -> int:
+        """Deprecated alias for ``max_failure_revisions``."""
+        return self.max_failure_revisions
+
+
+PlannerDecisionName = Literal["continue", "finish", "needs_clarification"]
 
 
 class PlannerDecision(StrictModel):
-    """Structured LLM output for planning or revision."""
+    """Structured LLM output for one planning turn.
 
-    decision: Literal["plan", "revise", "continue", "stop", "ask_user"]
+    - ``continue``: emit the next bounded action group (does not complete the run).
+    - ``finish``: claim every in-scope target is terminal; controller validates the ledger.
+    - ``needs_clarification``: stop for user input without inventing completion.
+
+    Legacy aliases ``plan``/``revise``→continue, ``stop``→finish, ``ask_user``→
+    needs_clarification are accepted on input.
+    """
+
+    decision: PlannerDecisionName
     actions: list[AgentAction] = Field(default_factory=list)
     tasks: list[AnnotationTask] = Field(default_factory=list)
     reason: str = ""
+    clarification_prompt: str = ""
+    # Legacy alias accepted on input via normalize_planner_decision().
     ask_user_prompt: str = ""
+
+    @field_validator("decision", mode="before")
+    @classmethod
+    def _normalize_decision_name(cls, value: Any) -> Any:
+        mapping = {
+            "plan": "continue",
+            "revise": "continue",
+            "continue": "continue",
+            "stop": "finish",
+            "finish": "finish",
+            "ask_user": "needs_clarification",
+            "needs_clarification": "needs_clarification",
+        }
+        if isinstance(value, str) and value in mapping:
+            return mapping[value]
+        return value
 
 
 class AutoAnnotateReport(StrictModel):
@@ -485,3 +546,71 @@ class AutoAnnotateResult(StrictModel):
     observations: list[ToolObservation] = Field(default_factory=list)
     output_dir: str = ""
     provenance: dict[str, Any] = Field(default_factory=dict)
+
+
+# ---------------------------------------------------------------------------
+# Checkpoint / resume
+# ---------------------------------------------------------------------------
+
+CHECKPOINT_SCHEMA_VERSION: Literal[1] = 1
+# Bump when allowlisted tool names or TOOL_ARG_MODELS / TOOL_RESULT_MODELS change.
+TOOL_SCHEMA_VERSION: Literal["agent-tools-v1"] = "agent-tools-v1"
+
+
+class CheckpointCompatibilityError(ValueError):
+    """Checkpoint is missing, corrupt, unsupported, or incompatible with this run."""
+
+
+class InFlightAction(StrictModel):
+    """Action started but not yet durably completed (at-least-once on resume)."""
+
+    action: AgentAction
+    fingerprint: str
+
+
+class CheckpointProvenance(StrictModel):
+    planner_meta: list[dict[str, Any]] = Field(default_factory=list)
+    revisions: list[dict[str, Any]] = Field(default_factory=list)
+    stop_reason: Optional[str] = None
+    inference_stages: list[Any] = Field(default_factory=list)
+    species_annotator: dict[str, Any] = Field(default_factory=dict)
+    last_planner_decision: Optional[str] = None
+    clarification_prompt: str = ""
+    execution_mode: Optional[str] = None
+    llm_planning_succeeded: Optional[bool] = None
+
+
+class AgentCheckpoint(StrictModel):
+    """Versioned durable controller state for interruption/resume.
+
+    Incremental planning fields (``planning_turn_count``,
+    ``failure_revision_count``, ``last_planner_decision``) are required for
+    multi-turn continue/finish loops. ``revision_count`` remains as a synonym
+    of ``failure_revision_count`` for resume-plan compatibility.
+    """
+
+    schema_version: Literal[1] = CHECKPOINT_SCHEMA_VERSION
+    cache_identity: str
+    model_sha256: str
+    backend: dict[str, Any] = Field(default_factory=dict)
+    settings: dict[str, Any] = Field(default_factory=dict)
+    tool_schema_version: str = TOOL_SCHEMA_VERSION
+    resource_identity: dict[str, Any] = Field(default_factory=dict)
+    initial_plan: Optional[AnnotationPlan] = None
+    executed_plan: Optional[AnnotationPlan] = None
+    entity_states: dict[str, EntityRuntimeState] = Field(default_factory=dict)
+    observations: list[ToolObservation] = Field(default_factory=list)
+    completed_fingerprints: list[str] = Field(default_factory=list)
+    action_counts: dict[str, int] = Field(default_factory=dict)
+    actions_executed: int = 0
+    revision_count: int = 0  # failure-driven revisions (compat alias)
+    planning_turn_count: int = 0
+    failure_revision_count: int = 0
+    last_planner_decision: Optional[PlannerDecisionName] = None
+    species_recommendations: Optional[list[dict[str, Any]]] = None
+    reaction_recommendations: Optional[list[dict[str, Any]]] = None
+    reaction_evidence: list[dict[str, Any]] = Field(default_factory=list)
+    entity_identities: dict[str, dict[str, Any]] = Field(default_factory=dict)
+    paths: dict[str, Any] = Field(default_factory=dict)
+    provenance: CheckpointProvenance = Field(default_factory=CheckpointProvenance)
+    in_flight_action: Optional[InFlightAction] = None

@@ -26,22 +26,50 @@ result = auto_annotate_model(
 print(result.report.status, result.report.annotated_model_path)
 ```
 
-CLI:
+### Synthetic demo (mock; no model cache)
 
-```bash
+```powershell
 python -m core.agent.cli model.xml --out _auto_annotate_out --backend mock
-python examples/auto_annotate_example.py
-python examples/auto_annotate_example.py --backend metabolm
+python examples/auto_annotate_example.py --out _auto_annotate_demo_mock
+```
+
+### Real local demo (MetaboLLM + catalog + encoder)
+
+```powershell
+# Prefer the existing MetaboLLM env (parent AAAIM checkout when using the nested worktree)
+$repo = (Resolve-Path ..\..\..).Path   # adjust if already at AAAIM root
+$py = Join-Path $repo "benchmark\phase3\_metabolm_env\Scripts\python.exe"
+$hf = Join-Path $repo "benchmark\phase3\metabolm_grounded_comparison\_hf_cache"
+$enc = Join-Path $repo "benchmark\integration_worktrees\rrf_grounded_api\_rrf_grounded_work\encoder"
+
+& $py -m core.agent.cli model.xml --out _auto_annotate_out --backend metabolm `
+  --hf-cache $hf `
+  --catalog data/kegg/kegg_reaction_features.lzma `
+  --encoder $enc --device cpu
+
+& $py examples/auto_annotate_real_local_example.py --out _auto_annotate_demo_real_local `
+  --hf-cache $hf --catalog data/kegg/kegg_reaction_features.lzma --encoder $enc
 ```
 
 ## Control loop
 
-**Inspect → plan → execute one allowlisted action → validate observation →
-continue or revise → export.**
+**Inspect → planning turn → execute bounded action group → validate →
+(continue | finish | needs_clarification) → export after accepted finish.**
 
-Deterministic code owns SBML parsing, inventories, dependency scheduling,
-schema checks, checkpoints, and writing. The LLM chooses tools/configurations
-and justified revisions. Malformed actions never execute.
+Planner decisions:
+
+- `continue` — next action group (`max_actions_per_turn`). Exhausting a group
+  requests another planning turn; it does **not** auto-complete the run.
+- `finish` — validated against the requested scope and task/entity ledger;
+  every in-scope target must be completed, unresolved, failed, or intentionally
+  skipped. Premature finish is rejected.
+- `needs_clarification` — stop partial with an explicit prompt.
+
+Ordinary `max_planning_turns` are separate from failure-driven
+`max_failure_revisions`. Malformed actions never execute. Real/metabolm mode
+defaults `allow_structural_fallback=False`; if explicitly enabled, provenance
+records `execution_mode=fallback_workflow_orchestration` (not LLM planning
+success).
 
 ## Schemas and semantic checks
 
@@ -78,15 +106,35 @@ Replacement requires `scope="replace_existing"` (curator policy).
 - Baseline only: Hub `MetaboLLM/MetaboLLM-Qwen3-4B` @ `13deefb…` on
   `Qwen/Qwen3-4B-Instruct-2507` @ `cdbee75…`
 - Experimental SFT checkpoints are **not** used
-- 4-bit NF4, unmerged adapter, greedy decoding, `max_new_tokens=512`,
-  `prefill_chunk_size=512`
+- 4-bit NF4, unmerged adapter, greedy decoding; configurable
+  `planner_max_new_tokens` (default 768; **512 is not a mandatory ceiling**),
+  justified by measured prompt/output fit; `prefill_chunk_size=512`
+- Compact inventory + bounded action-group prompts (`agent-metabolm-planner-v2-compact`)
 - Prompted JSON + Pydantic validation (no grammar-constrained decoding in-repo)
-- No silent truncation; no hosted-provider fallback
+- Truncation/malformed plans refused; raw text + usage recorded in `planner_meta`
+- No hosted-provider fallback; no silent structural fallback in real mode
+- No process-wide `HF_HOME` mutation (explicit `cache_dir` / local paths only)
 - Serial GPU use on RTX 3070 8 GB: bi-encoder defaults to CPU; unload MetaboLLM
   between heavy stages
 
-Requires the working env under `benchmark/phase3/_metabolm_env` and the HF cache
-at `benchmark/phase3/metabolm_grounded_comparison/_hf_cache`.
+### HF cache configuration precedence
+
+1. Explicit API `hf_cache=` / CLI `--hf-cache` (**authoritative**; invalid → fail, no fallback)
+2. Environment variable `AAAIM_METABOLM_HF_CACHE` (**authoritative**; invalid → fail, no fallback)
+3. Discovered documented default: walk ancestors for
+   `benchmark/phase3/metabolm_grounded_comparison/_hf_cache` (ordinary checkouts
+   and nested worktrees; no fixed folder depth). If no AAAIM-like root and no
+   existing cache are found, fail and require explicit/env configuration.
+
+Validation checks pinned snapshot **files** (weight shards, configs, broken
+symlinks) and records stable content fingerprints. Resume may relocate the
+cache directory only when fingerprints match; changed bytes invalidate
+compatibility even if revision strings are unchanged. Absolute paths are audit
+fields (`backend_resource_paths`); transient `load_info` (e.g. free VRAM) is
+excluded from resume identity. Catalog (`--catalog`) and encoder (`--encoder`)
+remain separately configurable.
+
+Requires the working env under `benchmark/phase3/_metabolm_env` for real runs.
 
 ## Outputs
 
@@ -114,8 +162,41 @@ result = auto_annotate_model(
 )
 ```
 
-Resume refuses incompatible cache identities (model hash + backend + settings).
-Completed action fingerprints are not repeated.
+```powershell
+# Inspect reports from a prior run, then resume when compatible
+Get-Content _auto_annotate_out\report.json
+Get-Content _auto_annotate_out\provenance.json
+& $py -m core.agent.cli model.xml --out _auto_annotate_out --backend metabolm `
+  --hf-cache $hf --catalog data/kegg/kegg_reaction_features.lzma --encoder $enc `
+  --resume-from _auto_annotate_out
+```
+
+`checkpoint.json` uses **schema_version=1** (`AgentCheckpoint` in
+`core/agent/schemas.py`) and is written atomically (temp file + replace).
+
+Resume restores the saved plan, task/entity states, observations, completed
+action fingerprints, attempt/revision counts, species and reaction
+recommendations, reaction retrieval evidence, provenance, and execution-limit
+accounting, then **continues that plan** instead of generating an unrelated
+fresh plan.
+
+Compatibility is checked against source model SHA-256, backend identity
+(including MetaboLLM weight content fingerprints), settings/limits/request,
+tool schema version, resource identities (retriever / resources / species
+annotator provenance), and the summary `cache_identity`. Evidence dependencies
+are validated (completed retrieval/selection requires persisted
+`reaction_evidence`, and completed selection requires
+`reaction_recommendations`).
+
+Unsupported or incompatible checkpoints are rejected with
+`CheckpointCompatibilityError` (missing file, corrupt JSON, missing /
+unsupported `schema_version`, incomplete fields, or envelope mismatch).
+**Pre-v1 checkpoints cannot be resumed**; restart without `resume_from`.
+
+Execution is **at-least-once**, not exactly-once: an `in_flight_action` is
+journaled before tool execution; if interruption occurs before the result is
+durably recorded, resume may re-execute that action. Successful completed
+fingerprints are not repeated.
 
 ## Tests
 
@@ -137,6 +218,8 @@ authorized separately and are not a biological accuracy claim.
   pickles), local LLM hooks for normalization/ranking/identity/qualifiers, and
   **no** hosted-provider fallback. Missing DB files or LLM failures are
   **technical failures** for that task; other tasks may continue.
+  ChromaDB / `grpc._cython.cygrpc` are **not** required for this direct path;
+  `core.database_search` loads them lazily only for RAG (`method="rag"`).
 - There is **no** implicit synthetic-ID default for real backends. A missing
   species annotator fails closed.
 - `update_annotation` still refuses URIs for `identity_status=unresolved` and

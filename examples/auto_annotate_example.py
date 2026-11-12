@@ -1,9 +1,10 @@
-"""Runnable example for the automatic model-annotation agent.
+"""Synthetic demonstration for the automatic model-annotation agent.
 
-Uses the deterministic MockBackend by default (no network, no GPU).
+Uses MockBackend + SyntheticTinyRetriever (no network, no GPU).
+This is NOT a real LLM planning or full-catalog retrieval demonstration.
 
   python examples/auto_annotate_example.py
-  python examples/auto_annotate_example.py --backend metabolm
+  python examples/auto_annotate_example.py --out _auto_annotate_demo_mock
 """
 from __future__ import annotations
 
@@ -18,8 +19,6 @@ import libsbml
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-# Avoid importing the full core package __init__ (ChromaDB/RAG stack) so the
-# local MetaboLLM environment can run the agent without those dependencies.
 if "core" not in sys.modules:
     _core = types.ModuleType("core")
     _core.__path__ = [str(ROOT / "core")]
@@ -27,8 +26,7 @@ if "core" not in sys.modules:
 
 from core.agent import ExecutionLimits, auto_annotate_model
 from core.agent.backends.mock import MockBackend
-from core.agent.species import make_real_species_annotator
-from tests.agent.conftest import TinyRetriever
+from examples.synthetic_retriever import SyntheticTinyRetriever
 
 
 def build_demo_model(path: Path) -> Path:
@@ -64,49 +62,36 @@ def build_demo_model(path: Path) -> Path:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--backend", choices=["mock", "metabolm"], default="mock")
-    parser.add_argument("--out", default="_auto_annotate_demo")
+    parser.add_argument("--out", default="_auto_annotate_demo_mock")
     args = parser.parse_args()
 
     model = build_demo_model(Path(args.out) / "demo_model.xml")
-    species_annotator = None
-    if args.backend == "mock":
-        evidence = TinyRetriever().retrieve("ATP")
-        backend = MockBackend(
-            grounded_responses={
-                "default": {
-                    "abstain": False,
-                    "predicted_kegg_id": evidence[0]["kegg_id"],
-                    "selected_evidence_rank": 1,
-                    "supporting_evidence_ids": ["E01"],
-                    "confidence": 0.55,
-                    "reasoning_summary": "Demo mock selection from synthetic evidence",
-                    "abstention_reason": None,
-                }
+    evidence = SyntheticTinyRetriever().retrieve("ATP")
+    backend = MockBackend(
+        grounded_responses={
+            "default": {
+                "abstain": False,
+                "predicted_kegg_id": evidence[0]["kegg_id"],
+                "selected_evidence_rank": 1,
+                "supporting_evidence_ids": ["E01"],
+                "confidence": 0.55,
+                "reasoning_summary": "Demo mock selection from synthetic evidence",
+                "abstention_reason": None,
             }
-        )
-        # MockBackend explicitly selects the synthetic species annotator (tests/demos only).
-    else:
-        from core.agent.backends.metabolm import MetaboLLMBackend, ensure_gpu_idle_enough
-
-        print(json.dumps({"gpu_check": ensure_gpu_idle_enough()}, indent=2))
-        backend = MetaboLLMBackend()
-        species_annotator = make_real_species_annotator(backend)
-
+        }
+    )
     result = auto_annotate_model(
         str(model),
         request="Annotate missing entities in this model",
         backend=backend,
-        reaction_retriever=TinyRetriever(),
+        reaction_retriever=SyntheticTinyRetriever(),
         output_dir=args.out,
-        limits=ExecutionLimits(max_actions=30, max_revisions=3),
-        species_annotator=species_annotator,
-    )
-    print(
-        "species_annotator:",
-        json.dumps(result.provenance.get("species_annotator"), indent=2),
+        limits=ExecutionLimits(max_actions=30, max_failure_revisions=3, max_actions_per_turn=4),
+        allow_structural_fallback=True,
     )
     print(json.dumps(result.report.model_dump(mode="json"), indent=2))
+    print("mode: synthetic mock (not real LLM planning / not full-catalog retrieval)")
+    print("species_annotator:", json.dumps(result.provenance.get("species_annotator"), indent=2))
     print("output_dir:", result.output_dir)
     return 0
 

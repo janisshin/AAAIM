@@ -44,6 +44,7 @@ class AgentResources:
     allow_names_only_reactions: bool = True
     identity_support_available: bool = True
     qualifier_prediction_available: bool = True
+    checkpoint_saver: Optional[Callable[[], None]] = None
 
 
 def _obs(
@@ -683,17 +684,17 @@ class ToolRegistry:
 
     def persist_checkpoint(self, action: AgentAction) -> ToolObservation:
         path = Path(self.resources.output_dir) / "checkpoint.json"
-        payload = {
-            "entity_identities": self.resources.entity_identities,
-            "checkpoint": self.resources.checkpoint,
-            "species_recommendations": None
-            if self.resources.species_recommendations is None
-            else self.resources.species_recommendations.fillna("").to_dict("records"),
-            "reaction_recommendations": None
-            if self.resources.reaction_recommendations is None
-            else self.resources.reaction_recommendations.fillna("").to_dict("records"),
-        }
-        path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+        saver = self.resources.checkpoint_saver
+        if saver is None:
+            return _obs(
+                action,
+                ok=False,
+                error="checkpoint_saver not configured; refuse partial checkpoint overwrite",
+                failure_kind=FailureKind.TECHNICAL_FAILURE,
+                inventory=self.resources.inventory,
+                skip_semantic=True,
+            )
+        saver()
         return _obs(
             action,
             ok=True,

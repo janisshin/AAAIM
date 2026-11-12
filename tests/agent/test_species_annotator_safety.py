@@ -221,6 +221,29 @@ def test_unresolved_recommendations_are_not_written(tmp_path):
 
 
 @pytest.mark.skipif(not species_database_available("chebi")[0], reason="ChEBI reference missing")
+def test_direct_species_search_does_not_load_cygrpc():
+    """method=direct must not import chromadb → grpc._cython.cygrpc (App Control risk)."""
+    import sys
+
+    # Drop modules if a prior test already imported them.
+    for name in list(sys.modules):
+        if name == "chromadb" or name.startswith("chromadb.") or "cygrpc" in name:
+            sys.modules.pop(name, None)
+
+    from core.database_search import get_species_recommendations_direct
+
+    assert "chromadb" not in sys.modules
+    assert "grpc._cython.cygrpc" not in sys.modules
+    recs = get_species_recommendations_direct(
+        ["water", "atp"], {"water": ["water"], "atp": ["ATP"]}, database="chebi", top_k=3
+    )
+    assert recs
+    assert "chromadb" not in sys.modules
+    assert "grpc._cython.cygrpc" not in sys.modules
+    assert any(getattr(r, "candidates", None) for r in recs)
+
+
+@pytest.mark.skipif(not species_database_available("chebi")[0], reason="ChEBI reference missing")
 def test_real_direct_search_is_evidence_dependent(tmp_path, monkeypatch):
     """Different species names must not collapse to one hard-coded CHEBI ID."""
     from core.database_search import get_species_recommendations_direct
