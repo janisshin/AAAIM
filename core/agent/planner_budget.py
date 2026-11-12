@@ -23,10 +23,17 @@ from core.agent.io import atomic_write_json
 
 # Official gpt-6-luna Standard short-context rates (USD / 1M tokens).
 # Checked 2026-11-12 from https://developers.openai.com/api/docs/models/gpt-6-luna
+# Service-tier naming: OpenAI Responses API uses ``default`` for Standard pricing
+# (see Responses create docs / openai.types.responses.Response.service_tier).
+# Pricing page labels this "Standard"; API response identity is ``default``.
 PRICING_CHECKED = "2026-11-12"
+PRICING_IDENTITY_CHECKED = "2026-11-12"
+PLANNER_SETTLEMENT_MODEL = "gpt-6-luna"
+# Requested / reserved billable tier for Standard-rate reservations.
+PLANNER_REQUESTED_SERVICE_TIER = "default"
 GPT6_LUNA_STANDARD = {
-    "model": "gpt-6-luna",
-    "service_tier": "standard",
+    "model": PLANNER_SETTLEMENT_MODEL,
+    "service_tier": PLANNER_REQUESTED_SERVICE_TIER,
     "input_per_mtok": 0.10,
     "cached_input_per_mtok": 0.01,
     "cache_write_per_mtok": 0.125,
@@ -36,6 +43,25 @@ GPT6_LUNA_STANDARD = {
     "long_context_input_threshold": 272_000,
     "include_cache_write_premium": False,
 }
+
+# Explicit settlement identity policy for Standard-priced gpt-6-luna planner.
+# Response model must match the reserved model exactly. Documented snapshot
+# alias list for Luna is only ``gpt-6-luna`` (model page, 2026-11-12).
+ACCEPTED_RESPONSE_MODELS_FOR_REQUESTED: dict[str, frozenset[str]] = {
+    PLANNER_SETTLEMENT_MODEL: frozenset({PLANNER_SETTLEMENT_MODEL}),
+}
+# For Standard pricing we accept only response service_tier ``default``.
+# Documented OpenAI request→response equivalences that are NOT accepted here
+# (different rates): request ``fast``/``priority`` → response ``priority``
+# (Fast, 2x); ``flex`` / ``ultrafast`` / ``scale`` are other tiers.
+# ``auto`` is a request default, not an accepted settlement response identity
+# for Standard-rate reservations.
+ACCEPTED_RESPONSE_TIERS_FOR_REQUESTED: dict[str, frozenset[str]] = {
+    PLANNER_REQUESTED_SERVICE_TIER: frozenset({PLANNER_REQUESTED_SERVICE_TIER}),
+}
+KNOWN_RESPONSE_SERVICE_TIERS = frozenset(
+    {"auto", "default", "flex", "scale", "priority", "fast", "ultrafast"}
+)
 
 LEDGER_SCHEMA_VERSION = 2
 AccountingStatus = Literal["ok", "reconciliation_required", "blocked"]
@@ -50,6 +76,88 @@ _STATUS_RANK = {
 
 class PlannerBudgetError(RuntimeError):
     """Spend authorization, reservation, settlement, or reconcile failure."""
+
+
+def _normalize_identity_token(value: Any) -> Optional[str]:
+    """Return stripped identity string, or None if missing/blank."""
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        value = str(value)
+    text = value.strip()
+    return text if text else None
+
+
+def verify_settlement_response_identity(
+    *,
+    expected_model: str,
+    expected_service_tier: str,
+    response_model: Any,
+    response_service_tier: Any,
+) -> tuple[str, str]:
+    """Require verified response model + billing tier before releasing a reservation.
+
+    Preserves requested vs actual separately: callers must pass the raw response
+    fields without substituting request defaults for missing values.
+
+    Returns normalized (response_model, response_service_tier) on success.
+    """
+    actual_model = _normalize_identity_token(response_model)
+    actual_tier = _normalize_identity_token(response_service_tier)
+    expected_model_n = _normalize_identity_token(expected_model)
+    expected_tier_n = _normalize_identity_token(expected_service_tier)
+    if not expected_model_n or not expected_tier_n:
+        raise PlannerBudgetError(
+            "reservation missing expected_model/expected_service_tier; cannot settle"
+        )
+    if actual_model is None and actual_tier is None:
+        raise PlannerBudgetError(
+            "settlement identity missing: response model and service_tier are absent; "
+            "validated usage alone cannot settle an identity-uncertain attempt"
+        )
+    if actual_model is None:
+        raise PlannerBudgetError(
+            "settlement identity missing: response model is absent/blank; "
+            "validated usage alone cannot settle an identity-uncertain attempt"
+        )
+    if actual_tier is None:
+        raise PlannerBudgetError(
+            "settlement identity missing: response service_tier is absent/blank; "
+            "validated usage alone cannot settle an identity-uncertain attempt"
+        )
+
+    accepted_models = ACCEPTED_RESPONSE_MODELS_FOR_REQUESTED.get(expected_model_n)
+    if accepted_models is None:
+        raise PlannerBudgetError(
+            f"unrecognized reserved expected_model={expected_model_n!r}; "
+            "no settlement compatibility policy"
+        )
+    if actual_model not in accepted_models:
+        raise PlannerBudgetError(
+            f"response model={actual_model!r} incompatible with reserved "
+            f"expected_model={expected_model_n!r} "
+            f"(accepted={sorted(accepted_models)})"
+        )
+
+    accepted_tiers = ACCEPTED_RESPONSE_TIERS_FOR_REQUESTED.get(expected_tier_n)
+    if accepted_tiers is None:
+        raise PlannerBudgetError(
+            f"unrecognized reserved expected_service_tier={expected_tier_n!r}; "
+            "no settlement compatibility policy"
+        )
+    if actual_tier not in KNOWN_RESPONSE_SERVICE_TIERS:
+        raise PlannerBudgetError(
+            f"unrecognized response service_tier={actual_tier!r}; "
+            f"known={sorted(KNOWN_RESPONSE_SERVICE_TIERS)}"
+        )
+    if actual_tier not in accepted_tiers:
+        raise PlannerBudgetError(
+            f"response service_tier={actual_tier!r} incompatible with reserved "
+            f"expected_service_tier={expected_tier_n!r} "
+            f"(accepted={sorted(accepted_tiers)}; "
+            "fast/priority/flex/ultrafast are not Standard-rate equivalents)"
+        )
+    return actual_model, actual_tier
 
 
 def hard_input_token_bound(serialized_request: str) -> int:
@@ -214,8 +322,14 @@ class PlannerAttemptRecord:
     created_at: float = field(default_factory=time.time)
     settled_at: Optional[float] = None
     potential_additional_exposure_usd: float = 0.0
-    expected_model: str = "gpt-6-luna"
-    expected_service_tier: str = "standard"
+    # Requested / reserved identity (never overwritten with response values).
+    expected_model: str = PLANNER_SETTLEMENT_MODEL
+    expected_service_tier: str = PLANNER_REQUESTED_SERVICE_TIER
+    # Actual response identity as returned (may remain None if absent).
+    actual_response_model: Optional[str] = None
+    actual_service_tier: Optional[str] = None
+    # Safe diagnostic metadata (no credentials).
+    response_identity_meta: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -311,12 +425,19 @@ class PlannerBudgetLedger:
                     potential_additional_exposure_usd=float(
                         raw.get("potential_additional_exposure_usd") or 0.0
                     ),
-                    expected_model=str(raw.get("expected_model") or data.get("model") or "gpt-6-luna"),
+                    expected_model=str(
+                        raw.get("expected_model")
+                        or data.get("model")
+                        or PLANNER_SETTLEMENT_MODEL
+                    ),
                     expected_service_tier=str(
                         raw.get("expected_service_tier")
                         or (data.get("pricing") or {}).get("service_tier")
-                        or "standard"
+                        or PLANNER_REQUESTED_SERVICE_TIER
                     ),
+                    actual_response_model=raw.get("actual_response_model"),
+                    actual_service_tier=raw.get("actual_service_tier"),
+                    response_identity_meta=dict(raw.get("response_identity_meta") or {}),
                 )
             )
         ledger = cls(
@@ -470,14 +591,16 @@ class PlannerBudgetLedger:
                 f"reservation ${reserved:.6f} exceeds remaining cap "
                 f"${self.remaining_cap_usd:.6f}"
             )
-        tier = expected_service_tier or str(self.pricing.get("service_tier") or "standard")
+        tier = expected_service_tier or str(
+            self.pricing.get("service_tier") or PLANNER_REQUESTED_SERVICE_TIER
+        )
         attempt = PlannerAttemptRecord(
             attempt_id=str(uuid.uuid4()),
             status="reserved",
             input_token_bound=int(input_token_bound),
             max_output_tokens=int(max_output_tokens),
             reserved_usd=float(reserved),
-            expected_model=str(expected_model or self.model),
+            expected_model=str(expected_model or self.model or PLANNER_SETTLEMENT_MODEL),
             expected_service_tier=str(tier),
         )
         self.attempts.append(attempt)
@@ -492,24 +615,36 @@ class PlannerBudgetLedger:
         usage: dict[str, Any],
         *,
         persist_path: Optional[Path] = None,
-        response_model: Optional[str] = None,
-        service_tier: Optional[str] = None,
+        response_model: Any = None,
+        service_tier: Any = None,
+        response_identity_meta: Optional[dict[str, Any]] = None,
     ) -> PlannerAttemptRecord:
         attempt = self._get(attempt_id)
         if attempt.status not in {"reserved", "retained_exposure"}:
             raise PlannerBudgetError(f"attempt {attempt_id} not open for settlement")
 
+        # Record raw response identity as provided — never fill from request defaults.
+        attempt.actual_response_model = _normalize_identity_token(response_model)
+        attempt.actual_service_tier = _normalize_identity_token(service_tier)
+        meta = dict(response_identity_meta or {})
+        meta.setdefault("raw_response_model", response_model)
+        meta.setdefault("raw_response_service_tier", service_tier)
+        meta.setdefault("expected_model", attempt.expected_model)
+        meta.setdefault("expected_service_tier", attempt.expected_service_tier)
+        # Strip anything that looks credential-like if a caller passed extras.
+        for bad in ("api_key", "authorization", "Authorization", "token", "secret"):
+            meta.pop(bad, None)
+        attempt.response_identity_meta = meta
+
         try:
-            if response_model is not None and str(response_model) != attempt.expected_model:
-                raise PlannerBudgetError(
-                    f"response model={response_model!r} mismatches reserved "
-                    f"expected_model={attempt.expected_model!r}"
-                )
-            if service_tier is not None and str(service_tier) != attempt.expected_service_tier:
-                raise PlannerBudgetError(
-                    f"service_tier={service_tier!r} mismatches reserved "
-                    f"expected_service_tier={attempt.expected_service_tier!r}"
-                )
+            verified_model, verified_tier = verify_settlement_response_identity(
+                expected_model=attempt.expected_model,
+                expected_service_tier=attempt.expected_service_tier,
+                response_model=response_model,
+                response_service_tier=service_tier,
+            )
+            attempt.actual_response_model = verified_model
+            attempt.actual_service_tier = verified_tier
             parsed = parse_strict_usage(usage)
             if parsed["input_tokens"] > attempt.input_token_bound:
                 raise PlannerBudgetError(
@@ -558,7 +693,7 @@ class PlannerBudgetLedger:
                 self.persist(persist_path)
             raise PlannerBudgetError(note) from exc
 
-        # Success: release unused reserve only after validated settlement.
+        # Success: release unused reserve only after identity + usage validation.
         attempt.usage = dict(parsed["raw"])
         attempt.charged_usd = float(charged)
         attempt.status = "settled"

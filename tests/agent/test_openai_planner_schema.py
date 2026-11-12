@@ -72,7 +72,7 @@ def test_submitted_request_embeds_identical_strict_schema(chemical_only_model):
     class _Resp:
         status = "completed"
         model = PLANNER_MODEL
-        service_tier = "standard"
+        service_tier = "default"
         output_text = json.dumps(
             {
                 "decision": "finish",

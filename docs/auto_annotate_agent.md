@@ -271,10 +271,20 @@ resource/tokenizer identity); restart without `resume_from`.
   input-token bound, reserves conservative Standard pricing (`$0.10` /
   `$0.50` per 1M in/out for gpt-6-luna, checked 2026-11-12), **persists the
   reservation**, journals a controller checkpoint, then dispatches.
-  Settlement accepts only strict nonnegative-integer usage within the reserved
-  input/output bounds and matching model/service-tier; token-derived USD is an
-  **estimate**, not invoice verification. Usage outside bounds, missing, or
-  inconsistent details → retain conservative exposure, record any
+  Settlement requires **verified response identity** before releasing any
+  reservation: raw Responses API `model` and `service_tier` must be present
+  (never filled from request defaults). Compatibility policy (docs checked
+  2026-11-12): reserved Standard-rate planner expects request model
+  `gpt-6-luna` and request tier `default` (OpenAI’s name for Standard
+  pricing); accepted response identities are exactly `gpt-6-luna` +
+  `default`. Documented Fast-mode request `fast`/`priority` → response
+  `priority`, plus `flex` / `ultrafast` / `scale` / `auto`, are **not**
+  accepted for Standard-rate settlement. Validated token usage alone cannot
+  settle an identity-uncertain attempt. Usage must also be strict
+  nonnegative integers within reserved bounds; token-derived USD is an
+  **estimate**, not invoice verification. Missing/blank/unknown/incompatible
+  identity or usage outside bounds → retain conservative exposure, record
+  requested vs actual identity metadata (no credentials), record any
   `potential_additional_exposure_usd` when reported liability exceeds the
   reservation, set `accounting_status=blocked`, and refuse further paid
   dispatches. **Post-response validation cannot undo charges already

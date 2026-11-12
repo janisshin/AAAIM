@@ -21,6 +21,7 @@ from pydantic.fields import FieldInfo
 
 from core.agent.planner_budget import (
     GPT6_LUNA_STANDARD,
+    PLANNER_REQUESTED_SERVICE_TIER,
     PlannerBudgetError,
     PlannerBudgetLedger,
     hard_input_token_bound,
@@ -458,7 +459,8 @@ class OpenAIPlannerBackend:
                 persist_path=self.budget_path,
                 expected_model=self.model,
                 expected_service_tier=str(
-                    self.budget.pricing.get("service_tier") or "standard"
+                    self.budget.pricing.get("service_tier")
+                    or PLANNER_REQUESTED_SERVICE_TIER
                 ),
             )
         except PlannerBudgetError as exc:
@@ -477,10 +479,16 @@ class OpenAIPlannerBackend:
         # Durable reservation before dispatch; journal controller checkpoint.
         self._journal()
 
+        requested_tier = str(
+            self.budget.pricing.get("service_tier") or PLANNER_REQUESTED_SERVICE_TIER
+        )
         client = self._get_client()
         try:
+            # Explicit Standard-rate request tier so the API returns the processing
+            # mode actually used (Responses docs). Do not invent response identity.
             response = client.responses.create(
                 model=self.model,
+                service_tier=requested_tier,
                 input=[
                     {
                         "role": m["role"],
@@ -512,6 +520,7 @@ class OpenAIPlannerBackend:
                 "usage": None,
                 "truncated": False,
                 "model": self.model,
+                "requested_service_tier": requested_tier,
                 "attempt_id": attempt.attempt_id,
                 "input_token_bound": input_bound,
             }
@@ -521,12 +530,11 @@ class OpenAIPlannerBackend:
         status = getattr(response, "status", None) or (
             response.get("status") if isinstance(response, dict) else None
         )
-        response_model = getattr(response, "model", None) or (
-            response.get("model") if isinstance(response, dict) else self.model
+        response_model, response_tier, identity_meta = _extract_response_identity(
+            response
         )
-        service_tier = getattr(response, "service_tier", None)
-        if service_tier is None and isinstance(response, dict):
-            service_tier = response.get("service_tier")
+        identity_meta["requested_model"] = self.model
+        identity_meta["requested_service_tier"] = requested_tier
         usage_obj = getattr(response, "usage", None)
         if usage_obj is None and isinstance(response, dict):
             usage_obj = response.get("usage")
@@ -546,6 +554,9 @@ class OpenAIPlannerBackend:
                 "usage": usage,
                 "truncated": status == "incomplete",
                 "model": response_model,
+                "response_service_tier": response_tier,
+                "requested_service_tier": requested_tier,
+                "response_identity": identity_meta,
                 "attempt_id": attempt.attempt_id,
                 "input_token_bound": input_bound,
             }
@@ -567,18 +578,23 @@ class OpenAIPlannerBackend:
                 "usage": usage,
                 "truncated": False,
                 "model": response_model,
+                "response_service_tier": response_tier,
+                "requested_service_tier": requested_tier,
+                "response_identity": identity_meta,
                 "attempt_id": attempt.attempt_id,
             }
             self.last_generate_meta = meta
             raise RuntimeError("OpenAI planner returned empty structured output")
 
         try:
+            # Pass through raw response identity only — never substitute request defaults.
             self.budget.settle_validated(
                 attempt.attempt_id,
                 usage or {},
                 persist_path=self.budget_path,
-                response_model=str(response_model) if response_model else None,
-                service_tier=str(service_tier) if service_tier is not None else None,
+                response_model=response_model,
+                service_tier=response_tier,
+                response_identity_meta=identity_meta,
             )
         except PlannerBudgetError as exc:
             self._journal()
@@ -589,6 +605,9 @@ class OpenAIPlannerBackend:
                 "usage": usage,
                 "truncated": False,
                 "model": response_model,
+                "response_service_tier": response_tier,
+                "requested_service_tier": requested_tier,
+                "response_identity": identity_meta,
                 "attempt_id": attempt.attempt_id,
             }
             self.last_generate_meta = meta
@@ -609,6 +628,9 @@ class OpenAIPlannerBackend:
                 "usage": usage,
                 "truncated": False,
                 "model": response_model,
+                "response_service_tier": response_tier,
+                "requested_service_tier": requested_tier,
+                "response_identity": identity_meta,
                 "attempt_id": attempt.attempt_id,
             }
             self.last_generate_meta = meta
@@ -621,6 +643,10 @@ class OpenAIPlannerBackend:
             "usage": usage,
             "truncated": False,
             "model": response_model,
+            "response_service_tier": response_tier,
+            "requested_model": self.model,
+            "requested_service_tier": requested_tier,
+            "response_identity": identity_meta,
             "attempt_id": attempt.attempt_id,
             "input_token_bound": input_bound,
             "budget": self.budget.summary(),
@@ -628,6 +654,34 @@ class OpenAIPlannerBackend:
         }
         self.last_generate_meta = meta
         return decision, meta
+
+
+def _extract_response_identity(
+    response: Any,
+) -> tuple[Any, Any, dict[str, Any]]:
+    """Extract model/service_tier from a Responses API object without defaults.
+
+    Missing fields remain None/absent — callers must not substitute the request
+    model or requested tier.
+    """
+    meta: dict[str, Any] = {"response_type": type(response).__name__}
+    if isinstance(response, dict):
+        response_model = response.get("model", None)
+        response_tier = response.get("service_tier", None)
+        if "id" in response:
+            meta["response_id"] = response.get("id")
+        if "object" in response:
+            meta["object"] = response.get("object")
+        if "status" in response:
+            meta["status"] = response.get("status")
+        return response_model, response_tier, meta
+
+    response_model = getattr(response, "model", None)
+    response_tier = getattr(response, "service_tier", None)
+    for attr in ("id", "object", "status"):
+        if hasattr(response, attr):
+            meta[attr] = getattr(response, attr)
+    return response_model, response_tier, meta
 
 
 def _usage_to_dict(usage: Any) -> Optional[dict[str, Any]]:

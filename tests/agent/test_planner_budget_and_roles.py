@@ -30,7 +30,7 @@ class _FakeResponse:
     def __init__(self, text: str, *, status: str = "completed") -> None:
         self.status = status
         self.model = PLANNER_MODEL
-        self.service_tier = "standard"
+        self.service_tier = "default"
         self.usage = _FakeUsage(12, 8)
         self.output_text = text
         self.output = [
@@ -127,7 +127,7 @@ def test_reserve_settle_and_retain_exposure(tmp_path):
         {"input_tokens": 100, "output_tokens": 20},
         persist_path=path,
         response_model=PLANNER_MODEL,
-        service_tier="standard",
+        service_tier="default",
     )
     assert ledger.charged_usd > 0
     assert ledger.reserved_usd == 0.0
@@ -274,7 +274,7 @@ def test_resume_restores_planner_budget_accounting(tmp_path, chemical_only_model
         {"input_tokens": 100, "output_tokens": 20},
         persist_path=budget_path,
         response_model=PLANNER_MODEL,
-        service_tier="standard",
+        service_tier="default",
     )
     a2 = file_ledger.reserve_attempt(
         input_token_bound=500, max_output_tokens=50, persist_path=budget_path

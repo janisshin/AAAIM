@@ -67,7 +67,7 @@ def test_exact_boundary_usage_settles(tmp_path):
         {"input_tokens": 100, "output_tokens": 50},
         persist_path=path,
         response_model=PLANNER_MODEL,
-        service_tier="standard",
+        service_tier="default",
     )
     assert settled.status == "settled"
     assert ledger.reserved_usd == 0.0
@@ -91,6 +91,7 @@ def test_usage_overflow_blocks_further_dispatch(tmp_path):
             {"input_tokens": 1_000_000, "output_tokens": 1_000_000},
             persist_path=path,
             response_model=PLANNER_MODEL,
+            service_tier="default",
         )
     assert ledger.accounting_status == "blocked"
     assert ledger.retained_exposure_usd > 0
@@ -131,7 +132,13 @@ def test_malformed_usage_retains_exposure(tmp_path, usage, match):
         input_token_bound=10, max_output_tokens=5, persist_path=path
     )
     with pytest.raises(PlannerBudgetError, match=match):
-        ledger.settle_validated(attempt.attempt_id, usage, persist_path=path)
+        ledger.settle_validated(
+            attempt.attempt_id,
+            usage,
+            persist_path=path,
+            response_model=PLANNER_MODEL,
+            service_tier="default",
+        )
     assert ledger.accounting_status == "blocked"
     assert any(a.status == "retained_exposure" for a in ledger.attempts)
 
@@ -144,7 +151,7 @@ def test_model_tier_mismatch(tmp_path):
         max_output_tokens=5,
         persist_path=path,
         expected_model=PLANNER_MODEL,
-        expected_service_tier="standard",
+        expected_service_tier="default",
     )
     with pytest.raises(PlannerBudgetError, match="model"):
         ledger.settle_validated(
@@ -152,13 +159,14 @@ def test_model_tier_mismatch(tmp_path):
             {"input_tokens": 1, "output_tokens": 1},
             persist_path=path,
             response_model="other-model",
+            service_tier="default",
         )
     ledger2 = _bound_ledger()
     attempt2 = ledger2.reserve_attempt(
         input_token_bound=10,
         max_output_tokens=5,
         expected_model=PLANNER_MODEL,
-        expected_service_tier="standard",
+        expected_service_tier="default",
     )
     with pytest.raises(PlannerBudgetError, match="service_tier"):
         ledger2.settle_validated(
@@ -180,6 +188,7 @@ def test_reconciliation_required_survives_restart(tmp_path):
             {"input_tokens": 1000, "output_tokens": 1000},
             persist_path=path,
             response_model=PLANNER_MODEL,
+            service_tier="default",
         )
     restored = PlannerBudgetLedger.load(path)
     assert restored.ledger_schema_version == LEDGER_SCHEMA_VERSION
@@ -196,7 +205,7 @@ def test_stale_checkpoint_cannot_restore_capacity(tmp_path):
         a.attempt_id,
         {"input_tokens": 50, "output_tokens": 5},
         response_model=PLANNER_MODEL,
-        service_tier="standard",
+        service_tier="default",
     )
     charged = file_ledger.charged_usd
     stale = PlannerBudgetLedger(
@@ -268,7 +277,7 @@ def test_settle_before_checkpoint_crash_keeps_charge(tmp_path, chemical_only_mod
         {"input_tokens": 40, "output_tokens": 4},
         persist_path=budget_path,
         response_model=PLANNER_MODEL,
-        service_tier="standard",
+        service_tier="default",
     )
     charged = file_ledger.charged_usd
     # Checkpoint still stale (no charged attempt).
