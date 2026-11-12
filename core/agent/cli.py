@@ -35,11 +35,16 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.backend == "mock":
         backend = MockBackend()
+        # MockBackend resolves to the explicit synthetic species annotator.
+        species_annotator = None
     else:
         from core.agent.backends.metabolm import MetaboLLMBackend, ensure_gpu_idle_enough
+        from core.agent.species import make_real_species_annotator
 
         ensure_gpu_idle_enough()
         backend = MetaboLLMBackend()
+        # Real path: normalization + direct DB retrieval + identity/qualifiers via MetaboLLM.
+        species_annotator = make_real_species_annotator(backend)
 
     resources = None
     retriever = None
@@ -63,6 +68,7 @@ def main(argv: list[str] | None = None) -> int:
         scope=AnnotationScope(args.scope),
         limits=ExecutionLimits(max_actions=args.max_actions),
         resume_from=args.resume_from,
+        species_annotator=species_annotator,
     )
     print(json.dumps(result.report.model_dump(mode="json"), indent=2))
     return 0 if result.report.status in {"completed", "partial", "interrupted"} else 1

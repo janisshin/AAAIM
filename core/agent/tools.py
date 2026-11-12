@@ -12,12 +12,12 @@ from core.agent.inspect_model import inspect_sbml_model
 from core.agent.schemas import (
     AgentAction,
     AnnotationStatus,
-    BiologicalType,
     FailureKind,
     ModelInventory,
     ToolObservation,
     parse_tool_arguments,
-)
+)  # AnnotationStatus used by classify_or_route_entities
+from core.agent.species import llm_backend_hook
 from core.agent.validate import ObservationValidationError, validate_observation
 from core.reaction import grounded as grounded_mod
 from core.reaction.species_evidence import build_queries
@@ -34,12 +34,16 @@ class AgentResources:
     reaction_retriever: Any = None
     grounded_transport: Optional[Callable[[dict], dict]] = None
     species_annotator: Optional[Callable[..., pd.DataFrame]] = None
+    species_backend: Any = None
+    species_annotator_provenance: dict[str, Any] = field(default_factory=dict)
     species_recommendations: Optional[pd.DataFrame] = None
     reaction_recommendations: Optional[pd.DataFrame] = None
     reaction_evidence: list[dict] = field(default_factory=list)
     entity_identities: dict[str, dict[str, Any]] = field(default_factory=dict)
     checkpoint: dict[str, Any] = field(default_factory=dict)
     allow_names_only_reactions: bool = True
+    identity_support_available: bool = True
+    qualifier_prediction_available: bool = True
 
 
 def _obs(
@@ -89,56 +93,6 @@ def _obs(
                 checks_performed=["observation_schema", "evidence_consistency"],
             )
         return observation
-
-
-def _default_species_annotator(
-    model_file: str, target_ids: list[str], databases: list[str], inventory: ModelInventory
-) -> pd.DataFrame:
-    """Deterministic offline species recommendations (no paid API)."""
-    by_id = {e.target_id: e for e in inventory.entities}
-    rows = []
-    for tid in target_ids:
-        ent = by_id[tid]
-        if ent.biological_type == BiologicalType.AMBIGUOUS:
-            rows.append(
-                {
-                    "id": tid,
-                    "display_name": ent.display_name,
-                    "annotation": "",
-                    "database": "",
-                    "type": ent.biological_type.value,
-                    "qualifier": "is",
-                    "update_annotation": "ignore",
-                    "identity_status": "unresolved",
-                    "status": "unresolved",
-                    "Note": "ambiguous biological type",
-                }
-            )
-            continue
-        db = (databases or ["chebi"])[0]
-        # Synthetic but schema-valid placeholders for additive writing in demos/tests.
-        annotation = {
-            "chebi": "CHEBI:15377",
-            "ncbigene": "NCBIGene:3988",
-            "uniprot": "UNIPROT:P0DP23",
-        }.get(db, "CHEBI:15377")
-        if ent.annotation_status == AnnotationStatus.COMPLETE:
-            continue
-        rows.append(
-            {
-                "id": tid,
-                "display_name": ent.display_name,
-                "annotation": annotation,
-                "database": db,
-                "type": ent.biological_type.value,
-                "qualifier": "is",
-                "update_annotation": "add",
-                "identity_status": "supported",
-                "status": "selected",
-                "match_score": 0.5,
-            }
-        )
-    return pd.DataFrame(rows)
 
 
 class ToolRegistry:
@@ -213,15 +167,46 @@ class ToolRegistry:
         return _obs(action, ok=True, result={"routing": routing}, inventory=inv)
 
     def annotate_species_candidates(self, action: AgentAction) -> ToolObservation:
-        annotator = self.resources.species_annotator or _default_species_annotator
+        annotator = self.resources.species_annotator
+        if annotator is None:
+            return _obs(
+                action,
+                ok=False,
+                error=(
+                    "species annotator not configured; refusing implicit synthetic "
+                    "identifier fallback"
+                ),
+                failure_kind=FailureKind.TECHNICAL_FAILURE,
+                inventory=self.resources.inventory,
+                skip_semantic=True,
+            )
         args = parse_tool_arguments(action.tool, action.arguments)
         databases = list(args.databases)  # type: ignore[attr-defined]
-        frame = annotator(
-            self.resources.model_file,
-            list(action.target_ids),
-            databases,
-            self.resources.inventory,
-        )
+        try:
+            frame = annotator(
+                self.resources.model_file,
+                list(action.target_ids),
+                databases,
+                self.resources.inventory,
+            )
+        except Exception as exc:
+            return _obs(
+                action,
+                ok=False,
+                error=f"species annotation failed: {type(exc).__name__}: {exc}",
+                failure_kind=FailureKind.TECHNICAL_FAILURE,
+                inventory=self.resources.inventory,
+                skip_semantic=True,
+            )
+        if frame is None or not isinstance(frame, pd.DataFrame):
+            return _obs(
+                action,
+                ok=False,
+                error="species annotator returned no DataFrame",
+                failure_kind=FailureKind.TECHNICAL_FAILURE,
+                inventory=self.resources.inventory,
+                skip_semantic=True,
+            )
         if self.resources.species_recommendations is None:
             self.resources.species_recommendations = frame.copy()
         else:
@@ -230,54 +215,232 @@ class ToolRegistry:
             )
         unresolved = [
             r["id"]
-            for r in frame.to_dict("records")
+            for r in frame.fillna("").to_dict("records")
             if str(r.get("identity_status", "")).lower() == "unresolved"
             or str(r.get("status", "")).lower() == "unresolved"
+            or (
+                str(r.get("update_annotation", "")).lower() == "ignore"
+                and not str(r.get("annotation", "")).strip()
+            )
         ]
-        for row in frame.to_dict("records"):
+        for row in frame.fillna("").to_dict("records"):
+            if str(row.get("id")) == "Reason:":
+                continue
             self.resources.entity_identities[str(row["id"])] = {
                 "annotation": row.get("annotation"),
-                "identity_status": row.get("identity_status"),
+                "identity_status": row.get("identity_status") or "",
                 "qualifier": row.get("qualifier", "is"),
+                "qualifier_status": row.get("qualifier_status") or "",
+                "component_id": row.get("component_id") or "",
+                "annotator_kind": row.get("annotator_kind")
+                or self.resources.species_annotator_provenance.get("kind"),
             }
         failure = FailureKind.UNRESOLVED_IDENTITY if unresolved else FailureKind.NONE
         return _obs(
             action,
             ok=True,
             result={
-                "n_rows": len(frame),
+                "n_rows": int(len(frame)),
                 "unresolved_ids": unresolved,
                 "recommendations": frame.fillna("").to_dict("records"),
+                "annotator_kind": self.resources.species_annotator_provenance.get("kind"),
             },
             failure_kind=failure,
             inventory=self.resources.inventory,
         )
 
     def assess_identity_support(self, action: AgentAction) -> ToolObservation:
-        # Preserve existing statuses; do not fabricate support.
-        ids = action.target_ids
+        if not self.resources.identity_support_available:
+            return _obs(
+                action,
+                ok=False,
+                error="identity-support assessment unavailable in this configuration",
+                failure_kind=FailureKind.TECHNICAL_FAILURE,
+                inventory=self.resources.inventory,
+                skip_semantic=True,
+            )
+        frame = self.resources.species_recommendations
+        if frame is None or frame.empty:
+            return _obs(
+                action,
+                ok=False,
+                error="no species recommendations available for identity support",
+                failure_kind=FailureKind.TECHNICAL_FAILURE,
+                inventory=self.resources.inventory,
+                skip_semantic=True,
+            )
+        # Mock synthetic rows already carry identity_status; do not invent support.
+        kind = self.resources.species_annotator_provenance.get("kind")
+        if kind == "mock_synthetic":
+            ids = action.target_ids or sorted(self.resources.entity_identities)
+            out = []
+            for tid in ids:
+                info = self.resources.entity_identities.get(tid, {})
+                out.append(
+                    {
+                        "id": tid,
+                        "identity_status": info.get("identity_status") or "unresolved",
+                    }
+                )
+            return _obs(
+                action,
+                ok=True,
+                result={"assessments": out, "mode": "mock_passthrough"},
+                inventory=self.resources.inventory,
+            )
+
+        from core.identity_support import assess_species_identity_support
+
+        args = parse_tool_arguments(action.tool, action.arguments)
+        subset = frame
+        if action.target_ids:
+            subset = frame[frame["id"].astype(str).isin(action.target_ids)].copy()
+        try:
+            with llm_backend_hook(self.resources.species_backend) as meta:
+                if not meta.get("hook_installed"):
+                    raise RuntimeError(
+                        "identity support requires a local LLM backend; "
+                        "refusing hosted fallback and fabricated support labels"
+                    )
+                assessed = assess_species_identity_support(
+                    subset,
+                    model_file=self.resources.model_file,
+                    llm_model="metabolm-local",
+                    effort=getattr(args, "effort", "low"),
+                )
+        except Exception as exc:
+            return _obs(
+                action,
+                ok=False,
+                error=f"identity support failed: {type(exc).__name__}: {exc}",
+                failure_kind=FailureKind.TECHNICAL_FAILURE,
+                inventory=self.resources.inventory,
+                skip_semantic=True,
+            )
+        # Merge assessed rows back
+        self.resources.species_recommendations = assessed
         out = []
-        for tid in ids:
-            info = self.resources.entity_identities.get(tid, {})
-            status = info.get("identity_status") or "unresolved"
+        for row in assessed.fillna("").to_dict("records"):
+            if str(row.get("id")) == "Reason:":
+                continue
+            tid = str(row["id"])
+            status = str(row.get("identity_status") or "")
+            self.resources.entity_identities.setdefault(tid, {})
+            self.resources.entity_identities[tid].update(
+                {
+                    "annotation": row.get("annotation"),
+                    "identity_status": status,
+                    "qualifier": row.get("qualifier", "is"),
+                    "component_id": row.get("component_id") or "",
+                }
+            )
+            if action.target_ids and tid not in action.target_ids:
+                continue
             out.append({"id": tid, "identity_status": status})
         return _obs(
             action,
             ok=True,
-            result={"assessments": out},
+            result={"assessments": out, "mode": "real_assess_species_identity_support"},
             inventory=self.resources.inventory,
         )
 
     def predict_qualifiers(self, action: AgentAction) -> ToolObservation:
-        ids = action.target_ids
+        if not self.resources.qualifier_prediction_available:
+            return _obs(
+                action,
+                ok=False,
+                error="qualifier prediction unavailable in this configuration",
+                failure_kind=FailureKind.TECHNICAL_FAILURE,
+                inventory=self.resources.inventory,
+                skip_semantic=True,
+            )
+        frame = self.resources.species_recommendations
+        if frame is None or frame.empty:
+            return _obs(
+                action,
+                ok=False,
+                error="no species recommendations available for qualifier prediction",
+                failure_kind=FailureKind.TECHNICAL_FAILURE,
+                inventory=self.resources.inventory,
+                skip_semantic=True,
+            )
+        kind = self.resources.species_annotator_provenance.get("kind")
+        if kind == "mock_synthetic":
+            ids = action.target_ids or sorted(self.resources.entity_identities)
+            out = []
+            for tid in ids:
+                info = self.resources.entity_identities.get(tid, {})
+                out.append(
+                    {
+                        "id": tid,
+                        "qualifier": info.get("qualifier") or "is",
+                        "qualifier_status": info.get("qualifier_status") or "mock",
+                    }
+                )
+            return _obs(
+                action,
+                ok=True,
+                result={"qualifiers": out, "mode": "mock_passthrough"},
+                inventory=self.resources.inventory,
+            )
+
+        from core.qualifier_workflow import predict_species_qualifiers
+
+        args = parse_tool_arguments(action.tool, action.arguments)
+        subset = frame
+        if action.target_ids:
+            subset = frame[frame["id"].astype(str).isin(action.target_ids)].copy()
+        try:
+            with llm_backend_hook(self.resources.species_backend) as meta:
+                if not meta.get("hook_installed"):
+                    raise RuntimeError(
+                        "qualifier prediction requires a local LLM backend; "
+                        "refusing hosted fallback"
+                    )
+                predicted = predict_species_qualifiers(
+                    subset,
+                    model_file=self.resources.model_file,
+                    llm_model="metabolm-local",
+                    effort=getattr(args, "effort", "low"),
+                )
+        except Exception as exc:
+            return _obs(
+                action,
+                ok=False,
+                error=f"qualifier prediction failed: {type(exc).__name__}: {exc}",
+                failure_kind=FailureKind.TECHNICAL_FAILURE,
+                inventory=self.resources.inventory,
+                skip_semantic=True,
+            )
+        self.resources.species_recommendations = predicted
         out = []
-        for tid in ids:
-            info = self.resources.entity_identities.get(tid, {})
-            out.append({"id": tid, "qualifier": info.get("qualifier") or "is", "qualifier_status": "ok"})
+        for row in predicted.fillna("").to_dict("records"):
+            if str(row.get("id")) == "Reason:":
+                continue
+            tid = str(row["id"])
+            self.resources.entity_identities.setdefault(tid, {})
+            self.resources.entity_identities[tid].update(
+                {
+                    "qualifier": row.get("qualifier") or "",
+                    "qualifier_status": row.get("qualifier_status") or "",
+                    "identity_status": row.get("identity_status")
+                    or self.resources.entity_identities[tid].get("identity_status"),
+                    "component_id": row.get("component_id") or "",
+                }
+            )
+            if action.target_ids and tid not in action.target_ids:
+                continue
+            out.append(
+                {
+                    "id": tid,
+                    "qualifier": row.get("qualifier") or "",
+                    "qualifier_status": row.get("qualifier_status") or "",
+                }
+            )
         return _obs(
             action,
             ok=True,
-            result={"qualifiers": out},
+            result={"qualifiers": out, "mode": "real_predict_species_qualifiers"},
             inventory=self.resources.inventory,
         )
 

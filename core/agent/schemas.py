@@ -236,6 +236,7 @@ class SpeciesRecommendationRow(StrictModel):
     match_score: Optional[float] = None
     component_id: str = ""
     qualifier_status: str = ""
+    annotator_kind: Optional[str] = None
 
 
 class ReactionRecommendationRow(StrictModel):
@@ -275,6 +276,7 @@ class AnnotateSpeciesResult(StrictModel):
     n_rows: int = 0
     unresolved_ids: list[str] = Field(default_factory=list)
     recommendations: list[SpeciesRecommendationRow] = Field(default_factory=list)
+    annotator_kind: Optional[str] = None
 
 
 class IdentityAssessment(StrictModel):
@@ -284,6 +286,7 @@ class IdentityAssessment(StrictModel):
 
 class AssessIdentityResult(StrictModel):
     assessments: list[IdentityAssessment] = Field(default_factory=list)
+    mode: Optional[str] = None
 
 
 class QualifierPrediction(StrictModel):
@@ -294,6 +297,7 @@ class QualifierPrediction(StrictModel):
 
 class PredictQualifiersResult(StrictModel):
     qualifiers: list[QualifierPrediction] = Field(default_factory=list)
+    mode: Optional[str] = None
 
 
 class RetrievalArtifact(StrictModel):

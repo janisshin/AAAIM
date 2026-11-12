@@ -52,12 +52,13 @@ pending separate scope and authorization; this status grants neither.
 
 **Status:** implemented on `feature/auto-annotate-agent` (isolated worktree) under
 `core/agent/`. This is a product workstream, not a new numbered research phase.
-Offline controller tests (27) and RRF compatibility tests (73 passed, 2 skipped)
-passed. Bounded local MetaboLLM demo completed on a synthetic mixed model:
-planning JSON truncated and fell back to a validated structural plan (recorded);
-species/reaction tools executed; unresolved ambiguous species preserved; annotated
-copy plus reports written. Schema/semantic validation does not certify biological
-correctness. No held-out access, paid APIs, or frozen-result changes.
+Offline controller/species-safety tests and RRF compatibility tests passed.
+Species annotation no longer defaults to synthetic IDs: MockBackend uses an
+explicit `mock_synthetic` annotator recorded in provenance; real backends use
+`make_real_species_annotator` (`annotate_single_model` + local DB retrieval +
+MetaboLLM hooks). Missing resources fail as technical errors. Schema/semantic
+validation does not certify biological correctness. No held-out access, paid
+APIs, or frozen-result changes.
 
 ### User goal and scope
 
@@ -841,3 +842,4 @@ This is feasible for an October **writing start**, not necessarily an October su
 
 - 2026-11-09: Added public API integration status for `feature/rrf-grounded-public-api` / Draft PR #25 without merging phase branches. Recorded manuscript reaction-results and review-informed reference-sensitivity analysis branches. Added the planned automatic model-annotation agent module as a product workstream (roadmap/design; implementation tracked separately). No paid execution, held-out access, or evaluation-freeze change.
 - 2026-11-11: Implemented `core/agent` automatic annotation module on isolated `feature/auto-annotate-agent`. Pydantic plans/actions/tool I/O plus semantic checks (targets, deps, evidence); MockBackend tests 27 passed; RRF compatibility 73 passed / 2 skipped; bounded MetaboLLM demo on synthetic mixed model with structural planning fallback after truncated planner JSON, unresolved ambiguous species, and validated annotated copy/reports. No biological accuracy claim, paid APIs, held-out access, commit, or merge.
+- 2026-11-12: Fixed species path so synthetic CHEBI/NCBIGene/UniProt IDs are mock/test-only; real backends use direct DB retrieval + local MetaboLLM hooks; identity/qualifier tools call real assessments or report unavailability; regression tests cover no implicit synthetic fallback, evidence-dependent candidates, technical failure on missing resources, and unresolved/abstain write refusal.

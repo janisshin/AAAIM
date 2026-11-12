@@ -82,6 +82,11 @@ class AnnotationAgentController:
         self.inventory = inspect_sbml_model(
             self.model_file, scope_add_missing=scope == AnnotationScope.ADD_MISSING
         )
+        from core.agent.species import resolve_species_annotator
+
+        resolved_annotator, species_prov = resolve_species_annotator(
+            backend, species_annotator
+        )
         self.agent_resources = AgentResources(
             model_file=self.model_file,
             output_dir=self.output_dir,
@@ -89,7 +94,9 @@ class AnnotationAgentController:
             reaction_resources=resources,
             reaction_retriever=reaction_retriever,
             grounded_transport=getattr(backend, "grounded_transport", None),
-            species_annotator=species_annotator,
+            species_annotator=resolved_annotator,
+            species_backend=backend if hasattr(backend, "generate") else None,
+            species_annotator_provenance=species_prov,
             allow_names_only_reactions=self.limits.allow_names_only_reactions,
         )
         self.tools = ToolRegistry(self.agent_resources)
@@ -109,8 +116,10 @@ class AnnotationAgentController:
                 "limits": self.limits.model_dump(mode="json"),
                 "request": request,
             },
+            "species_annotator": species_prov,
             "planner_meta": [],
             "revisions": [],
+            "inference_stages": [],
         }
         self.provenance["cache_identity"] = _cache_identity(
             self.inventory.sha256,
@@ -254,6 +263,15 @@ class AnnotationAgentController:
     def _apply_observation(self, plan: AnnotationPlan, action: AgentAction, obs: ToolObservation) -> Optional[str]:
         """Update states; return revision reason if a plan revision is warranted."""
         if action.tool == "annotate_species_candidates":
+            if not obs.ok:
+                self._mark_task(
+                    plan,
+                    action.task_ids,
+                    TaskState.FAILED,
+                    obs.error or "species annotation failed",
+                    FailureKind.TECHNICAL_FAILURE,
+                )
+                return f"species annotation failed: {obs.error}"
             unresolved = obs.result.get("unresolved_ids") or []
             done = [t for t in action.task_ids if True]
             if unresolved:

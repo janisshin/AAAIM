@@ -27,6 +27,7 @@ if "core" not in sys.modules:
 
 from core.agent import ExecutionLimits, auto_annotate_model
 from core.agent.backends.mock import MockBackend
+from core.agent.species import make_real_species_annotator
 from tests.agent.conftest import TinyRetriever
 
 
@@ -68,6 +69,7 @@ def main() -> int:
     args = parser.parse_args()
 
     model = build_demo_model(Path(args.out) / "demo_model.xml")
+    species_annotator = None
     if args.backend == "mock":
         evidence = TinyRetriever().retrieve("ATP")
         backend = MockBackend(
@@ -83,11 +85,13 @@ def main() -> int:
                 }
             }
         )
+        # MockBackend explicitly selects the synthetic species annotator (tests/demos only).
     else:
         from core.agent.backends.metabolm import MetaboLLMBackend, ensure_gpu_idle_enough
 
         print(json.dumps({"gpu_check": ensure_gpu_idle_enough()}, indent=2))
         backend = MetaboLLMBackend()
+        species_annotator = make_real_species_annotator(backend)
 
     result = auto_annotate_model(
         str(model),
@@ -96,6 +100,11 @@ def main() -> int:
         reaction_retriever=TinyRetriever(),
         output_dir=args.out,
         limits=ExecutionLimits(max_actions=30, max_revisions=3),
+        species_annotator=species_annotator,
+    )
+    print(
+        "species_annotator:",
+        json.dumps(result.provenance.get("species_annotator"), indent=2),
     )
     print(json.dumps(result.report.model_dump(mode="json"), indent=2))
     print("output_dir:", result.output_dir)

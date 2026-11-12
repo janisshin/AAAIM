@@ -127,10 +127,25 @@ python -m pytest tests/test_public_rrf_grounded.py -q
 Controller tests use `MockBackend` only. Bounded local MetaboLLM demos are
 authorized separately and are not a biological accuracy claim.
 
+## Species annotation path
+
+- **MockBackend / tests:** explicit `mock_species_annotator` may emit synthetic
+  IDs (`CHEBI:15377`, etc.). Provenance records
+  `species_annotator.kind = "mock_synthetic"`.
+- **Real backends (MetaboLLM):** `make_real_species_annotator` wraps
+  `annotate_single_model` with `method="direct"` (local ChEBI/NCBIGene/UniProt
+  pickles), local LLM hooks for normalization/ranking/identity/qualifiers, and
+  **no** hosted-provider fallback. Missing DB files or LLM failures are
+  **technical failures** for that task; other tasks may continue.
+- There is **no** implicit synthetic-ID default for real backends. A missing
+  species annotator fails closed.
+- `update_annotation` still refuses URIs for `identity_status=unresolved` and
+  `qualifier_status=abstain`. Schema-valid IDs alone never imply `supported`.
+
 ## Known limitations
 
-- Species candidate generation in the agent path uses an injectable annotator;
-  the default offline annotator is deterministic and does not call paid APIs.
+- Real species annotation requires local reference databases under `data/` and a
+  local LLM backend with `generate()` (MetaboLLM baseline).
 - Planning uses prompted JSON; grammar-constrained decoding is unavailable.
 - Biological accuracy of annotations is out of scope for the operational demo.
 - Phase 5 paid runs and held-out evaluation remain unauthorized.
