@@ -3,15 +3,21 @@
 Biological annotation inference must use the local MetaboLLM (or mock) path.
 This backend does not implement generate()/grounded_transport() for biology.
 SDK automatic retries are disabled (max_retries=0).
+
+Structured Outputs use strict=True with a generated schema: every object has
+additionalProperties=false and every property is required (nullable unions for
+optional semantics). Tool arguments are closed per-tool anyOf variants from
+TOOL_ARG_MODELS — no free-form arguments bags.
 """
 from __future__ import annotations
 
 import json
 import os
 from pathlib import Path
-from typing import Any, Callable, Mapping, Optional, Sequence
+from typing import Any, Callable, Mapping, Optional, Sequence, get_args, get_origin
 
 from pydantic import ValidationError
+from pydantic.fields import FieldInfo
 
 from core.agent.planner_budget import (
     GPT6_LUNA_STANDARD,
@@ -20,81 +26,175 @@ from core.agent.planner_budget import (
     hard_input_token_bound,
 )
 from core.agent.schemas import (
+    ALLOWED_TOOLS,
+    TOOL_ARG_MODELS,
     AnnotationPlan,
+    BiologicalType,
+    EntityRepresentation,
     ExecutionLimits,
     ModelInventory,
     PlannerDecision,
+    TaskToolName,
     ToolObservation,
 )
 
 PLANNER_MODEL = "gpt-6-luna"
 PROMPT_VERSION = "agent-openai-planner-v1"
-SCHEMA_VERSION = "agent-planner-decision-v1"
+SCHEMA_VERSION = "agent-planner-decision-v2"
 
-# Strict JSON Schema for Responses API structured outputs (PlannerDecision-shaped).
-PLANNER_DECISION_JSON_SCHEMA: dict[str, Any] = {
-    "type": "object",
-    "additionalProperties": False,
-    "required": ["decision", "actions", "tasks", "reason", "clarification_prompt"],
-    "properties": {
-        "decision": {
+TASK_TOOLS: tuple[str, ...] = get_args(TaskToolName)
+
+
+def _literal_values(annotation: Any) -> Optional[list[Any]]:
+    origin = get_origin(annotation)
+    if origin is None:
+        return None
+    # typing.Literal
+    if getattr(origin, "__name__", "") == "Literal" or str(origin) == "typing.Literal":
+        return list(get_args(annotation))
+    # Python 3.10+ Literal from typing_extensions / typing
+    from typing import Literal as _Literal
+
+    if origin is _Literal:
+        return list(get_args(annotation))
+    return None
+
+
+def _json_type_for_annotation(annotation: Any) -> dict[str, Any]:
+    lit = _literal_values(annotation)
+    if lit is not None:
+        return {"type": "string", "enum": [str(v) for v in lit]}
+    origin = get_origin(annotation)
+    args = get_args(annotation)
+    if annotation is bool or annotation is int or annotation is float or annotation is str:
+        mapping = {bool: "boolean", int: "integer", float: "number", str: "string"}
+        return {"type": mapping[annotation]}
+    if origin is list:
+        item = args[0] if args else str
+        return {"type": "array", "items": _json_type_for_annotation(item)}
+    # Fallback string
+    return {"type": "string"}
+
+
+def _arguments_schema_for_tool(tool: str) -> dict[str, Any]:
+    model_cls = TOOL_ARG_MODELS[tool]
+    props: dict[str, Any] = {}
+    required: list[str] = []
+    for name, field in model_cls.model_fields.items():
+        assert isinstance(field, FieldInfo)
+        schema = _json_type_for_annotation(field.annotation)
+        # Preserve integer bounds when present on Field
+        if schema.get("type") == "integer":
+            if field.metadata:
+                for m in field.metadata:
+                    ge = getattr(m, "ge", None)
+                    le = getattr(m, "le", None)
+                    if ge is not None:
+                        schema["minimum"] = int(ge)
+                    if le is not None:
+                        schema["maximum"] = int(le)
+        props[name] = schema
+        required.append(name)
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": props,
+        "required": required,
+    }
+
+
+def _default_arguments_for_tool(tool: str) -> dict[str, Any]:
+    return TOOL_ARG_MODELS[tool]().model_dump(mode="json")
+
+
+def _action_variant(tool: str) -> dict[str, Any]:
+    props = {
+        "action_id": {"type": "string"},
+        "tool": {"type": "string", "const": tool},
+        "target_ids": {"type": "array", "items": {"type": "string"}},
+        "task_ids": {"type": "array", "items": {"type": "string"}},
+        "arguments": _arguments_schema_for_tool(tool),
+        "rationale": {"type": "string"},
+    }
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": props,
+        "required": list(props.keys()),
+    }
+
+
+def _task_variant(tool: str) -> dict[str, Any]:
+    props = {
+        "task_id": {"type": "string"},
+        "target_id": {"type": "string"},
+        "representation": {
             "type": "string",
-            "enum": ["continue", "finish", "needs_clarification"],
+            "enum": [e.value for e in EntityRepresentation],
         },
-        "reason": {"type": "string"},
-        "clarification_prompt": {"type": "string"},
-        "actions": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "additionalProperties": False,
-                "required": [
-                    "action_id",
-                    "tool",
-                    "target_ids",
-                    "task_ids",
-                    "arguments",
-                    "rationale",
-                ],
-                "properties": {
-                    "action_id": {"type": "string"},
-                    "tool": {"type": "string"},
-                    "target_ids": {"type": "array", "items": {"type": "string"}},
-                    "task_ids": {"type": "array", "items": {"type": "string"}},
-                    "arguments": {"type": "object", "additionalProperties": True},
-                    "rationale": {"type": "string"},
-                },
+        "biological_type": {
+            "type": "string",
+            "enum": [e.value for e in BiologicalType],
+        },
+        "tool": {"type": "string", "const": tool},
+        "depends_on": {"type": "array", "items": {"type": "string"}},
+        "arguments": _arguments_schema_for_tool(tool),
+    }
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": props,
+        "required": list(props.keys()),
+    }
+
+
+def build_planner_decision_json_schema() -> dict[str, Any]:
+    """Strict Structured Outputs schema for PlannerDecision-shaped responses."""
+    action_tools = list(ALLOWED_TOOLS)
+    task_tools = list(TASK_TOOLS)
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "required": ["decision", "actions", "tasks", "reason", "clarification_prompt"],
+        "properties": {
+            "decision": {
+                "type": "string",
+                "enum": ["continue", "finish", "needs_clarification"],
+            },
+            "reason": {"type": "string"},
+            "clarification_prompt": {"type": "string"},
+            "actions": {
+                "type": "array",
+                "items": {"anyOf": [_action_variant(t) for t in action_tools]},
+            },
+            "tasks": {
+                "type": "array",
+                "items": {"anyOf": [_task_variant(t) for t in task_tools]},
             },
         },
-        "tasks": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "additionalProperties": False,
-                "required": [
-                    "task_id",
-                    "target_id",
-                    "representation",
-                    "biological_type",
-                    "tool",
-                    "depends_on",
-                    "arguments",
-                ],
-                "properties": {
-                    "task_id": {"type": "string"},
-                    "target_id": {"type": "string"},
-                    "representation": {"type": "string"},
-                    "biological_type": {"type": "string"},
-                    "tool": {"type": "string"},
-                    "depends_on": {"type": "array", "items": {"type": "string"}},
-                    "arguments": {"type": "object", "additionalProperties": True},
-                    "rationale": {"type": "string"},
-                    "completion_condition": {"type": "string"},
-                },
-            },
-        },
-    },
-}
+    }
+
+
+PLANNER_DECISION_JSON_SCHEMA: dict[str, Any] = build_planner_decision_json_schema()
+
+
+def tool_argument_keys() -> dict[str, list[str]]:
+    """Prompt-aligned argument keys derived from TOOL_ARG_MODELS."""
+    return {
+        tool: list(model.model_fields.keys())
+        for tool, model in TOOL_ARG_MODELS.items()
+        if tool in TASK_TOOLS
+        or tool
+        in {
+            "annotate_species_candidates",
+            "assess_identity_support",
+            "predict_qualifiers",
+            "retrieve_reaction_rrf",
+            "select_reaction_grounded",
+            "write_species_annotations",
+            "write_reaction_annotations",
+        }
+    }
 
 
 def build_planner_messages(
@@ -160,24 +260,8 @@ def build_planner_messages(
             "planner_max_output_tokens": limits.planner_max_new_tokens,
         },
         "authorized_annotation_models": list(authorized_annotation_models),
-        "allowed_tools": [
-            "annotate_species_candidates",
-            "assess_identity_support",
-            "predict_qualifiers",
-            "retrieve_reaction_rrf",
-            "select_reaction_grounded",
-            "write_species_annotations",
-            "write_reaction_annotations",
-        ],
-        "tool_argument_keys": {
-            "annotate_species_candidates": ["databases", "method", "predict_qualifiers"],
-            "assess_identity_support": ["effort"],
-            "predict_qualifiers": ["effort"],
-            "retrieve_reaction_rrf": ["allow_names_only", "top_k"],
-            "select_reaction_grounded": ["llm_model", "reasoning_effort", "max_output_tokens"],
-            "write_species_annotations": ["add_all", "qualifier"],
-            "write_reaction_annotations": ["require_selected"],
-        },
+        "allowed_tools": list(TASK_TOOLS),
+        "tool_argument_keys": tool_argument_keys(),
     }
     return [
         {"role": "system", "content": system},
@@ -229,6 +313,7 @@ class OpenAIPlannerBackend:
         budget_ledger: Optional[PlannerBudgetLedger] = None,
         budget_path: Optional[str | Path] = None,
         authorized_annotation_models: Optional[Sequence[str]] = None,
+        on_budget_journal: Optional[Callable[[], None]] = None,
     ) -> None:
         if model != PLANNER_MODEL:
             raise ValueError(
@@ -248,6 +333,7 @@ class OpenAIPlannerBackend:
         self.authorized_annotation_models = list(
             authorized_annotation_models or ("metabolm-local",)
         )
+        self.on_budget_journal = on_budget_journal
         self.last_generate_meta: dict[str, Any] = {}
         self._client = None
 
@@ -259,6 +345,7 @@ class OpenAIPlannerBackend:
             "prompt_version": PROMPT_VERSION,
             "schema_version": SCHEMA_VERSION,
             "structured_outputs": True,
+            "strict_structured_outputs": True,
             "api": "responses",
             "max_retries": 0,
             "authorized_annotation_models": list(self.authorized_annotation_models),
@@ -299,18 +386,25 @@ class OpenAIPlannerBackend:
         self._client = OpenAI(api_key=self.api_key, max_retries=0)
         return self._client
 
+    def _journal(self) -> None:
+        if self.on_budget_journal is not None:
+            self.on_budget_journal()
+
     def configure_budget(
         self,
         *,
         spend_authorized: bool,
         hard_cap_usd: float,
         max_attempts: Optional[int] = None,
+        persist: bool = False,
     ) -> None:
-        self.budget.spend_authorized = bool(spend_authorized)
-        self.budget.hard_cap_usd = float(hard_cap_usd)
-        if max_attempts is not None:
-            self.budget.max_attempts = int(max_attempts)
-        if self.budget_path is not None:
+        """Apply spend limits. Does not overwrite an existing ledger by default."""
+        self.budget.apply_spend_limits(
+            spend_authorized=spend_authorized,
+            hard_cap_usd=hard_cap_usd,
+            max_attempts=max_attempts,
+        )
+        if persist and self.budget_path is not None:
             self.budget.persist(self.budget_path)
 
     def plan(
@@ -336,10 +430,11 @@ class OpenAIPlannerBackend:
             entity_states=entity_states,
             authorized_annotation_models=self.authorized_annotation_models,
         )
+        schema = PLANNER_DECISION_JSON_SCHEMA
         serialized = serialize_responses_request_for_bound(
             model=self.model,
             messages=messages,
-            json_schema=PLANNER_DECISION_JSON_SCHEMA,
+            json_schema=schema,
             max_output_tokens=max_out,
         )
         try:
@@ -361,6 +456,10 @@ class OpenAIPlannerBackend:
                 input_token_bound=input_bound,
                 max_output_tokens=max_out,
                 persist_path=self.budget_path,
+                expected_model=self.model,
+                expected_service_tier=str(
+                    self.budget.pricing.get("service_tier") or "standard"
+                ),
             )
         except PlannerBudgetError as exc:
             meta = {
@@ -374,6 +473,9 @@ class OpenAIPlannerBackend:
             }
             self.last_generate_meta = meta
             raise RuntimeError(str(exc)) from exc
+
+        # Durable reservation before dispatch; journal controller checkpoint.
+        self._journal()
 
         client = self._get_client()
         try:
@@ -392,7 +494,7 @@ class OpenAIPlannerBackend:
                         "type": "json_schema",
                         "name": "aaaim_planner_decision",
                         "strict": True,
-                        "schema": PLANNER_DECISION_JSON_SCHEMA,
+                        "schema": schema,
                     }
                 },
             )
@@ -402,6 +504,7 @@ class OpenAIPlannerBackend:
                 error=f"request failed: {type(exc).__name__}: {exc}",
                 persist_path=self.budget_path,
             )
+            self._journal()
             meta = {
                 "terminal_status": "error",
                 "raw_text": None,
@@ -421,6 +524,9 @@ class OpenAIPlannerBackend:
         response_model = getattr(response, "model", None) or (
             response.get("model") if isinstance(response, dict) else self.model
         )
+        service_tier = getattr(response, "service_tier", None)
+        if service_tier is None and isinstance(response, dict):
+            service_tier = response.get("service_tier")
         usage_obj = getattr(response, "usage", None)
         if usage_obj is None and isinstance(response, dict):
             usage_obj = response.get("usage")
@@ -432,6 +538,7 @@ class OpenAIPlannerBackend:
                 error=f"incomplete_or_refused status={status!r}",
                 persist_path=self.budget_path,
             )
+            self._journal()
             meta = {
                 "terminal_status": "incomplete",
                 "raw_text": None,
@@ -452,6 +559,7 @@ class OpenAIPlannerBackend:
                 error="empty structured output",
                 persist_path=self.budget_path,
             )
+            self._journal()
             meta = {
                 "terminal_status": "incomplete",
                 "raw_text": None,
@@ -466,10 +574,14 @@ class OpenAIPlannerBackend:
 
         try:
             self.budget.settle_validated(
-                attempt.attempt_id, usage or {}, persist_path=self.budget_path
+                attempt.attempt_id,
+                usage or {},
+                persist_path=self.budget_path,
+                response_model=str(response_model) if response_model else None,
+                service_tier=str(service_tier) if service_tier is not None else None,
             )
         except PlannerBudgetError as exc:
-            # Exposure already retained inside settle_validated when usage invalid.
+            self._journal()
             meta = {
                 "terminal_status": "generated_unsettled",
                 "raw_text": raw_text,
@@ -480,8 +592,9 @@ class OpenAIPlannerBackend:
                 "attempt_id": attempt.attempt_id,
             }
             self.last_generate_meta = meta
-            # Still try to parse for caller diagnostics, but fail closed on budget.
             raise RuntimeError(str(exc)) from exc
+
+        self._journal()
 
         try:
             obj = json.loads(raw_text)
@@ -511,6 +624,7 @@ class OpenAIPlannerBackend:
             "attempt_id": attempt.attempt_id,
             "input_token_bound": input_bound,
             "budget": self.budget.summary(),
+            "schema_version": SCHEMA_VERSION,
         }
         self.last_generate_meta = meta
         return decision, meta
@@ -539,12 +653,19 @@ def _usage_to_dict(usage: Any) -> Optional[dict[str, Any]]:
             out["input_tokens_details"] = {
                 "cached_tokens": getattr(details, "cached_tokens", None)
             }
+    out_details = getattr(usage, "output_tokens_details", None)
+    if out_details is not None:
+        if isinstance(out_details, dict):
+            out["output_tokens_details"] = dict(out_details)
+        else:
+            out["output_tokens_details"] = {
+                "reasoning_tokens": getattr(out_details, "reasoning_tokens", None)
+            }
     return out or None
 
 
 def _extract_output_text(response: Any) -> str:
     if isinstance(response, dict):
-        # dict-shaped mock
         for item in response.get("output") or []:
             if not isinstance(item, dict):
                 continue
@@ -585,3 +706,19 @@ def _is_refusal(response: Any) -> bool:
             if getattr(part, "type", None) == "refusal":
                 return True
     return False
+
+
+# Re-export for tests that build example arguments
+__all__ = [
+    "PLANNER_MODEL",
+    "PROMPT_VERSION",
+    "SCHEMA_VERSION",
+    "PLANNER_DECISION_JSON_SCHEMA",
+    "OpenAIPlannerBackend",
+    "build_planner_decision_json_schema",
+    "build_planner_messages",
+    "serialize_responses_request_for_bound",
+    "tool_argument_keys",
+    "_default_arguments_for_tool",
+    "TASK_TOOLS",
+]

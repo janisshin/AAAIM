@@ -30,6 +30,7 @@ class _FakeResponse:
     def __init__(self, text: str, *, status: str = "completed") -> None:
         self.status = status
         self.model = PLANNER_MODEL
+        self.service_tier = "standard"
         self.usage = _FakeUsage(12, 8)
         self.output_text = text
         self.output = [
@@ -80,10 +81,11 @@ class BudgetMock(MockBackend):
         return MockBackend().identity()
 
     def configure_budget(self, **kwargs: Any) -> None:
-        self.budget.spend_authorized = bool(kwargs.get("spend_authorized"))
-        self.budget.hard_cap_usd = float(kwargs.get("hard_cap_usd") or 0.0)
-        if kwargs.get("max_attempts") is not None:
-            self.budget.max_attempts = int(kwargs["max_attempts"])
+        self.budget.apply_spend_limits(
+            spend_authorized=bool(kwargs.get("spend_authorized")),
+            hard_cap_usd=float(kwargs.get("hard_cap_usd") or 0.0),
+            max_attempts=kwargs.get("max_attempts"),
+        )
 
 
 def test_hard_input_bound_uses_utf8_bytes():
@@ -108,8 +110,12 @@ def test_budget_defaults_block_paid_dispatch(tmp_path):
 def test_reserve_settle_and_retain_exposure(tmp_path):
     path = tmp_path / "planner_budget.json"
     ledger = PlannerBudgetLedger(spend_authorized=True, hard_cap_usd=1.0)
+    ledger.bind_identity(run_id="r", cache_identity="c", model=PLANNER_MODEL)
     attempt = ledger.reserve_attempt(
-        input_token_bound=1000, max_output_tokens=100, persist_path=path
+        input_token_bound=1000,
+        max_output_tokens=100,
+        persist_path=path,
+        expected_model=PLANNER_MODEL,
     )
     assert attempt.status == "reserved"
     assert path.is_file()
@@ -120,6 +126,8 @@ def test_reserve_settle_and_retain_exposure(tmp_path):
         attempt.attempt_id,
         {"input_tokens": 100, "output_tokens": 20},
         persist_path=path,
+        response_model=PLANNER_MODEL,
+        service_tier="standard",
     )
     assert ledger.charged_usd > 0
     assert ledger.reserved_usd == 0.0
@@ -234,26 +242,47 @@ def test_dual_roles_wire_planner_not_inference(chemical_only_model, tmp_path):
 
 def test_resume_restores_planner_budget_accounting(tmp_path, chemical_only_model):
     out = tmp_path / "budget_resume"
+    spend_limits = ExecutionLimits(
+        planner_spend_authorized=True,
+        planner_spend_cap_usd=1.0,
+        max_planning_turns=12,
+    )
     interrupted = auto_annotate_model(
         str(chemical_only_model),
         backend=BudgetMock(),
         output_dir=out,
         interrupt_after_actions=1,
+        limits=spend_limits,
     )
     assert interrupted.report.status == "interrupted"
     ckpt_path = out / "checkpoint.json"
     ckpt = json.loads(ckpt_path.read_text(encoding="utf-8"))
     assert ckpt["schema_version"] == 3
 
-    injected = PlannerBudgetLedger(
-        spend_authorized=True,
-        hard_cap_usd=0.05,
-        charged_usd=0.001234,
-        retained_exposure_usd=0.002,
-        model=PLANNER_MODEL,
+    # Authoritative file ahead of checkpoint: settled + retained exposure.
+    budget_path = out / "planner_budget.json"
+    file_ledger = PlannerBudgetLedger.load(budget_path)
+    file_ledger.apply_spend_limits(spend_authorized=True, hard_cap_usd=1.0)
+    a1 = file_ledger.reserve_attempt(
+        input_token_bound=1000,
+        max_output_tokens=100,
+        persist_path=budget_path,
+        expected_model=PLANNER_MODEL,
     )
-    ckpt["planner_budget"] = injected.summary()
-    ckpt_path.write_text(json.dumps(ckpt, indent=2), encoding="utf-8")
+    file_ledger.settle_validated(
+        a1.attempt_id,
+        {"input_tokens": 100, "output_tokens": 20},
+        persist_path=budget_path,
+        response_model=PLANNER_MODEL,
+        service_tier="standard",
+    )
+    a2 = file_ledger.reserve_attempt(
+        input_token_bound=500, max_output_tokens=50, persist_path=budget_path
+    )
+    file_ledger.retain_exposure(a2.attempt_id, error="uncertain", persist_path=budget_path)
+    charged = file_ledger.charged_usd
+    retained = file_ledger.retained_exposure_usd
+    assert charged > 0 and retained > 0
 
     resumed_backend = BudgetMock()
     resumed = auto_annotate_model(
@@ -261,12 +290,13 @@ def test_resume_restores_planner_budget_accounting(tmp_path, chemical_only_model
         backend=resumed_backend,
         output_dir=out,
         resume_from=out,
+        limits=spend_limits,
     )
     assert resumed.report.status in {"completed", "partial"}
-    assert abs(resumed_backend.budget.charged_usd - 0.001234) < 1e-9
-    assert abs(resumed_backend.budget.retained_exposure_usd - 0.002) < 1e-9
+    assert resumed_backend.budget.charged_usd == pytest.approx(charged)
+    assert resumed_backend.budget.retained_exposure_usd == pytest.approx(retained)
     assert resumed.provenance.get("planner_usage", {}).get("charged_usd") == pytest.approx(
-        0.001234
+        charged
     )
 
 

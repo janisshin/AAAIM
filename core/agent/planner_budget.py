@@ -2,6 +2,12 @@
 
 Biological/local MetaboLLM inference is not billed through this ledger.
 Default authorization permits zero paid dispatches.
+
+``planner_budget.json`` is the authoritative attempt store (single writer:
+ledger ``persist()`` via atomic replace). Checkpoint embeds a summary for
+cross-check. Post-response validation cannot undo provider charges already
+incurred; anomalies retain conservative exposure and block further paid
+dispatches until reconciled.
 """
 from __future__ import annotations
 
@@ -11,7 +17,7 @@ import time
 import uuid
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Literal, Optional
 
 from core.agent.io import atomic_write_json
 
@@ -20,6 +26,7 @@ from core.agent.io import atomic_write_json
 PRICING_CHECKED = "2026-11-12"
 GPT6_LUNA_STANDARD = {
     "model": "gpt-6-luna",
+    "service_tier": "standard",
     "input_per_mtok": 0.10,
     "cached_input_per_mtok": 0.01,
     "cache_write_per_mtok": 0.125,
@@ -27,11 +34,22 @@ GPT6_LUNA_STANDARD = {
     "long_context_input_multiplier": 2.0,
     "long_context_output_multiplier": 1.5,
     "long_context_input_threshold": 272_000,
+    "include_cache_write_premium": False,
+}
+
+LEDGER_SCHEMA_VERSION = 2
+AccountingStatus = Literal["ok", "reconciliation_required", "blocked"]
+
+_STATUS_RANK = {
+    "blocked": 0,
+    "reserved": 1,
+    "retained_exposure": 2,
+    "settled": 3,
 }
 
 
 class PlannerBudgetError(RuntimeError):
-    """Spend authorization, reservation, or settlement failure."""
+    """Spend authorization, reservation, settlement, or reconcile failure."""
 
 
 def hard_input_token_bound(serialized_request: str) -> int:
@@ -46,6 +64,10 @@ def hard_input_token_bound(serialized_request: str) -> int:
     return max(1, len(serialized_request.encode("utf-8")))
 
 
+def _ceil_usd(value: float) -> float:
+    return math.ceil(float(value) * 1_000_000.0) / 1_000_000.0
+
+
 def conservative_attempt_cost_usd(
     *,
     input_token_bound: int,
@@ -58,14 +80,11 @@ def conservative_attempt_cost_usd(
     in_rate = float(p["input_per_mtok"])
     out_rate = float(p["output_per_mtok"])
     # Never use cache-read discount for reservations.
-    if not assume_uncached:
-        in_rate = float(p["input_per_mtok"])
+    _ = assume_uncached  # documented: reservations always uncached
     threshold = int(p.get("long_context_input_threshold") or 272_000)
     if input_token_bound > threshold:
         in_rate *= float(p.get("long_context_input_multiplier") or 2.0)
         out_rate *= float(p.get("long_context_output_multiplier") or 1.5)
-    # Optional cache-write premium when caching is enabled: still charge full
-    # uncached input; add write premium on the same bound for conservatism.
     write_extra = 0.0
     if p.get("include_cache_write_premium"):
         write_rate = float(p.get("cache_write_per_mtok") or 0.0)
@@ -78,39 +97,89 @@ def conservative_attempt_cost_usd(
     return float(cost)
 
 
+def _require_nonneg_int(value: Any, field_name: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise PlannerBudgetError(
+            f"usage field {field_name} must be a nonnegative integer (got {value!r})"
+        )
+    if value < 0:
+        raise PlannerBudgetError(f"usage field {field_name} must be nonnegative")
+    return value
+
+
+def parse_strict_usage(usage: Any) -> dict[str, Any]:
+    """Parse provider usage without silent coercion or clamping.
+
+    Returns a normalized dict with integer input_tokens, output_tokens,
+    optional cached_tokens / reasoning_tokens, and raw evidence preserved.
+    """
+    if not isinstance(usage, dict) or not usage:
+        raise PlannerBudgetError("usage missing or not an object")
+    raw = dict(usage)
+    input_tokens = raw.get("input_tokens")
+    if input_tokens is None:
+        input_tokens = raw.get("prompt_tokens")
+    output_tokens = raw.get("output_tokens")
+    if output_tokens is None:
+        output_tokens = raw.get("completion_tokens")
+    if input_tokens is None or output_tokens is None:
+        raise PlannerBudgetError("usage missing input_tokens/output_tokens")
+    input_tokens = _require_nonneg_int(input_tokens, "input_tokens")
+    output_tokens = _require_nonneg_int(output_tokens, "output_tokens")
+
+    cached_tokens = 0
+    details = raw.get("input_tokens_details")
+    if details is not None:
+        if not isinstance(details, dict):
+            raise PlannerBudgetError("input_tokens_details must be an object")
+        if "cached_tokens" in details and details["cached_tokens"] is not None:
+            cached_tokens = _require_nonneg_int(details["cached_tokens"], "cached_tokens")
+            if cached_tokens > input_tokens:
+                raise PlannerBudgetError(
+                    f"cached_tokens={cached_tokens} exceeds input_tokens={input_tokens}"
+                )
+
+    reasoning_tokens = 0
+    out_details = raw.get("output_tokens_details")
+    if out_details is not None:
+        if not isinstance(out_details, dict):
+            raise PlannerBudgetError("output_tokens_details must be an object")
+        if "reasoning_tokens" in out_details and out_details["reasoning_tokens"] is not None:
+            reasoning_tokens = _require_nonneg_int(
+                out_details["reasoning_tokens"], "reasoning_tokens"
+            )
+            if reasoning_tokens > output_tokens:
+                raise PlannerBudgetError(
+                    f"reasoning_tokens={reasoning_tokens} exceeds output_tokens={output_tokens}"
+                )
+
+    return {
+        "input_tokens": input_tokens,
+        "output_tokens": output_tokens,
+        "cached_tokens": cached_tokens,
+        "reasoning_tokens": reasoning_tokens,
+        "raw": raw,
+    }
+
+
 def validated_usage_cost_usd(
     usage: dict[str, Any],
     *,
     pricing: Optional[dict[str, Any]] = None,
-) -> Optional[float]:
-    """Return settled USD from validated usage, or None if usage is incomplete."""
-    if not isinstance(usage, dict) or not usage:
-        return None
-    # Accept OpenAI-style and local meta keys.
-    input_tokens = usage.get("input_tokens")
-    if input_tokens is None:
-        input_tokens = usage.get("prompt_tokens")
-    output_tokens = usage.get("output_tokens")
-    if output_tokens is None:
-        output_tokens = usage.get("completion_tokens")
-    if input_tokens is None or output_tokens is None:
-        return None
-    try:
-        input_tokens = int(input_tokens)
-        output_tokens = int(output_tokens)
-    except (TypeError, ValueError):
-        return None
-    if input_tokens < 0 or output_tokens < 0:
-        return None
+) -> float:
+    """Token-derived USD estimate from already-strict-parsed usage fields.
+
+    Distinct from invoice verification — estimates only.
+    Accepts either parse_strict_usage output or raw usage (re-parsed).
+    """
+    if "raw" in usage and "input_tokens" in usage:
+        parsed = usage
+    else:
+        parsed = parse_strict_usage(usage)
     p = dict(pricing or GPT6_LUNA_STANDARD)
-    cached = usage.get("input_tokens_details", {})
-    cached_tokens = 0
-    if isinstance(cached, dict):
-        try:
-            cached_tokens = int(cached.get("cached_tokens") or 0)
-        except (TypeError, ValueError):
-            cached_tokens = 0
-    cached_tokens = max(0, min(cached_tokens, input_tokens))
+    input_tokens = int(parsed["input_tokens"])
+    output_tokens = int(parsed["output_tokens"])
+    cached_tokens = int(parsed.get("cached_tokens") or 0)
     uncached = input_tokens - cached_tokens
     in_rate = float(p["input_per_mtok"])
     cached_rate = float(p["cached_input_per_mtok"])
@@ -123,6 +192,12 @@ def validated_usage_cost_usd(
     cost = (uncached / 1_000_000.0) * in_rate
     cost += (cached_tokens / 1_000_000.0) * cached_rate
     cost += (output_tokens / 1_000_000.0) * out_rate
+    if p.get("include_cache_write_premium"):
+        write_rate = float(p.get("cache_write_per_mtok") or 0.0)
+        if input_tokens > threshold:
+            write_rate *= float(p.get("long_context_input_multiplier") or 2.0)
+        # Settlement: only charge write premium on uncached tokens when enabled.
+        cost += (uncached / 1_000_000.0) * write_rate
     return float(cost)
 
 
@@ -138,40 +213,62 @@ class PlannerAttemptRecord:
     error: Optional[str] = None
     created_at: float = field(default_factory=time.time)
     settled_at: Optional[float] = None
+    potential_additional_exposure_usd: float = 0.0
+    expected_model: str = "gpt-6-luna"
+    expected_service_tier: str = "standard"
 
 
 @dataclass
 class PlannerBudgetLedger:
-    """Durable planner-only spend state."""
+    """Durable planner-only spend state (ledger schema v2)."""
 
     spend_authorized: bool = False
     hard_cap_usd: float = 0.0
     charged_usd: float = 0.0
     reserved_usd: float = 0.0
     retained_exposure_usd: float = 0.0
+    potential_additional_exposure_usd: float = 0.0
     attempts: list[PlannerAttemptRecord] = field(default_factory=list)
     pricing: dict[str, Any] = field(default_factory=lambda: dict(GPT6_LUNA_STANDARD))
     pricing_checked: str = PRICING_CHECKED
     model: str = "gpt-6-luna"
     max_attempts: int = 12
+    ledger_schema_version: int = LEDGER_SCHEMA_VERSION
+    run_id: str = ""
+    cache_identity: str = ""
+    accounting_status: AccountingStatus = "ok"
+    anomaly_notes: list[str] = field(default_factory=list)
+    estimate_not_invoice: bool = True
 
     @property
     def remaining_cap_usd(self) -> float:
-        exposure = self.reserved_usd + self.retained_exposure_usd
+        exposure = (
+            self.reserved_usd
+            + self.retained_exposure_usd
+            + self.potential_additional_exposure_usd
+        )
         return float(self.hard_cap_usd) - float(self.charged_usd) - float(exposure)
 
     def summary(self) -> dict[str, Any]:
         return {
+            "ledger_schema_version": self.ledger_schema_version,
+            "run_id": self.run_id,
+            "cache_identity": self.cache_identity,
+            "accounting_status": self.accounting_status,
+            "anomaly_notes": list(self.anomaly_notes),
+            "estimate_not_invoice": self.estimate_not_invoice,
             "spend_authorized": self.spend_authorized,
             "hard_cap_usd": self.hard_cap_usd,
             "charged_usd": self.charged_usd,
             "reserved_usd": self.reserved_usd,
             "retained_exposure_usd": self.retained_exposure_usd,
+            "potential_additional_exposure_usd": self.potential_additional_exposure_usd,
             "remaining_cap_usd": self.remaining_cap_usd,
             "attempt_count": len(self.attempts),
             "model": self.model,
             "pricing_checked": self.pricing_checked,
             "pricing": dict(self.pricing),
+            "max_attempts": self.max_attempts,
             "attempts": [asdict(a) for a in self.attempts],
         }
 
@@ -180,6 +277,23 @@ class PlannerBudgetLedger:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "PlannerBudgetLedger":
+        if not isinstance(data, dict):
+            raise PlannerBudgetError("planner budget ledger root must be an object")
+        version = data.get("ledger_schema_version")
+        if version is None and not data.get("attempts") and not data.get("charged_usd"):
+            # Empty legacy/empty checkpoint budget → upgrade to v2 empty ledger.
+            version = LEDGER_SCHEMA_VERSION
+        if version is None:
+            raise PlannerBudgetError(
+                "unsupported planner budget ledger: missing ledger_schema_version "
+                "(pre-v2 ledgers cannot be resumed; restart without resume_from or "
+                "with a fresh output_dir)"
+            )
+        if int(version) != LEDGER_SCHEMA_VERSION:
+            raise PlannerBudgetError(
+                f"unsupported planner budget ledger_schema_version={version!r}; "
+                f"only {LEDGER_SCHEMA_VERSION} is supported"
+            )
         attempts = []
         for raw in data.get("attempts") or []:
             attempts.append(
@@ -194,22 +308,135 @@ class PlannerBudgetLedger:
                     error=raw.get("error"),
                     created_at=float(raw.get("created_at") or time.time()),
                     settled_at=raw.get("settled_at"),
+                    potential_additional_exposure_usd=float(
+                        raw.get("potential_additional_exposure_usd") or 0.0
+                    ),
+                    expected_model=str(raw.get("expected_model") or data.get("model") or "gpt-6-luna"),
+                    expected_service_tier=str(
+                        raw.get("expected_service_tier")
+                        or (data.get("pricing") or {}).get("service_tier")
+                        or "standard"
+                    ),
                 )
             )
-        return cls(
+        ledger = cls(
             spend_authorized=bool(data.get("spend_authorized", False)),
             hard_cap_usd=float(data.get("hard_cap_usd") or 0.0),
             charged_usd=float(data.get("charged_usd") or 0.0),
             reserved_usd=float(data.get("reserved_usd") or 0.0),
             retained_exposure_usd=float(data.get("retained_exposure_usd") or 0.0),
+            potential_additional_exposure_usd=float(
+                data.get("potential_additional_exposure_usd") or 0.0
+            ),
             attempts=attempts,
             pricing=dict(data.get("pricing") or GPT6_LUNA_STANDARD),
             pricing_checked=str(data.get("pricing_checked") or PRICING_CHECKED),
             model=str(data.get("model") or "gpt-6-luna"),
             max_attempts=int(data.get("max_attempts") or 12),
+            ledger_schema_version=LEDGER_SCHEMA_VERSION,
+            run_id=str(data.get("run_id") or ""),
+            cache_identity=str(data.get("cache_identity") or ""),
+            accounting_status=str(data.get("accounting_status") or "ok"),  # type: ignore[arg-type]
+            anomaly_notes=list(data.get("anomaly_notes") or []),
+            estimate_not_invoice=bool(data.get("estimate_not_invoice", True)),
         )
+        if ledger.accounting_status not in {"ok", "reconciliation_required", "blocked"}:
+            raise PlannerBudgetError(
+                f"invalid accounting_status={ledger.accounting_status!r}"
+            )
+        ledger.recompute_totals()
+        return ledger
+
+    def recompute_totals(self) -> None:
+        """Recompute aggregates from attempts (never double-count)."""
+        charged = 0.0
+        reserved = 0.0
+        retained = 0.0
+        extra = 0.0
+        for a in self.attempts:
+            if a.status == "settled":
+                charged += float(a.charged_usd)
+                extra += float(a.potential_additional_exposure_usd or 0.0)
+            elif a.status == "reserved":
+                reserved += float(a.reserved_usd)
+            elif a.status == "retained_exposure":
+                retained += float(a.reserved_usd)
+                extra += float(a.potential_additional_exposure_usd or 0.0)
+            elif a.status == "blocked":
+                extra += float(a.potential_additional_exposure_usd or 0.0)
+        self.charged_usd = float(charged)
+        self.reserved_usd = float(reserved)
+        self.retained_exposure_usd = float(retained)
+        self.potential_additional_exposure_usd = float(extra)
+
+    def bind_identity(
+        self,
+        *,
+        run_id: str,
+        cache_identity: str,
+        model: str,
+        pricing: Optional[dict[str, Any]] = None,
+        pricing_checked: Optional[str] = None,
+    ) -> None:
+        self.run_id = str(run_id)
+        self.cache_identity = str(cache_identity)
+        self.model = str(model)
+        if pricing is not None:
+            self.pricing = dict(pricing)
+        if pricing_checked is not None:
+            self.pricing_checked = str(pricing_checked)
+        self.ledger_schema_version = LEDGER_SCHEMA_VERSION
+
+    def validate_identity(
+        self,
+        *,
+        cache_identity: str,
+        model: str,
+        pricing_checked: Optional[str] = None,
+        require_bound: bool = True,
+    ) -> None:
+        if require_bound and (not self.cache_identity or not self.run_id):
+            raise PlannerBudgetError(
+                "planner budget ledger missing run_id/cache_identity; "
+                "cannot accept unbound ledger for this run"
+            )
+        if self.cache_identity and self.cache_identity != cache_identity:
+            raise PlannerBudgetError(
+                "planner budget ledger cache_identity mismatch with current run"
+            )
+        if self.model and self.model != model:
+            raise PlannerBudgetError(
+                f"planner budget ledger model={self.model!r} mismatches {model!r}"
+            )
+        if pricing_checked is not None and self.pricing_checked != pricing_checked:
+            raise PlannerBudgetError(
+                "planner budget ledger pricing_checked mismatch with planner identity"
+            )
+
+    def apply_spend_limits(
+        self,
+        *,
+        spend_authorized: bool,
+        hard_cap_usd: float,
+        max_attempts: Optional[int] = None,
+    ) -> None:
+        """Apply current operator limits without erasing prior exposure/charges."""
+        self.spend_authorized = bool(spend_authorized)
+        self.hard_cap_usd = float(hard_cap_usd)
+        if max_attempts is not None:
+            self.max_attempts = int(max_attempts)
+
+    def mark_anomaly(self, note: str, *, block: bool = True) -> None:
+        self.anomaly_notes.append(note)
+        self.accounting_status = "blocked" if block else "reconciliation_required"
 
     def ensure_can_dispatch(self) -> None:
+        if self.accounting_status in {"reconciliation_required", "blocked"}:
+            raise PlannerBudgetError(
+                f"planner accounting_status={self.accounting_status}; "
+                "further paid dispatches blocked until reconciled "
+                "(post-response validation cannot undo charges already incurred)"
+            )
         if not self.spend_authorized or float(self.hard_cap_usd) <= 0.0:
             raise PlannerBudgetError(
                 "planner spend not authorized or hard cap is $0; zero paid dispatches permitted"
@@ -225,6 +452,8 @@ class PlannerBudgetLedger:
         input_token_bound: int,
         max_output_tokens: int,
         persist_path: Optional[Path] = None,
+        expected_model: Optional[str] = None,
+        expected_service_tier: Optional[str] = None,
     ) -> PlannerAttemptRecord:
         self.ensure_can_dispatch()
         if input_token_bound <= 0:
@@ -235,22 +464,24 @@ class PlannerBudgetLedger:
             pricing=self.pricing,
             assume_uncached=True,
         )
-        # Round up to micros for stable comparisons.
-        reserved = math.ceil(reserved * 1_000_000.0) / 1_000_000.0
+        reserved = _ceil_usd(reserved)
         if reserved > self.remaining_cap_usd + 1e-12:
             raise PlannerBudgetError(
                 f"reservation ${reserved:.6f} exceeds remaining cap "
                 f"${self.remaining_cap_usd:.6f}"
             )
+        tier = expected_service_tier or str(self.pricing.get("service_tier") or "standard")
         attempt = PlannerAttemptRecord(
             attempt_id=str(uuid.uuid4()),
             status="reserved",
             input_token_bound=int(input_token_bound),
             max_output_tokens=int(max_output_tokens),
             reserved_usd=float(reserved),
+            expected_model=str(expected_model or self.model),
+            expected_service_tier=str(tier),
         )
         self.attempts.append(attempt)
-        self.reserved_usd = float(self.reserved_usd) + float(reserved)
+        self.recompute_totals()
         if persist_path is not None:
             self.persist(persist_path)
         return attempt
@@ -261,29 +492,79 @@ class PlannerBudgetLedger:
         usage: dict[str, Any],
         *,
         persist_path: Optional[Path] = None,
+        response_model: Optional[str] = None,
+        service_tier: Optional[str] = None,
     ) -> PlannerAttemptRecord:
         attempt = self._get(attempt_id)
         if attempt.status not in {"reserved", "retained_exposure"}:
             raise PlannerBudgetError(f"attempt {attempt_id} not open for settlement")
-        charged = validated_usage_cost_usd(usage, pricing=self.pricing)
-        if charged is None:
-            # Missing/uncertain usage retains exposure.
-            self.retain_exposure(attempt_id, error="usage missing or invalid", persist_path=persist_path)
-            raise PlannerBudgetError(
-                "cannot settle without validated usage; reservation retained as exposure"
+
+        try:
+            if response_model is not None and str(response_model) != attempt.expected_model:
+                raise PlannerBudgetError(
+                    f"response model={response_model!r} mismatches reserved "
+                    f"expected_model={attempt.expected_model!r}"
+                )
+            if service_tier is not None and str(service_tier) != attempt.expected_service_tier:
+                raise PlannerBudgetError(
+                    f"service_tier={service_tier!r} mismatches reserved "
+                    f"expected_service_tier={attempt.expected_service_tier!r}"
+                )
+            parsed = parse_strict_usage(usage)
+            if parsed["input_tokens"] > attempt.input_token_bound:
+                raise PlannerBudgetError(
+                    f"input_tokens={parsed['input_tokens']} exceeds reserved "
+                    f"input_token_bound={attempt.input_token_bound}"
+                )
+            billable_output = int(parsed["output_tokens"])
+            if billable_output > attempt.max_output_tokens:
+                raise PlannerBudgetError(
+                    f"output_tokens={billable_output} exceeds reserved "
+                    f"max_output_tokens={attempt.max_output_tokens}"
+                )
+            charged = validated_usage_cost_usd(parsed, pricing=self.pricing)
+            charged = _ceil_usd(charged)
+            if charged > float(attempt.reserved_usd) + 1e-12:
+                raise PlannerBudgetError(
+                    f"token-derived liability ${charged:.6f} exceeds reservation "
+                    f"${attempt.reserved_usd:.6f}"
+                )
+        except PlannerBudgetError as exc:
+            # Preserve evidence; retain conservative exposure; record any overage.
+            attempt.usage = dict(usage) if isinstance(usage, dict) else {"raw": usage}
+            overage = 0.0
+            try:
+                if isinstance(usage, dict) and usage:
+                    maybe = validated_usage_cost_usd(usage, pricing=self.pricing)
+                    maybe = _ceil_usd(maybe)
+                    if maybe > float(attempt.reserved_usd):
+                        overage = maybe - float(attempt.reserved_usd)
+            except PlannerBudgetError:
+                overage = 0.0
+            attempt.potential_additional_exposure_usd = float(
+                attempt.potential_additional_exposure_usd
+            ) + float(overage)
+            note = (
+                f"settlement anomaly attempt_id={attempt_id}: {exc}; "
+                "post-response validation cannot undo charges already incurred"
             )
-        charged = math.ceil(float(charged) * 1_000_000.0) / 1_000_000.0
-        if attempt.status == "reserved":
-            self.reserved_usd = max(0.0, float(self.reserved_usd) - float(attempt.reserved_usd))
-        elif attempt.status == "retained_exposure":
-            self.retained_exposure_usd = max(
-                0.0, float(self.retained_exposure_usd) - float(attempt.reserved_usd)
-            )
-        self.charged_usd = float(self.charged_usd) + float(charged)
+            if attempt.status == "reserved":
+                self.retain_exposure(attempt_id, error=str(exc), persist_path=None)
+            else:
+                attempt.error = str(exc)
+            self.mark_anomaly(note, block=True)
+            self.recompute_totals()
+            if persist_path is not None:
+                self.persist(persist_path)
+            raise PlannerBudgetError(note) from exc
+
+        # Success: release unused reserve only after validated settlement.
+        attempt.usage = dict(parsed["raw"])
         attempt.charged_usd = float(charged)
-        attempt.usage = dict(usage)
         attempt.status = "settled"
         attempt.settled_at = time.time()
+        attempt.error = None
+        self.recompute_totals()
         if persist_path is not None:
             self.persist(persist_path)
         return attempt
@@ -303,15 +584,32 @@ class PlannerBudgetLedger:
                 self.persist(persist_path)
             return attempt
         if attempt.status != "reserved":
-            raise PlannerBudgetError(f"attempt {attempt_id} cannot retain exposure from {attempt.status}")
-        self.reserved_usd = max(0.0, float(self.reserved_usd) - float(attempt.reserved_usd))
-        self.retained_exposure_usd = float(self.retained_exposure_usd) + float(attempt.reserved_usd)
+            raise PlannerBudgetError(
+                f"attempt {attempt_id} cannot retain exposure from {attempt.status}"
+            )
         attempt.status = "retained_exposure"
         attempt.error = error
         attempt.settled_at = time.time()
+        self.recompute_totals()
         if persist_path is not None:
             self.persist(persist_path)
         return attempt
+
+    def retain_open_reservations(
+        self,
+        *,
+        error: str = "orphan reservation after crash/resume",
+        persist_path: Optional[Path] = None,
+    ) -> list[PlannerAttemptRecord]:
+        retained: list[PlannerAttemptRecord] = []
+        for attempt in list(self.attempts):
+            if attempt.status == "reserved":
+                retained.append(
+                    self.retain_exposure(attempt.attempt_id, error=error, persist_path=None)
+                )
+        if retained and persist_path is not None:
+            self.persist(persist_path)
+        return retained
 
     def _get(self, attempt_id: str) -> PlannerAttemptRecord:
         for attempt in self.attempts:
@@ -320,6 +618,7 @@ class PlannerBudgetLedger:
         raise PlannerBudgetError(f"unknown planner attempt_id={attempt_id}")
 
     def persist(self, path: Path) -> None:
+        """Atomic single-writer persist of the authoritative ledger file."""
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
         atomic_write_json(self.to_dict(), path)
@@ -330,3 +629,134 @@ class PlannerBudgetLedger:
         if not isinstance(raw, dict):
             raise PlannerBudgetError("planner budget ledger root must be an object")
         return cls.from_dict(raw)
+
+
+def _attempt_conflict(a: PlannerAttemptRecord, b: PlannerAttemptRecord) -> Optional[str]:
+    if a.input_token_bound != b.input_token_bound or a.max_output_tokens != b.max_output_tokens:
+        return "bound mismatch"
+    if abs(float(a.reserved_usd) - float(b.reserved_usd)) > 1e-9:
+        return "reserved_usd mismatch"
+    rank_a = _STATUS_RANK.get(a.status, -1)
+    rank_b = _STATUS_RANK.get(b.status, -1)
+    if rank_a == rank_b and a.status == "settled":
+        if abs(float(a.charged_usd) - float(b.charged_usd)) > 1e-9:
+            return "settled charged_usd conflict"
+    if rank_a == rank_b and a.status == b.status and a.status != "reserved":
+        # Same terminal-ish status with conflicting extra exposure
+        if abs(
+            float(a.potential_additional_exposure_usd)
+            - float(b.potential_additional_exposure_usd)
+        ) > 1e-9:
+            return "potential_additional_exposure conflict"
+    return None
+
+
+def _prefer_attempt(
+    a: PlannerAttemptRecord, b: PlannerAttemptRecord
+) -> PlannerAttemptRecord:
+    conflict = _attempt_conflict(a, b)
+    if conflict:
+        raise PlannerBudgetError(
+            f"irreconcilable planner attempt {a.attempt_id}: {conflict}"
+        )
+    rank_a = _STATUS_RANK.get(a.status, -1)
+    rank_b = _STATUS_RANK.get(b.status, -1)
+    if rank_a > rank_b:
+        return a
+    if rank_b > rank_a:
+        return b
+    # Same status: prefer newer settled_at / created_at
+    ta = float(a.settled_at or a.created_at or 0.0)
+    tb = float(b.settled_at or b.created_at or 0.0)
+    return a if ta >= tb else b
+
+
+def reconcile_ledgers(
+    file_ledger: Optional[PlannerBudgetLedger],
+    checkpoint_ledger: Optional[PlannerBudgetLedger],
+) -> PlannerBudgetLedger:
+    """Union attempts by id; prefer newest valid terminal state; fail closed on conflict."""
+    if file_ledger is None and checkpoint_ledger is None:
+        return PlannerBudgetLedger()
+    if file_ledger is None:
+        out = PlannerBudgetLedger.from_dict(checkpoint_ledger.to_dict())  # type: ignore[union-attr]
+        out.recompute_totals()
+        return out
+    if checkpoint_ledger is None:
+        out = PlannerBudgetLedger.from_dict(file_ledger.to_dict())
+        out.recompute_totals()
+        return out
+
+    # Identity must agree when both bound (even if one side has no attempts yet).
+    if (
+        file_ledger.cache_identity
+        and checkpoint_ledger.cache_identity
+        and file_ledger.cache_identity != checkpoint_ledger.cache_identity
+    ):
+        raise PlannerBudgetError(
+            "ledger/checkpoint cache_identity mismatch during reconcile"
+        )
+    if (
+        file_ledger.run_id
+        and checkpoint_ledger.run_id
+        and file_ledger.run_id != checkpoint_ledger.run_id
+    ):
+        raise PlannerBudgetError("ledger/checkpoint run_id mismatch during reconcile")
+    if (
+        file_ledger.model
+        and checkpoint_ledger.model
+        and file_ledger.model != checkpoint_ledger.model
+    ):
+        raise PlannerBudgetError("ledger/checkpoint model mismatch during reconcile")
+
+    if (
+        not checkpoint_ledger.attempts
+        and not checkpoint_ledger.charged_usd
+        and not checkpoint_ledger.retained_exposure_usd
+        and not checkpoint_ledger.potential_additional_exposure_usd
+    ):
+        # Stale/empty checkpoint summary: authoritative file wins after identity check.
+        out = PlannerBudgetLedger.from_dict(file_ledger.to_dict())
+        out.recompute_totals()
+        return out
+
+    by_id: dict[str, PlannerAttemptRecord] = {}
+    for src in (checkpoint_ledger.attempts, file_ledger.attempts):
+        for attempt in src:
+            prev = by_id.get(attempt.attempt_id)
+            if prev is None:
+                by_id[attempt.attempt_id] = PlannerAttemptRecord(**asdict(attempt))
+            else:
+                by_id[attempt.attempt_id] = _prefer_attempt(prev, attempt)
+
+    # Prefer file metadata for identity/status when file is present (newer writer).
+    base = file_ledger
+    out = PlannerBudgetLedger(
+        spend_authorized=base.spend_authorized,
+        hard_cap_usd=base.hard_cap_usd,
+        attempts=list(by_id.values()),
+        pricing=dict(base.pricing),
+        pricing_checked=base.pricing_checked,
+        model=base.model,
+        max_attempts=max(base.max_attempts, checkpoint_ledger.max_attempts),
+        ledger_schema_version=LEDGER_SCHEMA_VERSION,
+        run_id=base.run_id or checkpoint_ledger.run_id,
+        cache_identity=base.cache_identity or checkpoint_ledger.cache_identity,
+        accounting_status=base.accounting_status
+        if base.accounting_status != "ok"
+        else checkpoint_ledger.accounting_status,
+        anomaly_notes=list(
+            dict.fromkeys(list(checkpoint_ledger.anomaly_notes) + list(base.anomaly_notes))
+        ),
+        estimate_not_invoice=True,
+    )
+    # Prefer blocked/reconciliation from either side.
+    if "blocked" in {base.accounting_status, checkpoint_ledger.accounting_status}:
+        out.accounting_status = "blocked"
+    elif "reconciliation_required" in {
+        base.accounting_status,
+        checkpoint_ledger.accounting_status,
+    }:
+        out.accounting_status = "reconciliation_required"
+    out.recompute_totals()
+    return out

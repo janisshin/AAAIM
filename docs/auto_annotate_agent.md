@@ -253,19 +253,40 @@ resource/tokenizer identity); restart without `resume_from`.
 ## Role separation and planner budget
 
 - **Planner** (`OpenAIPlannerBackend`, model `gpt-6-luna`): Responses API +
-  strict JSON Schema structured outputs; `max_retries=0`; refuses
-  `generate()` / `grounded_transport()` biological paths.
+  **strict** Structured Outputs (`strict: true`). The submitted schema is
+  generated from typed `TOOL_ARG_MODELS` as per-tool `anyOf` variants: every
+  object has `additionalProperties: false`, every property is `required`, and
+  free-form `arguments` bags are not used. `max_retries=0`; refuses
+  `generate()` / `grounded_transport()` biological paths. Schema version
+  `agent-planner-decision-v2`.
 - **Inference** (local MetaboLLM / MockBackend): species annotation and
   grounded reaction selection. `select_reaction_grounded.llm_model` must be in
   `ExecutionLimits.authorized_annotation_models` (default `metabolm-local`);
   unauthorized ids are rejected without rewrite.
-- **Budget** (planner-only): default `planner_spend_authorized=False` and
-  `planner_spend_cap_usd=0.0` (zero paid dispatches). Before each OpenAI call
-  the ledger computes a hard UTF-8-byte input-token bound, reserves
-  conservative Standard pricing (`$0.10` / `$0.50` per 1M in/out for
-  gpt-6-luna, checked 2026-11-12), persists the reservation, then dispatches.
-  Only validated usage is settled; uncertain/failed attempts retain exposure
-  against the cap. Biological/local MetaboLLM work is not billed here.
+- **Budget** (planner-only, **ledger schema v2**): default
+  `planner_spend_authorized=False` and `planner_spend_cap_usd=0.0` (zero paid
+  dispatches). `planner_budget.json` is the **authoritative** attempt store
+  (single writer via atomic replace); checkpoints embed a summary for
+  cross-check. Before each OpenAI call the ledger computes a hard UTF-8-byte
+  input-token bound, reserves conservative Standard pricing (`$0.10` /
+  `$0.50` per 1M in/out for gpt-6-luna, checked 2026-11-12), **persists the
+  reservation**, journals a controller checkpoint, then dispatches.
+  Settlement accepts only strict nonnegative-integer usage within the reserved
+  input/output bounds and matching model/service-tier; token-derived USD is an
+  **estimate**, not invoice verification. Usage outside bounds, missing, or
+  inconsistent details → retain conservative exposure, record any
+  `potential_additional_exposure_usd` when reported liability exceeds the
+  reservation, set `accounting_status=blocked`, and refuse further paid
+  dispatches. **Post-response validation cannot undo charges already
+  incurred.** Uncertain/failed attempts retain exposure against the cap.
+  Biological/local MetaboLLM work is not billed here.
+- **Resume:** do not overwrite an existing ledger during init. Reconcile
+  `planner_budget.json` with checkpoint `planner_budget` by `attempt_id`
+  (prefer newer terminal status; fail closed on conflicting charges/bounds).
+  Open `reserved` attempts become retained exposure. Pre-v2 ledgers and
+  unbound foreign ledgers in an existing `output_dir` are rejected (use
+  `resume_from` or a fresh directory). Resume applies current spend
+  authorization/limits without erasing prior charged/exposure.
 
 ### Live integrated demo proposal (not executed)
 

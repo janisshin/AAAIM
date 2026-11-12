@@ -4,6 +4,7 @@ from __future__ import annotations
 import hashlib
 import json
 import time
+import uuid
 from pathlib import Path
 from typing import Any, Optional
 
@@ -164,13 +165,20 @@ class AnnotationAgentController:
         if getattr(species_backend, "name", "") == "openai_planner":
             species_backend = None
         self.budget_path = self.output_dir / "planner_budget.json"
-        if hasattr(self.planner, "configure_budget"):
+        self._planner_run_id = str(uuid.uuid4())
+        if hasattr(self.planner, "budget_path"):
             self.planner.budget_path = self.budget_path
+        # Apply spend limits in memory only — never overwrite an existing ledger
+        # before resume reconcile (configure_budget persist=False by default).
+        if hasattr(self.planner, "configure_budget"):
             self.planner.configure_budget(
                 spend_authorized=bool(self.limits.planner_spend_authorized),
                 hard_cap_usd=float(self.limits.planner_spend_cap_usd),
                 max_attempts=int(self.limits.max_planning_turns),
+                persist=False,
             )
+        if hasattr(self.planner, "on_budget_journal"):
+            self.planner.on_budget_journal = self._journal_budget_checkpoint
         self.agent_resources = AgentResources(
             model_file=self.model_file,
             output_dir=self.output_dir,
@@ -257,6 +265,121 @@ class AnnotationAgentController:
         )
         if self.resume_from:
             self._restore_checkpoint(self.resume_from)
+        else:
+            self._bind_or_protect_planner_budget(new_run=True)
+
+    def _journal_budget_checkpoint(self) -> None:
+        """Persist controller checkpoint after durable ledger mutations."""
+        try:
+            self._save_checkpoint()
+        except Exception:
+            # Ledger file remains authoritative; checkpoint journal is best-effort
+            # for crash windows. Re-raise would abort mid-settle after persist.
+            raise
+
+    def _bind_or_protect_planner_budget(self, *, new_run: bool) -> None:
+        """Bind ledger identity for a new run; refuse clobbering foreign ledgers."""
+        if not hasattr(self.planner, "budget"):
+            return
+        from core.agent.planner_budget import PlannerBudgetLedger
+
+        cache_id = str(self.provenance["cache_identity"])
+        model = str((self.provenance.get("planner") or {}).get("model") or getattr(self.planner, "model", "") or "")
+        pricing_checked = (self.provenance.get("planner") or {}).get("pricing_checked")
+        if self.budget_path.is_file():
+            existing = PlannerBudgetLedger.load(self.budget_path)
+            if existing.attempts or existing.charged_usd or existing.retained_exposure_usd:
+                if new_run and existing.cache_identity and existing.cache_identity != cache_id:
+                    raise CheckpointCompatibilityError(
+                        "output_dir already contains a planner_budget.json for a different "
+                        "cache_identity; use resume_from or a fresh output_dir "
+                        "(refusing accidental new-run ledger reset)"
+                    )
+                if new_run and existing.run_id and existing.cache_identity == cache_id:
+                    # Same identity leftover without resume — fail closed.
+                    raise CheckpointCompatibilityError(
+                        "output_dir already contains a planner_budget.json for this "
+                        "cache_identity; resume with resume_from or choose a new output_dir"
+                    )
+        self.planner.budget.bind_identity(
+            run_id=self._planner_run_id,
+            cache_identity=cache_id,
+            model=model or self.planner.budget.model,
+            pricing=dict(self.planner.budget.pricing),
+            pricing_checked=str(
+                pricing_checked or self.planner.budget.pricing_checked
+            ),
+        )
+        self.planner.budget.apply_spend_limits(
+            spend_authorized=bool(self.limits.planner_spend_authorized),
+            hard_cap_usd=float(self.limits.planner_spend_cap_usd),
+            max_attempts=int(self.limits.max_planning_turns),
+        )
+        self.provenance["planner_usage"] = self.planner.budget.summary()
+        # Persist bound empty/new ledger only when no foreign file exists.
+        if not self.budget_path.is_file():
+            self.planner.budget.persist(self.budget_path)
+
+    def _reconcile_planner_budget_on_resume(self, ckpt_budget: dict[str, Any]) -> None:
+        """Authoritative file + checkpoint reconcile; never wipe newer settlements."""
+        if not hasattr(self.planner, "budget"):
+            return
+        from core.agent.planner_budget import PlannerBudgetLedger, reconcile_ledgers
+
+        cache_id = str(self.provenance["cache_identity"])
+        model = str(
+            (self.provenance.get("planner") or {}).get("model")
+            or getattr(self.planner, "model", "")
+            or "gpt-6-luna"
+        )
+        pricing_checked = (self.provenance.get("planner") or {}).get("pricing_checked")
+
+        file_ledger = None
+        if self.budget_path.is_file():
+            file_ledger = PlannerBudgetLedger.load(self.budget_path)
+
+        ckpt_ledger = None
+        if ckpt_budget:
+            ckpt_ledger = PlannerBudgetLedger.from_dict(dict(ckpt_budget))
+        elif file_ledger is None:
+            ckpt_ledger = PlannerBudgetLedger()
+
+        if file_ledger is None and ckpt_ledger is not None and not ckpt_budget:
+            # Empty checkpoint budget and no file — bind fresh under current identity.
+            self._planner_run_id = str(uuid.uuid4())
+            self._bind_or_protect_planner_budget(new_run=True)
+            return
+
+        reconciled = reconcile_ledgers(file_ledger, ckpt_ledger)
+        reconciled.validate_identity(
+            cache_identity=cache_id,
+            model=model,
+            pricing_checked=str(pricing_checked) if pricing_checked else None,
+            require_bound=bool(reconciled.attempts or reconciled.charged_usd),
+        )
+        if not reconciled.run_id:
+            reconciled.run_id = self._planner_run_id
+        else:
+            self._planner_run_id = reconciled.run_id
+        if not reconciled.cache_identity:
+            reconciled.cache_identity = cache_id
+        reconciled.apply_spend_limits(
+            spend_authorized=bool(self.limits.planner_spend_authorized),
+            hard_cap_usd=float(self.limits.planner_spend_cap_usd),
+            max_attempts=int(self.limits.max_planning_turns),
+        )
+        # Crash windows: open reservations become uncertain exposure.
+        retained = reconciled.retain_open_reservations(
+            error="orphan reservation after interruption/resume"
+        )
+        if retained:
+            self.provenance.setdefault("resume_notes", []).append(
+                f"retained {len(retained)} open planner reservation(s) as exposure"
+            )
+        reconciled.persist(self.budget_path)
+        self.planner.budget = reconciled
+        self.planner.budget_path = self.budget_path
+        self.provenance["planner_usage"] = reconciled.summary()
 
     def _checkpoint_path(self, path: Path) -> Path:
         return path / "checkpoint.json" if path.is_dir() else path
@@ -420,14 +543,10 @@ class AnnotationAgentController:
         if ckpt.reaction_recommendations is not None:
             self.agent_resources.reaction_recommendations = pd.DataFrame(ckpt.reaction_recommendations)
 
-        if ckpt.planner_budget and hasattr(self.planner, "budget"):
-            from core.agent.planner_budget import PlannerBudgetLedger
-
-            self.planner.budget = PlannerBudgetLedger.from_dict(dict(ckpt.planner_budget))
-            self.planner.budget_path = self.budget_path
-            self.provenance["planner_usage"] = self.planner.budget.summary()
-            if self.budget_path is not None:
-                self.planner.budget.persist(self.budget_path)
+        # Reconcile authoritative planner_budget.json with checkpoint summary.
+        # Never overwrite the file with a fresh empty ledger before this step.
+        if hasattr(self.planner, "budget"):
+            self._reconcile_planner_budget_on_resume(dict(ckpt.planner_budget or {}))
 
         prov = ckpt.provenance
         self.provenance["planner_meta"] = list(prov.planner_meta)
