@@ -10,6 +10,10 @@ default baseline. The species `method` parameter is separate. Review the
 identity-support and qualifier outputs. The new path supports a zero-call
 dry-run; its generic species feedback helper is intentionally disabled.
 
+For a bounded automatic planner over those tools, see the
+[automatic model-annotation agent](auto_annotate_agent.md)
+(`core.agent.auto_annotate_model`). Explicit annotation APIs remain available.
+
 ## Installation
 
 ```bash

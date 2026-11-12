@@ -73,6 +73,7 @@ from .reaction.matching import (
     normalize_reactions,
 )
 from .update_model import update_annotation
+from .agent import auto_annotate_model, AutoAnnotateResult, ExecutionLimits, AnnotationScope
 
 __all__ = [
     "RetrievalResources",
@@ -87,7 +88,10 @@ __all__ = [
     "assess_species_identity_support",
     "predict_species_qualifiers",
     "AnnotationResult",
-    
+    "auto_annotate_model",
+    "AutoAnnotateResult",
+    "ExecutionLimits",
+    "AnnotationScope",
     # Model + LLM
     "detect_model_format",
     "extract_model_info",
@@ -106,7 +110,7 @@ __all__ = [
     "query_llm_message_with_history",
     "query_llm_with_history",
     "parse_llm_response",
-    
+
     # Database search
     "Recommendation",
     "get_available_databases",
@@ -121,7 +125,7 @@ __all__ = [
     "normalize_reactions",
     "Reaction",
     "deduplicate_reactions",
-    
+
     # ChEBI hierarchy / relaxation
     "compute_relaxation_penalty",
     "expand_chebi_with_metadata",
