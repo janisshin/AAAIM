@@ -146,6 +146,7 @@ def main() -> int:
             max_actions_per_turn=args.max_actions_per_turn,
             planner_max_new_tokens=args.planner_max_new_tokens,
             allow_names_only_reactions=True,
+            max_runtime_sec=1800.0,
         ),
         allow_structural_fallback=bool(args.allow_structural_fallback),
     )

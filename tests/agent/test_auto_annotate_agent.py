@@ -270,7 +270,7 @@ def test_interrupt_resume_after_species_annotation(chemical_only_model, tmp_path
     )
     assert interrupted.report.status == "interrupted"
     ckpt = json.loads((out / "checkpoint.json").read_text(encoding="utf-8"))
-    assert ckpt["schema_version"] == 1
+    assert ckpt["schema_version"] == 2
     assert ckpt["executed_plan"] is not None
     assert any(
         t["tool"] == "annotate_species_candidates" and t["state"] == "completed"
@@ -493,9 +493,22 @@ def test_resume_rejects_incompatible_and_corrupt_checkpoints(chemical_only_model
             resume_from=out,
         )
 
-    # Incomplete / truncated required fields
+    # Pre-v2 schema rejected (resource/tokenizer identity strengthened in v2)
     ckpt_path.write_text(
-        json.dumps({"schema_version": 1, "cache_identity": "x"}),
+        json.dumps({"schema_version": 1, "cache_identity": good["cache_identity"]}),
+        encoding="utf-8",
+    )
+    with pytest.raises(CheckpointCompatibilityError, match="schema_version"):
+        auto_annotate_model(
+            str(chemical_only_model),
+            backend=MockBackend(),
+            output_dir=out,
+            resume_from=out,
+        )
+
+    # Incomplete / truncated required fields on v2
+    ckpt_path.write_text(
+        json.dumps({"schema_version": 2, "cache_identity": "x"}),
         encoding="utf-8",
     )
     with pytest.raises(CheckpointCompatibilityError, match="incomplete|invalid"):

@@ -12,7 +12,12 @@ import pandas as pd
 from core.agent.export import export_artifacts
 from core.agent.inspect_model import entities_needing_annotation, inspect_sbml_model
 from core.agent.io import atomic_write_json
-from core.agent.planner import PlannerRequestError, request_plan, validate_finish
+from core.agent.planner import (
+    PlannerRequestError,
+    request_plan,
+    unfinished_scope_targets,
+    validate_finish,
+)
 from core.agent.schemas import (
     AgentAction,
     AgentCheckpoint,
@@ -26,10 +31,13 @@ from core.agent.schemas import (
     ExecutionLimits,
     FailureKind,
     InFlightAction,
-    PlannerDecision,
     TaskState,
     TOOL_SCHEMA_VERSION,
     ToolObservation,
+)
+from core.agent.resource_identity import (
+    assert_resource_identity_compatible,
+    build_resource_identity,
 )
 from core.agent.tools import AgentResources, ToolRegistry
 from core.agent.validate import PlanValidationError, validate_action
@@ -80,33 +88,13 @@ def _resource_identity(
     reaction_retriever: Any,
     reaction_resources: Any,
     species_annotator_provenance: dict[str, Any],
-) -> dict[str, Any]:
-    retriever_prov: Any
-    if reaction_retriever is None:
-        retriever_prov = None
-    elif hasattr(reaction_retriever, "provenance"):
-        retriever_prov = getattr(reaction_retriever, "provenance")
-    else:
-        retriever_prov = {"type": type(reaction_retriever).__name__}
-
-    resources_prov: Any = None
-    if reaction_resources is not None:
-        if hasattr(reaction_resources, "provenance"):
-            resources_prov = getattr(reaction_resources, "provenance")
-        elif isinstance(reaction_resources, dict):
-            resources_prov = {
-                k: reaction_resources[k]
-                for k in ("catalog_id", "checkpoint", "sha256", "path")
-                if k in reaction_resources
-            } or {"type": "dict"}
-        else:
-            resources_prov = {"type": type(reaction_resources).__name__}
-
-    return {
-        "reaction_retriever": retriever_prov,
-        "reaction_resources": resources_prov,
-        "species_annotator": species_annotator_provenance or {},
-    }
+) -> tuple[dict[str, Any], dict[str, str]]:
+    """Content-based resource identity plus absolute paths for provenance only."""
+    return build_resource_identity(
+        reaction_retriever=reaction_retriever,
+        reaction_resources=reaction_resources,
+        species_annotator_provenance=species_annotator_provenance,
+    )
 
 
 class AnnotationAgentController:
@@ -174,7 +162,7 @@ class AnnotationAgentController:
         self._restored_from_checkpoint = False
         self._awaiting_planning_turn = True
         self.started = time.time()
-        self.resource_identity = _resource_identity(
+        self.resource_identity, resource_paths = _resource_identity(
             reaction_retriever=reaction_retriever,
             reaction_resources=resources,
             species_annotator_provenance=species_prov,
@@ -198,6 +186,7 @@ class AnnotationAgentController:
             "execution_semantics": "at_least_once",
         }
         # Absolute resource paths are audit-only; resume identity uses content fingerprints.
+        self.provenance["resource_paths"] = dict(resource_paths)
         if hasattr(backend, "resource_paths"):
             self.provenance["backend_resource_paths"] = dict(getattr(backend, "resource_paths") or {})
         if hasattr(backend, "load_info") and getattr(backend, "load_info"):
@@ -217,7 +206,7 @@ class AnnotationAgentController:
 
     def _build_checkpoint(self) -> AgentCheckpoint:
         return AgentCheckpoint(
-            schema_version=1,
+            schema_version=2,
             cache_identity=self.provenance["cache_identity"],
             model_sha256=self.inventory.sha256,
             backend=dict(self.provenance.get("backend") or {}),
@@ -294,12 +283,13 @@ class AnnotationAgentController:
         if "schema_version" not in raw:
             raise CheckpointCompatibilityError(
                 "unsupported checkpoint: missing schema_version "
-                "(pre-v1 checkpoints cannot be resumed; restart without resume_from)"
+                "(pre-v2 checkpoints cannot be resumed; restart without resume_from)"
             )
-        if raw.get("schema_version") != 1:
+        if raw.get("schema_version") != 2:
             raise CheckpointCompatibilityError(
                 f"unsupported checkpoint schema_version={raw.get('schema_version')!r}; "
-                "only schema_version=1 is supported"
+                "only schema_version=2 is supported (v1 lacked content-based "
+                "resource/tokenizer identity; restart without resume_from)"
             )
         try:
             ckpt = AgentCheckpoint.model_validate(raw)
@@ -317,8 +307,8 @@ class AnnotationAgentController:
             mismatches.append("settings")
         if ckpt.tool_schema_version != TOOL_SCHEMA_VERSION:
             mismatches.append("tool_schema_version")
-        if ckpt.resource_identity != self.resource_identity:
-            mismatches.append("resource_identity")
+        # Incomplete/legacy resource identities raise with an explicit restart message.
+        assert_resource_identity_compatible(ckpt.resource_identity, self.resource_identity)
         if ckpt.cache_identity != self.provenance["cache_identity"]:
             mismatches.append("cache_identity")
         if mismatches:
@@ -703,8 +693,20 @@ class AnnotationAgentController:
             pending = self._pending_actions(self.executed_plan)
             pending_non_export = [a for a in pending if a.tool != "export_reports"]
 
-            # Exhausting an action group triggers another planning turn — never auto-finish.
+            # Exhausting an action group triggers another planning turn unless the
+            # scope ledger is already fully terminal (no LLM finish call needed).
             if not pending_non_export:
+                leftover = unfinished_scope_targets(
+                    self.inventory, self.entity_states, self.scope, self.executed_plan
+                )
+                if not leftover:
+                    accepted_finish = True
+                    self.last_planner_decision = "finish"
+                    self.provenance["stop_reason"] = self.provenance.get("stop_reason") or "ledger_complete"
+                    if self.initial_plan is None:
+                        self.initial_plan = self.executed_plan.model_copy(deep=True)
+                    self._save_checkpoint()
+                    break
                 self._awaiting_planning_turn = True
 
             if self._awaiting_planning_turn:

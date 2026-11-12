@@ -552,7 +552,8 @@ class AutoAnnotateResult(StrictModel):
 # Checkpoint / resume
 # ---------------------------------------------------------------------------
 
-CHECKPOINT_SCHEMA_VERSION: Literal[1] = 1
+# v2: content-based retrieval resource identity + MetaboLLM tokenizer fingerprints.
+CHECKPOINT_SCHEMA_VERSION: Literal[2] = 2
 # Bump when allowlisted tool names or TOOL_ARG_MODELS / TOOL_RESULT_MODELS change.
 TOOL_SCHEMA_VERSION: Literal["agent-tools-v1"] = "agent-tools-v1"
 
@@ -589,7 +590,7 @@ class AgentCheckpoint(StrictModel):
     of ``failure_revision_count`` for resume-plan compatibility.
     """
 
-    schema_version: Literal[1] = CHECKPOINT_SCHEMA_VERSION
+    schema_version: Literal[2] = CHECKPOINT_SCHEMA_VERSION
     cache_identity: str
     model_sha256: str
     backend: dict[str, Any] = Field(default_factory=dict)

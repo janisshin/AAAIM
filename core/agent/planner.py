@@ -85,42 +85,84 @@ def normalize_planner_decision(raw: PlannerDecision | dict[str, Any]) -> Planner
             _sanitize_action_dict(a) if isinstance(a, dict) else a for a in data["actions"]
         ]
     # Ensure tasks exist for synthesized task_ids when the LLM omitted tasks.
-    if data.get("decision") == "continue" and data.get("actions") and not data.get("tasks"):
-        tasks = []
-        for action in data["actions"]:
-            if not isinstance(action, dict):
-                continue
-            tool = action.get("tool")
-            if tool not in {
-                "annotate_species_candidates",
-                "assess_identity_support",
-                "predict_qualifiers",
-                "retrieve_reaction_rrf",
-                "select_reaction_grounded",
-                "write_species_annotations",
-                "write_reaction_annotations",
-            }:
-                continue
-            for tid, task_id in zip(action.get("target_ids") or [], action.get("task_ids") or []):
-                tasks.append(
-                    {
-                        "task_id": task_id,
-                        "target_id": tid,
-                        "representation": (
-                            "sbml_reaction"
-                            if tool in {"retrieve_reaction_rrf", "select_reaction_grounded", "write_reaction_annotations"}
-                            else "sbml_species"
-                        ),
-                        "biological_type": (
-                            "reaction"
-                            if tool in {"retrieve_reaction_rrf", "select_reaction_grounded", "write_reaction_annotations"}
-                            else "unknown"
-                        ),
-                        "tool": tool,
-                        "arguments": action.get("arguments") or {},
-                    }
-                )
-        data["tasks"] = tasks
+    if data.get("decision") == "continue" and data.get("actions"):
+        if not data.get("tasks"):
+            tasks = []
+            retrieve_ids: dict[str, str] = {}
+            for action in data["actions"]:
+                if not isinstance(action, dict):
+                    continue
+                tool = action.get("tool")
+                if tool not in {
+                    "annotate_species_candidates",
+                    "assess_identity_support",
+                    "predict_qualifiers",
+                    "retrieve_reaction_rrf",
+                    "select_reaction_grounded",
+                    "write_species_annotations",
+                    "write_reaction_annotations",
+                }:
+                    continue
+                for tid, task_id in zip(action.get("target_ids") or [], action.get("task_ids") or []):
+                    if tool == "retrieve_reaction_rrf":
+                        retrieve_ids[str(tid)] = str(task_id)
+                    deps = []
+                    if tool == "select_reaction_grounded" and str(tid) in retrieve_ids:
+                        deps = [retrieve_ids[str(tid)]]
+                    tasks.append(
+                        {
+                            "task_id": task_id,
+                            "target_id": tid,
+                            "representation": (
+                                "sbml_reaction"
+                                if tool
+                                in {
+                                    "retrieve_reaction_rrf",
+                                    "select_reaction_grounded",
+                                    "write_reaction_annotations",
+                                }
+                                else "sbml_species"
+                            ),
+                            "biological_type": (
+                                "reaction"
+                                if tool
+                                in {
+                                    "retrieve_reaction_rrf",
+                                    "select_reaction_grounded",
+                                    "write_reaction_annotations",
+                                }
+                                else "unknown"
+                            ),
+                            "tool": tool,
+                            "depends_on": deps,
+                            "arguments": action.get("arguments") or {},
+                        }
+                    )
+            data["tasks"] = tasks
+        else:
+            # Repair missing select→retrieve dependencies when both tasks are present.
+            by_id = {t.get("task_id"): t for t in data["tasks"] if isinstance(t, dict)}
+            retrieve_by_target = {
+                t.get("target_id"): t.get("task_id")
+                for t in data["tasks"]
+                if isinstance(t, dict) and t.get("tool") == "retrieve_reaction_rrf"
+            }
+            for t in data["tasks"]:
+                if not isinstance(t, dict):
+                    continue
+                if t.get("tool") == "select_reaction_grounded":
+                    rid = retrieve_by_target.get(t.get("target_id"))
+                    deps = list(t.get("depends_on") or [])
+                    if rid and rid not in deps:
+                        deps.append(rid)
+                        t["depends_on"] = deps
+    # Prefer local metabolm model id in select arguments.
+    for action in data.get("actions") or []:
+        if isinstance(action, dict) and action.get("tool") == "select_reaction_grounded":
+            args = dict(action.get("arguments") or {})
+            if str(args.get("llm_model", "")).startswith("gpt"):
+                args["llm_model"] = "metabolm-local"
+            action["arguments"] = args
     return PlannerDecision.model_validate(data)
 
 

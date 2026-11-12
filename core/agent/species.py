@@ -144,10 +144,23 @@ def llm_backend_hook(backend: Any) -> Iterator[dict[str, Any]]:
         meta["stages"].append({"model": model, "n_messages": len(messages)})
         prompt_messages = [dict(m) for m in messages]
         if response_format is not None:
+            # Do not dump the full OpenAI json_schema envelope into the prompt —
+            # MetaboLLM has no constrained decoding, and the envelope bloats
+            # context until outputs truncate under Application-Control-safe budgets.
+            schema_body = response_format
+            if (
+                isinstance(response_format, dict)
+                and response_format.get("type") == "json_schema"
+                and isinstance(response_format.get("json_schema"), dict)
+            ):
+                schema_body = response_format["json_schema"].get("schema") or {
+                    "name": response_format["json_schema"].get("name")
+                }
             schema_text = (
-                "\n\nLOCAL_TRANSPORT_JSON_SCHEMA\n"
-                "Return exactly one JSON object matching this schema and no other text:\n"
-                + json.dumps(response_format, sort_keys=True)
+                "\n\nLOCAL_TRANSPORT_JSON\n"
+                "Return exactly one JSON object and no other text. "
+                "Match this shape (types/enums are hints, not a license to omit required keys):\n"
+                + json.dumps(schema_body, sort_keys=True, separators=(",", ":"))
             )
             if prompt_messages and prompt_messages[0].get("role") == "system":
                 prompt_messages[0] = {

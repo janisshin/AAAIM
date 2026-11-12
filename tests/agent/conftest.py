@@ -143,7 +143,6 @@ def invalid_model(tmp_path):
 
 
 class TinyRetriever:
-    provenance = {"resource": "synthetic", "verified_selected_checkpoint": False}
     catalog = {
         f"R{i:05d}": {
             "NAME": "ATP" if i == 1 else f"name{i}",
@@ -154,9 +153,21 @@ class TinyRetriever:
     }
 
     def __init__(self):
+        import hashlib
+        import json
+
         self.retrieve_calls = 0
-        # Instance copy so tests can mutate identity without cross-talk.
-        self.provenance = dict(type(self).provenance)
+        # Complete content identity so resume does not rely on class-name equality.
+        catalog_blob = json.dumps(self.catalog, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        self.provenance = {
+            "identity_schema_version": 1,
+            "identity_complete": True,
+            "kind": "TinyRetriever",
+            "resource": "synthetic",
+            "verified_selected_checkpoint": False,
+            "content_sha256": hashlib.sha256(catalog_blob).hexdigest(),
+            "settings": {"device": "cpu", "batch_size": 1},
+        }
 
     def retrieve(self, query):
         from core.reaction import retrieval

@@ -24,8 +24,6 @@ from dataclasses import dataclass
 import logging
 from collections import Counter, defaultdict
 from itertools import product
-import chromadb
-from chromadb.utils import embedding_functions
 from utils.constants import (
     REF_CHEBI2FORMULA,
     REF_CHEBI2LABEL,
@@ -57,6 +55,25 @@ logger.setLevel(logging.WARNING)
 
 # Global ChromaDB client cache to avoid conflicts
 _CHROMADB_CLIENTS = {}
+
+# ChromaDB / grpc.cygrpc are only required for RAG embedding search. Keep them
+# out of the module import path so direct (lzma dictionary) species lookup can
+# run under environments where Application Control blocks cygrpc*.pyd.
+_CHROMADB_MODULE = None
+_EMBEDDING_FUNCTIONS = None
+
+
+def _load_chromadb():
+    """Lazy-import chromadb and embedding helpers (pulls grpc._cython.cygrpc)."""
+    global _CHROMADB_MODULE, _EMBEDDING_FUNCTIONS
+    if _CHROMADB_MODULE is None:
+        import chromadb
+        from chromadb.utils import embedding_functions as _embedding_functions
+
+        _CHROMADB_MODULE = chromadb
+        _EMBEDDING_FUNCTIONS = _embedding_functions
+    return _CHROMADB_MODULE, _EMBEDDING_FUNCTIONS
+
 
 # Cache for loaded dictionaries
 _CHEBI_CLEANNAMES_DICT: Optional[Dict[str, List[str]]] = None
@@ -2079,6 +2096,7 @@ def get_embedding_function(model_type: str = "default"):
     Returns:
         ChromaDB embedding function
     """
+    _, embedding_functions = _load_chromadb()
     if model_type == "openai":
         if not os.getenv("OPENAI_API_KEY"):
             raise ValueError("OPENAI_API_KEY environment variable is required for OpenAI embeddings")
@@ -2105,6 +2123,7 @@ def get_chromadb_client(persist_directory: str, collection_name: str, model_type
     Returns:
         Tuple of (client, collection)
     """
+    chromadb, _ = _load_chromadb()
     client_key = f"{persist_directory}_{collection_name}_{model_type}"
 
     if client_key in _CHROMADB_CLIENTS:

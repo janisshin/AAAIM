@@ -251,6 +251,85 @@ def _weight_relative_paths(
     return []
 
 
+def _exists_in_snapshot(snapshot_dir: Path, rel: str) -> bool:
+    path = snapshot_dir / rel
+    return path.exists() or path.is_symlink()
+
+
+def _tokenizer_vocab_layouts() -> tuple[tuple[str, ...], ...]:
+    """Accepted alternative vocab/model layouts for AutoTokenizer."""
+    return (
+        ("tokenizer.json",),
+        ("vocab.json", "merges.txt"),
+        ("vocab.txt",),
+        ("tokenizer.model",),
+        ("spiece.model",),
+    )
+
+
+def discover_tokenizer_relative_paths(snapshot_dir: Path, *, required: bool) -> list[str]:
+    """Discover tokenizer / chat-template files that affect AutoTokenizer loading.
+
+    Supports common alternative layouts. When ``required`` is true (adapter
+    snapshot, where ``AutoTokenizer.from_pretrained(adapter_dir)`` runs), a
+    usable tokenizer layout must be present.
+    """
+    found: set[str] = set()
+    config_name = "tokenizer_config.json"
+    has_config = _exists_in_snapshot(snapshot_dir, config_name)
+    if has_config:
+        found.add(config_name)
+
+    layout_hit: tuple[str, ...] | None = None
+    for layout in _tokenizer_vocab_layouts():
+        if all(_exists_in_snapshot(snapshot_dir, name) for name in layout):
+            layout_hit = layout
+            found.update(layout)
+            break
+
+    for optional in (
+        "special_tokens_map.json",
+        "added_tokens.json",
+        "chat_template.jinja",
+        "chat_template.json",
+    ):
+        if _exists_in_snapshot(snapshot_dir, optional):
+            found.add(optional)
+
+    additional = snapshot_dir / "additional_chat_templates"
+    if additional.is_dir():
+        for path in sorted(additional.rglob("*")):
+            if path.is_file() or path.is_symlink():
+                found.add(path.relative_to(snapshot_dir).as_posix())
+
+    # tokenizer_config may reference a chat template file by relative name.
+    if has_config:
+        try:
+            payload = json.loads((snapshot_dir / config_name).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            payload = {}
+        if isinstance(payload, dict):
+            for key in ("chat_template", "chat_template_file"):
+                value = payload.get(key)
+                if isinstance(value, str) and "/" not in value and "\\" not in value:
+                    # Embedded template strings are already covered by hashing tokenizer_config.
+                    # Only treat simple relative filenames as sidecar dependencies.
+                    if value.endswith((".jinja", ".json", ".txt")) and _exists_in_snapshot(
+                        snapshot_dir, value
+                    ):
+                        found.add(value)
+
+    if required and (not has_config or layout_hit is None):
+        raise MetaboLLMCacheError(
+            f"Adapter snapshot {snapshot_dir} is missing tokenizer files required "
+            "for offline AutoTokenizer / chat-template loading "
+            "(need tokenizer_config.json plus one of tokenizer.json, "
+            "vocab.json+merges.txt, vocab.txt, tokenizer.model, or spiece.model). "
+            "Refusing hosted-provider fallback."
+        )
+    return sorted(found)
+
+
 def required_snapshot_relative_paths(
     snapshot_dir: Path,
     *,
@@ -275,16 +354,16 @@ def required_snapshot_relative_paths(
             snapshot_dir / "adapter_model.safetensors.index.json"
         ).is_symlink():
             required.add("adapter_model.safetensors.index.json")
+        # AutoTokenizer is loaded from the adapter snapshot.
+        required.update(discover_tokenizer_relative_paths(snapshot_dir, required=True))
     else:
         required.add("config.json")
         if (snapshot_dir / "model.safetensors.index.json").exists() or (
             snapshot_dir / "model.safetensors.index.json"
         ).is_symlink():
             required.add("model.safetensors.index.json")
-        if (snapshot_dir / "tokenizer_config.json").exists() or (
-            snapshot_dir / "tokenizer_config.json"
-        ).is_symlink():
-            required.add("tokenizer_config.json")
+        # Base may carry unused tokenizer sidecars; fingerprint those that exist.
+        required.update(discover_tokenizer_relative_paths(snapshot_dir, required=False))
     return sorted(required)
 
 

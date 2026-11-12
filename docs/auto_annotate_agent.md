@@ -171,7 +171,7 @@ Get-Content _auto_annotate_out\provenance.json
   --resume-from _auto_annotate_out
 ```
 
-`checkpoint.json` uses **schema_version=1** (`AgentCheckpoint` in
+`checkpoint.json` uses **schema_version=2** (`AgentCheckpoint` in
 `core/agent/schemas.py`) and is written atomically (temp file + replace).
 
 Resume restores the saved plan, task/entity states, observations, completed
@@ -181,17 +181,36 @@ accounting, then **continues that plan** instead of generating an unrelated
 fresh plan.
 
 Compatibility is checked against source model SHA-256, backend identity
-(including MetaboLLM weight content fingerprints), settings/limits/request,
-tool schema version, resource identities (retriever / resources / species
-annotator provenance), and the summary `cache_identity`. Evidence dependencies
-are validated (completed retrieval/selection requires persisted
-`reaction_evidence`, and completed selection requires
+(including MetaboLLM weight **and tokenizer/chat-template** content
+fingerprints), settings/limits/request, tool schema version, **content-based**
+resource identities, and the summary `cache_identity`.
+
+Retrieval resource identity (see `core/agent/resource_identity.py`) records
+catalog file SHA-256, selected-encoder manifest/file digests via
+`verify_model_dir`, and output-affecting settings (`device`, dtype policy,
+`batch_size`, retrieval `CONFIG`). Absolute catalog/encoder/HF-cache paths are
+audit-only (`resource_paths` / `backend_resource_paths`) and do not participate
+in the resume hash, so relocating identical bytes with the same settings is
+allowed. Changed catalog/encoder bytes or device/batch/config settings reject
+resume before further annotation. Injected retrievers must expose a complete
+provenance identity (or wrap `RetrievalResources` / `ReactionRetriever`);
+class-name equality alone is rejected.
+
+MetaboLLM offline cache validation fingerprints adapter tokenizer layouts
+(`tokenizer_config.json` plus `tokenizer.json` or alternate vocab/model files,
+special-token maps, `chat_template.jinja` / `chat_template.json` /
+`additional_chat_templates/`). Tokenizer or chat-template edits invalidate
+resume even when revision strings and weight shards are unchanged.
+
+Evidence dependencies are validated (completed retrieval/selection requires
+persisted `reaction_evidence`, and completed selection requires
 `reaction_recommendations`).
 
 Unsupported or incompatible checkpoints are rejected with
 `CheckpointCompatibilityError` (missing file, corrupt JSON, missing /
 unsupported `schema_version`, incomplete fields, or envelope mismatch).
-**Pre-v1 checkpoints cannot be resumed**; restart without `resume_from`.
+**Pre-v2 checkpoints cannot be resumed** (v1 lacked content-based
+resource/tokenizer identity); restart without `resume_from`.
 
 Execution is **at-least-once**, not exactly-once: an `in_flight_action` is
 journaled before tool execution; if interruption occurs before the result is
@@ -207,6 +226,11 @@ python -m pytest tests/test_public_rrf_grounded.py -q
 
 Controller tests use `MockBackend` only. Bounded local MetaboLLM demos are
 authorized separately and are not a biological accuracy claim.
+
+On Windows, MetaboLLM HF-cache fixture paths can hit legacy `MAX_PATH` limits
+when nested under long pytest basetemp directories; use a short `--basetemp`
+(for example `C:\t\aaaim`) for those tests. That is an environment/path
+limitation, not a product resume failure.
 
 ## Species annotation path
 
@@ -225,10 +249,22 @@ authorized separately and are not a biological accuracy claim.
 - `update_annotation` still refuses URIs for `identity_status=unresolved` and
   `qualifier_status=abstain`. Schema-valid IDs alone never imply `supported`.
 
+## Real vs synthetic demos
+
+| Example | Backend | Retrieval | Species | Claims |
+|---------|---------|-----------|---------|--------|
+| `examples/auto_annotate_example.py` | MockBackend | `SyntheticTinyRetriever` (not from `tests/`) | `mock_synthetic` | Control-loop only |
+| `examples/auto_annotate_real_local_example.py` | MetaboLLM | verified catalog + selected encoder (CPU) | `make_real_species_annotator` | Real LLM tool choice + retrieval; **not** biological accuracy |
+
+Measured planner fit on the bounded real local demo (development model): ~749 input /
+169 output tokens with `planner_max_new_tokens=768` (not truncated).
+
 ## Known limitations
 
 - Real species annotation requires local reference databases under `data/` and a
   local LLM backend with `generate()` (MetaboLLM baseline).
 - Planning uses prompted JSON; grammar-constrained decoding is unavailable.
+  Compact prompts + argument sanitization help, but invalid LLM plans are still
+  possible and are rejected (or labeled fallback if explicitly enabled).
 - Biological accuracy of annotations is out of scope for the operational demo.
 - Phase 5 paid runs and held-out evaluation remain unauthorized.

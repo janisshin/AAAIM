@@ -39,6 +39,11 @@ def build_minimal_valid_cache(cache: Path) -> Path:
     adapter = _hub_snapshot(cache, mb.ADAPTER_ID, mb.ADAPTER_REVISION)
     _write(adapter / "adapter_config.json", '{"peft_type":"LORA"}\n')
     _write(adapter / "adapter_model.safetensors", b"adapter-weights-v1")
+    # AutoTokenizer loads from the adapter snapshot — include a usable layout.
+    _write(adapter / "tokenizer_config.json", '{"tokenizer_class":"X","chat_template":"{{ messages }}"}\n')
+    _write(adapter / "tokenizer.json", '{"model":{"vocab":{"a":0}}}\n')
+    _write(adapter / "special_tokens_map.json", '{"eos_token":"</s>"}\n')
+    _write(adapter / "chat_template.jinja", "{{ messages }}\n")
 
     base = _hub_snapshot(cache, mb.BASE_ID, mb.BASE_REVISION)
     _write(base / "config.json", '{"model_type":"qwen3"}\n')
@@ -175,6 +180,91 @@ def test_content_change_changes_fingerprint_same_revision(tmp_path):
     id_b = mb.MetaboLLMBackend(hf_cache=cache_b, lazy=True).identity()
     assert id_a["adapter_revision"] == id_b["adapter_revision"]
     assert id_a["weight_fingerprints"]["content_sha256"] != id_b["weight_fingerprints"]["content_sha256"]
+
+
+def test_adapter_tokenizer_and_chat_template_changes_invalidate_identity(tmp_path):
+    base_fp = mb.validate_metabolm_hf_cache(build_minimal_valid_cache(tmp_path / "base"))[
+        "content_sha256"
+    ]
+
+    def _fp_after(mutator) -> str:
+        cache = build_minimal_valid_cache(tmp_path / f"m-{mutator.__name__}")
+        adapter = _hub_snapshot(cache, mb.ADAPTER_ID, mb.ADAPTER_REVISION)
+        mutator(adapter)
+        return mb.validate_metabolm_hf_cache(cache)["content_sha256"]
+
+    def change_tokenizer_config(adapter: Path) -> None:
+        _write(adapter / "tokenizer_config.json", '{"tokenizer_class":"Y"}\n')
+
+    def change_tokenizer_json(adapter: Path) -> None:
+        _write(adapter / "tokenizer.json", '{"model":{"vocab":{"b":1}}}\n')
+
+    def change_chat_template(adapter: Path) -> None:
+        _write(adapter / "chat_template.jinja", "{{ messages | length }}\n")
+
+    assert _fp_after(change_tokenizer_config) != base_fp
+    assert _fp_after(change_tokenizer_json) != base_fp
+    assert _fp_after(change_chat_template) != base_fp
+    # Revision strings / weight bytes unchanged across template-only edit.
+    cache = build_minimal_valid_cache(tmp_path / "tmpl")
+    adapter = _hub_snapshot(cache, mb.ADAPTER_ID, mb.ADAPTER_REVISION)
+    weights_before = (adapter / "adapter_model.safetensors").read_bytes()
+    _write(adapter / "chat_template.jinja", "{{ messages | tojson }}\n")
+    identity = mb.MetaboLLMBackend(hf_cache=cache, lazy=True).identity()
+    assert identity["adapter_revision"] == mb.ADAPTER_REVISION
+    assert (adapter / "adapter_model.safetensors").read_bytes() == weights_before
+    assert identity["weight_fingerprints"]["content_sha256"] != base_fp
+
+
+def test_missing_adapter_tokenizer_or_broken_link_rejected(tmp_path):
+    cache = build_minimal_valid_cache(tmp_path / "miss")
+    adapter = _hub_snapshot(cache, mb.ADAPTER_ID, mb.ADAPTER_REVISION)
+    (adapter / "tokenizer.json").unlink()
+    with pytest.raises(mb.MetaboLLMCacheError, match="tokenizer"):
+        mb.validate_metabolm_hf_cache(cache)
+
+    cache2 = build_minimal_valid_cache(tmp_path / "link")
+    adapter2 = _hub_snapshot(cache2, mb.ADAPTER_ID, mb.ADAPTER_REVISION)
+    tok = adapter2 / "tokenizer.json"
+    tok.unlink()
+    try:
+        tok.symlink_to(adapter2 / "missing-tokenizer.json")
+    except OSError:
+        pytest.skip("symlinks not available on this platform/permissions")
+    with pytest.raises(mb.MetaboLLMCacheError, match="[Bb]roken symlink|does not resolve|Missing|tokenizer"):
+        mb.validate_metabolm_hf_cache(cache2)
+
+
+def test_alternate_vocab_layout_vocab_json_merges_accepted(tmp_path):
+    cache = build_minimal_valid_cache(tmp_path / "alt")
+    adapter = _hub_snapshot(cache, mb.ADAPTER_ID, mb.ADAPTER_REVISION)
+    (adapter / "tokenizer.json").unlink()
+    _write(adapter / "vocab.json", '{"a":0}\n')
+    _write(adapter / "merges.txt", "a b\n")
+    fp = mb.validate_metabolm_hf_cache(cache)
+    adapter_key = f"{mb.ADAPTER_ID}@{mb.ADAPTER_REVISION}"
+    files = fp["snapshots"][adapter_key]["files"]
+    assert "vocab.json" in files and "merges.txt" in files
+    assert "tokenizer.json" not in files
+
+
+def test_tokenizer_validation_is_offline_no_download(tmp_path, monkeypatch):
+    cache = build_minimal_valid_cache(tmp_path / "off")
+    calls: list[str] = []
+
+    def boom_download(*args, **kwargs):
+        calls.append("download")
+        raise AssertionError("download must not run")
+
+    import types
+    import sys
+
+    hub = types.ModuleType("huggingface_hub")
+    hub.snapshot_download = boom_download
+    monkeypatch.setitem(sys.modules, "huggingface_hub", hub)
+    mb.validate_metabolm_hf_cache(cache)
+    mb.MetaboLLMBackend(hf_cache=cache, lazy=True).identity()
+    assert calls == []
 
 
 def test_relocated_identical_content_keeps_resume_identity(tmp_path):
